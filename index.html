@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THERMPYX | Thermodynamic Learning & Calculation Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ==============================
+         SIDEBAR
+    =============================== -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="sidebar-logo">
+            <div class="logo-symbol">T</div>
+            <div class="logo-text">
+                <span>THERMPYX</span>
+                <small>THERMODYNAMICS</small>
+            </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="sidebar-navigation">
+            <p class="navigation-title">MAIN MENU</p>
+            <a href="#home" class="nav-item active">
+                <span class="nav-icon">⌂</span>
+                <span class="nav-text">Home</span>
+            </a>
+            <a href="#theory" class="nav-item">
+                <span class="nav-icon">▣</span>
+                <span class="nav-text">Theory</span>
+            </a>
+            <a href="#calculation" class="nav-item">
+                <span class="nav-icon">∑</span>
+                <span class="nav-text">Calculation</span>
+            </a>
+            <a href="#converter" class="nav-item">
+                <span class="nav-icon">⇄</span>
+                <span class="nav-text">Unit Converter</span>
+            </a>
+            <a href="#quiz" class="nav-item">
+                <span class="nav-icon">✓</span>
+                <span class="nav-text">Quiz</span>
+            </a>
+            <a href="#history" class="nav-item">
+                <span class="nav-icon">◷</span>
+                <span class="nav-text">History</span>
+            </a>
+        </nav>
+        <!-- Bottom Navigation -->
+        <div class="sidebar-bottom">
+            <a href="#about" class="nav-item">
+                <span class="nav-icon">ⓘ</span>
+                <span class="nav-text">About</span>
+            </a>
+
+            <!-- Theme Toggle -->
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-icon" id="themeIcon">☾</span>
+                <span class="nav-text" id="themeText">
+                    Dark Mode
+                </span>
+            </button>
+        </div>
+    </aside>
+    <!-- ==============================
+         MAIN CONTENT
+    =============================== -->
+    <main class="main-content" id="mainContent">
+        <!-- ==============================
+             TOP BAR
+        =============================== -->
+        <header class="topbar">
+            <!-- Sidebar Toggle -->
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                ☰
+            </button>
+            <!-- Mobile Logo -->
+            <div class="mobile-logo">
+                <span>THERMPYX</span>
+            </div>
+            <!-- Theme Button for Mobile -->
+            <button class="mobile-theme-toggle" id="mobileThemeToggle" aria-label="Toggle theme">
+                ☾
+            </button>
+        </header>
+        <!-- ==============================
+             HOME SECTION
+        =============================== -->
+        <section class="home-section" id="home">
+            <!-- Decorative Background -->
+            <div class="background-grid"></div>
+            <div class="particles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <!-- Hero Content -->
+            <div class="hero-content">
+                <p class="hero-label">
+                    THERMODYNAMIC LEARNING SYSTEM
+                </p>
+                <h1 class="hero-title">
+                    THERMPYX
+                </h1>
+                <h2 class="hero-subtitle">
+                    THERMODYNAMIC LEARNING
+                    <span>&</span>
+                    CALCULATION PLATFORM
+                </h2>
+                <p class="hero-description">
+                    A learning and calculation platform designed to help
+                    students understand thermodynamics through theory,
+                    calculations, visualization, and practice.
+                </p>
+                <div class="hero-tagline">
+                    <span>Learn.</span>
+                    <span>Calculate.</span>
+                    <span>Explore.</span>
+                </div>
+                <!-- Main Actions -->
+                <div class="hero-actions">
+                    <a href="#theory" class="primary-button">
+                        <span>EXPLORE THEORY</span>
+                    </a>
+                    <a href="#calculation" class="secondary-button">
+                        <span>START CALCULATING</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Decorative Thermodynamics Element -->
+            <div class="hero-visual">
+                <div class="visual-ring ring-one"></div>
+                <div class="visual-ring ring-two"></div>
+                <div class="energy-core">
+                    <span>ΔU</span>
+                </div>
+                <div class="orbit-dot dot-one"></div>
+                <div class="orbit-dot dot-two"></div>
+                <div class="orbit-dot dot-three"></div>
+            </div>
+        </section>
+        <!-- ==============================
+             THEORY PREVIEW
+        =============================== -->
+        <section class="content-section" id="theory">
+            <div class="section-heading">
+                <p class="section-label">
+                    LEARN
+                </p>
+                <h2>
+                    Thermodynamics Theory
+                </h2>
+                <p>
+                    Understand the fundamental concepts of thermodynamics
+                    before moving into calculations.
+                </p>
+            </div>
+            <div class="feature-grid">
+                <!-- Theory Card -->
+                <article class="feature-card">
+                    <div class="card-icon">
+                        ΔT
+                    </div>
+                    <h3>
+                        Heat & Temperature
+                    </h3>
+                    <p>
+                        Learn about heat, temperature, specific heat,
+                        and temperature changes.
+                    </p>
+                   <a href="theory/heat.html">
+                    Learn More
+                   </a>
+                </article>
+                <!-- Theory Card -->
+                <article class="feature-card">
+                    <div class="card-icon">
+                        W
+                    </div>
+                    <h3>
+                        Work & Energy
+                    </h3>
+                    <p>
+                        Explore thermodynamic work, internal energy,
+                        and energy transfer.
+                    </p>
+                    <a href="#">
+                        Learn More 
+                    </a>
+                </article>
+                <!-- Theory Card -->
+                <article class="feature-card">
+                    <div class="card-icon">
+                        Σ
+                    </div>
+                    <h3>
+                        Laws of Thermodynamics
+                    </h3>
+                    <p>
+                        Study the Zeroth, First, Second, and Third Laws
+                        of Thermodynamics.
+                    </p>
+                    <a href="#">
+                        Learn More 
+                    </a>
+                </article>
+                <!-- Theory Card -->
+                <article class="feature-card">
+                    <div class="card-icon">
+                        PV
+                    </div>
+                    <h3>
+                        Thermodynamic Processes
+                    </h3>
+                    <p>
+                        Understand isothermal, isobaric, isochoric,
+                        and adiabatic processes.
+                    </p>
+                    <a href="#">
+                        Learn More 
+                    </a>
+                </article>
+            </div>
+        </section>
+        <!-- ==============================
+             CALCULATION PREVIEW
+        =============================== -->
+<!-- ==============================
+     CALCULATION
+============================== -->
+<section class="content-section calculation-section" id="calculation">
+    <div class="section-heading">
+        <p class="section-label">
+            CALCULATE
+        </p>
+        <h2>
+            Thermodynamic Calculations
+        </h2>
+        <p>
+            Select a calculation and solve thermodynamic problems
+            with step-by-step solutions.
+        </p>
+    </div>
+    <!-- ==============================
+         HEAT CALCULATOR
+    =============================== -->
+    <div class="heat-calculator">
+        <div class="calculator-header">
+            <div>
+                <p class="calculator-label">
+                    CALCULATOR 01
+                </p>
+                <h3>
+                    Heat Calculator
+                </h3>
+                <p>
+                    Calculate the amount of heat transferred using
+                    mass, specific heat capacity, and temperature change.
+                </p>
+            </div>
+            <div class="calculator-symbol">
+                Q
+            </div>
+        </div>
+        <!-- Formula -->
+        <div class="formula-box">
+            <span>Formula</span>
+            <strong>
+                Q = m × c × ΔT
+            </strong>
+        </div>
+        <!-- Input Area -->
+        <div class="calculator-inputs">
+            <!-- Mass -->
+            <div class="input-group">
+                <label for="heatMass">
+                    Mass (m)
+                </label>
+                <div class="input-with-unit">
+                    <input
+                        type="number"
+                        id="heatMass"
+                        placeholder="Enter mass"
+                        step="any"
+                    >
+                    <span>kg</span>
+                </div>
+            </div>
+            <!-- Specific Heat -->
+            <div class="input-group">
+                <label for="heatSpecificHeat">
+                    Specific Heat Capacity (c)
+                </label>
+                <div class="input-with-unit">
+                    <input
+                        type="number"
+                        id="heatSpecificHeat"
+                        placeholder="Enter specific heat"
+                        step="any"
+                    >
+                    <span>J/kg·K</span>
+                </div>
+            </div>
+            <!-- Temperature Change -->
+            <div class="input-group">
+                <label for="heatTemperature">
+                    Temperature Change (ΔT)
+                </label>
+                <div class="input-with-unit">
+                    <input
+                        type="number"
+                        id="heatTemperature"
+                        placeholder="Enter temperature change"
+                        step="any"
+                    >
+                    <span>K</span>
+                </div>
+            </div>
+        </div>
+        <!-- Calculate Button -->
+        <button
+            class="calculate-button"
+            id="calculateHeatButton"
+            type="button"
+        >
+            CALCULATE
+        </button>
+        <!-- Result -->
+        <div
+            class="calculation-result"
+            id="heatResult"
+        >
+            <div class="result-header">
+                <span>
+                    RESULT
+                </span>
+                <strong id="heatResultValue">
+                    —
+                </strong>
+            </div>
+            <!-- Solution -->
+            <div class="solution-box">
+                <h4>
+                    Step-by-Step Solution
+                </h4>
+                <div class="solution-step">
+                    <span>
+                        Step 1 — Formula
+                    </span>
+                    <p id="heatStep1">
+                        Q = m × c × ΔT
+                    </p>
+                </div>
+                <div class="solution-step">
+                    <span>
+                        Step 2 — Substitute
+                    </span>
+                    <p id="heatStep2">
+                        —
+                    </p>
+                </div>
+                <div class="solution-step">
+                    <span>
+                        Step 3 — Calculate
+                    </span>
+                    <p id="heatStep3">
+                        —
+                    </p>
+                </div>
+                <div class="final-answer">
+                    <span>
+                        Final Answer
+                    </span>
+                    <strong id="heatFinalAnswer">
+                        —
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ==============================
+     WORK CALCULATOR
+============================== -->
+<div class="work-calculator">
+    <div class="calculator-header">
+        <div>
+            <p class="calculator-label">
+                CALCULATOR 02
+            </p>
+            <h3>
+                Work Calculator
+            </h3>
+            <p>
+                Calculate thermodynamic work using pressure
+                and change in volume.
+            </p>
+        </div>
+        <div class="calculator-symbol">
+            W
+        </div>
+    </div>
+    <!-- Formula -->
+    <div class="formula-box">
+        <span>Formula</span>
+        <strong>
+            W = P × ΔV
+        </strong>
+    </div>
+    <!-- Input Area -->
+    <div class="calculator-inputs">
+        <!-- Pressure -->
+        <div class="input-group">
+            <label for="workPressure">
+                Pressure (P)
+            </label>
+            <div class="input-with-unit">
+                <input
+                    type="number"
+                    id="workPressure"
+                    placeholder="Enter pressure"
+                    step="any"
+                >
+                <span>Pa</span>
+            </div>
+        </div>
+        <!-- Volume Change -->
+        <div class="input-group">
+            <label for="workVolume">
+                Volume Change (ΔV)
+            </label>
+            <div class="input-with-unit">
+                <input
+                    type="number"
+                    id="workVolume"
+                    placeholder="Enter volume change"
+                    step="any"
+                >
+                <span>m³</span>
+            </div>
+        </div>
+    </div>
+    <!-- Calculate Button -->
+    <button
+        class="calculate-button"
+        id="calculateWorkButton"
+        type="button"
+    >
+        CALCULATE
+    </button>
+    <!-- Result -->
+    <div
+        class="calculation-result"
+        id="workResult"
+        <div class="result-header">
+            <span>
+                RESULT
+            </span>
+            <strong id="workResultValue">
+                —
+            </strong>
+        </div>
+        <!-- Solution -->
+        <div class="solution-box">
+            <h4>
+                Step-by-Step Solution
+            </h4>
+            <div class="solution-step">
+                <span>
+                    Step 1 — Formula
+                </span>
+                <p id="workStep1">
+                    W = P × ΔV
+                </p>
+            </div>
+            <div class="solution-step">
+                <span>
+                    Step 2 — Substitute
+                </span>
+                <p id="workStep2">
+                    —
+                </p>
+            </div>
+            <div class="solution-step">
+                <span>
+                    Step 3 — Calculate
+                </span>
+                <p id="workStep3">
+                    —
+                </p>
+            </div>
+            <div class="final-answer">
+                <span>
+                    Final Answer
+                </span>
+                <strong id="workFinalAnswer">
+                    —
+                </strong>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- ==============================
+             UNIT CONVERTER
+        =============================== -->
+        <section class="content-section" id="converter">
+            <div class="section-heading">
+                <p class="section-label">
+                    EXPLORE
+                </p>
+                <h2>
+                    Unit Converter
+                </h2>
+                <p>
+                    Convert common thermodynamic units quickly and easily.
+                </p>
+            </div>
+            <div class="converter-preview">
+                <div class="converter-item converter-tool">
+    <div class="converter-item-header">
+        <span>Temperature</span>
+        <strong>°C ↔ K</strong>
+    </div>
+    <div class="converter-input">
+        <label for="celsiusInput">
+            Celsius (°C)
+        </label>
+        <input
+            type="number"
+            id="celsiusInput"
+            placeholder="Enter Celsius"
+            step="any"
+        >
+    </div>
+    <button
+        class="converter-button"
+        id="convertCelsiusButton"
+        type="button"
+    >
+        CONVERT →
+    </button>
+    <div class="converter-result" id="temperatureResult">
+        <span>Result</span>
+        <strong id="kelvinResult">
+            —
+        </strong>
+    </div>
+</div>
+<div class="converter-item converter-tool">
+    <div class="converter-item-header">
+        <span>Temperature</span>
+        <strong>K ↔ °C</strong>
+    </div>
+    <div class="converter-input">
+        <label for="kelvinInput">
+            Kelvin (K)
+        </label>
+        <input
+            type="number"
+            id="kelvinInput"
+            placeholder="Enter Kelvin"
+            step="any"
+        >
+    </div>
+    <button
+        class="converter-button"
+        id="convertKelvinButton"
+        type="button"
+    >
+        CONVERT →
+    </button>
+    <div class="converter-result" id="celsiusResult">
+        <span>Result</span>
+        <strong id="celsiusResultValue">
+            —
+        </strong>
+    </div>
+</div>
+                <div class="converter-item">
+                    <span>Pressure</span>
+                    <strong>atm ↔ Pa</strong>
+                </div>
+                <div class="converter-item">
+                    <span>Volume</span>
+                    <strong>L ↔ m³</strong>
+                </div>
+                <div class="converter-item">
+                    <span>Energy</span>
+                    <strong>J ↔ kJ</strong>
+                </div>
+            </div>
+        </section>
+        <!-- ==============================
+             QUIZ
+        =============================== -->
+        <section class="content-section" id="quiz">
+            <div class="section-heading">
+                <p class="section-label">
+                    PRACTICE
+                </p>
+                <h2>
+                    Test Your Knowledge
+                </h2>
+                <p>
+                    Practice thermodynamics concepts with interactive quizzes.
+                </p>
+            </div>
+            <div class="quiz-preview">
+                <div class="quiz-icon">
+                    ?
+                </div>
+                <div class="quiz-content">
+                    <h3>
+                        Thermodynamics Quiz
+                    </h3>
+                    <p>
+                        Test your understanding of thermodynamic concepts,
+                        equations, and processes.
+                    </p>
+                   <a
+                     href="quiz/quiz.html"
+                     class="primary-button"
+                    >
+                      START QUIZ
+                   </a>
+                </div>
+            </div>
+        </section>
+        <!-- ==============================
+             HISTORY
+        =============================== -->
+        <section class="content-section" id="history">
+            <div class="section-heading">
+                <p class="section-label">
+                    TRACK
+                </p>
+                <h2>
+                    Calculation History
+                </h2>
+                <p>
+                    Your previous calculations will appear here.
+                </p>
+            </div>
+            <div class="history-empty">
+                <div class="history-icon">
+                    ◷
+                </div>
+                <h3>
+                    No calculations yet
+                </h3>
+                <p>
+                    Your calculation history will be saved here.
+                </p>
+            </div>
+        </section>
+        <!-- ==============================
+             ABOUT
+        =============================== -->
+        <section class="content-section about-section" id="about">
+            <div class="section-heading">
+                <p class="section-label">
+                    ABOUT
+                </p>
+                <h2>
+                    About THERMPYX
+                </h2>
+                <p>
+                    THERMPYX is a thermodynamic learning and calculation
+                    platform created to make learning physics more
+                    interactive, understandable, and practical.
+                </p>
+            </div>
+        </section>
+        <!-- ==============================
+             FOOTER
+        =============================== -->
+        <footer class="footer">
+            <div>
+                <strong>THERMPYX</strong>
+                <span>
+                    Thermodynamic Learning & Calculation Platform
+                </span>
+            </div>
+            <p>
+                Learn. Calculate. Explore.
+            </p>
+        </footer>
+    </main>
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>

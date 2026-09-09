@@ -1,0 +1,762 @@
+/* =========================================================
+   THERMPYX
+   THEORY PAGE STYLES
+========================================================= */
+
+
+/* =========================================================
+   1. THEORY TOPBAR
+========================================================= */
+
+.theory-topbar {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    height: 70px;
+
+    padding: 0 8%;
+
+    background:
+        rgba(5, 7, 10, 0.88);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid var(--border-light);
+}
+
+
+body.light-mode .theory-topbar {
+    background:
+        rgba(244, 247, 251, 0.90);
+}
+
+
+/* Back Button */
+
+.theory-back {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 40px;
+
+    padding: 0 16px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition: all var(--transition);
+}
+
+
+.theory-back:hover {
+    color: var(--blue);
+
+    border-color: var(--blue);
+
+    background:
+        rgba(0, 168, 255, 0.05);
+
+    transform: translateY(-2px);
+}
+
+
+/* Logo */
+
+.theory-logo {
+    color: var(--text-primary);
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   2. THEORY PAGE
+========================================================= */
+
+.theory-page {
+    position: relative;
+
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--bg-primary),
+            var(--bg-secondary)
+        );
+
+    overflow: hidden;
+}
+
+
+/* Grid Background */
+
+.theory-page::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 168, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0, 168, 255, 0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 55px 55px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 90%
+        );
+}
+
+
+/* =========================================================
+   3. THEORY HERO
+========================================================= */
+
+.theory-hero {
+    position: relative;
+
+    z-index: 1;
+
+    max-width: 850px;
+
+    margin: 0 auto;
+
+    padding: 110px 8% 80px;
+
+    text-align: center;
+}
+
+
+.theory-hero .section-label {
+    margin-bottom: 12px;
+}
+
+
+.theory-hero h1 {
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size:
+        clamp(
+            42px,
+            7vw,
+            72px
+        );
+
+    line-height: 1.05;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 22px;
+
+    text-shadow:
+        0 0 30px
+        rgba(0, 168, 255, 0.12);
+}
+
+
+.theory-hero > p:last-child {
+    max-width: 680px;
+
+    margin: 0 auto;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   4. THEORY CONTENT
+========================================================= */
+
+.theory-content {
+    position: relative;
+
+    z-index: 1;
+
+    max-width: 950px;
+
+    margin: 0 auto;
+
+    padding: 35px 8%;
+}
+
+
+/* Section Heading */
+
+.theory-section-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+}
+
+
+.theory-section-header > span {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    color: var(--blue);
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    background:
+        rgba(0, 168, 255, 0.04);
+
+    box-shadow:
+        0 0 18px
+        rgba(0, 168, 255, 0.08);
+}
+
+
+.theory-section-header h2 {
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size:
+        clamp(
+            22px,
+            4vw,
+            30px
+        );
+
+    line-height: 1.2;
+}
+
+
+/* Content Card */
+
+.theory-card {
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--bg-card),
+            var(--bg-secondary)
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 0 30px
+        rgba(0, 168, 255, 0.04);
+
+    transition: all var(--transition);
+}
+
+
+.theory-card:hover {
+    border-color:
+        rgba(0, 168, 255, 0.45);
+
+    box-shadow:
+        0 0 35px
+        rgba(0, 168, 255, 0.08);
+
+    transform: translateY(-3px);
+}
+
+
+.theory-card p {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    margin-bottom: 15px;
+}
+
+
+.theory-card p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   5. FORMULA DISPLAY
+========================================================= */
+
+.formula-display {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 22px;
+
+    padding: 18px 20px;
+
+    background:
+        rgba(0, 168, 255, 0.04);
+
+    border-left: 3px solid var(--blue);
+
+    border-top: 1px solid var(--border-light);
+
+    border-right: 1px solid var(--border-light);
+
+    border-bottom: 1px solid var(--border-light);
+
+    border-radius: 9px;
+}
+
+
+.formula-display span {
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.formula-display strong {
+    color: var(--blue);
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 22px;
+}
+
+
+.formula-display small {
+    color: var(--text-secondary);
+
+    font-size: 11px;
+}
+
+
+/* Main Formula */
+
+.main-formula {
+    margin: 25px 0;
+
+    padding: 25px;
+
+    text-align: center;
+
+    background:
+        rgba(0, 168, 255, 0.05);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    color: var(--blue);
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size:
+        clamp(
+            24px,
+            5vw,
+            38px
+        );
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 0 25px
+        rgba(0, 168, 255, 0.06);
+}
+
+
+/* =========================================================
+   6. VARIABLE GRID
+========================================================= */
+
+.variable-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+
+    gap: 12px;
+
+    margin-top: 10px;
+}
+
+
+.variable-grid > div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    padding: 18px;
+
+    background:
+        var(--bg-primary);
+
+    border: 1px solid var(--border-light);
+
+    border-radius: 10px;
+
+    transition: all var(--transition);
+}
+
+
+.variable-grid > div:hover {
+    border-color: var(--border);
+
+    transform: translateY(-2px);
+}
+
+
+.variable-grid strong {
+    color: var(--blue);
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 20px;
+}
+
+
+.variable-grid span {
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   7. EXAMPLE PROBLEM
+========================================================= */
+
+.example-card {
+    position: relative;
+}
+
+
+.example-solution {
+    margin-top: 24px;
+
+    padding: 22px;
+
+    background:
+        var(--bg-primary);
+
+    border: 1px solid var(--border-light);
+
+    border-radius: 10px;
+}
+
+
+.example-solution p {
+    margin-bottom: 8px;
+
+    color: var(--text-primary);
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 14px;
+}
+
+
+.example-solution p:nth-last-child(1) {
+    margin-bottom: 0;
+}
+
+
+.example-answer {
+    margin-top: 18px !important;
+
+    padding: 15px;
+
+    color: var(--blue) !important;
+
+    background:
+        rgba(0, 168, 255, 0.06);
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    font-size: 18px !important;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   8. THEORY NAVIGATION
+========================================================= */
+
+.theory-navigation {
+    position: relative;
+
+    z-index: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+
+    max-width: 950px;
+
+    margin: 30px auto 0;
+
+    padding: 50px 8% 90px;
+}
+
+
+.theory-navigation-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 48px;
+
+    padding: 0 22px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    color: var(--text-primary);
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.6px;
+
+    transition: all var(--transition);
+}
+
+
+.theory-navigation-button:hover {
+    color: var(--blue);
+
+    border-color: var(--blue);
+
+    background:
+        rgba(0, 168, 255, 0.05);
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        var(--shadow-blue);
+}
+
+
+/* =========================================================
+   9. THEORY FOOTER
+========================================================= */
+
+.theory-footer {
+    position: relative;
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   10. MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .theory-topbar {
+        height: 65px;
+
+        padding:
+            0 20px;
+    }
+
+
+    .theory-back {
+        min-height: 36px;
+
+        padding:
+            0 12px;
+
+        font-size: 10px;
+    }
+
+
+    .theory-logo {
+        font-size: 14px;
+
+        letter-spacing: 1.5px;
+    }
+
+
+    .theory-hero {
+        padding:
+            80px
+            20px
+            55px;
+    }
+
+
+    .theory-hero h1 {
+        font-size: 42px;
+    }
+
+
+    .theory-hero > p:last-child {
+        font-size: 13px;
+    }
+
+
+    .theory-content {
+        padding:
+            25px
+            20px;
+    }
+
+
+    .theory-card {
+        padding: 22px;
+    }
+
+
+    .formula-display {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .variable-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+
+    .theory-navigation {
+        padding:
+            35px
+            20px
+            65px;
+    }
+
+
+    .theory-navigation-button {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 430px) {
+
+    .theory-logo {
+        display: none;
+    }
+
+
+    .theory-hero h1 {
+        font-size: 35px;
+    }
+
+
+    .theory-card {
+        padding: 18px;
+    }
+
+
+    .variable-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .main-formula {
+        padding: 20px;
+
+        font-size: 25px;
+    }
+
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Thermodynamics Quiz | THERMPYX</title>
+    <!-- Google Fonts -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+    <!-- Main CSS -->
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+    <!-- Quiz CSS -->
+    <link
+        rel="stylesheet"
+        href="../css/quiz.css"
+    >
+</head>
+<body>
+    <!-- ==============================
+         TOP BAR
+    =============================== -->
+    <header class="quiz-topbar">
+        <a
+            href="../index.html#quiz"
+            class="quiz-back"
+        >
+            Back to Home
+        </a>
+        <div class="quiz-logo">
+            THERMPYX
+        </div>
+    </header>
+    <!-- ==============================
+         MAIN QUIZ PAGE
+    =============================== -->
+    <main class="quiz-page">
+        <!-- ==============================
+             QUIZ INTRODUCTION
+        =============================== -->
+        <section class="quiz-hero">
+            <p class="section-label">
+                THERMPYX PRACTICE
+            </p>
+            <h1>
+                Thermodynamics Quiz
+            </h1>
+            <p>
+                Test your understanding of thermodynamic concepts,
+                equations, and basic thermodynamic processes.
+            </p>
+        </section>
+        <!-- ==============================
+             QUIZ AREA
+        =============================== -->
+        <section class="quiz-area">
+            <!-- Quiz Container -->
+            <div
+                class="quiz-container"
+                id="quizContainer"
+            >
+                <!-- Progress -->
+                <div class="quiz-progress">
+                    <span id="quizQuestionNumber">
+                        Question 1 of 5
+                    </span>
+                    <span id="quizScore">
+                        Score: 0
+                    </span>
+                </div>
+                <!-- Question -->
+                <div class="quiz-question">
+                    <span class="quiz-question-label">
+                        QUESTION
+                    </span>
+                    <h2 id="questionText">
+                        What is the SI unit of heat energy?
+                    </h2>
+                </div>
+                <!-- ==============================
+                     ANSWER OPTIONS
+                =============================== -->
+                <div
+                    class="quiz-options"
+                    id="quizOptions"
+                >
+                    <!-- Answer 1 -->
+                    <button
+                        class="quiz-option"
+                        type="button"
+                        data-answer="Joule"
+                    >
+                        Joule
+                    </button>
+                    <!-- Answer 2 -->
+                    <button
+                        class="quiz-option"
+                        type="button"
+                        data-answer="Watt"
+                    >
+                        Watt
+                    </button>
+                    <!-- Answer 3 -->
+                    <button
+                        class="quiz-option"
+                        type="button"
+                        data-answer="Pascal"
+                    >
+                        Pascal
+                    </button>
+                    <!-- Answer 4 -->
+                    <button
+                        class="quiz-option"
+                        type="button"
+                        data-answer="Kelvin"
+                    >
+                        Kelvin
+                    </button>
+                </div>
+                <!-- Feedback -->
+                <div
+                    class="quiz-feedback"
+                    id="quizFeedback"
+                >
+                </div>
+                <!-- Next Button -->
+                <button
+                    class="quiz-next-button"
+                    id="quizNextButton"
+                    type="button"
+                    disabled
+                >
+                    NEXT
+                </button>
+            </div>
+            <!-- ==============================
+                 QUIZ RESULT
+            =============================== -->
+            <div
+                class="quiz-result"
+                id="quizResult"
+            >
+                <p class="section-label">
+                    QUIZ COMPLETE
+                </p>
+                <h2>
+                    Your Score
+                </h2>
+                <div
+                    class="quiz-final-score"
+                    id="quizFinalScore"
+                >
+                    0 / 5
+                </div>
+                <p
+                    class="quiz-final-message"
+                    id="quizFinalMessage"
+                >
+                    Good job!
+                </p>
+                <!-- Result Buttons -->
+                <div class="quiz-result-actions">
+                    <button
+                        class="quiz-restart-button"
+                        id="quizRestartButton"
+                        type="button"
+                    >
+                        RETAKE QUIZ
+                    </button>
+                    <a
+                        href="../index.html#quiz"
+                        class="quiz-home-button"
+                    >
+                        BACK TO HOME
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- ==============================
+         FOOTER
+    =============================== -->
+    <footer class="footer quiz-footer">
+        <div>
+            <strong>
+                THERMPYX
+            </strong>
+            <span>
+                Thermodynamic Learning & Calculation Platform
+            </span>
+        </div>
+        <p>
+            Learn. Calculate. Explore.
+        </p>
+    </footer>
+    <!-- ==============================
+         QUIZ JAVASCRIPT
+    =============================== -->
+    <script src="../js/quiz.js"></script>
+</body>
+</html>
