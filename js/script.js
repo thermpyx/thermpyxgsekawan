@@ -1031,3 +1031,76 @@ if (convertCubicMeterButton) {
             `${formattedLiter} L`;
     });
 }
+/* =========================================================
+   20. ENERGY CONVERTER (J → kJ)
+========================================================= */
+
+const convertJouleButton =
+    document.getElementById("convertJouleButton");
+
+const jouleInput =
+    document.getElementById("jouleInput");
+
+const energyResult =
+    document.getElementById("energyResult");
+
+const kilojouleResult =
+    document.getElementById("kilojouleResult");
+
+
+if (convertJouleButton) {
+
+    convertJouleButton.addEventListener("click", function () {
+
+        const joule =
+            Number(jouleInput.value);
+
+
+        /* Validation */
+
+        if (!Number.isFinite(joule)) {
+
+            alert(
+                "Please enter an energy value in Joules."
+            );
+
+            jouleInput.focus();
+
+            return;
+
+        }
+
+
+        /* Energy cannot be below 0 */
+
+        if (joule < 0) {
+
+            alert(
+                "Energy cannot be below 0 J."
+            );
+
+            jouleInput.focus();
+
+            return;
+
+        }
+
+
+        /* Conversion: 1 kJ = 1000 J */
+
+        const kilojoule =
+            joule / 1000;
+
+
+        const formattedKilojoule =
+            formatNumber(kilojoule);
+
+
+        /* Display Result */
+
+        kilojouleResult.textContent =
+            `${formattedKilojoule} kJ`;
+
+    });
+
+}
