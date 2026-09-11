@@ -843,3 +843,191 @@ if (convertKelvinButton) {
     });
 
 }
+/* =========================================================
+   18. PRESSURE CONVERTER (atm ↔ Pa)
+========================================================= */
+
+/* atm → Pa */
+const convertAtmButton =
+    document.getElementById("convertAtmButton");
+
+const atmInput =
+    document.getElementById("atmInput");
+
+const paResultValue =
+    document.getElementById("paResultValue");
+
+if (convertAtmButton) {
+    convertAtmButton.addEventListener("click", function () {
+        const atm =
+            Number(atmInput.value);
+
+        /* Validation */
+        if (!Number.isFinite(atm)) {
+            alert(
+                "Please enter an atm pressure."
+            );
+            atmInput.focus();
+            return;
+        }
+
+        if (atm < 0) {
+            alert(
+                "Pressure cannot be below 0 atm."
+            );
+            atmInput.focus();
+            return;
+        }
+
+        /* Conversion: 1 atm = 101,325 Pa */
+        const pa =
+            atm * 101325;
+
+        const formattedPa =
+            formatNumber(pa);
+
+        /* Display Result */
+        paResultValue.textContent =
+            `${formattedPa} Pa`;
+    });
+}
+
+/* Pa → atm */
+const convertPaButton =
+    document.getElementById("convertPaButton");
+
+const paInput =
+    document.getElementById("paInput");
+
+const atmResultValue =
+    document.getElementById("atmResultValue");
+
+if (convertPaButton) {
+    convertPaButton.addEventListener("click", function () {
+        const pa =
+            Number(paInput.value);
+
+        /* Validation */
+        if (!Number.isFinite(pa)) {
+            alert(
+                "Please enter a Pascal (Pa) pressure."
+            );
+            paInput.focus();
+            return;
+        }
+
+        if (pa < 0) {
+            alert(
+                "Pressure cannot be below 0 Pa."
+            );
+            paInput.focus();
+            return;
+        }
+
+        /* Conversion: 1 Pa = 1 / 101,325 atm */
+        const atm =
+            pa / 101325;
+
+        const formattedAtm =
+            formatNumber(atm);
+
+        /* Display Result */
+        atmResultValue.textContent =
+            `${formattedAtm} atm`;
+    });
+}
+
+
+/* =========================================================
+   19. VOLUME CONVERTER (L ↔ m³)
+========================================================= */
+
+/* Liter → m³ */
+const convertLiterButton =
+    document.getElementById("convertLiterButton");
+
+const literInput =
+    document.getElementById("literInput");
+
+const cubicMeterResultValue =
+    document.getElementById("cubicMeterResultValue");
+
+if (convertLiterButton) {
+    convertLiterButton.addEventListener("click", function () {
+        const liter =
+            Number(literInput.value);
+
+        /* Validation */
+        if (!Number.isFinite(liter)) {
+            alert(
+                "Please enter a volume in Liters (L)."
+            );
+            literInput.focus();
+            return;
+        }
+
+        if (liter < 0) {
+            alert(
+                "Volume cannot be below 0 L."
+            );
+            literInput.focus();
+            return;
+        }
+
+        /* Conversion: 1 L = 0.001 m³ */
+        const cubicMeter =
+            liter / 1000;
+
+        const formattedCubicMeter =
+            formatNumber(cubicMeter);
+
+        /* Display Result */
+        cubicMeterResultValue.textContent =
+            `${formattedCubicMeter} m³`;
+    });
+}
+
+/* m³ → Liter */
+const convertCubicMeterButton =
+    document.getElementById("convertCubicMeterButton");
+
+const cubicMeterInput =
+    document.getElementById("cubicMeterInput");
+
+const literResultValue =
+    document.getElementById("literResultValue");
+
+if (convertCubicMeterButton) {
+    convertCubicMeterButton.addEventListener("click", function () {
+        const cubicMeter =
+            Number(cubicMeterInput.value);
+
+        /* Validation */
+        if (!Number.isFinite(cubicMeter)) {
+            alert(
+                "Please enter a volume in m³."
+            );
+            cubicMeterInput.focus();
+            return;
+        }
+
+        if (cubicMeter < 0) {
+            alert(
+                "Volume cannot be below 0 m³."
+            );
+            cubicMeterInput.focus();
+            return;
+        }
+
+        /* Conversion: 1 m³ = 1,000 L */
+        const liter =
+            cubicMeter * 1000;
+
+        const formattedLiter =
+            formatNumber(liter);
+
+        /* Display Result */
+        literResultValue.textContent =
+            `${formattedLiter} L`;
+    });
+}
