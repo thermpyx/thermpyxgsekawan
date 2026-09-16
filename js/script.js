@@ -709,398 +709,68 @@ if (calculateWorkButton) {
     });
 
 }
-/* =========================================================
-   17. TEMPERATURE CONVERTER
-========================================================= */
-
-
-/* Celsius → Kelvin */
-
-const convertCelsiusButton =
-    document.getElementById("convertCelsiusButton");
-
-const celsiusInput =
-    document.getElementById("celsiusInput");
-
-const temperatureResult =
-    document.getElementById("temperatureResult");
-
-const kelvinResult =
-    document.getElementById("kelvinResult");
-
-
-if (convertCelsiusButton) {
-
-    convertCelsiusButton.addEventListener("click", function () {
-
-        const celsius =
-            Number(celsiusInput.value);
-
-
-        /* Validation */
-
-        if (!Number.isFinite(celsius)) {
-
-            alert(
-                "Please enter a Celsius temperature."
-            );
-
-            celsiusInput.focus();
-
-            return;
-
-        }
-
-
-        /* Conversion */
-
-        const kelvin =
-            celsius + 273.15;
-
-
-        const formattedKelvin =
-            formatNumber(kelvin);
-
-
-        /* Display Result */
-
-        kelvinResult.textContent =
-            `${formattedKelvin} K`;
-
-    });
-
-}
-
-
-/* Kelvin → Celsius */
-
-const convertKelvinButton =
-    document.getElementById("convertKelvinButton");
-
-const kelvinInput =
-    document.getElementById("kelvinInput");
-
-const celsiusResult =
-    document.getElementById("celsiusResult");
-
-const celsiusResultValue =
-    document.getElementById("celsiusResultValue");
-
-
-if (convertKelvinButton) {
-
-    convertKelvinButton.addEventListener("click", function () {
-
-        const kelvin =
-            Number(kelvinInput.value);
-
-
-        /* Validation */
-
-        if (!Number.isFinite(kelvin)) {
-
-            alert(
-                "Please enter a Kelvin temperature."
-            );
-
-            kelvinInput.focus();
-
-            return;
-
-        }
-
-
-        /* Kelvin cannot be below absolute zero */
-
-        if (kelvin < 0) {
-
-            alert(
-                "Kelvin temperature cannot be below 0 K."
-            );
-
-            kelvinInput.focus();
-
-            return;
-
-        }
-
-
-        /* Conversion */
-
-        const celsius =
-            kelvin - 273.15;
-
-
-        const formattedCelsius =
-            formatNumber(celsius);
-
-
-        /* Display Result */
-
-        celsiusResultValue.textContent =
-            `${formattedCelsius} °C`;
-
-    });
-
-}
-/* =========================================================
-   18. PRESSURE CONVERTER (atm ↔ Pa)
-========================================================= */
-
-/* atm → Pa */
-const convertAtmButton =
-    document.getElementById("convertAtmButton");
-
-const atmInput =
-    document.getElementById("atmInput");
-
-const paResultValue =
-    document.getElementById("paResultValue");
-
-if (convertAtmButton) {
-    convertAtmButton.addEventListener("click", function () {
-        const atm =
-            Number(atmInput.value);
-
-        /* Validation */
-        if (!Number.isFinite(atm)) {
-            alert(
-                "Please enter an atm pressure."
-            );
-            atmInput.focus();
-            return;
-        }
-
-        if (atm < 0) {
-            alert(
-                "Pressure cannot be below 0 atm."
-            );
-            atmInput.focus();
-            return;
-        }
-
-        /* Conversion: 1 atm = 101,325 Pa */
-        const pa =
-            atm * 101325;
-
-        const formattedPa =
-            formatNumber(pa);
-
-        /* Display Result */
-        paResultValue.textContent =
-            `${formattedPa} Pa`;
-    });
-}
-
-/* Pa → atm */
-const convertPaButton =
-    document.getElementById("convertPaButton");
-
-const paInput =
-    document.getElementById("paInput");
-
-const atmResultValue =
-    document.getElementById("atmResultValue");
-
-if (convertPaButton) {
-    convertPaButton.addEventListener("click", function () {
-        const pa =
-            Number(paInput.value);
-
-        /* Validation */
-        if (!Number.isFinite(pa)) {
-            alert(
-                "Please enter a Pascal (Pa) pressure."
-            );
-            paInput.focus();
-            return;
-        }
-
-        if (pa < 0) {
-            alert(
-                "Pressure cannot be below 0 Pa."
-            );
-            paInput.focus();
-            return;
-        }
-
-        /* Conversion: 1 Pa = 1 / 101,325 atm */
-        const atm =
-            pa / 101325;
-
-        const formattedAtm =
-            formatNumber(atm);
-
-        /* Display Result */
-        atmResultValue.textContent =
-            `${formattedAtm} atm`;
-    });
-}
-
 
 /* =========================================================
-   19. VOLUME CONVERTER (L ↔ m³)
+   17. UNIT & TEMPERATURE CONVERTER
 ========================================================= */
 
-/* Liter → m³ */
-const convertLiterButton =
-    document.getElementById("convertLiterButton");
+const setupConverter = (btnId, inputId, resultId, convertFn) => {
+    const btn = document.getElementById(btnId);
+    const input = document.getElementById(inputId);
+    const resultEl = document.getElementById(resultId);
 
-const literInput =
-    document.getElementById("literInput");
+    if (!btn || !input || !resultEl) return;
 
-const cubicMeterResultValue =
-    document.getElementById("cubicMeterResultValue");
-
-if (convertLiterButton) {
-    convertLiterButton.addEventListener("click", function () {
-        const liter =
-            Number(literInput.value);
-
-        /* Validation */
-        if (!Number.isFinite(liter)) {
-            alert(
-                "Please enter a volume in Liters (L)."
-            );
-            literInput.focus();
+    const processConversion = () => {
+        const val = parseFloat(input.value);
+        if (isNaN(val)) {
+            resultEl.textContent = "—";
             return;
         }
+        resultEl.textContent = convertFn(val);
+    };
 
-        if (liter < 0) {
-            alert(
-                "Volume cannot be below 0 L."
-            );
-            literInput.focus();
-            return;
+    btn.addEventListener("click", processConversion);
+
+    input.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+            processConversion();
         }
-
-        /* Conversion: 1 L = 0.001 m³ */
-        const cubicMeter =
-            liter / 1000;
-
-        const formattedCubicMeter =
-            formatNumber(cubicMeter);
-
-        /* Display Result */
-        cubicMeterResultValue.textContent =
-            `${formattedCubicMeter} m³`;
     });
-}
+};
 
-/* m³ → Liter */
-const convertCubicMeterButton =
-    document.getElementById("convertCubicMeterButton");
+const initConverters = () => {
+    // 1. Celsius -> Kelvin
+    setupConverter("convertCelsiusButton", "celsiusInput", "kelvinResult", 
+        val => (val + 273.15).toFixed(2) + " K");
 
-const cubicMeterInput =
-    document.getElementById("cubicMeterInput");
+    // 2. Kelvin -> Celsius
+    setupConverter("convertKelvinButton", "kelvinInput", "celsiusResultValue", 
+        val => (val - 273.15).toFixed(2) + " °C");
 
-const literResultValue =
-    document.getElementById("literResultValue");
+    // 3. atm -> Pa
+    setupConverter("convertAtmButton", "atmInput", "paResultValue", 
+        val => (val * 101325).toLocaleString("id-ID") + " Pa");
 
-if (convertCubicMeterButton) {
-    convertCubicMeterButton.addEventListener("click", function () {
-        const cubicMeter =
-            Number(cubicMeterInput.value);
+    // 4. Pa -> atm
+    setupConverter("convertPaButton", "paInput", "atmResultValue", 
+        val => (val / 101325).toFixed(5) + " atm");
 
-        /* Validation */
-        if (!Number.isFinite(cubicMeter)) {
-            alert(
-                "Please enter a volume in m³."
-            );
-            cubicMeterInput.focus();
-            return;
-        }
+    // 5. Liter -> m³
+    setupConverter("convertLiterButton", "literInput", "cubicMeterResultValue", 
+        val => (val / 1000).toFixed(4) + " m³");
 
-        if (cubicMeter < 0) {
-            alert(
-                "Volume cannot be below 0 m³."
-            );
-            cubicMeterInput.focus();
-            return;
-        }
+    // 6. m³ -> Liter
+    setupConverter("convertCubicMeterButton", "cubicMeterInput", "literResultValue", 
+        val => (val * 1000).toLocaleString("id-ID") + " L");
 
-        /* Conversion: 1 m³ = 1,000 L */
-        const liter =
-            cubicMeter * 1000;
+    // 7. Joule -> kJ
+    setupConverter("convertJouleButton", "jouleInput", "kilojouleResult", 
+        val => (val / 1000).toFixed(3) + " kJ");
+};
 
-        const formattedLiter =
-            formatNumber(liter);
-
-        /* Display Result */
-        literResultValue.textContent =
-            `${formattedLiter} L`;
-    });
-}
-/* =========================================================
-   20. ENERGY CONVERTER (J → kJ)
-========================================================= */
-
-const convertJouleButton =
-    document.getElementById("convertJouleButton");
-
-const jouleInput =
-    document.getElementById("jouleInput");
-
-const energyResult =
-    document.getElementById("energyResult");
-
-const kilojouleResult =
-    document.getElementById("kilojouleResult");
-
-
-if (convertJouleButton) {
-
-    convertJouleButton.addEventListener("click", function () {
-
-        const joule =
-            Number(jouleInput.value);
-
-
-        /* Validation */
-
-        if (!Number.isFinite(joule)) {
-
-            alert(
-                "Please enter an energy value in Joules."
-            );
-
-            jouleInput.focus();
-
-            return;
-
-        }
-
-
-        /* Energy cannot be below 0 */
-
-        if (joule < 0) {
-
-            alert(
-                "Energy cannot be below 0 J."
-            );
-
-            jouleInput.focus();
-
-            return;
-
-        }
-
-
-        /* Conversion: 1 kJ = 1000 J */
-
-        const kilojoule =
-            joule / 1000;
-
-
-        const formattedKilojoule =
-            formatNumber(kilojoule);
-
-
-        /* Display Result */
-
-        kilojouleResult.textContent =
-            `${formattedKilojoule} kJ`;
-
-    });
-
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initConverters);
+} else {
+    initConverters();
 }
