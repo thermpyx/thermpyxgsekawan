@@ -591,19 +591,161 @@
         </strong>
     </div>
 </div>
-                <div class="converter-item">
+               <div class="converter-item">
                     <span>Pressure</span>
                     <strong>atm ↔ Pa</strong>
                 </div>
+                <div class="converter-input">
+        <label for="atmInput">
+            Atmosphere (atm)
+        </label>
+        <input
+            type="number"
+            id="atmInput"
+            placeholder="Enter atm"
+            step="any"
+        >
+    </div>
+    <button
+        class="converter-button"
+        id="convertAtmButton"
+        type="button"
+    >
+        CONVERT →
+    </button>
+    <div class="converter-result">
+        <span>Result</span>
+        <strong id="paResultValue">
+            —
+        </strong>
+    </div>
+</div>
+
+<!-- Pressure: Pa → atm -->
+<div class="converter-item converter-tool">
+    <div class="converter-item-header">
+        <span>Pressure</span>
+        <strong>Pa ↔ atm</strong>
+    </div>
+    <div class="converter-input">
+        <label for="paInput">
+            Pascal (Pa)
+        </label>
+        <input
+            type="number"
+            id="paInput"
+            placeholder="Enter Pa"
+            step="any"
+        >
+    </div>
+    <button
+        class="converter-button"
+        id="convertPaButton"
+        type="button"
+    >
+        CONVERT →
+    </button>
+    <div class="converter-result">
+        <span>Result</span>
+        <strong id="atmResultValue">
+            —
+        </strong>
+    </div>
+</div>
+
+<!-- Volume: L → m³ -->
                 <div class="converter-item">
                     <span>Volume</span>
                     <strong>L ↔ m³</strong>
                 </div>
-                <div class="converter-item">
-                    <span>Energy</span>
-                    <strong>J ↔ kJ</strong>
-                </div>
-            </div>
+                <div class="converter-input">
+        <label for="literInput">
+            Liter (L)
+        </label>
+        <input
+            type="number"
+            id="literInput"
+            placeholder="Enter Liter"
+            step="any"
+        >
+    </div>
+    <button
+        class="converter-button"
+        id="convertLiterButton"
+        type="button"
+    >
+        CONVERT →
+    </button>
+    <div class="converter-result">
+        <span>Result</span>
+        <strong id="cubicMeterResultValue">
+            —
+        </strong>
+    </div>
+</div>
+
+<!-- Volume: m³ → L -->
+<div class="converter-item converter-tool">
+    <div class="converter-item-header">
+        <span>Volume</span>
+        <strong>m³ ↔ L</strong>
+    </div>
+    <div class="converter-input">
+        <label for="cubicMeterInput">
+            Cubic Meter (m³)
+        </label>
+        <input
+            type="number"
+            id="cubicMeterInput"
+            placeholder="Enter m³"
+            step="any"
+        >
+    </div>
+    <button
+        class="converter-button"
+        id="convertCubicMeterButton"
+        type="button"
+    >
+        CONVERT →
+    </button>
+    <div class="converter-result">
+        <span>Result</span>
+        <strong id="literResultValue">
+            —
+        </strong>
+    </div>
+</div>
+<!-- ==================== ENERGY (J → kJ) ==================== -->
+<div class="converter-item converter-tool">
+    <div class="converter-item-header">
+        <span>Energy</span>
+        <strong>J ↔ kJ</strong>
+    </div>
+    <div class="converter-input">
+        <label for="jouleInput">
+            Joule (J)
+        </label>
+        <input
+            type="number"
+            id="jouleInput"
+            placeholder="Enter Joule"
+            step="any"
+        >
+    </div>
+    <button
+        class="converter-button"
+        id="convertJouleButton"
+        type="button"
+    >
+        CONVERT →
+    </button>
+    <div class="converter-result" id="energyResult">
+        <span>Result</span>
+        <strong id="kilojouleResult">
+            —
+        </strong>
+    </div>
+</div>
         </section>
         <!-- ==============================
              QUIZ
