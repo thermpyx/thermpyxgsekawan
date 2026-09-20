@@ -1,0 +1,655 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eef3f8;
+    color: #1e293b;
+    min-height: 100vh;
+}
+
+
+/* ================= HEADER ================= */
+
+header {
+    background: linear-gradient(135deg, #0f4c81, #1769aa);
+    color: white;
+    text-align: center;
+    padding: 28px 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+header p {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+
+/* ================= CONTAINER ================= */
+
+.container {
+    width: min(1200px, 94%);
+    margin: 30px auto 50px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.4fr)
+        minmax(300px, 0.9fr);
+
+    gap: 22px;
+}
+
+
+/* ================= PANEL ================= */
+
+.simulation-panel,
+.control-panel,
+.data-panel,
+.law-panel,
+.graph-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.08);
+
+    border: 1px solid #e2e8f0;
+}
+
+
+/* ================= SECTION TITLE ================= */
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.section-title h2,
+.control-panel h2,
+.data-panel h2,
+.law-panel h2,
+.graph-panel h2 {
+    color: #163b5c;
+    font-size: 21px;
+}
+
+#processBadge {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 20px;
+    padding: 7px 13px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* ================= CYLINDER ================= */
+
+.cylinder {
+    position: relative;
+
+    width: 310px;
+    height: 390px;
+
+    margin: 30px auto 25px;
+
+    border-left: 7px solid #475569;
+    border-right: 7px solid #475569;
+    border-bottom: 7px solid #475569;
+
+    border-radius: 0 0 20px 20px;
+
+    background: #f8fafc;
+
+    overflow: visible;
+}
+
+
+/* ================= GAS ================= */
+
+.gas {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 50%;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(37, 99, 235, 0.40),
+            rgba(96, 165, 250, 0.18)
+        );
+
+    border-top: 2px solid rgba(37, 99, 235, 0.6);
+
+    overflow: hidden;
+
+    transition: height 0.08s linear;
+}
+
+
+/* ================= PARTICLES ================= */
+
+.particle {
+    position: absolute;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    box-shadow:
+        0 0 6px rgba(37, 99, 235, 0.5);
+}
+
+
+/* ================= PISTON ================= */
+
+.piston {
+    position: absolute;
+
+    left: -13px;
+
+    width: calc(100% + 26px);
+    height: 25px;
+
+    background: linear-gradient(
+        to bottom,
+        #64748b,
+        #334155
+    );
+
+    border: 2px solid #1e293b;
+
+    border-radius: 5px;
+
+    z-index: 10;
+
+    top: 175px;
+
+    transition: top 0.08s linear;
+}
+
+.piston-handle {
+    position: absolute;
+
+    left: 50%;
+    top: -27px;
+
+    transform: translateX(-50%);
+
+    width: 42px;
+    height: 28px;
+
+    background: #475569;
+
+    border-radius: 5px 5px 0 0;
+}
+
+
+/* ================= BEBAN ================= */
+
+.weight {
+    position: absolute;
+
+    z-index: 15;
+
+    top: 115px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    min-width: 95px;
+
+    padding: 10px 15px;
+
+    background: #334155;
+    color: white;
+
+    text-align: center;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
+    transition: top 0.08s linear;
+}
+
+
+/* ================= HEATER ================= */
+
+.heater {
+    position: absolute;
+
+    left: 50%;
+    bottom: -82px;
+
+    transform: translateX(-50%);
+
+    width: 105px;
+
+    text-align: center;
+
+    z-index: 20;
+}
+
+.flame {
+    font-size: 38px;
+
+    opacity: 0;
+
+    transform: scale(0.8);
+
+    transition:
+        opacity 0.2s,
+        transform 0.2s;
+}
+
+.heater.active .flame {
+    opacity: 1;
+    transform: scale(1);
+    animation: flameMove 0.45s infinite alternate;
+}
+
+.heater-base {
+    width: 105px;
+    height: 17px;
+
+    background: #475569;
+
+    border-radius: 5px;
+}
+
+@keyframes flameMove {
+    from {
+        transform: scale(0.9);
+    }
+
+    to {
+        transform: scale(1.08);
+    }
+}
+
+
+/* ================= BUTTON ================= */
+
+.simulation-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 70px;
+}
+
+.simulation-buttons button {
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+#startBtn {
+    background: #2563eb;
+    color: white;
+}
+
+#pauseBtn {
+    background: #64748b;
+    color: white;
+}
+
+#resetBtn {
+    background: #dc2626;
+    color: white;
+}
+
+.simulation-buttons button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+
+/* ================= CONTROL ================= */
+
+.control-panel > label {
+    display: block;
+
+    margin-top: 18px;
+    margin-bottom: 7px;
+
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+
+    padding: 11px;
+
+    border-radius: 8px;
+
+    border: 1px solid #cbd5e1;
+
+    background: white;
+
+    font-size: 14px;
+}
+
+
+/* ================= CONTROL GROUP ================= */
+
+.control-group {
+    margin-top: 20px;
+}
+
+.control-group label {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+.control-group label span {
+    color: #2563eb;
+}
+
+
+/* ================= SLIDER ================= */
+
+input[type="range"] {
+    width: 100%;
+
+    accent-color: #2563eb;
+
+    cursor: pointer;
+}
+
+input[type="range"]:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+
+/* ================= INFO ================= */
+
+.info-box {
+    margin-top: 22px;
+
+    padding: 14px;
+
+    background: #eff6ff;
+
+    border-left: 4px solid #2563eb;
+
+    border-radius: 8px;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* ================= DATA ================= */
+
+.data-panel,
+.law-panel,
+.graph-panel {
+    grid-column: 1 / -1;
+}
+
+.data-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 13px;
+
+    margin-top: 17px;
+}
+
+.data-card {
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 11px;
+
+    padding: 15px;
+
+    min-height: 105px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.data-card span {
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+.data-card strong {
+    color: #0f4c81;
+
+    font-size: 20px;
+}
+
+.data-card small {
+    margin-top: 5px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* ================= LAW ================= */
+
+.law-panel {
+    text-align: center;
+}
+
+.formula {
+    margin: 20px auto;
+
+    max-width: 420px;
+
+    padding: 18px;
+
+    background: #eff6ff;
+
+    border-radius: 12px;
+
+    color: #1d4ed8;
+
+    font-size: 30px;
+
+    font-weight: bold;
+}
+
+.formula-explanation {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 45px;
+
+    flex-wrap: wrap;
+}
+
+.formula-explanation div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.formula-explanation strong {
+    color: #2563eb;
+
+    font-size: 20px;
+}
+
+.formula-explanation span {
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* ================= GRAPH ================= */
+
+.graph-wrapper {
+    position: relative;
+
+    width: 100%;
+
+    height: 430px;
+
+    margin-top: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+}
+
+#pvGraph {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    cursor: crosshair;
+}
+
+
+/* ================= TOOLTIP ================= */
+
+.graph-tooltip {
+    position: absolute;
+
+    display: none;
+
+    pointer-events: none;
+
+    z-index: 50;
+
+    min-width: 185px;
+
+    padding: 11px 13px;
+
+    background: rgba(15, 23, 42, 0.95);
+
+    color: white;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.graph-tooltip strong {
+    color: #93c5fd;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 950px) {
+
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .simulation-panel,
+    .control-panel,
+    .data-panel,
+    .law-panel,
+    .graph-panel {
+        grid-column: 1;
+    }
+
+    .data-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    header h1 {
+        font-size: 23px;
+    }
+
+    .cylinder {
+        width: 260px;
+        height: 350px;
+    }
+
+    .data-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .simulation-buttons {
+        flex-wrap: wrap;
+    }
+
+    .formula {
+        font-size: 24px;
+    }
+
+    .graph-wrapper {
+        height: 350px;
+    }
+}

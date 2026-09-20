@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Simulasi Hukum I Termodinamika</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Simulasi Hukum I Termodinamika</h1>
+    <p>Interactive First Law of Thermodynamics Simulation</p>
+</header>
+
+
+<main class="container">
+
+    <!-- ================= SIMULATOR ================= -->
+
+    <section class="simulation-panel">
+
+        <div class="section-title">
+            <h2>Gas dalam Silinder</h2>
+
+            <span id="processBadge">
+                Isobaric
+            </span>
+        </div>
+
+
+        <div class="cylinder">
+
+            <!-- BEBAN -->
+            <div class="weight" id="weight">
+                BEBAN
+            </div>
+
+
+            <!-- PISTON -->
+            <div class="piston" id="piston">
+
+                <div class="piston-handle"></div>
+
+            </div>
+
+
+            <!-- GAS -->
+            <div class="gas" id="gas">
+
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+
+            </div>
+
+
+            <!-- HEATER -->
+            <div class="heater" id="heater">
+
+                <div class="flame">
+                    🔥
+                </div>
+
+                <div class="heater-base"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTON -->
+        <div class="simulation-buttons">
+
+            <button id="startBtn">
+                ▶ Mulai
+            </button>
+
+            <button id="pauseBtn">
+                ⏸ Jeda
+            </button>
+
+            <button id="resetBtn">
+                ↻ Reset
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CONTROL ================= -->
+
+    <section class="control-panel">
+
+        <h2>Kontrol Simulasi</h2>
+
+
+        <label for="processSelect">
+            Proses Termodinamika
+        </label>
+
+        <select id="processSelect">
+
+            <option value="isobaric">
+                Isobaric — Tekanan Tetap
+            </option>
+
+            <option value="isochoric">
+                Isochoric — Volume Tetap
+            </option>
+
+            <option value="isothermal">
+                Isothermal — Temperatur Tetap
+            </option>
+
+            <option value="adiabatic">
+                Adiabatic — Q = 0
+            </option>
+
+        </select>
+
+
+        <!-- KALOR -->
+
+        <div class="control-group">
+
+            <label>
+                Kalor Q
+                <span id="heatValue">
+                    0 J
+                </span>
+            </label>
+
+            <input
+                type="range"
+                id="heatInput"
+                min="0"
+                max="1000"
+                value="0"
+                step="10"
+            >
+
+        </div>
+
+
+        <!-- TEKANAN -->
+
+        <div class="control-group">
+
+            <label>
+                Tekanan Awal
+                <span id="pressureValue">
+                    100 kPa
+                </span>
+            </label>
+
+            <input
+                type="range"
+                id="pressureInput"
+                min="50"
+                max="200"
+                value="100"
+                step="5"
+            >
+
+        </div>
+
+
+        <!-- VOLUME -->
+
+        <div class="control-group">
+
+            <label>
+                Volume Awal
+                <span id="volumeValue">
+                    2.00 L
+                </span>
+            </label>
+
+            <input
+                type="range"
+                id="volumeInput"
+                min="1"
+                max="5"
+                value="2"
+                step="0.1"
+            >
+
+        </div>
+
+
+        <!-- SUHU -->
+
+        <div class="control-group">
+
+            <label>
+                Temperatur Awal
+                <span id="temperatureValue">
+                    300 K
+                </span>
+            </label>
+
+            <input
+                type="range"
+                id="temperatureInput"
+                min="250"
+                max="500"
+                value="300"
+                step="10"
+            >
+
+        </div>
+
+
+        <!-- INFO PROSES -->
+
+        <div
+            class="info-box"
+            id="processInfo"
+        >
+            Tekanan tetap selama proses.
+            Ketika gas menerima kalor,
+            volume dan temperatur berubah.
+        </div>
+
+    </section>
+
+
+    <!-- ================= DATA ================= -->
+
+    <section class="data-panel">
+
+        <h2>Data Termodinamika</h2>
+
+
+        <div class="data-grid">
+
+            <!-- PRESSURE -->
+
+            <div class="data-card">
+
+                <span>
+                    Pressure
+                </span>
+
+                <strong id="pressureDisplay">
+                    100 kPa
+                </strong>
+
+                <small id="pressureAlt">
+                    0.987 atm
+                </small>
+
+                <small id="pressurePa">
+                    100000 Pa
+                </small>
+
+            </div>
+
+
+            <!-- VOLUME -->
+
+            <div class="data-card">
+
+                <span>
+                    Volume
+                </span>
+
+                <strong id="volumeDisplay">
+                    2.00 L
+                </strong>
+
+                <small id="volumeAlt">
+                    0.00200 m³
+                </small>
+
+            </div>
+
+
+            <!-- TEMPERATURE -->
+
+            <div class="data-card">
+
+                <span>
+                    Temperature
+                </span>
+
+                <strong id="temperatureDisplay">
+                    300 K
+                </strong>
+
+                <small id="temperatureAlt">
+                    26.85 °C
+                </small>
+
+            </div>
+
+
+            <!-- Q -->
+
+            <div class="data-card">
+
+                <span>
+                    Heat Q
+                </span>
+
+                <strong id="qDisplay">
+                    0 J
+                </strong>
+
+            </div>
+
+
+            <!-- W -->
+
+            <div class="data-card">
+
+                <span>
+                    Work W
+                </span>
+
+                <strong id="wDisplay">
+                    0 J
+                </strong>
+
+            </div>
+
+
+            <!-- DELTA U -->
+
+            <div class="data-card">
+
+                <span>
+                    ΔU
+                </span>
+
+                <strong id="uDisplay">
+                    0 J
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HUKUM I ================= -->
+
+    <section class="law-panel">
+
+        <h2>
+            Hukum I Termodinamika
+        </h2>
+
+
+        <div class="formula">
+
+            ΔU = Q − W
+
+        </div>
+
+
+        <div class="formula-explanation">
+
+            <div>
+
+                <strong>ΔU</strong>
+
+                <span>
+                    Perubahan energi dalam
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <strong>Q</strong>
+
+                <span>
+                    Kalor yang diterima gas
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <strong>W</strong>
+
+                <span>
+                    Usaha yang dilakukan gas
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= GRAPH ================= -->
+
+    <section class="graph-panel">
+
+        <h2>
+            Diagram P–V
+        </h2>
+
+        <div class="graph-wrapper">
+
+            <canvas id="pvGraph"></canvas>
+
+            <div id="graphTooltip" class="graph-tooltip"></div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
