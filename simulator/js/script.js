@@ -562,29 +562,59 @@ function updateDisplay() {
 
 function getPistonTop(volume) {
 
-    const minVolume = 1;
-    const maxVolume = 5;
+    const cylinder =
+        document.querySelector(".cylinder");
+
+    const pistonEl =
+        document.getElementById("piston");
+
 
     /*
-        volume besar → piston naik
-        volume kecil → piston turun
+        Ambil nilai min dan max secara dinamis dari slider volume.
+        Jika slider min = 1, maka volume = 1 L akan berada tepat di dasar silinder.
     */
 
-    const topAtSmallVolume = 300;
-    const topAtLargeVolume = 45;
+    const minVol =
+        volumeInput ? Number(volumeInput.min || 0.5) : 0.5;
+
+    const maxVol =
+        volumeInput ? Number(volumeInput.max || 5) : 5;
+
+
+    const cylinderHeight =
+        cylinder ? cylinder.clientHeight : 350;
+
+    const pistonHeight =
+        pistonEl ? pistonEl.offsetHeight : 20;
+
+
+    /*
+        Saat V = minVol, alas piston menyentuh dasar silinder
+    */
+
+    const topAtMinVolume =
+        cylinderHeight - pistonHeight;
+
+    const topAtMaxVolume = 10;
 
 
     const ratio =
-        (volume - minVolume) /
-        (maxVolume - minVolume);
+        Math.max(
+            0,
+            Math.min(
+                1,
+                (volume - minVol) /
+                (maxVol - minVol)
+            )
+        );
 
 
     return (
-        topAtSmallVolume -
+        topAtMinVolume -
         ratio *
         (
-            topAtSmallVolume -
-            topAtLargeVolume
+            topAtMinVolume -
+            topAtMaxVolume
         )
     );
 }
@@ -638,7 +668,7 @@ function updateCylinder() {
 
     const gasHeight =
         Math.max(
-            20,
+            0,
             cylinderHeight -
             pistonBottom
         );
@@ -802,247 +832,122 @@ function interpolate(a, b, t) {
 ========================================================= */
 
 function startSimulation() {
-
-    /*
-        Hitung target berdasarkan
-        kontrol yang dipilih.
-    */
-
     calculateTarget();
-
-
-    /*
-        Kalau sudah berada di target,
-        tidak perlu animasi.
-    */
-
-    if (
-        Math.abs(state.V - target.V) < 0.0001 &&
-        Math.abs(state.P - target.P) < 0.0001 &&
-        Math.abs(state.T - target.T) < 0.0001
-    ) {
-
-        /*
-            Pastikan kita mulai
-            benar-benar dari keadaan awal.
-        */
-
-        state = {
-
-            P: initial.P,
-
-            V: initial.V,
-
-            T: initial.T,
-
-            Q: 0,
-
-            W: 0,
-
-            U: 0
-        };
-    }
-
 
     running = true;
 
-
-    /*
-        Animasi dimulai dari kondisi
-        state SEKARANG menuju target.
-    */
-
-    const startState = {
-        ...state
-    };
-
-
     const duration = 2500;
 
-    const startTime = performance.now();
+    if (typeof animationProgress !== "number") {
+        animationProgress = 0;
+    }
 
+    let direction = 1;
 
-    cancelAnimationFrame(
-        animationFrame
-    );
+    if (animationProgress >= 1) {
+        direction = -1;
+    } else if (animationProgress <= 0) {
+        direction = 1;
+    }
 
+    let lastTime = performance.now();
+
+    cancelAnimationFrame(animationFrame);
 
     function animate(currentTime) {
 
         if (!running) return;
 
+        const deltaTime =
+            Math.min(currentTime - lastTime, 50);
 
-        const elapsed =
-            currentTime -
-            startTime;
+        lastTime = currentTime;
 
+        animationProgress +=
+            direction * (deltaTime / duration);
 
-        const rawProgress =
-            elapsed / duration;
+        if (animationProgress >= 1) {
+            animationProgress = 1;
+            direction = -1;
+        }
 
-
-        const t =
-            Math.min(
-                1,
-                rawProgress
-            );
-
-
-        /*
-            Smooth movement.
-        */
+        else if (animationProgress <= 0) {
+            animationProgress = 0;
+            direction = 1;
+        }
 
         const smoothT =
-            t * t * (3 - 2 * t);
+            animationProgress *
+            animationProgress *
+            (3 - 2 * animationProgress);
 
+        state.P = interpolate(
+            initial.P,
+            target.P,
+            smoothT
+        );
 
-        state.P =
-            interpolate(
-                startState.P,
-                target.P,
-                smoothT
-            );
+        state.V = interpolate(
+            initial.V,
+            target.V,
+            smoothT
+        );
 
+        state.T = interpolate(
+            initial.T,
+            target.T,
+            smoothT
+        );
 
-        state.V =
-            interpolate(
-                startState.V,
-                target.V,
-                smoothT
-            );
+        state.Q = interpolate(
+            0,
+            target.Q,
+            smoothT
+        );
 
+        state.W = interpolate(
+            0,
+            target.W,
+            smoothT
+        );
 
-        state.T =
-            interpolate(
-                startState.T,
-                target.T,
-                smoothT
-            );
+        state.U = interpolate(
+            0,
+            target.U,
+            smoothT
+        );
 
-
-        state.Q =
-            interpolate(
-                startState.Q,
-                target.Q,
-                smoothT
-            );
-
-
-        state.W =
-            interpolate(
-                startState.W,
-                target.W,
-                smoothT
-            );
-
-
-        state.U =
-            interpolate(
-                startState.U,
-                target.U,
-                smoothT
-            );
-
-
-        /*
-            PASTIKAN NILAI KONSTAN
-            TIDAK MELENCENG KARENA
-            INTERPOLASI.
-        */
-
+        // Proses isobarik
         if (process === "isobaric") {
-
-            state.P =
-                initial.P;
+            state.P = initial.P;
         }
 
-
+        // Proses isokhorik
         if (process === "isochoric") {
-
-            state.V =
-                initial.V;
+            state.V = initial.V;
         }
 
-
+        // Proses isotermal
         if (process === "isothermal") {
-
-            state.T =
-                initial.T;
-
+            state.T = initial.T;
             state.U = 0;
         }
 
-
+        // Proses adiabatik
         if (process === "adiabatic") {
-
             state.Q = 0;
         }
 
-
         updateDisplay();
-
         updateCylinder();
-
         drawGraph();
 
-
-        if (t < 1) {
-
-            animationFrame =
-                requestAnimationFrame(
-                    animate
-                );
-
-        } else {
-
-            /*
-                Set nilai akhir PERSIS
-                sesuai persamaan.
-            */
-
-            state = {
-                ...target
-            };
-
-
-            /*
-                Kunci kembali variabel konstan.
-            */
-
-            if (process === "isobaric") {
-                state.P = initial.P;
-            }
-
-            if (process === "isochoric") {
-                state.V = initial.V;
-            }
-
-            if (process === "isothermal") {
-                state.T = initial.T;
-                state.U = 0;
-            }
-
-            if (process === "adiabatic") {
-                state.Q = 0;
-            }
-
-
-            running = false;
-
-
-            updateDisplay();
-
-            updateCylinder();
-
-            drawGraph();
-        }
+        animationFrame =
+            requestAnimationFrame(animate);
     }
 
-
     animationFrame =
-        requestAnimationFrame(
-            animate
-        );
+        requestAnimationFrame(animate);
 }
 
 
