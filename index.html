@@ -39,6 +39,10 @@
                 <span class="nav-icon">∑</span>
                 <span class="nav-text">Calculation</span>
             </a>
+            <a href="#simulator" class="nav-item">
+                <span class="nav-icon">◉</span>
+                <span class="nav-text">Simulator</span>
+            </a>
             <a href="#converter" class="nav-item">
                 <span class="nav-icon">⇄</span>
                 <span class="nav-text">Unit Converter</span>
@@ -215,8 +219,8 @@
                         Study the Zeroth, First, Second, and Third Laws
                         of Thermodynamics.
                     </p>
-                    <a href="#">
-                        Learn More 
+                    <a href="theory/laws.html">
+                        Learn More
                     </a>
                 </article>
                 <!-- Theory Card -->
@@ -356,11 +360,11 @@
             <!-- Solution -->
             <div class="solution-box">
                 <h4>
-                    Step-by-Step Solution
+                    Step by Step Solution
                 </h4>
                 <div class="solution-step">
                     <span>
-                        Step 1 — Formula
+                        Step 1: Formula
                     </span>
                     <p id="heatStep1">
                         Q = m × c × ΔT
@@ -368,7 +372,7 @@
                 </div>
                 <div class="solution-step">
                     <span>
-                        Step 2 — Substitute
+                        Step 2: Substitute
                     </span>
                     <p id="heatStep2">
                         —
@@ -376,7 +380,7 @@
                 </div>
                 <div class="solution-step">
                     <span>
-                        Step 3 — Calculate
+                        Step 3: Calculate
                     </span>
                     <p id="heatStep3">
                         —
@@ -393,7 +397,6 @@
             </div>
         </div>
     </div>
-</section>
 <!-- ==============================
      WORK CALCULATOR
 ============================== -->
@@ -467,6 +470,7 @@
     <div
         class="calculation-result"
         id="workResult"
+    >
         <div class="result-header">
             <span>
                 RESULT
@@ -482,7 +486,7 @@
             </h4>
             <div class="solution-step">
                 <span>
-                    Step 1 — Formula
+                    Step 1: Formula
                 </span>
                 <p id="workStep1">
                     W = P × ΔV
@@ -490,7 +494,7 @@
             </div>
             <div class="solution-step">
                 <span>
-                    Step 2 — Substitute
+                    Step 2: Substitute
                 </span>
                 <p id="workStep2">
                     —
@@ -498,7 +502,7 @@
             </div>
             <div class="solution-step">
                 <span>
-                    Step 3 — Calculate
+                    Step 3: Calculate
                 </span>
                 <p id="workStep3">
                     —
@@ -515,138 +519,134 @@
         </div>
     </div>
 </div>
-        <!-- ==============================
-             UNIT CONVERTER
-        =============================== -->
-        <section class="content-section" id="converter">
-            <div class="section-heading">
-                <p class="section-label">
-                    EXPLORE
-                </p>
-                <h2>
-                    Unit Converter
-                </h2>
-                <p>
-                    Convert common thermodynamic units quickly and easily.
-                </p>
-            </div>
-<div class="converter-preview">
-        <!-- Temperature: °C → K -->
+</section>
+
+<!-- ==============================
+     SIMULATOR PREVIEW
+============================== -->
+<section class="content-section simulator-preview-section" id="simulator">
+    <div class="section-heading">
+        <p class="section-label">EXPLORE</p>
+        <h2>Thermodynamics Simulator</h2>
+        <p>Explore how pressure, volume, temperature, heat, work, and internal energy change during different thermodynamic processes.</p>
+    </div>
+
+    <div class="simulator-preview-card">
+        <div class="simulator-preview-icon">ΔU</div>
+        <div class="simulator-preview-content">
+            <p class="calculator-label">INTERACTIVE SIMULATION</p>
+            <h3>First Law of Thermodynamics</h3>
+            <p>
+                Try Isobaric, Isochoric, Isothermal, and Adiabatic processes
+                with an animated piston and P–V diagram.
+            </p>
+            <a href="simulator/index.html" class="primary-button">
+                OPEN SIMULATOR
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     UNIT CONVERTER
+============================== -->
+<section class="content-section converter-section" id="converter">
+    <div class="section-heading">
+        <p class="section-label">
+            EXPLORE
+        </p>
+        <h2>
+            Unit Converter
+        </h2>
+        <p>
+            Convert common thermodynamic units quickly and easily.
+        </p>
+    </div>
+    <!-- ==============================
+         CONVERTER GRID
+    =============================== -->
+    <div class="converter-preview">
+        <!-- Temperature Converter -->
         <div class="converter-item converter-tool">
             <div class="converter-item-header">
                 <span>Temperature</span>
-                <strong>°C ↔ K</strong>
+                <strong id="temperatureDirection">°C → K</strong>
+            </div>
+            <div class="converter-select-area">
+                <div class="converter-select-group">
+                    <label>From</label>
+                    <div class="converter-unit-display" id="temperatureFromDisplay">Celsius (°C)</div>
+                </div>
+                <button type="button" class="converter-swap" id="temperatureSwapButton" aria-label="Reverse temperature conversion">⇄</button>
+                <div class="converter-select-group">
+                    <label>To</label>
+                    <div class="converter-unit-display" id="temperatureToDisplay">Kelvin (K)</div>
+                </div>
             </div>
             <div class="converter-input">
-                <label for="celsiusInput">Celsius (°C)</label>
-                <input type="number" id="celsiusInput" placeholder="Enter Celsius" step="any">
+                <label for="temperatureValue">Value</label>
+                <input type="number" id="temperatureValue" placeholder="Enter temperature" step="any">
             </div>
-            <button class="converter-button" id="convertCelsiusButton" type="button">CONVERT →</button>
-            <div class="converter-result" id="temperatureResult">
+            <button type="button" class="converter-button" id="convertTemperatureButton">CONVERT</button>
+            <div class="converter-result" id="temperatureConversionResult">
                 <span>Result</span>
-                <strong id="kelvinResult">—</strong>
+                <strong id="temperatureConversionValue">—</strong>
             </div>
         </div>
 
-        <!-- Temperature: K → °C -->
-        <div class="converter-item converter-tool">
-            <div class="converter-item-header">
-                <span>Temperature</span>
-                <strong>K ↔ °C</strong>
-            </div>
-            <div class="converter-input">
-                <label for="kelvinInput">Kelvin (K)</label>
-                <input type="number" id="kelvinInput" placeholder="Enter Kelvin" step="any">
-            </div>
-            <button class="converter-button" id="convertKelvinButton" type="button">CONVERT →</button>
-            <div class="converter-result" id="celsiusResult">
-                <span>Result</span>
-                <strong id="celsiusResultValue">—</strong>
-            </div>
-        </div>
-
-        <!-- Pressure: atm → Pa -->
+        <!-- Pressure Converter -->
         <div class="converter-item converter-tool">
             <div class="converter-item-header">
                 <span>Pressure</span>
-                <strong>atm ↔ Pa</strong>
+                <strong id="pressureDirection">atm → Pa</strong>
+            </div>
+            <div class="converter-select-area">
+                <div class="converter-select-group">
+                    <label>From</label>
+                    <div class="converter-unit-display" id="pressureFromDisplay">Atmosphere (atm)</div>
+                </div>
+                <button type="button" class="converter-swap" id="pressureSwapButton" aria-label="Reverse pressure conversion">⇄</button>
+                <div class="converter-select-group">
+                    <label>To</label>
+                    <div class="converter-unit-display" id="pressureToDisplay">Pascal (Pa)</div>
+                </div>
             </div>
             <div class="converter-input">
-                <label for="atmInput">Atmosphere (atm)</label>
-                <input type="number" id="atmInput" placeholder="Enter atm" step="any">
+                <label for="pressureConverterValue">Value</label>
+                <input type="number" id="pressureConverterValue" placeholder="Enter pressure" step="any">
             </div>
-            <button class="converter-button" id="convertAtmButton" type="button">CONVERT →</button>
-            <div class="converter-result">
+            <button type="button" class="converter-button" id="convertPressureButton">CONVERT</button>
+            <div class="converter-result" id="pressureConversionResult">
                 <span>Result</span>
-                <strong id="paResultValue">—</strong>
+                <strong id="pressureConversionValue">—</strong>
             </div>
         </div>
 
-        <!-- Pressure: Pa → atm -->
-        <div class="converter-item converter-tool">
-            <div class="converter-item-header">
-                <span>Pressure</span>
-                <strong>Pa ↔ atm</strong>
-            </div>
-            <div class="converter-input">
-                <label for="paInput">Pascal (Pa)</label>
-                <input type="number" id="paInput" placeholder="Enter Pa" step="any">
-            </div>
-            <button class="converter-button" id="convertPaButton" type="button">CONVERT →</button>
-            <div class="converter-result">
-                <span>Result</span>
-                <strong id="atmResultValue">—</strong>
-            </div>
-        </div>
-
-        <!-- Volume: L → m³ -->
+        <!-- Volume Converter -->
         <div class="converter-item converter-tool">
             <div class="converter-item-header">
                 <span>Volume</span>
-                <strong>L ↔ m³</strong>
+                <strong id="volumeDirection">L → m³</strong>
+            </div>
+            <div class="converter-select-area">
+                <div class="converter-select-group">
+                    <label>From</label>
+                    <div class="converter-unit-display" id="volumeFromDisplay">Liter (L)</div>
+                </div>
+                <button type="button" class="converter-swap" id="volumeSwapButton" aria-label="Reverse volume conversion">⇄</button>
+                <div class="converter-select-group">
+                    <label>To</label>
+                    <div class="converter-unit-display" id="volumeToDisplay">Cubic Meter (m³)</div>
+                </div>
             </div>
             <div class="converter-input">
-                <label for="literInput">Liter (L)</label>
-                <input type="number" id="literInput" placeholder="Enter Liter" step="any">
+                <label for="volumeConverterValue">Value</label>
+                <input type="number" id="volumeConverterValue" placeholder="Enter volume" step="any">
             </div>
-            <button class="converter-button" id="convertLiterButton" type="button">CONVERT →</button>
-            <div class="converter-result">
+            <button type="button" class="converter-button" id="convertVolumeButton">CONVERT</button>
+            <div class="converter-result" id="volumeConversionResult">
                 <span>Result</span>
-                <strong id="cubicMeterResultValue">—</strong>
-            </div>
-        </div>
-
-        <!-- Volume: m³ → L -->
-        <div class="converter-item converter-tool">
-            <div class="converter-item-header">
-                <span>Volume</span>
-                <strong>m³ ↔ L</strong>
-            </div>
-            <div class="converter-input">
-                <label for="cubicMeterInput">Cubic Meter (m³)</label>
-                <input type="number" id="cubicMeterInput" placeholder="Enter m³" step="any">
-            </div>
-            <button class="converter-button" id="convertCubicMeterButton" type="button">CONVERT →</button>
-            <div class="converter-result">
-                <span>Result</span>
-                <strong id="literResultValue">—</strong>
-            </div>
-        </div>
-
-        <!-- Energy: J → kJ -->
-        <div class="converter-item converter-tool">
-            <div class="converter-item-header">
-                <span>Energy</span>
-                <strong>J ↔ kJ</strong>
-            </div>
-            <div class="converter-input">
-                <label for="jouleInput">Joule (J)</label>
-                <input type="number" id="jouleInput" placeholder="Enter Joule" step="any">
-            </div>
-            <button class="converter-button" id="convertJouleButton" type="button">CONVERT →</button>
-            <div class="converter-result" id="energyResult">
-                <span>Result</span>
-                <strong id="kilojouleResult">—</strong>
+                <strong id="volumeConversionValue">—</strong>
             </div>
         </div>
     </div>
@@ -686,7 +686,7 @@
                    </a>
                 </div>
             </div>
-        </section>
+        </section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
         <!-- ==============================
              HISTORY
         =============================== -->
@@ -702,17 +702,40 @@
                     Your previous calculations will appear here.
                 </p>
             </div>
-            <div class="history-empty">
-                <div class="history-icon">
-                    ◷
-                </div>
-                <h3>
-                    No calculations yet
-                </h3>
-                <p>
-                    Your calculation history will be saved here.
-                </p>
+            <div class="history-container">
+    <div class="history-header">
+        <div>
+            <p class="history-label">
+                SAVED CALCULATIONS
+            <h3>
+                Recent History
+            </h3>
+        </div>
+        <button
+            class="clear-history-button"
+            id="clearHistoryButton"
+            type="button"
+        >
+            CLEAR HISTORY
+        </button>
+    </div>
+    <div
+        class="history-list"
+        id="historyList"
+    >
+        <div class="history-empty">
+            <div class="history-icon">
+                ◷
             </div>
+            <h3>
+                No calculations yet
+            </h3>
+            <p>
+                Your previous calculations will appear here.
+            </p>
+        </div>
+    </div>
+</div>
         </section>
         <!-- ==============================
              ABOUT
@@ -726,8 +749,9 @@
                     About THERMPYX
                 </h2>
                 <p>
-                    THIS WEB IS DEVELOP BY GSEKAWAN INCLUDE MISEL, DIAZ, REIPHANDY, AND ZIKRI
-                    TO HELP ANYBODY TO SOLVE THEIR PROBLEM ABOUT THERMODYNAMICS TASK
+                    THERMPYX is a thermodynamic learning and calculation
+                    platform created to make learning physics more
+                    interactive, understandable, and practical.
                 </p>
             </div>
         </section>

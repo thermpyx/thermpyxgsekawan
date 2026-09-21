@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | THERMPYX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <link rel="stylesheet" href="leaderboard.css">
+</head>
+<body>
+    <header class="quiz-topbar">
+        <a href="../index.html#quiz" class="quiz-back">Back to Home</a>
+        <div class="quiz-logo">THERMPYX</div>
+        <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+        </button>
+    </header>
+
+    <main class="quiz-page leaderboard-shell">
+        <section class="leaderboard-page">
+            <header class="leaderboard-header">
+                <div>
+                    <p class="section-label">QUIZ COMPLETE</p>
+                    <h1>Final Leaderboard</h1>
+                    <p class="leaderboard-subtitle">Live quiz results and final player ranking.</p>
+                </div>
+
+                <div class="leaderboard-room-box">
+                    <span>ROOM</span>
+                    <strong id="leaderboardRoomCode">------</strong>
+                </div>
+            </header>
+
+            <section class="result-summary">
+                <div class="summary-item">
+                    <span>Players</span>
+                    <strong id="totalPlayers">0</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Your Rank</span>
+                    <strong id="yourRank">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Your Score</span>
+                    <strong id="yourScore">-</strong>
+                </div>
+            </section>
+
+            <section id="podium" class="podium">
+                <p class="loading-text">Loading results...</p>
+            </section>
+
+            <section class="ranking-section">
+                <div class="ranking-title">
+                    <div>
+                        <span class="quiz-question-label">FULL RANKING</span>
+                        <h2>All Players</h2>
+                    </div>
+                    <span id="liveStatus" class="live-status">Connecting...</span>
+                </div>
+
+                <div id="leaderboardList" class="leaderboard-list">
+                    <p class="loading-text">Loading leaderboard...</p>
+                </div>
+            </section>
+
+            <div class="leaderboard-actions">
+                <a href="quiz.html" class="leaderboard-secondary">QUIZ MENU</a>
+                <a href="../index.html#quiz" class="leaderboard-primary">BACK TO HOME</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="leaderboard.js"></script>
+</body>
+</html>

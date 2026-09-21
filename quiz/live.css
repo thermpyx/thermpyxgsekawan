@@ -1,0 +1,448 @@
+/* =========================================================
+   THERMPYX LIVE QUIZ UI
+   Shared by live / host / join / waiting room
+========================================================= */
+
+.live-page-shell {
+    min-height: 100vh;
+}
+
+.live-hero-compact {
+    padding-top: 88px;
+    padding-bottom: 42px;
+}
+
+.live-area {
+    position: relative;
+    z-index: 1;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 8% 90px;
+}
+
+.live-panel {
+    padding: 30px;
+    background:
+        linear-gradient(
+            145deg,
+            var(--bg-card),
+            var(--bg-secondary)
+        );
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 0 35px rgba(0, 168, 255, 0.06);
+}
+
+.live-panel-heading {
+    margin-bottom: 24px;
+}
+
+.live-panel-heading h2 {
+    margin-bottom: 8px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(25px, 4vw, 33px);
+}
+
+.live-panel-heading p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.live-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.live-role-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 58px 1fr;
+    gap: 15px;
+    min-height: 170px;
+    padding: 21px;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+    border-radius: 13px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all var(--transition);
+}
+
+.live-role-card::after {
+    content: "→";
+    position: absolute;
+    right: 18px;
+    bottom: 17px;
+    color: var(--text-secondary);
+    font-size: 17px;
+    transition: all var(--transition);
+}
+
+.live-role-card:hover,
+.live-role-card:focus-visible {
+    border-color: var(--blue);
+    background: rgba(0, 168, 255, 0.055);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 168, 255, 0.08);
+    outline: none;
+}
+
+.live-role-card:hover::after,
+.live-role-card:focus-visible::after {
+    color: var(--blue);
+    transform: translateX(3px);
+}
+
+.live-role-card-featured {
+    border-color: rgba(0, 168, 255, 0.28);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 168, 255, 0.07),
+            var(--bg-primary)
+        );
+}
+
+.live-role-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border: 1px solid rgba(0, 168, 255, 0.28);
+    border-radius: 12px;
+    background: rgba(0, 168, 255, 0.08);
+    color: var(--blue);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.live-role-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-right: 20px;
+}
+
+.live-role-copy strong {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 18px;
+}
+
+.live-role-copy small {
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.live-role-tag {
+    grid-column: 2;
+    width: fit-content;
+    align-self: end;
+    padding: 5px 8px;
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+}
+
+/* Forms */
+.live-form {
+    display: grid;
+    gap: 18px;
+}
+
+.live-field {
+    display: grid;
+    gap: 8px;
+}
+
+.live-field label {
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.live-field input,
+.live-field select {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 15px;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    outline: none;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    transition: all var(--transition);
+}
+
+.live-field select {
+    appearance: none;
+    padding-right: 46px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--blue) 50%),
+        linear-gradient(135deg, var(--blue) 50%, transparent 50%);
+    background-position:
+        calc(100% - 19px) 22px,
+        calc(100% - 13px) 22px;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+}
+
+.live-field input:focus,
+.live-field select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.07);
+}
+
+.live-field input::placeholder {
+    color: var(--text-muted);
+}
+
+.live-field option {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.live-field-hint {
+    color: var(--text-muted);
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.live-primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 22px;
+    border: 1px solid var(--blue);
+    border-radius: 9px;
+    background: var(--blue);
+    color: #ffffff;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.live-primary-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(0, 168, 255, 0.22);
+}
+
+.live-primary-button:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.live-info-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin-top: 18px;
+    padding: 13px 14px;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    background: rgba(0, 168, 255, 0.035);
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.live-info-dot {
+    flex: 0 0 8px;
+    width: 8px;
+    height: 8px;
+    margin-top: 5px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 12px rgba(0, 168, 255, 0.45);
+}
+
+/* Waiting room */
+.waiting-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 16px;
+}
+
+.waiting-card,
+.room-card {
+    padding: 25px;
+    background:
+        linear-gradient(
+            145deg,
+            var(--bg-card),
+            var(--bg-secondary)
+        );
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0, 168, 255, 0.045);
+}
+
+.players-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 17px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.players-header h2 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 20px;
+}
+
+.players-live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--text-secondary);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.players-live-indicator::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+#playerList {
+    display: grid;
+    gap: 9px;
+}
+
+#playerList > p {
+    padding: 24px 10px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-align: center;
+}
+
+.player-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 49px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    background: var(--bg-primary);
+}
+
+.player-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 29px;
+    height: 29px;
+    border: 1px solid rgba(0, 168, 255, 0.22);
+    border-radius: 8px;
+    background: rgba(0, 168, 255, 0.07);
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.player-name {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.room-card {
+    align-self: start;
+}
+
+.room-code-label {
+    margin-bottom: 7px;
+    color: var(--text-secondary);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+#roomCodeDisplay {
+    margin-bottom: 22px;
+    color: var(--blue);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(34px, 6vw, 48px);
+    line-height: 1;
+    letter-spacing: 5px;
+}
+
+#hostControls {
+    margin-top: 8px;
+}
+
+#hostControls .live-primary-button {
+    width: 100%;
+}
+
+#playerWaitingText {
+    margin: 0;
+    padding: 13px 14px;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    background: rgba(0, 168, 255, 0.035);
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+#roomStatusText {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+    .live-area {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .live-panel,
+    .waiting-card,
+    .room-card {
+        padding: 22px 20px;
+    }
+
+    .live-mode-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .waiting-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .room-card {
+        order: -1;
+    }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Quiz | THERMPYX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <link rel="stylesheet" href="play.css">
+</head>
+<body>
+    <header class="quiz-topbar">
+        <a href="../index.html#quiz" class="quiz-back">Back to Home</a>
+        <div class="quiz-logo">THERMPYX</div>
+        <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+        </button>
+    </header>
+
+    <main class="quiz-page live-play-shell">
+        <section class="play-stage">
+            <div class="play-session-bar">
+                <div class="play-session-item">
+                    <span class="play-session-label">PLAYER / ROLE</span>
+                    <strong id="playRole">Loading...</strong>
+                </div>
+
+                <div class="play-session-item play-room-item">
+                    <span class="play-session-label">ROOM</span>
+                    <strong id="playRoomCode">------</strong>
+                </div>
+
+                <div id="timerBox" class="timer-box">
+                    <span class="play-session-label">TIME</span>
+                    <strong id="quizTimer">20</strong>
+                    <small>sec</small>
+                </div>
+            </div>
+
+            <div class="timer-track" aria-hidden="true">
+                <span id="timerProgress" class="timer-progress"></span>
+            </div>
+
+            <section id="quizArea" class="play-question-card">
+                <div class="play-question-head">
+                    <span class="quiz-question-label">LIVE QUESTION</span>
+                    <span id="questionNumber" class="play-question-number">Loading question...</span>
+                </div>
+
+                <h1 id="questionText">Please wait...</h1>
+                <div id="answerOptions" class="play-options"></div>
+                <div id="playMessage" class="play-message" aria-live="polite"></div>
+            </section>
+
+            <section id="hostPlayControls" class="host-controls" style="display: none;">
+                <div class="host-controls-copy">
+                    <span class="quiz-question-label">HOST CONTROL</span>
+                    <p id="hostAnswerStatus">Waiting for players...</p>
+                </div>
+                <button id="nextQuestionBtn" type="button" disabled>NEXT QUESTION</button>
+            </section>
+        </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="play.js"></script>
+</body>
+</html>

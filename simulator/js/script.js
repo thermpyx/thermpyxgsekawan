@@ -100,6 +100,7 @@ let animationFrame = null;
 let running = false;
 
 let animationProgress = 0;
+let animationDirection = 1;
 
 
 /* =========================================================
@@ -390,9 +391,9 @@ function updateProcessInfo() {
         processBadge.textContent = "Isobaric";
 
         processInfo.textContent =
-            "Tekanan tetap selama proses. " +
-            "Kalor yang diberikan meningkatkan temperatur " +
-            "dan menyebabkan volume gas berubah.";
+            "Pressure remains constant throughout the process. " +
+            "Adding heat increases the temperature " +
+            "and changes the gas volume.";
 
     }
 
@@ -401,9 +402,9 @@ function updateProcessInfo() {
         processBadge.textContent = "Isochoric";
 
         processInfo.textContent =
-            "Volume tetap selama proses. " +
-            "Kalor yang diberikan meningkatkan temperatur " +
-            "dan tekanan gas.";
+            "Volume remains constant throughout the process. " +
+            "Adding heat increases both the temperature " +
+            "and the gas pressure.";
 
     }
 
@@ -412,9 +413,9 @@ function updateProcessInfo() {
         processBadge.textContent = "Isothermal";
 
         processInfo.textContent =
-            "Temperatur tetap selama proses. " +
-            "Perubahan volume menyebabkan tekanan berubah. " +
-            "Kalor yang diterima sama dengan usaha gas.";
+            "Temperature remains constant throughout the process. " +
+            "Changing the volume changes the pressure. " +
+            "The heat absorbed equals the work done by the gas.";
 
     }
 
@@ -423,8 +424,8 @@ function updateProcessInfo() {
         processBadge.textContent = "Adiabatic";
 
         processInfo.textContent =
-            "Tidak ada pertukaran kalor dengan lingkungan. " +
-            "Q = 0 dan perubahan energi berasal dari usaha gas.";
+            "There is no heat exchange with the surroundings. " +
+            "Q = 0, so changes in internal energy come from work.";
     }
 }
 
@@ -736,81 +737,55 @@ const particleData =
 function animateParticles() {
 
     /*
-        Kecepatan partikel bergantung
-        pada temperatur.
+        Particle motion follows the simulation state.
+        When paused, the frame loop stays alive but positions
+        are frozen so Pause stops every visible motion.
     */
 
-    const speed =
-        Math.max(
-            0.4,
-            Math.min(
-                2.5,
-                state.T / 300
-            )
-        );
+    if (running) {
 
-
-    particleData.forEach(p => {
-
-        p.x +=
-            p.vx *
-            speed *
-            0.35;
-
-        p.y +=
-            p.vy *
-            speed *
-            0.35;
-
-
-        if (
-            p.x <= 3 ||
-            p.x >= 94
-        ) {
-
-            p.vx *= -1;
-        }
-
-
-        if (
-            p.y <= 3 ||
-            p.y >= 94
-        ) {
-
-            p.vy *= -1;
-        }
-
-
-        p.x =
+        const speed =
             Math.max(
-                3,
+                0.4,
                 Math.min(
-                    94,
-                    p.x
-                )
-            );
-
-        p.y =
-            Math.max(
-                3,
-                Math.min(
-                    94,
-                    p.y
+                    2.5,
+                    state.T / 300
                 )
             );
 
 
-        p.element.style.left =
-            `${p.x}%`;
+        particleData.forEach(p => {
 
-        p.element.style.top =
-            `${p.y}%`;
-    });
+            p.x +=
+                p.vx *
+                speed *
+                0.35;
+
+            p.y +=
+                p.vy *
+                speed *
+                0.35;
 
 
-    requestAnimationFrame(
-        animateParticles
-    );
+            if (p.x <= 3 || p.x >= 94) {
+                p.vx *= -1;
+            }
+
+            if (p.y <= 3 || p.y >= 94) {
+                p.vy *= -1;
+            }
+
+
+            p.x = Math.max(3, Math.min(94, p.x));
+            p.y = Math.max(3, Math.min(94, p.y));
+
+            p.element.style.left = `${p.x}%`;
+            p.element.style.top = `${p.y}%`;
+        });
+    }
+
+
+    requestAnimationFrame(animateParticles);
 }
 
 
@@ -832,9 +807,17 @@ function interpolate(a, b, t) {
 ========================================================= */
 
 function startSimulation() {
+
+    if (running) return;
+
     calculateTarget();
 
     running = true;
+    document.body.classList.remove("simulation-paused");
+
+    startBtn.disabled = true;
+    startBtn.textContent = "▶ Running";
+    pauseBtn.disabled = false;
 
     const duration = 2500;
 
@@ -842,12 +825,12 @@ function startSimulation() {
         animationProgress = 0;
     }
 
-    let direction = 1;
-
     if (animationProgress >= 1) {
-        direction = -1;
+        animationProgress = 1;
+        animationDirection = -1;
     } else if (animationProgress <= 0) {
-        direction = 1;
+        animationProgress = 0;
+        animationDirection = 1;
     }
 
     let lastTime = performance.now();
@@ -864,16 +847,16 @@ function startSimulation() {
         lastTime = currentTime;
 
         animationProgress +=
-            direction * (deltaTime / duration);
+            animationDirection * (deltaTime / duration);
 
         if (animationProgress >= 1) {
             animationProgress = 1;
-            direction = -1;
+            animationDirection = -1;
         }
 
         else if (animationProgress <= 0) {
             animationProgress = 0;
-            direction = 1;
+            animationDirection = 1;
         }
 
         const smoothT =
@@ -881,73 +864,32 @@ function startSimulation() {
             animationProgress *
             (3 - 2 * animationProgress);
 
-        state.P = interpolate(
-            initial.P,
-            target.P,
-            smoothT
-        );
+        state.P = interpolate(initial.P, target.P, smoothT);
+        state.V = interpolate(initial.V, target.V, smoothT);
+        state.T = interpolate(initial.T, target.T, smoothT);
+        state.Q = interpolate(0, target.Q, smoothT);
+        state.W = interpolate(0, target.W, smoothT);
+        state.U = interpolate(0, target.U, smoothT);
 
-        state.V = interpolate(
-            initial.V,
-            target.V,
-            smoothT
-        );
+        if (process === "isobaric") state.P = initial.P;
 
-        state.T = interpolate(
-            initial.T,
-            target.T,
-            smoothT
-        );
+        if (process === "isochoric") state.V = initial.V;
 
-        state.Q = interpolate(
-            0,
-            target.Q,
-            smoothT
-        );
-
-        state.W = interpolate(
-            0,
-            target.W,
-            smoothT
-        );
-
-        state.U = interpolate(
-            0,
-            target.U,
-            smoothT
-        );
-
-        // Proses isobarik
-        if (process === "isobaric") {
-            state.P = initial.P;
-        }
-
-        // Proses isokhorik
-        if (process === "isochoric") {
-            state.V = initial.V;
-        }
-
-        // Proses isotermal
         if (process === "isothermal") {
             state.T = initial.T;
             state.U = 0;
         }
 
-        // Proses adiabatik
-        if (process === "adiabatic") {
-            state.Q = 0;
-        }
+        if (process === "adiabatic") state.Q = 0;
 
         updateDisplay();
         updateCylinder();
         drawGraph();
 
-        animationFrame =
-            requestAnimationFrame(animate);
+        animationFrame = requestAnimationFrame(animate);
     }
 
-    animationFrame =
-        requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
 }
 
 
@@ -957,11 +899,16 @@ function startSimulation() {
 
 function pauseSimulation() {
 
-    running = false;
+    if (!running) return;
 
-    cancelAnimationFrame(
-        animationFrame
-    );
+    running = false;
+    cancelAnimationFrame(animationFrame);
+
+    document.body.classList.add("simulation-paused");
+
+    startBtn.disabled = false;
+    startBtn.textContent = "▶ Resume";
+    pauseBtn.disabled = true;
 }
 
 
@@ -972,40 +919,32 @@ function pauseSimulation() {
 function resetSimulation() {
 
     running = false;
+    cancelAnimationFrame(animationFrame);
 
-    cancelAnimationFrame(
-        animationFrame
-    );
+    animationProgress = 0;
+    animationDirection = 1;
 
+    document.body.classList.remove("simulation-paused");
+
+    startBtn.disabled = false;
+    startBtn.textContent = "▶ Start";
+    pauseBtn.disabled = true;
 
     readInitialState();
 
-
     state = {
-
         P: initial.P,
-
         V: initial.V,
-
         T: initial.T,
-
         Q: 0,
-
         W: 0,
-
         U: 0
     };
 
-
-    target = {
-        ...state
-    };
-
+    target = { ...state };
 
     updateDisplay();
-
     updateCylinder();
-
     drawGraph();
 }
 
@@ -1040,6 +979,12 @@ function previewControl() {
     */
 
     if (!running) {
+
+        animationProgress = 0;
+        animationDirection = 1;
+        document.body.classList.remove("simulation-paused");
+        startBtn.textContent = "▶ Start";
+        pauseBtn.disabled = true;
 
         readInitialState();
 
@@ -1339,6 +1284,16 @@ function drawGraph() {
     );
 
 
+    const isLightTheme =
+        document.body.classList.contains("light-mode");
+
+    const graphGridColor =
+        isLightTheme ? "#DCE4EF" : "rgba(139, 154, 173, 0.16)";
+
+    const graphTextColor =
+        isLightTheme ? "#475569" : "#8b9aad";
+
+
     const path =
         generatePath();
 
@@ -1469,7 +1424,7 @@ function drawGraph() {
     ===================================================== */
 
     ctx.strokeStyle =
-        "#e2e8f0";
+        graphGridColor;
 
     ctx.lineWidth = 1;
 
@@ -1551,7 +1506,7 @@ function drawGraph() {
     ===================================================== */
 
     ctx.strokeStyle =
-        "#334155";
+        graphTextColor;
 
     ctx.lineWidth = 2;
 
@@ -1581,10 +1536,10 @@ function drawGraph() {
     ===================================================== */
 
     ctx.fillStyle =
-        "#334155";
+        graphTextColor;
 
     ctx.font =
-        "13px Arial";
+        "13px Inter, sans-serif";
 
     ctx.textAlign =
         "center";
@@ -1738,7 +1693,7 @@ function drawGraph() {
 
 
     ctx.strokeStyle =
-        "#16a34a";
+        "#00a8ff";
 
     ctx.lineWidth = 3;
 
@@ -1768,16 +1723,16 @@ function drawGraph() {
 
 
     ctx.fillStyle =
-        "#2563eb";
+        "#38bdf8";
 
     ctx.fill();
 
 
     ctx.fillStyle =
-        "#2563eb";
+        "#38bdf8";
 
     ctx.font =
-        "bold 12px Arial";
+        "bold 12px Inter, sans-serif";
 
     ctx.textAlign =
         "left";
@@ -1813,13 +1768,13 @@ function drawGraph() {
 
 
     ctx.fillStyle =
-        "#dc2626";
+        "#f87171";
 
     ctx.fill();
 
 
     ctx.fillStyle =
-        "#dc2626";
+        "#f87171";
 
 
     ctx.fillText(

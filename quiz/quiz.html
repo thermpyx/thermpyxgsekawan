@@ -2,216 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <title>Thermodynamics Quiz | THERMPYX</title>
-    <!-- Google Fonts -->
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
-    <!-- Main CSS -->
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
-    <!-- Quiz CSS -->
-    <link
-        rel="stylesheet"
-        href="../css/quiz.css"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz | THERMPYX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quiz.css">
 </head>
 <body>
-    <!-- ==============================
-         TOP BAR
-    =============================== -->
     <header class="quiz-topbar">
-        <a
-            href="../index.html#quiz"
-            class="quiz-back"
-        >
-            Back to Home
-        </a>
-        <div class="quiz-logo">
-            THERMPYX
-        </div>
+        <a href="../index.html#quiz" class="quiz-back">Back to Home</a>
+        <div class="quiz-logo">THERMPYX</div>
+        <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+        </button>
     </header>
-    <!-- ==============================
-         MAIN QUIZ PAGE
-    =============================== -->
+
     <main class="quiz-page">
-        <!-- ==============================
-             QUIZ INTRODUCTION
-        =============================== -->
-        <section class="quiz-hero">
-            <p class="section-label">
-                THERMPYX PRACTICE
-            </p>
-            <h1>
-                Thermodynamics Quiz
-            </h1>
+        <section class="quiz-hero quiz-hub-hero">
+            <p class="section-label">THERMPYX QUIZ</p>
+            <h1>Choose Your Quiz Mode</h1>
             <p>
-                Test your understanding of thermodynamic concepts,
-                equations, and basic thermodynamic processes.
+                Practice independently at your own pace or enter a live multiplayer room
+                and compete with other learners in real time.
             </p>
         </section>
-        <!-- ==============================
-             QUIZ AREA
-        =============================== -->
-        <section class="quiz-area">
-            <!-- Quiz Container -->
-            <div
-                class="quiz-container"
-                id="quizContainer"
-            >
-                <!-- Progress -->
-                <div class="quiz-progress">
-                    <span id="quizQuestionNumber">
-                        Question 1 of 5
-                    </span>
-                    <span id="quizScore">
-                        Score: 0
-                    </span>
+
+        <section class="quiz-area quiz-hub-area">
+            <div class="quiz-mode-selector">
+                <div class="quiz-selector-heading">
+                    <span class="quiz-question-label">SELECT MODE</span>
+                    <h2>How do you want to learn?</h2>
+                    <p>Both modes use THERMPYX thermodynamics materials, but the learning experience is different.</p>
                 </div>
-                <!-- Question -->
-                <div class="quiz-question">
-                    <span class="quiz-question-label">
-                        QUESTION
-                    </span>
-                    <h2 id="questionText">
-                        What is the SI unit of heat energy?
-                    </h2>
-                </div>
-                <!-- ==============================
-                     ANSWER OPTIONS
-                =============================== -->
-                <div
-                    class="quiz-options"
-                    id="quizOptions"
-                >
-                    <!-- Answer 1 -->
-                    <button
-                        class="quiz-option"
-                        type="button"
-                        data-answer="Joule"
-                    >
-                        Joule
-                    </button>
-                    <!-- Answer 2 -->
-                    <button
-                        class="quiz-option"
-                        type="button"
-                        data-answer="Watt"
-                    >
-                        Watt
-                    </button>
-                    <!-- Answer 3 -->
-                    <button
-                        class="quiz-option"
-                        type="button"
-                        data-answer="Pascal"
-                    >
-                        Pascal
-                    </button>
-                    <!-- Answer 4 -->
-                    <button
-                        class="quiz-option"
-                        type="button"
-                        data-answer="Kelvin"
-                    >
-                        Kelvin
-                    </button>
-                </div>
-                <!-- Feedback -->
-                <div
-                    class="quiz-feedback"
-                    id="quizFeedback"
-                >
-                </div>
-                <!-- Next Button -->
-                <button
-                    class="quiz-next-button"
-                    id="quizNextButton"
-                    type="button"
-                    disabled
-                >
-                    NEXT
-                </button>
-            </div>
-            <!-- ==============================
-                 QUIZ RESULT
-            =============================== -->
-            <div
-                class="quiz-result"
-                id="quizResult"
-            >
-                <p class="section-label">
-                    QUIZ COMPLETE
-                </p>
-                <h2>
-                    Your Score
-                </h2>
-                <div
-                    class="quiz-final-score"
-                    id="quizFinalScore"
-                >
-                    0 / 5
-                </div>
-                <p
-                    class="quiz-final-message"
-                    id="quizFinalMessage"
-                >
-                    Good job!
-                </p>
-                <!-- Result Buttons -->
-                <div class="quiz-result-actions">
-                    <button
-                        class="quiz-restart-button"
-                        id="quizRestartButton"
-                        type="button"
-                    >
-                        RETAKE QUIZ
-                    </button>
-                    <a
-                        href="../index.html#quiz"
-                        class="quiz-home-button"
-                    >
-                        BACK TO HOME
+
+                <div class="quiz-mode-grid">
+                    <a href="practice.html" class="quiz-mode-card">
+                        <span class="quiz-mode-number">01</span>
+                        <span class="quiz-mode-icon">✓</span>
+                        <span class="quiz-mode-copy">
+                            <strong>Practice Quiz</strong>
+                            <small>Choose a topic, answer at your own pace, and review your score instantly.</small>
+                        </span>
+                        <span class="quiz-mode-meta">Self-paced</span>
+                        <span class="quiz-mode-arrow">→</span>
                     </a>
+
+                    <a href="live.html" class="quiz-mode-card quiz-mode-card-live">
+                        <span class="quiz-mode-number">02</span>
+                        <span class="quiz-mode-icon">⌁</span>
+                        <span class="quiz-mode-copy">
+                            <strong>Live Quiz</strong>
+                            <small>Create or join a room, answer together, and see a realtime leaderboard.</small>
+                        </span>
+                        <span class="quiz-mode-meta">Multiplayer</span>
+                        <span class="quiz-mode-arrow">→</span>
+                    </a>
+                </div>
+
+                <div class="quiz-mode-note">
+                    <span class="quiz-mode-note-icon">i</span>
+                    <p><strong>New to THERMPYX?</strong> Start with Practice Quiz, then try Live Quiz when you are ready to compete.</p>
                 </div>
             </div>
         </section>
     </main>
-    <!-- ==============================
-         FOOTER
-    =============================== -->
+
     <footer class="footer quiz-footer">
         <div>
-            <strong>
-                THERMPYX
-            </strong>
-            <span>
-                Thermodynamic Learning & Calculation Platform
-            </span>
+            <strong>THERMPYX</strong>
+            <span>Thermodynamic Learning &amp; Calculation Platform</span>
         </div>
-        <p>
-            Learn. Calculate. Explore.
-        </p>
+        <p>Learn. Calculate. Explore.</p>
     </footer>
-    <!-- ==============================
-         QUIZ JAVASCRIPT
-    =============================== -->
-    <script src="../js/quiz.js"></script>
+
+    <script src="../js/script.js"></script>
 </body>
 </html>
