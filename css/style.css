@@ -3633,3 +3633,75 @@ a:focus-visible {
 /* =========================================================
    END OF STYLESHEET
 ========================================================= */
+
+/* =========================================================
+   THERMPYX - FIRST LAW / SIMULATOR PREVIEW
+========================================================= */
+
+.simulator-preview-card {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+    gap: 28px;
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 32px;
+    background: linear-gradient(145deg, var(--bg-card), var(--bg-secondary));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 0 35px rgba(0, 168, 255, 0.06);
+}
+
+.simulator-preview-icon {
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--blue);
+    border-radius: 50%;
+    background: rgba(0, 168, 255, 0.06);
+    color: var(--blue);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.simulator-preview-content h3 {
+    margin-bottom: 10px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 25px;
+}
+
+.simulator-preview-content p:not(.calculator-label) {
+    max-width: 700px;
+    margin-bottom: 22px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.simulator-preview-content .primary-button {
+    display: inline-flex;
+    width: auto;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .simulator-preview-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .simulator-preview-icon {
+        width: 85px;
+        height: 85px;
+        margin: 0 auto;
+    }
+
+    .simulator-preview-content .primary-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
