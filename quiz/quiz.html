@@ -37,16 +37,35 @@
          TOP BAR
     =============================== -->
     <header class="quiz-topbar">
-        <a
-            href="../index.html#quiz"
-            class="quiz-back"
+    <a
+        href="../index.html#quiz"
+        class="quiz-back"
+    >
+        Back to Home
+    </a>
+    <div class="quiz-logo">
+        THERMPYX
+    </div>
+    <button
+        class="page-theme-toggle"
+        id="themeToggle"
+        type="button"
+        aria-label="Toggle theme"
+    >
+        <span
+            class="theme-icon"
+            id="themeIcon"
         >
-            Back to Home
-        </a>
-        <div class="quiz-logo">
-            THERMPYX
-        </div>
-    </header>
+            ☾
+        </span>
+        <span
+            class="theme-text"
+            id="themeText"
+        >
+            Dark Mode
+        </span>
+    </button>
+</header>
     <!-- ==============================
          MAIN QUIZ PAGE
     =============================== -->
@@ -212,6 +231,7 @@
     <!-- ==============================
          QUIZ JAVASCRIPT
     =============================== -->
+    <script src="../js/script.js"></script>
     <script src="../js/quiz.js"></script>
 </body>
 </html>
