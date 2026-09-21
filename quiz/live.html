@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Quiz | THERMPYX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <link rel="stylesheet" href="live.css">
+</head>
+<body>
+    <header class="quiz-topbar">
+        <a href="quiz.html" class="quiz-back">Back to Quiz Menu</a>
+        <div class="quiz-logo">THERMPYX</div>
+        <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+        </button>
+    </header>
+
+    <main class="quiz-page live-page-shell">
+        <section class="quiz-hero live-hero-compact">
+            <p class="section-label">THERMPYX LIVE</p>
+            <h1>Live Thermodynamics Quiz</h1>
+            <p>Create a room and lead the session, or join an existing room and compete on the realtime leaderboard.</p>
+        </section>
+
+        <section class="live-area">
+            <div class="live-panel">
+                <div class="live-panel-heading">
+                    <span class="quiz-question-label">CHOOSE YOUR ROLE</span>
+                    <h2>Enter the live session</h2>
+                    <p>Hosts control the quiz flow. Players join using the six-digit room code created by the host.</p>
+                </div>
+
+                <div class="live-mode-grid">
+                    <a href="host.html" class="live-role-card live-role-card-featured">
+                        <span class="live-role-icon">H</span>
+                        <span class="live-role-copy">
+                            <strong>Host Quiz</strong>
+                            <small>Create a room, choose the topic, see connected players, and control each question.</small>
+                        </span>
+                        <span class="live-role-tag">Create room</span>
+                    </a>
+
+                    <a href="join.html" class="live-role-card">
+                        <span class="live-role-icon">J</span>
+                        <span class="live-role-copy">
+                            <strong>Join Quiz</strong>
+                            <small>Enter a room code and nickname, then answer together with the other players.</small>
+                        </span>
+                        <span class="live-role-tag">Join room</span>
+                    </a>
+                </div>
+
+                <div class="live-info-strip">
+                    <span class="live-info-dot"></span>
+                    <span>Live Quiz uses realtime room updates, synchronized questions, scores, and rankings.</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer quiz-footer">
+        <div>
+            <strong>THERMPYX</strong>
+            <span>Thermodynamic Learning &amp; Calculation Platform</span>
+        </div>
+        <p>Learn. Calculate. Explore.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

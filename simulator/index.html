@@ -1,443 +1,204 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Law of Thermodynamics Simulator | THERMPYX</title>
 
-    <title>Simulasi Hukum I Termodinamika</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
+<body class="simulator-standalone">
 
-<body>
+<header class="simulator-header">
+    <a class="simulator-brand" href="../index.html#home" aria-label="THERMPYX Home">
+        <span class="simulator-brand-symbol">T</span>
+        <span class="simulator-brand-copy">
+            <strong>THERMPYX</strong>
+            <small>THERMODYNAMICS</small>
+        </span>
+    </a>
 
-<header>
-    <h1>Simulasi Hukum I Termodinamika</h1>
-    <p>Interactive First Law of Thermodynamics Simulation</p>
+    <div class="simulator-header-actions">
+        <a class="simulator-back" href="../index.html#home">← Back to Home</a>
+        <button class="simulator-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span id="themeIcon">☾</span>
+            <span id="themeText">Dark Mode</span>
+        </button>
+    </div>
 </header>
 
-
-<main class="container">
-
-    <!-- ================= SIMULATOR ================= -->
-
-    <section class="simulation-panel">
-
-        <div class="section-title">
-            <h2>Gas dalam Silinder</h2>
-
-            <span id="processBadge">
-                Isobaric
-            </span>
+<main class="simulator-main">
+    <section class="simulator-page">
+        <div class="simulator-hero">
+            <p class="section-label">INTERACTIVE SIMULATION</p>
+            <h1>First Law of Thermodynamics</h1>
+            <p>Explore how heat, work, pressure, volume, temperature, and internal energy interact across four thermodynamic processes.</p>
         </div>
 
-
-        <div class="cylinder">
-
-            <!-- BEBAN -->
-            <div class="weight" id="weight">
-                BEBAN
-            </div>
-
-
-            <!-- PISTON -->
-            <div class="piston" id="piston">
-
-                <div class="piston-handle"></div>
-
-            </div>
-
-
-            <!-- GAS -->
-            <div class="gas" id="gas">
-
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-
-            </div>
-
-
-            <!-- HEATER -->
-            <div class="heater" id="heater">
-
-                <div class="flame">
-                    🔥
+        <div class="simulator-container">
+            <section class="simulation-panel">
+                <div class="section-title">
+                    <h2>Gas in a Cylinder</h2>
+                    <span id="processBadge">Isobaric</span>
                 </div>
 
-                <div class="heater-base"></div>
+                <div class="cylinder">
+                    <div class="weight" id="weight">LOAD</div>
+                    <div class="piston" id="piston">
+                        <div class="piston-handle"></div>
+                    </div>
+                    <div class="gas" id="gas">
+                        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                    </div>
+                    <div class="heater" id="heater">
+                        <div class="flame">🔥</div>
+                        <div class="heater-base"></div>
+                    </div>
+                </div>
 
-            </div>
+                <div class="simulation-buttons">
+                    <button id="startBtn" type="button">▶ Start</button>
+                    <button id="pauseBtn" type="button">⏸ Pause</button>
+                    <button id="resetBtn" type="button">↻ Reset</button>
+                </div>
+            </section>
 
+            <section class="control-panel">
+                <h2>Simulation Controls</h2>
+
+                <label id="processSelectLabelText">Thermodynamic Process</label>
+                <div class="process-selector" id="processSelector">
+                    <button
+                        class="process-select-trigger"
+                        id="processSelectTrigger"
+                        type="button"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-labelledby="processSelectLabelText processSelectCurrent"
+                    >
+                        <span class="process-select-copy">
+                            <strong id="processSelectCurrent">Isobaric</strong>
+                            <small id="processSelectDescription">Constant Pressure</small>
+                        </span>
+                        <span class="process-select-chevron" aria-hidden="true"></span>
+                    </button>
+
+                    <div class="process-select-menu" id="processSelectMenu" role="listbox" aria-label="Thermodynamic Process">
+                        <button class="process-option is-selected" type="button" role="option" aria-selected="true" data-value="isobaric" data-description="Constant Pressure">
+                            <span>Isobaric</span>
+                            <small>Constant Pressure</small>
+                        </button>
+                        <button class="process-option" type="button" role="option" aria-selected="false" data-value="isochoric" data-description="Constant Volume">
+                            <span>Isochoric</span>
+                            <small>Constant Volume</small>
+                        </button>
+                        <button class="process-option" type="button" role="option" aria-selected="false" data-value="isothermal" data-description="Constant Temperature">
+                            <span>Isothermal</span>
+                            <small>Constant Temperature</small>
+                        </button>
+                        <button class="process-option" type="button" role="option" aria-selected="false" data-value="adiabatic" data-description="No Heat Transfer (Q = 0)">
+                            <span>Adiabatic</span>
+                            <small>No Heat Transfer (Q = 0)</small>
+                        </button>
+                    </div>
+
+                    <select id="processSelect" class="process-native-select" tabindex="-1" aria-hidden="true">
+                        <option value="isobaric">Isobaric</option>
+                        <option value="isochoric">Isochoric</option>
+                        <option value="isothermal">Isothermal</option>
+                        <option value="adiabatic">Adiabatic</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Heat Q <span id="heatValue">0 J</span></label>
+                    <input type="range" id="heatInput" min="0" max="1000" value="0" step="10">
+                </div>
+
+                <div class="control-group">
+                    <label>Initial Pressure <span id="pressureValue">100 kPa</span></label>
+                    <input type="range" id="pressureInput" min="50" max="200" value="100" step="5">
+                </div>
+
+                <div class="control-group">
+                    <label>Initial Volume <span id="volumeValue">2.00 L</span></label>
+                    <input type="range" id="volumeInput" min="1" max="5" value="2" step="0.1">
+                </div>
+
+                <div class="control-group">
+                    <label>Initial Temperature <span id="temperatureValue">300 K</span></label>
+                    <input type="range" id="temperatureInput" min="250" max="500" value="300" step="10">
+                </div>
+
+                <div class="info-box" id="processInfo">
+                    Pressure remains constant throughout the process. Adding heat changes the gas temperature and volume.
+                </div>
+            </section>
+
+            <section class="data-panel">
+                <h2>Thermodynamic Data</h2>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <span>Pressure</span>
+                        <strong id="pressureDisplay">100 kPa</strong>
+                        <small id="pressureAlt">0.987 atm</small>
+                        <small id="pressurePa">100000 Pa</small>
+                    </div>
+                    <div class="data-card">
+                        <span>Volume</span>
+                        <strong id="volumeDisplay">2.00 L</strong>
+                        <small id="volumeAlt">0.00200 m³</small>
+                    </div>
+                    <div class="data-card">
+                        <span>Temperature</span>
+                        <strong id="temperatureDisplay">300 K</strong>
+                        <small id="temperatureAlt">26.85 °C</small>
+                    </div>
+                    <div class="data-card">
+                        <span>Heat Q</span>
+                        <strong id="qDisplay">0 J</strong>
+                    </div>
+                    <div class="data-card">
+                        <span>Work W</span>
+                        <strong id="wDisplay">0 J</strong>
+                    </div>
+                    <div class="data-card">
+                        <span>ΔU</span>
+                        <strong id="uDisplay">0 J</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="law-panel">
+                <h2>First Law of Thermodynamics</h2>
+                <div class="formula">ΔU = Q − W</div>
+                <div class="formula-explanation">
+                    <div><strong>ΔU</strong><span>Change in internal energy</span></div>
+                    <div><strong>Q</strong><span>Heat absorbed by the gas</span></div>
+                    <div><strong>W</strong><span>Work done by the gas</span></div>
+                </div>
+            </section>
+
+            <section class="graph-panel">
+                <h2>P–V Diagram</h2>
+                <div class="graph-wrapper">
+                    <canvas id="pvGraph"></canvas>
+                    <div id="graphTooltip" class="graph-tooltip"></div>
+                </div>
+            </section>
         </div>
-
-
-        <!-- BUTTON -->
-        <div class="simulation-buttons">
-
-            <button id="startBtn">
-                ▶ Mulai
-            </button>
-
-            <button id="pauseBtn">
-                ⏸ Jeda
-            </button>
-
-            <button id="resetBtn">
-                ↻ Reset
-            </button>
-
-        </div>
-
     </section>
-
-
-    <!-- ================= CONTROL ================= -->
-
-    <section class="control-panel">
-
-        <h2>Kontrol Simulasi</h2>
-
-
-        <label for="processSelect">
-            Proses Termodinamika
-        </label>
-
-        <select id="processSelect">
-
-            <option value="isobaric">
-                Isobaric — Tekanan Tetap
-            </option>
-
-            <option value="isochoric">
-                Isochoric — Volume Tetap
-            </option>
-
-            <option value="isothermal">
-                Isothermal — Temperatur Tetap
-            </option>
-
-            <option value="adiabatic">
-                Adiabatic — Q = 0
-            </option>
-
-        </select>
-
-
-        <!-- KALOR -->
-
-        <div class="control-group">
-
-            <label>
-                Kalor Q
-                <span id="heatValue">
-                    0 J
-                </span>
-            </label>
-
-            <input
-                type="range"
-                id="heatInput"
-                min="0"
-                max="1000"
-                value="0"
-                step="10"
-            >
-
-        </div>
-
-
-        <!-- TEKANAN -->
-
-        <div class="control-group">
-
-            <label>
-                Tekanan Awal
-                <span id="pressureValue">
-                    100 kPa
-                </span>
-            </label>
-
-            <input
-                type="range"
-                id="pressureInput"
-                min="50"
-                max="200"
-                value="100"
-                step="5"
-            >
-
-        </div>
-
-
-        <!-- VOLUME -->
-
-        <div class="control-group">
-
-            <label>
-                Volume Awal
-                <span id="volumeValue">
-                    2.00 L
-                </span>
-            </label>
-
-            <input
-                type="range"
-                id="volumeInput"
-                min="1"
-                max="5"
-                value="2"
-                step="0.1"
-            >
-
-        </div>
-
-
-        <!-- SUHU -->
-
-        <div class="control-group">
-
-            <label>
-                Temperatur Awal
-                <span id="temperatureValue">
-                    300 K
-                </span>
-            </label>
-
-            <input
-                type="range"
-                id="temperatureInput"
-                min="250"
-                max="500"
-                value="300"
-                step="10"
-            >
-
-        </div>
-
-
-        <!-- INFO PROSES -->
-
-        <div
-            class="info-box"
-            id="processInfo"
-        >
-            Tekanan tetap selama proses.
-            Ketika gas menerima kalor,
-            volume dan temperatur berubah.
-        </div>
-
-    </section>
-
-
-    <!-- ================= DATA ================= -->
-
-    <section class="data-panel">
-
-        <h2>Data Termodinamika</h2>
-
-
-        <div class="data-grid">
-
-            <!-- PRESSURE -->
-
-            <div class="data-card">
-
-                <span>
-                    Pressure
-                </span>
-
-                <strong id="pressureDisplay">
-                    100 kPa
-                </strong>
-
-                <small id="pressureAlt">
-                    0.987 atm
-                </small>
-
-                <small id="pressurePa">
-                    100000 Pa
-                </small>
-
-            </div>
-
-
-            <!-- VOLUME -->
-
-            <div class="data-card">
-
-                <span>
-                    Volume
-                </span>
-
-                <strong id="volumeDisplay">
-                    2.00 L
-                </strong>
-
-                <small id="volumeAlt">
-                    0.00200 m³
-                </small>
-
-            </div>
-
-
-            <!-- TEMPERATURE -->
-
-            <div class="data-card">
-
-                <span>
-                    Temperature
-                </span>
-
-                <strong id="temperatureDisplay">
-                    300 K
-                </strong>
-
-                <small id="temperatureAlt">
-                    26.85 °C
-                </small>
-
-            </div>
-
-
-            <!-- Q -->
-
-            <div class="data-card">
-
-                <span>
-                    Heat Q
-                </span>
-
-                <strong id="qDisplay">
-                    0 J
-                </strong>
-
-            </div>
-
-
-            <!-- W -->
-
-            <div class="data-card">
-
-                <span>
-                    Work W
-                </span>
-
-                <strong id="wDisplay">
-                    0 J
-                </strong>
-
-            </div>
-
-
-            <!-- DELTA U -->
-
-            <div class="data-card">
-
-                <span>
-                    ΔU
-                </span>
-
-                <strong id="uDisplay">
-                    0 J
-                </strong>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= HUKUM I ================= -->
-
-    <section class="law-panel">
-
-        <h2>
-            Hukum I Termodinamika
-        </h2>
-
-
-        <div class="formula">
-
-            ΔU = Q − W
-
-        </div>
-
-
-        <div class="formula-explanation">
-
-            <div>
-
-                <strong>ΔU</strong>
-
-                <span>
-                    Perubahan energi dalam
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <strong>Q</strong>
-
-                <span>
-                    Kalor yang diterima gas
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <strong>W</strong>
-
-                <span>
-                    Usaha yang dilakukan gas
-                </span>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= GRAPH ================= -->
-
-    <section class="graph-panel">
-
-        <h2>
-            Diagram P–V
-        </h2>
-
-        <div class="graph-wrapper">
-
-            <canvas id="pvGraph"></canvas>
-
-            <div id="graphTooltip" class="graph-tooltip"></div>
-
-        </div>
-
-    </section>
-
 </main>
 
-
 <script src="js/script.js"></script>
-
+<script src="js/ui.js"></script>
 </body>
 </html>

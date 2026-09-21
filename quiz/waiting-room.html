@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting Room | THERMPYX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <link rel="stylesheet" href="live.css">
+</head>
+<body>
+    <header class="quiz-topbar">
+        <a href="../index.html#quiz" class="quiz-back">Back to Home</a>
+        <div class="quiz-logo">THERMPYX</div>
+        <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+        </button>
+    </header>
+
+    <main class="quiz-page live-page-shell">
+        <section class="quiz-hero live-hero-compact">
+            <p class="section-label">LIVE SESSION</p>
+            <h1>Waiting Room</h1>
+            <p>Share the room code with other players. The player list updates automatically as they join.</p>
+        </section>
+
+        <section class="live-area">
+            <div class="waiting-layout">
+                <article class="waiting-card">
+                    <div class="players-header">
+                        <h2>Players</h2>
+                        <span class="players-live-indicator">Realtime</span>
+                    </div>
+                    <div id="playerList"><p>Loading players...</p></div>
+                </article>
+
+                <aside class="room-card">
+                    <p class="room-code-label">Room Code</p>
+                    <h2 id="roomCodeDisplay">------</h2>
+
+                    <div id="hostControls" style="display: none;">
+                        <button id="startQuizBtn" class="live-primary-button" type="button">START QUIZ</button>
+                    </div>
+
+                    <p id="playerWaitingText" style="display: none;">Waiting for host to start the quiz...</p>
+                    <p id="roomStatusText"></p>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="waiting-room.js"></script>
+</body>
+</html>

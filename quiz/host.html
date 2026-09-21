@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Quiz | THERMPYX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <link rel="stylesheet" href="live.css">
+</head>
+<body>
+    <header class="quiz-topbar">
+        <a href="live.html" class="quiz-back">Back to Live Quiz</a>
+        <div class="quiz-logo">THERMPYX</div>
+        <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+        </button>
+    </header>
+
+    <main class="quiz-page live-page-shell">
+        <section class="quiz-hero live-hero-compact">
+            <p class="section-label">LIVE QUIZ · HOST</p>
+            <h1>Create a Quiz Room</h1>
+            <p>Select the thermodynamics material for this session. A unique room code will be generated automatically.</p>
+        </section>
+
+        <section class="live-area">
+            <div class="live-panel">
+                <div class="live-panel-heading">
+                    <span class="quiz-question-label">ROOM SETUP</span>
+                    <h2>Choose quiz material</h2>
+                    <p>Players who join your room will receive questions from the selected material.</p>
+                </div>
+
+                <div class="live-form">
+                    <div class="live-field">
+                        <label for="topic">Quiz Topic</label>
+                        <select id="topic">
+                            <option value="heat">Heat &amp; Temperature</option>
+                            <option value="work">Work &amp; Energy</option>
+                            <option value="first-law">First Law of Thermodynamics</option>
+                            <option value="process">Thermodynamic Processes</option>
+                            <option value="all">All Materials</option>
+                        </select>
+                        <span class="live-field-hint">You can create another room later to use a different topic.</span>
+                    </div>
+
+                    <button id="createRoomBtn" class="live-primary-button" type="button">CREATE ROOM</button>
+                </div>
+
+                <div class="live-info-strip">
+                    <span class="live-info-dot"></span>
+                    <span>After the room is created, you will move to the waiting room and see players join in realtime.</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="host.js"></script>
+</body>
+</html>

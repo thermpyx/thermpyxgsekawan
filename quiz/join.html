@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Quiz | THERMPYX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <link rel="stylesheet" href="live.css">
+</head>
+<body>
+    <header class="quiz-topbar">
+        <a href="live.html" class="quiz-back">Back to Live Quiz</a>
+        <div class="quiz-logo">THERMPYX</div>
+        <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+        </button>
+    </header>
+
+    <main class="quiz-page live-page-shell">
+        <section class="quiz-hero live-hero-compact">
+            <p class="section-label">LIVE QUIZ · PLAYER</p>
+            <h1>Join a Quiz Room</h1>
+            <p>Enter the six-digit code from the host and choose the nickname that will appear on the leaderboard.</p>
+        </section>
+
+        <section class="live-area">
+            <div class="live-panel">
+                <div class="live-panel-heading">
+                    <span class="quiz-question-label">JOIN SESSION</span>
+                    <h2>Enter room details</h2>
+                    <p>Room codes only work while the host is still waiting for players.</p>
+                </div>
+
+                <div class="live-form">
+                    <div class="live-field">
+                        <label for="roomCode">Room Code</label>
+                        <input type="text" id="roomCode" maxlength="6" inputmode="numeric" autocomplete="off" placeholder="Example: 583291">
+                    </div>
+
+                    <div class="live-field">
+                        <label for="nickname">Nickname</label>
+                        <input type="text" id="nickname" maxlength="30" autocomplete="off" placeholder="Enter your nickname">
+                        <span class="live-field-hint">Use a name that other players can recognize.</span>
+                    </div>
+
+                    <button id="joinRoomBtn" class="live-primary-button" type="button">JOIN QUIZ</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="join.js"></script>
+</body>
+</html>
