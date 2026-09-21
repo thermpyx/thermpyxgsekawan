@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/first-law.css">
 </head>
 <body>
     <!-- ==============================
@@ -38,6 +39,14 @@
             <a href="#calculation" class="nav-item">
                 <span class="nav-icon">∑</span>
                 <span class="nav-text">Calculation</span>
+            </a>
+            <a href="#first-law-calculator" class="nav-item">
+                <span class="nav-icon">ΔU</span>
+                <span class="nav-text">First Law</span>
+            </a>
+            <a href="#simulator" class="nav-item">
+                <span class="nav-icon">◉</span>
+                <span class="nav-text">Simulator</span>
             </a>
             <a href="#converter" class="nav-item">
                 <span class="nav-icon">⇄</span>
@@ -215,8 +224,8 @@
                         Study the Zeroth, First, Second, and Third Laws
                         of Thermodynamics.
                     </p>
-                    <a href="#">
-                        Learn More 
+                    <a href="theory/first-law.html">
+                        Learn More
                     </a>
                 </article>
                 <!-- Theory Card -->
@@ -467,6 +476,7 @@
     <div
         class="calculation-result"
         id="workResult"
+    >
         <div class="result-header">
             <span>
                 RESULT
@@ -515,6 +525,100 @@
         </div>
     </div>
 </div>
+
+<!-- ==============================
+     FIRST LAW CALCULATOR
+============================== -->
+<section class="content-section" id="first-law-calculator">
+    <div class="section-heading">
+        <p class="section-label">CALCULATE</p>
+        <h2>First Law Calculator</h2>
+        <p>Calculate heat, work, or change in internal energy using the First Law of Thermodynamics.</p>
+    </div>
+
+    <div class="first-law-calculator">
+        <p class="calculator-label">FIRST LAW OF THERMODYNAMICS</p>
+        <h3>Calculate Heat, Work, or Internal Energy</h3>
+        <p class="first-law-calculator-description">
+            Use ΔU = Q − W to determine the unknown quantity.
+        </p>
+
+        <div class="first-law-input-grid">
+            <div class="first-law-input-group">
+                <label for="firstLawQ">Heat (Q)</label>
+                <input type="number" id="firstLawQ" placeholder="Enter Q" step="any">
+                <small>Unit: J</small>
+            </div>
+            <div class="first-law-input-group">
+                <label for="firstLawW">Work (W)</label>
+                <input type="number" id="firstLawW" placeholder="Enter W" step="any">
+                <small>Unit: J</small>
+            </div>
+            <div class="first-law-input-group">
+                <label for="firstLawDeltaU">Change in Internal Energy (ΔU)</label>
+                <input type="number" id="firstLawDeltaU" placeholder="Enter ΔU" step="any">
+                <small>Unit: J</small>
+            </div>
+        </div>
+
+        <div class="first-law-calc-actions">
+            <select class="first-law-select" id="firstLawUnknown">
+                <option value="deltaU">Find ΔU</option>
+                <option value="Q">Find Q</option>
+                <option value="W">Find W</option>
+            </select>
+            <button type="button" class="first-law-calc-button" id="firstLawCalculate">
+                CALCULATE
+            </button>
+        </div>
+
+        <div class="first-law-result" id="firstLawResult">
+            <p class="first-law-result-title">RESULT</p>
+            <div class="first-law-result-value" id="firstLawResultValue">—</div>
+            <div class="first-law-solution">
+                <div class="first-law-solution-step">
+                    <span>Step 1 — Formula</span>
+                    <p id="firstLawStep1">ΔU = Q − W</p>
+                </div>
+                <div class="first-law-solution-step">
+                    <span>Step 2 — Substitute</span>
+                    <p id="firstLawStep2">—</p>
+                </div>
+                <div class="first-law-solution-step">
+                    <span>Step 3 — Calculate</span>
+                    <p id="firstLawStep3">—</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     SIMULATOR PREVIEW
+============================== -->
+<section class="content-section simulator-preview-section" id="simulator">
+    <div class="section-heading">
+        <p class="section-label">EXPLORE</p>
+        <h2>Thermodynamics Simulator</h2>
+        <p>Explore how pressure, volume, temperature, heat, work, and internal energy change during different thermodynamic processes.</p>
+    </div>
+
+    <div class="simulator-preview-card">
+        <div class="simulator-preview-icon">ΔU</div>
+        <div class="simulator-preview-content">
+            <p class="calculator-label">INTERACTIVE SIMULATION</p>
+            <h3>First Law of Thermodynamics</h3>
+            <p>
+                Try Isobaric, Isochoric, Isothermal, and Adiabatic processes
+                with an animated piston and P–V diagram.
+            </p>
+            <a href="simulator/index.html" class="primary-button">
+                OPEN SIMULATOR
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- ==============================
      UNIT CONVERTER
 ============================== -->
@@ -734,16 +838,6 @@
         </div>
     </div>
 </div>
-                <div class="history-icon">
-                    ◷
-                </div>
-                <h3>
-                    No calculations yet
-                </h3>
-                <p>
-                    Your calculation history will be saved here.
-                </p>
-            </div>
         </section>
         <!-- ==============================
              ABOUT
@@ -780,5 +874,6 @@
     </main>
     <!-- JavaScript -->
     <script src="js/script.js"></script>
+    <script src="js/first-law.js"></script>
 </body>
 </html>
