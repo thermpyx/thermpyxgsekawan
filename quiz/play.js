@@ -1,29 +1,32 @@
 // ======================================================
-// THERMPYX LIVE QUIZ
-// AUTO FLOW VERSION
-// TIMER + SPEED SCORE + REALTIME
+// THERMPYX LIVE QUIZ PLAYER
+// FINAL INDIVIDUAL PLAYER SYSTEM
+// PART 1/4
 // ======================================================
-
-
-// ======================================================
-// SETTINGS
-// ======================================================
-
-const CORRECT_BASE_SCORE = 700;
-
-const MAX_SPEED_BONUS = 300;
 
 
 // ======================================================
 // ELEMENTS
 // ======================================================
 
+const playRole =
+    document.getElementById("playRole");
+
+
 const playRoomCode =
     document.getElementById("playRoomCode");
 
 
-const playRole =
-    document.getElementById("playRole");
+const quizTimer =
+    document.getElementById("quizTimer");
+
+
+const timerProgress =
+    document.getElementById("timerProgress");
+
+
+const timerBox =
+    document.getElementById("timerBox");
 
 
 const questionNumber =
@@ -54,17 +57,6 @@ const nextQuestionBtn =
     document.getElementById("nextQuestionBtn");
 
 
-const quizTimer =
-    document.getElementById("quizTimer");
-
-
-const timerProgress =
-    document.getElementById("timerProgress");
-
-
-const timerBox =
-    document.getElementById("timerBox");
-
 
 // ======================================================
 // SESSION
@@ -90,9 +82,30 @@ const nickname =
     sessionStorage.getItem("nickname");
 
 
+
+console.log(
+    "ROLE:",
+    userRole
+);
+
+
+console.log(
+    "PLAYER ID:",
+    playerId
+);
+
+
+console.log(
+    "NICKNAME:",
+    nickname
+);
+
+
+
 // ======================================================
-// STATE
+// QUIZ STATE
 // ======================================================
+
 
 let currentQuestions = [];
 
@@ -106,366 +119,68 @@ let currentQuestionStartedAt = null;
 let questionTimeSeconds = 20;
 
 
-let answerSubmitted = false;
-
-
-let timeoutHandled = false;
-
-
-let autoNextExecuted = false;
-
-
-let roomChannel = null;
-
-
-let answersChannel = null;
-
-
 let timerInterval = null;
 
 
-// ======================================================
-// QUESTION BANK
-// ======================================================
+let answered = false;
 
-const questionBank = {
 
+let movingNext = false;
 
-    heat: [
 
-        {
-            question:
-                "What is the SI unit of temperature?",
+let realtimeChannel = null;
 
-            options: [
-
-                "Celsius",
-
-                "Kelvin",
-
-                "Fahrenheit",
-
-                "Joule"
-
-            ],
-
-            correctAnswer: 1
-
-        },
-
-
-        {
-            question:
-                "Heat naturally flows from...",
-
-            options: [
-
-                "Low temperature to high temperature",
-
-                "High temperature to low temperature",
-
-                "Low pressure to high pressure",
-
-                "Small volume to large volume"
-
-            ],
-
-            correctAnswer: 1
-
-        },
-
-
-        {
-            question:
-                "Which symbol is commonly used for heat?",
-
-            options: [
-
-                "Q",
-
-                "P",
-
-                "V",
-
-                "U"
-
-            ],
-
-            correctAnswer: 0
-
-        }
-
-    ],
-
-
-
-    work: [
-
-        {
-            question:
-                "Thermodynamic work at constant pressure can be expressed as...",
-
-            options: [
-
-                "W = PΔV",
-
-                "W = mcΔT",
-
-                "W = Q + T",
-
-                "W = PV/T"
-
-            ],
-
-            correctAnswer: 0
-
-        },
-
-
-        {
-            question:
-                "When a gas expands, its volume...",
-
-            options: [
-
-                "Decreases",
-
-                "Remains constant",
-
-                "Increases",
-
-                "Becomes zero"
-
-            ],
-
-            correctAnswer: 2
-
-        },
-
-
-        {
-            question:
-                "The SI unit of work is...",
-
-            options: [
-
-                "Pascal",
-
-                "Kelvin",
-
-                "Joule",
-
-                "Watt"
-
-            ],
-
-            correctAnswer: 2
-
-        }
-
-    ],
-
-
-
-    "first-law": [
-
-        {
-            question:
-                "Which equation represents the First Law of Thermodynamics?",
-
-            options: [
-
-                "ΔU = Q - W",
-
-                "P = F / A",
-
-                "Q = mcΔT",
-
-                "PV = nRT"
-
-            ],
-
-            correctAnswer: 0
-
-        },
-
-
-        {
-            question:
-                "Internal energy is represented by the symbol...",
-
-            options: [
-
-                "P",
-
-                "V",
-
-                "U",
-
-                "T"
-
-            ],
-
-            correctAnswer: 2
-
-        },
-
-
-        {
-            question:
-                "In the First Law of Thermodynamics, Q represents...",
-
-            options: [
-
-                "Pressure",
-
-                "Heat",
-
-                "Volume",
-
-                "Temperature"
-
-            ],
-
-            correctAnswer: 1
-
-        }
-
-    ],
-
-
-
-    process: [
-
-        {
-            question:
-                "An isobaric process occurs at constant...",
-
-            options: [
-
-                "Temperature",
-
-                "Pressure",
-
-                "Volume",
-
-                "Internal energy"
-
-            ],
-
-            correctAnswer: 1
-
-        },
-
-
-        {
-            question:
-                "An isochoric process occurs at constant...",
-
-            options: [
-
-                "Pressure",
-
-                "Temperature",
-
-                "Volume",
-
-                "Heat"
-
-            ],
-
-            correctAnswer: 2
-
-        },
-
-
-        {
-            question:
-                "An isothermal process occurs at constant...",
-
-            options: [
-
-                "Temperature",
-
-                "Pressure",
-
-                "Volume",
-
-                "Work"
-
-            ],
-
-            correctAnswer: 0
-
-        }
-
-    ]
-
-};
 
 
 // ======================================================
-// START
+// START INITIALIZE
 // ======================================================
 
-if (
-    !roomId ||
-    !roomCode ||
-    !userRole
-) {
 
+initializeQuiz();
 
-    alert(
-        "Quiz session not found."
-    );
-
-
-    window.location.href =
-        "quiz.html";
-
-
-} else {
-
-
-    initializeQuiz();
-
-}
 
 
 // ======================================================
-// INITIALIZE
+// INITIALIZE QUIZ
 // ======================================================
 
-async function initializeQuiz() {
+
+async function initializeQuiz(){
+
+
+    if(
+        !roomId
+    ){
+
+        playMessage.textContent =
+            "Room not found.";
+
+        return;
+
+    }
+
 
 
     playRoomCode.textContent =
-        roomCode;
+        roomCode ||
+        "------";
 
 
 
-    if (
+    if(
         userRole === "host"
-    ) {
-
-
-        playRole.textContent =
-            "Host View";
-
-
-        hostPlayControls.style.display =
-            "block";
-
-
-    } else {
-
+    ){
 
         playRole.textContent =
-            `Player: ${nickname || "Unknown Player"}`;
+            "Host Quiz";
 
+    }
+    else{
 
-        hostPlayControls.style.display =
-            "none";
+        playRole.textContent =
+            "Player: " +
+            nickname;
 
     }
 
@@ -474,44 +189,34 @@ async function initializeQuiz() {
     await loadRoom();
 
 
-    subscribeToRoom();
-
-
-
-    if (
-        userRole === "host"
-    ) {
-
-
-        subscribeToAnswers();
-
-    }
-
 }
 // ======================================================
 // LOAD ROOM
 // ======================================================
 
-async function loadRoom() {
 
-    try {
+async function loadRoom(){
+
+
+    try{
+
 
         playMessage.textContent =
             "Loading quiz...";
 
 
+
         const {
             data: room,
             error
-        } = await supabaseClient
+        } =
+        await supabaseClient
             .from("quiz_rooms")
             .select(
                 `
                 id,
                 topic,
-                status,
-                current_question,
-                question_started_at
+                status
                 `
             )
             .eq(
@@ -522,101 +227,102 @@ async function loadRoom() {
 
 
 
-        if (error) {
+        if(error){
 
             console.error(
-                "Failed to load room:",
+                "ROOM ERROR:",
                 error
             );
-
-
             playMessage.textContent =
-                "Failed to load quiz.";
-
-
+                "Room not found.";
             return;
-
         }
-
-
-
         console.log(
-            "ROOM DATA:",
+            "ROOM:",
             room
         );
-
-
-
-        // Jika quiz sudah selesai
-
-        if (
-            room.status === "finished"
-        ) {
-
-            goToLeaderboard();
-
-            return;
-
-        }
-
-
-
-        // Jika belum dimulai
-
-        if (
+        if(
             room.status !== "playing"
-        ) {
-
-
+        ){
             playMessage.textContent =
                 "Waiting for host to start quiz...";
-
-
             return;
-
         }
-
-
-
-        // Gunakan default dulu
-        // nanti bisa dibuat dinamis dari host
-
-        questionTimeSeconds = 20;
-
-
-
         currentQuestions =
             getQuestionsForTopic(
                 room.topic
             );
-
-
-
-        if (
+        if(
             !currentQuestions ||
             currentQuestions.length === 0
-        ) {
+        ){
+            playMessage.textContent =
+                "Question not found.";
+            return;
+        }
+        // ==========================
+        // HOST
+        // ==========================
+        if(
+            userRole === "host"
+        ){
+            currentQuestionIndex =
+                0;
+            hostPlayControls.style.display =
+                "block";
+            renderQuestion();
+            return;
+        }
+        // ==========================
+        // PLAYER
+        // ==========================
+        const {
+            data: player,
+            error: playerError
+        }
+        =
+        await supabaseClient
+            .from("quiz_players")
+            .select(
+                `
+                current_question,
+                question_started_at
+                `
+            )
+            .eq(
+                "id",
+                playerId
+            )
+            .single();
+
+
+
+
+        if(
+            playerError ||
+            !player
+        ){
+
+            console.error(
+                "PLAYER ERROR:",
+                playerError
+            );
 
 
             playMessage.textContent =
-                "No questions available.";
-
-
-            console.error(
-                "Question bank empty:",
-                room.topic
-            );
+                "Player data missing.";
 
 
             return;
 
         }
+
 
 
 
         currentQuestionIndex =
             Number(
-                room.current_question
+                player.current_question
             )
             ||
             0;
@@ -624,10 +330,11 @@ async function loadRoom() {
 
 
         currentQuestionStartedAt =
-            room.question_started_at
+            player.question_started_at
             ||
             new Date()
                 .toISOString();
+
 
 
 
@@ -635,11 +342,16 @@ async function loadRoom() {
 
 
 
-    } catch (err) {
+        startRealtime();
+
+
+
+    }
+    catch(err){
 
 
         console.error(
-            "LOAD ROOM ERROR:",
+            "LOAD ROOM FAILED:",
             err
         );
 
@@ -648,142 +360,393 @@ async function loadRoom() {
             "Unable to load quiz.";
 
     }
+
 }
+
+
+
+
 // ======================================================
-// GET QUESTIONS
+// QUESTION BANK
 // ======================================================
 
-function getQuestionsForTopic(
-    topic
-) {
+function getQuestionsForTopic(topic){
 
 
-    const normalizedTopic =
+    const key =
         String(topic || "")
-            .trim()
-            .toLowerCase();
+            .toLowerCase()
+            .trim();
 
 
 
-    if (
-        normalizedTopic ===
-            "heat" ||
-        normalizedTopic ===
-            "heat-temperature" ||
-        normalizedTopic ===
-            "heat & temperature"
-    ) {
+    // ======================================================
+    // HEAT & TEMPERATURE
+    // ======================================================
 
+    const heatQuestions = [
 
-        return questionBank.heat;
+        {
+            question:
+                "What is the SI unit of temperature?",
 
-
-    }
-
-
-
-    if (
-        normalizedTopic ===
-            "work" ||
-        normalizedTopic ===
-            "work-energy" ||
-        normalizedTopic ===
-            "work & energy"
-    ) {
-
-
-        return questionBank.work;
-
-
-    }
-
-
-
-    if (
-        normalizedTopic ===
-            "first-law" ||
-        normalizedTopic ===
-            "first law"
-    ) {
-
-
-        return questionBank[
-            "first-law"
-        ];
-
-
-    }
-
-
-
-    if (
-        normalizedTopic ===
-            "process" ||
-        normalizedTopic ===
-            "thermodynamic-processes"
-    ) {
-
-
-        return questionBank.process;
-
-
-    }
-
-
-
-    if (
-        normalizedTopic ===
-        "all"
-    ) {
-
-
-        return [
-
-            ...questionBank.heat,
-
-            ...questionBank.work,
-
-            ...questionBank[
-                "first-law"
+            options:[
+                "Celsius",
+                "Kelvin",
+                "Fahrenheit",
+                "Joule"
             ],
 
-            ...questionBank.process
+            correctAnswer:1
+        },
 
-        ];
+
+        {
+            question:
+                "Heat naturally flows from...",
+
+            options:[
+                "Low temperature to high temperature",
+                "High temperature to low temperature",
+                "Low pressure to high pressure",
+                "Small volume to large volume"
+            ],
+
+            correctAnswer:1
+        },
 
 
+        {
+            question:
+                "Which symbol is commonly used for heat?",
+
+            options:[
+                "Q",
+                "P",
+                "V",
+                "U"
+            ],
+
+            correctAnswer:0
+        }
+
+    ];
+
+
+
+
+    // ======================================================
+    // WORK & ENERGY
+    // ======================================================
+
+    const workQuestions = [
+
+        {
+            question:
+                "Thermodynamic work at constant pressure can be expressed as...",
+
+            options:[
+                "W = PΔV",
+                "W = mcΔT",
+                "W = Q + T",
+                "PV = nRT"
+            ],
+
+            correctAnswer:0
+        },
+
+
+        {
+            question:
+                "When a gas expands, its volume...",
+
+            options:[
+                "Decreases",
+                "Remains constant",
+                "Increases",
+                "Becomes zero"
+            ],
+
+            correctAnswer:2
+        },
+
+
+        {
+            question:
+                "The SI unit of work is...",
+
+            options:[
+                "Pascal",
+                "Kelvin",
+                "Joule",
+                "Watt"
+            ],
+
+            correctAnswer:2
+        }
+
+    ];
+
+
+
+
+
+    // ======================================================
+    // FIRST LAW OF THERMODYNAMICS
+    // ======================================================
+
+    const firstLawQuestions = [
+
+        {
+            question:
+                "Which equation represents the First Law of Thermodynamics?",
+
+            options:[
+                "ΔU = Q - W",
+                "P = F / A",
+                "Q = mcΔT",
+                "PV = nRT"
+            ],
+
+            correctAnswer:0
+        },
+
+
+        {
+            question:
+                "Internal energy is represented by the symbol...",
+
+            options:[
+                "P",
+                "V",
+                "U",
+                "T"
+            ],
+
+            correctAnswer:2
+        },
+
+
+        {
+            question:
+                "In the First Law of Thermodynamics, Q represents...",
+
+            options:[
+                "Pressure",
+                "Heat",
+                "Volume",
+                "Temperature"
+            ],
+
+            correctAnswer:1
+        },
+
+
+        {
+            question:
+                "According to the First Law of Thermodynamics, energy can enter a system through...",
+
+            options:[
+                "Heat and work",
+                "Temperature and pressure",
+                "Volume and density",
+                "Mass and force"
+            ],
+
+            correctAnswer:0
+        },
+
+
+        {
+            question:
+                "A bicycle pump becomes hot after repeated use because...",
+
+            options:[
+                "Air creates energy by itself",
+                "Work done on the air increases its internal energy",
+                "Heat only comes from the hand",
+                "Temperature is unrelated to energy"
+            ],
+
+            correctAnswer:1
+        },
+
+
+        {
+            question:
+                "If a system receives heat and does no work, its internal energy will...",
+
+            options:[
+                "Increase",
+                "Decrease",
+                "Remain constant",
+                "Become zero"
+            ],
+
+            correctAnswer:0
+        },
+
+
+        {
+            question:
+                "A laptop becomes hot during heavy use because electrical energy is converted into...",
+
+            options:[
+                "Only mechanical energy",
+                "Internal energy and heat released to surroundings",
+                "Only chemical energy",
+                "Only potential energy"
+            ],
+
+            correctAnswer:1
+        },
+
+
+        {
+            question:
+                "Why is it important to define the system before applying the First Law of Thermodynamics?",
+
+            options:[
+                "Because it determines energy interactions being analyzed",
+                "Because temperature cannot be measured",
+                "Because pressure is always constant",
+                "Because heat does not exist"
+            ],
+
+            correctAnswer:0
+        },
+
+
+        {
+            question:
+                "When a gas is compressed by a piston, energy is transferred to the gas through...",
+            options:[
+                "Radiation",
+                "Work",
+                "Mass loss",
+                "Temperature only"
+            ],
+            correctAnswer:1
+        },
+        {
+            question:
+                "Two objects have the same initial and final states. Their change in internal energy is...",
+            options:[
+                "Always different",
+                "The same because internal energy is a state function",
+                "Always zero",
+                "Impossible to determine"
+            ],
+            correctAnswer:1
+        }
+    ];
+    // ======================================================
+    // THERMODYNAMIC PROCESSES
+    // ======================================================
+    const processQuestions = [
+
+        {
+            question:
+                "An isobaric process occurs at constant...",
+
+            options:[
+                "Temperature",
+                "Pressure",
+                "Volume",
+                "Internal energy"
+            ],
+
+            correctAnswer:1
+        },
+        {
+            question:
+                "An isochoric process occurs at constant...",
+
+            options:[
+                "Pressure",
+                "Temperature",
+                "Volume",
+                "Heat"
+            ],
+
+            correctAnswer:2
+        },
+        {
+            question:
+                "An isothermal process occurs at constant...",
+
+            options:[
+                "Temperature",
+                "Pressure",
+                "Volume",
+                "Work"
+            ],
+
+            correctAnswer:0
+        }
+    ];
+    // ======================================================
+    // TOPIC SELECTOR
+    // ======================================================
+    if(
+        key.includes("heat")
+    ){
+        return heatQuestions;
     }
+    if(
+        key.includes("work")
+        ||
+        key.includes("energy")
+    ){
 
+        return workQuestions;
+    }
+    if(
+    key.includes("first")
+    &&
+    key.includes("law")
+    ){
+    return firstLawQuestions;
+    }
+    if(
+        key.includes("process")
+    ){
+        return processQuestions;
+    }
+    if(
+        key.includes("all")
+    ){
+        return [
 
+            ...heatQuestions,
 
+            ...workQuestions,
+
+            ...firstLawQuestions,
+
+            ...processQuestions
+        ];
+    }
     return [];
-
 }
-
-
-
 // ======================================================
 // RENDER QUESTION
 // ======================================================
 
-function renderQuestion() {
+
+function renderQuestion(){
 
 
     stopTimer();
 
 
 
-    timeoutHandled =
+    answered =
         false;
 
 
 
-    autoNextExecuted =
-        false;
-
-
-
-    answerSubmitted =
+    movingNext =
         false;
 
 
@@ -795,12 +758,9 @@ function renderQuestion() {
 
 
 
-    if (!question) {
+    if(!question){
 
-
-        playMessage.textContent =
-            "Question unavailable.";
-
+        finishQuiz();
 
         return;
 
@@ -808,8 +768,13 @@ function renderQuestion() {
 
 
 
+
     questionNumber.textContent =
-        `Question ${currentQuestionIndex + 1} of ${currentQuestions.length}`;
+        `Question ${
+            currentQuestionIndex + 1
+        } of ${
+            currentQuestions.length
+        }`;
 
 
 
@@ -823,16 +788,11 @@ function renderQuestion() {
 
 
 
-    playMessage.textContent =
-        "";
-
-
-
     question.options.forEach(
         (
             option,
             index
-        ) => {
+        )=>{
 
 
             const button =
@@ -841,15 +801,8 @@ function renderQuestion() {
                 );
 
 
-
-            button.type =
-                "button";
-
-
-
             button.className =
                 "answer-option";
-
 
 
             button.textContent =
@@ -857,31 +810,18 @@ function renderQuestion() {
 
 
 
-            if (
-                userRole ===
-                "host"
-            ) {
+            if(
+                userRole === "player"
+            ){
 
+                button.onclick =
+                    ()=>submitAnswer(index);
+
+            }
+            else{
 
                 button.disabled =
                     true;
-
-
-            }
-            else {
-
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        submitAnswer(
-                            index
-                        );
-
-                    }
-                );
-
 
             }
 
@@ -897,78 +837,47 @@ function renderQuestion() {
 
 
 
-    if (
-        userRole ===
-        "host"
-    ) {
+    if(
+        userRole === "player"
+    ){
 
-
-        nextQuestionBtn.disabled =
-            true;
-
-
-
-        const last =
-            currentQuestionIndex ===
-            currentQuestions.length - 1;
-
-
-
-        nextQuestionBtn.textContent =
-            last
-                ?
-                "Finish Quiz"
-                :
-                "Next Question";
-
-
-
-        hostAnswerStatus.textContent =
-            "Waiting for players...";
-
+        startTimer();
 
     }
 
-
-
-    if (
-        userRole ===
-        "player"
-    ) {
-
-
-        checkExistingAnswer();
-
-
-    }
-
-
-
-    startTimer();
 
 
 }
-
-
-
 // ======================================================
 // TIMER
 // ======================================================
 
-function startTimer() {
+
+function startTimer(){
 
 
     stopTimer();
 
 
+    if(
+        !currentQuestionStartedAt
+    ){
 
-    updateTimerDisplay();
+        currentQuestionStartedAt =
+            new Date()
+                .toISOString();
+
+    }
+
+
+
+    updateTimer();
 
 
 
     timerInterval =
         setInterval(
-            updateTimerDisplay,
+            updateTimer,
             250
         );
 
@@ -977,17 +886,8 @@ function startTimer() {
 
 
 
-function updateTimerDisplay() {
 
-
-    if (
-        !currentQuestionStartedAt
-    ) {
-
-        return;
-
-    }
-
+function updateTimer(){
 
 
     const start =
@@ -1032,18 +932,12 @@ function updateTimerDisplay() {
 
 
     const percent =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                (
-                    remaining /
-                    total
-                )
-                *
-                100
-            )
-        );
+        (
+            remaining /
+            total
+        )
+        *
+        100;
 
 
 
@@ -1052,76 +946,54 @@ function updateTimerDisplay() {
 
 
 
-    if (
+    if(
         remaining <= 5000
-    ) {
-
+    ){
 
         timerBox.classList.add(
             "danger"
         );
 
-
-    } else {
-
+    }
+    else{
 
         timerBox.classList.remove(
             "danger"
         );
 
-
     }
 
 
 
-    if (
+    if(
         remaining <= 0
-    ) {
-
+    ){
 
         stopTimer();
 
 
 
-        if (
+        if(
             userRole === "player" &&
-            !answerSubmitted &&
-            !timeoutHandled
-        ) {
-
+            !answered
+        ){
 
             handleTimeout();
-
-
-        }
-
-
-
-        if (
-            userRole === "host"
-        ) {
-
-
-            autoNextQuestion();
-
 
         }
 
 
     }
 
-
 }
-// ======================================================
-// STOP TIMER
-// ======================================================
-
-function stopTimer() {
 
 
-    if (
-        timerInterval
-    ) {
+
+
+function stopTimer(){
+
+
+    if(timerInterval){
 
 
         clearInterval(
@@ -1135,32 +1007,51 @@ function stopTimer() {
     }
 
 }
+
+
+
 // ======================================================
-// RESPONSE TIME
+// SUBMIT ANSWER
 // ======================================================
 
-function getResponseTimeMs() {
+
+async function submitAnswer(
+    selectedIndex
+){
 
 
-    const total =
-        questionTimeSeconds *
-        1000;
+    if(
+        answered ||
+        userRole !== "player"
+    ){
 
-
-
-    if (
-        !currentQuestionStartedAt
-    ) {
-
-
-        return total;
-
+        return;
 
     }
 
 
 
-    const elapsed =
+    answered =
+        true;
+
+
+
+    stopTimer();
+
+
+
+    disableButtons();
+
+
+
+    const question =
+        currentQuestions[
+            currentQuestionIndex
+        ];
+
+
+
+    const responseTime =
         Date.now()
         -
         new Date(
@@ -1170,90 +1061,60 @@ function getResponseTimeMs() {
 
 
 
-    return Math.max(
-        0,
-        Math.min(
-            total,
-            elapsed
-        )
-    );
-
-
-}
+    const correct =
+        selectedIndex ===
+        question.correctAnswer;
 
 
 
-// ======================================================
-// SCORE CALCULATION
-// ======================================================
-
-function calculateScore(
-    isCorrect,
-    responseTimeMs
-) {
+    const score =
+        correct
+        ?
+        100
+        :
+        0;
 
 
-    if (
-        !isCorrect
-    ) {
 
 
-        return 0;
-
-
+    const {
+        error
     }
+    =
+    await supabaseClient
+        .from("quiz_answers")
+        .insert({
+
+            room_id:
+                Number(roomId),
+
+            player_id:
+                Number(playerId),
+
+            question_index:
+                currentQuestionIndex,
+
+            selected_answer:
+                selectedIndex,
+
+            is_correct:
+                correct,
+
+            score:
+                score,
+
+            response_time_ms:
+                responseTime
+
+        });
 
 
 
-    const total =
-        questionTimeSeconds *
-        1000;
+    if(error){
 
-
-
-    const remaining =
-        Math.max(
-            0,
-            total -
-            responseTimeMs
+        console.error(
+            error
         );
-
-
-
-    const ratio =
-        remaining /
-        total;
-
-
-
-    const bonus =
-        Math.round(
-            MAX_SPEED_BONUS *
-            ratio
-        );
-
-
-
-    return (
-        CORRECT_BASE_SCORE +
-        bonus
-    );
-
-
-}
-
-
-
-// ======================================================
-// CHECK EXISTING ANSWER
-// ======================================================
-
-async function checkExistingAnswer() {
-
-
-    if (
-        !playerId
-    ) {
 
         return;
 
@@ -1261,55 +1122,126 @@ async function checkExistingAnswer() {
 
 
 
+    showResult(
+        selectedIndex,
+        question.correctAnswer,
+        correct,
+        score
+    );
+
+
+
+    // pindah hanya player ini
+
+    setTimeout(
+        ()=>{
+
+            nextPlayerQuestion();
+
+        },
+        1000
+    );
+
+
+}
+
+
+
+
+// ======================================================
+// NEXT QUESTION - INDIVIDUAL PLAYER
+// ======================================================
+
+async function nextPlayerQuestion(){
+
+
+    if(
+        movingNext ||
+        userRole !== "player"
+    ){
+
+        return;
+
+    }
+
+
+
+    movingNext =
+        true;
+
+
+
+    const nextIndex =
+        currentQuestionIndex + 1;
+
+
+
+    // ==========================================
+    // PLAYER SUDAH MENYELESAIKAN SEMUA SOAL
+    // ==========================================
+
+    if(
+        nextIndex >=
+        currentQuestions.length
+    ){
+
+
+        finishQuiz();
+
+
+        return;
+
+    }
+
+
+
+    const newStartedAt =
+        new Date()
+            .toISOString();
+
+
+
     const {
-        data,
         error
     } =
     await supabaseClient
-        .from("quiz_answers")
-        .select(
-            `
-            selected_answer,
-            is_correct,
-            score
-            `
+        .from("quiz_players")
+        .update({
+
+            current_question:
+                nextIndex,
+
+            question_started_at:
+                newStartedAt
+
+        })
+        .eq(
+            "id",
+            Number(playerId)
         )
         .eq(
             "room_id",
-            roomId
-        )
-        .eq(
-            "player_id",
-            playerId
-        )
-        .eq(
-            "question_index",
-            currentQuestionIndex
-        )
-        .maybeSingle();
+            Number(roomId)
+        );
 
 
 
-    if (
-        error
-    ) {
+    if(error){
 
 
         console.error(
+            "NEXT QUESTION ERROR:",
             error
         );
 
 
-        return;
+        movingNext =
+            false;
 
 
-    }
+        playMessage.textContent =
+            "Failed to load next question.";
 
-
-
-    if (
-        !data
-    ) {
 
         return;
 
@@ -1317,32 +1249,20 @@ async function checkExistingAnswer() {
 
 
 
-    answerSubmitted =
-        true;
+    // Update state hanya milik player ini
+
+    currentQuestionIndex =
+        nextIndex;
+
+
+    currentQuestionStartedAt =
+        newStartedAt;
 
 
 
-    disableAnswerButtons();
-
-
-
-    stopTimer();
-
-
-
-    const question =
-        currentQuestions[
-            currentQuestionIndex
-        ];
-
-
-
-    showAnswerResult(
-        data.selected_answer,
-        question.correctAnswer,
-        data.is_correct,
-        data.score
-    );
+    // Render langsung.
+    // Tidak menunggu realtime room.
+    renderQuestion();
 
 
 }
@@ -1350,118 +1270,19 @@ async function checkExistingAnswer() {
 
 
 // ======================================================
-// SUBMIT ANSWER
+// TIMEOUT
 // ======================================================
 
-async function submitAnswer(
-    selectedIndex
-) {
-    if (
-        answerSubmitted
-    ) {
-        return;
-    }
-    const question =
-        currentQuestions[
-            currentQuestionIndex
-        ];
-    answerSubmitted =
-        true;
-    stopTimer();
-    disableAnswerButtons();
-    const responseTime =
-        getResponseTimeMs();
-    const isCorrect =
-        selectedIndex ===
-        question.correctAnswer;
-    const score =
-        calculateScore(
-            isCorrect,
-            responseTime
-        );
-    const {
-        error
-    } =
-    await supabaseClient
-        .from("quiz_answers")
-        .insert({
-            room_id:
-                Number(roomId),
-            player_id:
-                Number(playerId),
-            question_index:
-                currentQuestionIndex,
-            selected_answer:
-                selectedIndex,
-            is_correct:
-                isCorrect,
-            score:
-                score,
-            response_time_ms:
-                Math.round(
-                    responseTime
-                )
-        });
-    if (
-        error
-    ) {
-        console.error(
-            "Submit error:",
-            error
-        );
-        return;
-    }
-    showAnswerResult(
-        selectedIndex,
-        question.correctAnswer,
-        isCorrect,
-        score
-    );
-}
-// cek apakah semua player sudah menjawab
 
-if (
-    userRole === "player"
-) {
-
-    notifyAnswerCompleted();
-
-}
-// ======================================================
-// TIMEOUT HANDLER
-// ======================================================
-
-async function handleTimeout() {
+async function handleTimeout(){
 
 
-    if (
-        timeoutHandled
-    ) {
-
-        return;
-
-    }
-
-
-
-    timeoutHandled =
+    answered =
         true;
 
 
 
-    answerSubmitted =
-        true;
-
-
-
-    disableAnswerButtons();
-
-
-
-    const question =
-        currentQuestions[
-            currentQuestionIndex
-        ];
+    disableButtons();
 
 
 
@@ -1472,37 +1293,35 @@ async function handleTimeout() {
             room_id:
                 Number(roomId),
 
-
             player_id:
                 Number(playerId),
 
-
             question_index:
                 currentQuestionIndex,
-
 
             selected_answer:
                 -1,
 
-
             is_correct:
                 false,
-
 
             score:
                 0,
 
-
             response_time_ms:
-                questionTimeSeconds *
-                1000
+                questionTimeSeconds * 1000
 
         });
 
 
 
-    showTimeoutResult(
-        question.correctAnswer
+    setTimeout(
+        ()=>{
+
+            nextPlayerQuestion();
+
+        },
+        1000
     );
 
 
@@ -1511,37 +1330,62 @@ async function handleTimeout() {
 
 
 // ======================================================
-// SHOW ANSWER RESULT
+// BUTTON CONTROL
 // ======================================================
 
-function showAnswerResult(
-    selectedIndex,
-    correctIndex,
-    isCorrect,
+
+function disableButtons(){
+
+
+    document
+        .querySelectorAll(
+            ".answer-option"
+        )
+        .forEach(
+            btn=>{
+
+                btn.disabled =
+                    true;
+
+            }
+        );
+
+}
+
+
+
+// ======================================================
+// SHOW RESULT
+// ======================================================
+
+
+function showResult(
+    selected,
+    correct,
+    status,
     score
-) {
+){
 
 
     const buttons =
-        answerOptions
-            .querySelectorAll(
-                ".answer-option"
-            );
+        document.querySelectorAll(
+            ".answer-option"
+        );
 
 
 
     buttons.forEach(
         (
-            button,
+            btn,
             index
-        ) => {
+        )=>{
 
 
-            if (
-                index === correctIndex
-            ) {
+            if(
+                index === correct
+            ){
 
-                button.classList.add(
+                btn.classList.add(
                     "correct-answer"
                 );
 
@@ -1549,12 +1393,12 @@ function showAnswerResult(
 
 
 
-            if (
-                index === selectedIndex &&
-                index !== correctIndex
-            ) {
+            if(
+                index === selected &&
+                index !== correct
+            ){
 
-                button.classList.add(
+                btn.classList.add(
                     "wrong-answer"
                 );
 
@@ -1567,11 +1411,219 @@ function showAnswerResult(
 
 
     playMessage.textContent =
-        isCorrect
+        status
         ?
-        `Correct! +${score} points`
+        `Correct +${score}`
         :
-        "Incorrect +0 points";
+        "Incorrect";
+
+}
+// ======================================================
+// REALTIME
+// ======================================================
+
+let hostLeaderboardRedirect =
+    false;
+
+
+function startRealtime(){
+
+
+    if(
+        realtimeChannel
+    ){
+
+        return;
+
+    }
+
+
+
+    realtimeChannel =
+        supabaseClient
+            .channel(
+                `thermpyx-play-${roomId}-${userRole}-${playerId || "host"}`
+            );
+
+
+
+    // ==========================================
+    // ROOM STATUS
+    // ==========================================
+
+    realtimeChannel.on(
+
+        "postgres_changes",
+
+        {
+            event:
+                "UPDATE",
+
+            schema:
+                "public",
+
+            table:
+                "quiz_rooms",
+
+            filter:
+                `id=eq.${roomId}`
+        },
+
+        payload=>{
+
+
+            const room =
+                payload.new;
+
+
+            console.log(
+                "ROOM UPDATE:",
+                room
+            );
+
+
+
+            if(
+                room.status ===
+                "finished"
+            ){
+
+
+                stopTimer();
+
+
+                if(
+                    userRole ===
+                    "player"
+                ){
+
+                    goToLeaderboard();
+
+                }
+
+
+            }
+
+
+        }
+
+    );
+
+
+
+    // ==========================================
+    // HOST MONITORING
+    // ==========================================
+
+    if(
+        userRole === "host"
+    ){
+
+
+        nextQuestionBtn.style.display =
+            "none";
+
+
+        hostAnswerStatus.textContent =
+            "Players progress individually.";
+
+
+
+        realtimeChannel.on(
+
+            "postgres_changes",
+
+            {
+                event:
+                    "INSERT",
+
+                schema:
+                    "public",
+
+                table:
+                    "quiz_answers",
+
+                filter:
+                    `room_id=eq.${roomId}`
+            },
+
+            ()=>{
+
+
+                loadHostProgress();
+
+
+            }
+
+        );
+
+
+
+        realtimeChannel.on(
+
+            "postgres_changes",
+
+            {
+                event:
+                    "UPDATE",
+
+                schema:
+                    "public",
+
+                table:
+                    "quiz_players",
+
+                filter:
+                    `room_id=eq.${roomId}`
+            },
+
+            ()=>{
+
+
+                loadHostProgress();
+
+
+            }
+
+        );
+
+
+    }
+
+
+
+    realtimeChannel
+        .subscribe(
+            status=>{
+
+
+                console.log(
+                    "PLAY REALTIME:",
+                    status
+                );
+
+
+            }
+        );
+
+
+
+    if(
+        userRole === "host"
+    ){
+
+
+        setTimeout(
+            ()=>{
+
+                loadHostProgress();
+
+            },
+            500
+        );
+
+
+    }
 
 
 }
@@ -1579,36 +1631,179 @@ function showAnswerResult(
 
 
 // ======================================================
-// SHOW TIMEOUT
+// HOST PROGRESS
 // ======================================================
 
-function showTimeoutResult(
-    correctIndex
-) {
+async function loadHostProgress(){
 
 
-    const buttons =
-        answerOptions
-            .querySelectorAll(
-                ".answer-option"
-            );
+    if(
+        userRole !== "host"
+    ){
+
+        return;
+
+    }
 
 
 
-    buttons.forEach(
-        (
-            button,
-            index
-        ) => {
+    if(
+        !currentQuestions ||
+        currentQuestions.length === 0
+    ){
+
+        return;
+
+    }
 
 
-            if (
-                index === correctIndex
-            ) {
 
-                button.classList.add(
-                    "correct-answer"
+    const {
+        data: players,
+        error: playerError
+    } =
+    await supabaseClient
+        .from("quiz_players")
+        .select(
+            `
+            id,
+            nickname,
+            score,
+            current_question
+            `
+        )
+        .eq(
+            "room_id",
+            roomId
+        );
+
+
+
+    if(
+        playerError
+    ){
+
+
+        console.error(
+            "HOST PLAYER LOAD ERROR:",
+            playerError
+        );
+
+
+        return;
+
+    }
+
+
+
+    const {
+        data: answers,
+        error: answerError
+    } =
+    await supabaseClient
+        .from("quiz_answers")
+        .select(
+            `
+            player_id,
+            question_index
+            `
+        )
+        .eq(
+            "room_id",
+            roomId
+        );
+
+
+
+    if(
+        answerError
+    ){
+
+
+        console.error(
+            "HOST ANSWER LOAD ERROR:",
+            answerError
+        );
+
+
+        return;
+
+    }
+
+
+
+    if(
+        !players ||
+        players.length === 0
+    ){
+
+
+        hostAnswerStatus.textContent =
+            "Waiting for players...";
+
+
+        return;
+
+    }
+
+
+
+    const answerCounter =
+        new Map();
+
+
+
+    (answers || [])
+        .forEach(
+            answer=>{
+
+
+                const id =
+                    String(
+                        answer.player_id
+                    );
+
+
+                answerCounter.set(
+                    id,
+                    (
+                        answerCounter.get(id) ||
+                        0
+                    )
+                    +
+                    1
                 );
+
+
+            }
+        );
+
+
+
+    let completed =
+        0;
+
+
+
+    players.forEach(
+        player=>{
+
+
+            const answered =
+                answerCounter.get(
+                    String(player.id)
+                )
+                ||
+                0;
+
+
+
+            if(
+                answered >=
+                currentQuestions.length
+            ){
+
+                completed++;
 
             }
 
@@ -1618,62 +1813,70 @@ function showTimeoutResult(
 
 
 
-    playMessage.textContent =
-        "Time is up!";
-
-
-}
+    hostAnswerStatus.textContent =
+        `${completed} / ${players.length} players completed`;
 
 
 
-// ======================================================
-// AUTO NEXT QUESTION
-// ======================================================
-
-async function autoNextQuestion() {
-
-
-    if (
-        autoNextExecuted
-    ) {
-
-        return;
-
-    }
+    const progressText =
+        players
+            .map(
+                player=>{
 
 
-
-    autoNextExecuted =
-        true;
-
-
-
-    playMessage.textContent =
-        "Next question loading...";
+                    const answersDone =
+                        answerCounter.get(
+                            String(player.id)
+                        )
+                        ||
+                        0;
 
 
+                    return (
+                        `${player.nickname}: ` +
+                        `${Math.min(
+                            answersDone,
+                            currentQuestions.length
+                        )}/${currentQuestions.length}`
+                    );
 
-    await new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                3000
+
+                }
             )
-    );
+            .join(" • ");
 
 
 
-    const lastQuestion =
-        currentQuestionIndex >=
-        currentQuestions.length - 1;
+    playMessage.textContent =
+        progressText;
 
 
 
-    if (
-        lastQuestion
-    ) {
+    // ==========================================
+    // SEMUA PLAYER SELESAI
+    // ==========================================
+
+    if(
+        completed ===
+            players.length &&
+        players.length > 0 &&
+        !hostLeaderboardRedirect
+    ){
 
 
+        hostLeaderboardRedirect =
+            true;
+
+
+
+        hostAnswerStatus.textContent =
+            "All players completed the quiz.";
+
+
+
+        const {
+            error
+        } =
         await supabaseClient
             .from("quiz_rooms")
             .update({
@@ -1689,512 +1892,151 @@ async function autoNextQuestion() {
 
 
 
-        return;
+        if(error){
 
-    }
+            console.error(
+                "FINISH ROOM ERROR:",
+                error
+            );
 
-
-
-    const nextIndex =
-        currentQuestionIndex + 1;
-
-
-
-    await supabaseClient
-        .from("quiz_rooms")
-        .update({
-
-            current_question:
-                nextIndex,
-
-
-            question_started_at:
-                new Date()
-                    .toISOString()
-
-        })
-        .eq(
-            "id",
-            roomId
-        );
-
-
-}
-// ======================================================
-// REALTIME ROOM
-// ======================================================
-
-function subscribeToRoom() {
-
-
-    roomChannel =
-        supabaseClient
-            .channel(
-                `live-room-${roomId}`
-            )
-
-
-            .on(
-                "postgres_changes",
-
-                {
-                    event:
-                        "UPDATE",
-
-                    schema:
-                        "public",
-
-                    table:
-                        "quiz_rooms",
-
-                    filter:
-                        `id=eq.${roomId}`
-
-                },
-
-
-                (payload) => {
-
-
-                    handleRoomUpdate(
-                        payload.new
-                    );
-
-
-                }
-
-            )
-
-
-            .subscribe();
-
-
-
-}
-
-
-
-// ======================================================
-// HANDLE ROOM UPDATE
-// ======================================================
-
-function handleRoomUpdate(
-    room
-) {
-
-
-    console.log(
-        "ROOM UPDATE:",
-        room
-    );
-
-
-
-    if (
-        room.status === "finished"
-    ) {
-
-
-        stopTimer();
-
-
-
-        playMessage.textContent =
-            "Quiz Finished!";
+        }
 
 
 
         setTimeout(
-            () => {
+            ()=>{
 
                 goToLeaderboard();
 
             },
-            1000
+            1200
         );
-
-
-
-        return;
-
-    }
-
-
-
-    const updatedQuestion =
-        Number(
-            room.current_question
-        );
-
-
-
-    if (
-        updatedQuestion !==
-        currentQuestionIndex
-    ) {
-
-
-        currentQuestionIndex =
-            updatedQuestion;
-
-
-
-        currentQuestionStartedAt =
-            room.question_started_at;
-
-
-
-        // reload room supaya
-        // question bank tersedia
-
-        loadRoom();
 
 
     }
 
 
 }
-// ======================================================
-// REALTIME ANSWERS
-// ======================================================
-
-function subscribeToAnswers() {
-
-
-    answersChannel =
-        supabaseClient
-            .channel(
-                `answers-${roomId}`
-            )
-
-
-            .on(
-                "postgres_changes",
-
-                {
-                    event:
-                        "INSERT",
-
-                    schema:
-                        "public",
-
-                    table:
-                        "quiz_answers",
-
-                    filter:
-                        `room_id=eq.${roomId}`
-
-                },
-
-
-                () => {
-
-
-                    updateAnswerProgress();
-
-
-                }
-
-            )
-
-
-            .subscribe();
-
-
-}
 
 
 
 // ======================================================
-// UPDATE ANSWER PROGRESS
+// FINISH QUIZ - PLAYER
 // ======================================================
 
-async function updateAnswerProgress() {
+function finishQuiz(){
 
 
-    if (
-        userRole !== "host"
-    ) {
-
-        return;
-
-    }
+    stopTimer();
 
 
+    answered =
+        true;
 
-    const {
-        count: playerCount
-    } =
-    await supabaseClient
-        .from("quiz_players")
-        .select(
-            "id",
-            {
-                count:
-                    "exact",
-                head:
-                    true
-            }
-        )
-        .eq(
-            "room_id",
-            roomId
-        );
+
+    movingNext =
+        true;
+
+
+    disableButtons();
 
 
 
-    const {
-        count: answerCount
-    }
-    =
-    await supabaseClient
-        .from("quiz_answers")
-        .select(
-            "id",
-            {
-                count:
-                    "exact",
-                head:
-                    true
-            }
-        )
-        .eq(
-            "room_id",
-            roomId
-        )
-        .eq(
-            "question_index",
-            currentQuestionIndex
-        );
+    questionNumber.textContent =
+        "Quiz Completed";
+
+
+    questionText.textContent =
+        "Great work! Your answers have been submitted.";
+
+
+    answerOptions.innerHTML =
+        "";
+
+
+    playMessage.textContent =
+        "Opening leaderboard...";
 
 
 
-    console.log(
-        "ANSWER PROGRESS:",
-        answerCount,
-        "/",
-        playerCount
+    setTimeout(
+        ()=>{
+
+
+            goToLeaderboard();
+
+
+        },
+        1000
     );
 
 
-
-    hostAnswerStatus.textContent =
-        `${answerCount || 0} / ${playerCount || 0} players answered`;
-
-
-
-    // sementara tetap manual
-    // agar quiz stabil dulu
-
-    if (
-        answerCount >= playerCount &&
-        playerCount > 0
-    ) {
-
-
-        nextQuestionBtn.disabled =
-            false;
-
-
-        playMessage.textContent =
-            "All players answered.";
-
-
-    }
-
-
 }
-// ======================================================
-// MANUAL NEXT QUESTION
-// BACKUP BUTTON FOR HOST
-// ======================================================
-if (
-    nextQuestionBtn
-) {
-    nextQuestionBtn.addEventListener(
-        "click",
-        async () => {
-            if (
-                userRole !==
-                "host"
-            ) {
-                return;
-            }
-            nextQuestionBtn.disabled =
-                true;
-            const lastQuestion =
-                currentQuestionIndex >=
-                currentQuestions.length - 1;
-            if (
-                lastQuestion
-            ) {
-                await supabaseClient
-                    .from("quiz_rooms")
-                    .update({
-                        status:
-                            "finished"
-                    })
-                    .eq(
-                        "id",
-                        roomId
-                    );
-                return;
-            }
-            const nextIndex =
-                currentQuestionIndex + 1;
-            await supabaseClient
-                .from("quiz_rooms")
-                .update({
-                    current_question:
-                        nextIndex,
-                    question_started_at:
-                        new Date()
-                            .toISOString()
-                })
-                .eq(
-                    "id",
-                    roomId
-                );
-        }
-    );
-}
+
+
+
 // ======================================================
 // LEADERBOARD
 // ======================================================
-function goToLeaderboard() {
+
+function goToLeaderboard(){
+
+
     window.location.href =
         "leaderboard.html";
-}
-// ======================================================
-// BUTTON HELPERS
-// ======================================================
-function disableAnswerButtons() {
-    answerOptions
-        .querySelectorAll(
-            ".answer-option"
-        )
-        .forEach(
-            button => {
-                button.disabled =
-                    true;
-            }
-        );
-}
-function enableAnswerButtons() {
-    answerOptions
-        .querySelectorAll(
-            ".answer-option"
-        )
-        .forEach(
-            button => {
-                button.disabled =
-                    false;
-            }
-        );
-}
-// ======================================================
-// CHECK ALL PLAYERS ANSWERED
-// ======================================================
 
-async function notifyAnswerCompleted() {
-
-
-    const {
-        count: totalPlayers
-    } =
-    await supabaseClient
-        .from("quiz_players")
-        .select(
-            "id",
-            {
-                count:
-                    "exact",
-                head:
-                    true
-            }
-        )
-        .eq(
-            "room_id",
-            roomId
-        );
-
-
-
-    const {
-        count: totalAnswers
-    }
-    =
-    await supabaseClient
-        .from("quiz_answers")
-        .select(
-            "id",
-            {
-                count:
-                    "exact",
-                head:
-                    true
-            }
-        )
-        .eq(
-            "room_id",
-            roomId
-        )
-        .eq(
-            "question_index",
-            currentQuestionIndex
-        );
-
-
-
-    console.log(
-        "Answers:",
-        totalAnswers,
-        "/",
-        totalPlayers
-    );
-
-
-
-    if (
-        totalAnswers >= totalPlayers
-    ) {
-
-
-        if (
-            userRole === "host"
-        ) {
-
-
-            autoNextQuestion();
-
-
-        }
-
-    }
 
 }
+
+
+
+// ======================================================
+// INITIAL HOST REALTIME
+// ======================================================
+
+if(
+    roomId
+){
+
+    startRealtime();
+
+}
+
+
+
 // ======================================================
 // CLEANUP
 // ======================================================
+
 window.addEventListener(
+
     "beforeunload",
-    () => {
+
+    ()=>{
+
+
         stopTimer();
-        if (
-            roomChannel
-        ) {
+
+
+
+        if(
+            realtimeChannel
+        ){
+
+
             supabaseClient
                 .removeChannel(
-                    roomChannel
+                    realtimeChannel
                 );
+
+
+            realtimeChannel =
+                null;
+
+
         }
-        if (
-            answersChannel
-        ) {
-            supabaseClient
-                .removeChannel(
-                    answersChannel
-                );
-        }
+
+
     }
+
 );
