@@ -43,13 +43,16 @@ joinRoomBtn.addEventListener("click", async () => {
 
     // Masukkan pemain ke database
     const { data: player, error: playerError } = await supabaseClient
-        .from("quiz_players")
-        .insert({
-            room_id: room.id,
-            nickname: nickname
-        })
-        .select()
-        .single();
+    .from("quiz_players")
+    .insert({
+        room_id: room.id,
+        nickname: nickname,
+        score: 0,
+        current_question: 0,
+        question_started_at: null
+    })
+    .select()
+    .single();
 
     if (playerError) {
         console.error("Join error:", playerError);
