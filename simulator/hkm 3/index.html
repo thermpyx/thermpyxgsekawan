@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Simulasi Hukum III Termodinamika</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="simulator-hero">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">
+            THERMODYNAMICS SIMULATION
+        </span>
+
+        <h1>
+            Simulasi Hukum III Termodinamika
+        </h1>
+
+        <p>
+            Interactive Third Law of Thermodynamics Simulation
+        </p>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- =====================================================
+     THEORY INTRODUCTION
+===================================================== -->
+
+<section class="explanation-panel">
+
+    <h2>
+        Hukum III Termodinamika
+    </h2>
+
+    <div class="explanation-content">
+
+        <p>
+            Hukum III Termodinamika membahas perilaku entropi
+            suatu sistem ketika temperatur mendekati nol absolut.
+            Hukum ini menyatakan bahwa entropi sebuah
+            <strong>kristal sempurna</strong> mendekati nol
+            ketika temperatur mendekati <strong>0 K</strong>.
+        </p>
+
+        <p>
+            Ketika temperatur semakin rendah, energi termal
+            partikel semakin kecil. Akibatnya, gerakan partikel
+            berkurang dan susunan partikel dalam kristal menjadi
+            semakin teratur.
+        </p>
+
+        <p>
+            Temperatur <strong>0 K</strong> disebut sebagai
+            <strong>nol absolut (absolute zero)</strong>.
+            Nol absolut merupakan batas temperatur terendah
+            secara teoritis dan tidak dapat dicapai secara tepat
+            melalui sejumlah proses termodinamika yang berhingga.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     BASIC CONCEPT
+===================================================== -->
+
+<section class="law-panel">
+
+    <h2>
+        Konsep Dasar
+    </h2>
+
+    <div class="formula">
+
+        lim<sub>T → 0</sub> S = 0
+
+    </div>
+
+    <div class="formula-explanation">
+
+        <div>
+            <strong>S</strong>
+            <span>
+                Entropi sistem
+            </span>
+        </div>
+
+        <div>
+            <strong>T</strong>
+            <span>
+                Temperatur absolut dalam Kelvin
+            </span>
+        </div>
+
+        <div>
+            <strong>0 K</strong>
+            <span>
+                Nol absolut
+            </span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     INTERACTIVE THEORY
+===================================================== -->
+
+<section class="explanation-panel">
+
+    <h2>
+        Pelajari Konsep Hukum III
+    </h2>
+
+
+    <!-- ENTROPY -->
+
+    <details>
+
+        <summary>
+            Apa itu Entropi?
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Entropi merupakan besaran termodinamika yang
+                berkaitan dengan penyebaran energi dan jumlah
+                kemungkinan keadaan mikroskopis suatu sistem.
+            </p>
+
+            <p>
+                Secara sederhana, dalam konteks kristal,
+                semakin teratur susunan partikel maka jumlah
+                kemungkinan keadaan mikroskopisnya semakin
+                terbatas.
+            </p>
+
+            <p>
+                Oleh karena itu, pada kristal sempurna yang
+                mendekati 0 K, entropi mendekati nilai minimum,
+                yaitu nol.
+            </p>
+
+        </div>
+
+    </details>
+
+
+    <!-- ABSOLUTE ZERO -->
+
+    <details>
+
+        <summary>
+            Apa itu Nol Absolut?
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Nol absolut adalah temperatur
+                <strong>0 K</strong>, yang setara dengan
+                sekitar <strong>−273,15 °C</strong>.
+            </p>
+
+            <p>
+                Pada temperatur yang sangat mendekati nol
+                absolut, energi termal yang tersedia untuk
+                gerakan partikel menjadi sangat kecil.
+            </p>
+
+            <p>
+                Namun, 0 K merupakan batas yang tidak dapat
+                dicapai secara tepat melalui sejumlah langkah
+                pendinginan yang berhingga.
+            </p>
+
+        </div>
+
+    </details>
+
+
+    <!-- CRYSTAL -->
+
+    <details>
+
+        <summary>
+            Mengapa Menggunakan Kristal?
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Hukum III biasanya dijelaskan menggunakan
+                kristal sempurna karena partikel-partikelnya
+                memiliki susunan yang sangat teratur.
+            </p>
+
+            <p>
+                Ketika temperatur mendekati 0 K, keadaan
+                mikroskopis kristal sempurna mendekati satu
+                keadaan dasar sehingga entropinya mendekati nol.
+            </p>
+
+        </div>
+
+    </details>
+
+
+    <!-- PARTICLE MOTION -->
+
+    <details>
+
+        <summary>
+            Apa Hubungan Temperatur dan Gerak Partikel?
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Temperatur berhubungan dengan energi termal
+                suatu sistem. Ketika temperatur meningkat,
+                gerakan termal partikel secara umum menjadi
+                semakin besar.
+            </p>
+
+            <p>
+                Sebaliknya, ketika temperatur diturunkan,
+                gerakan termal semakin kecil.
+            </p>
+
+            <p>
+                Pada simulasi ini, gerakan tersebut
+                divisualisasikan sebagai getaran partikel
+                di sekitar posisi keseimbangannya.
+            </p>
+
+        </div>
+
+    </details>
+
+
+    <!-- TEMPERATURE -->
+
+    <details>
+
+        <summary>
+            Mengapa Temperatur Menggunakan Kelvin?
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Temperatur termodinamika dinyatakan dalam
+                skala Kelvin karena skala ini dimulai dari
+                nol absolut.
+            </p>
+
+            <p>
+                Dalam simulasi, perhitungan temperatur
+                menggunakan Kelvin. Pengguna juga dapat
+                memilih tampilan Celsius melalui pilihan
+                satuan temperatur.
+            </p>
+
+            <p>
+                Hubungan kedua skala tersebut adalah:
+            </p>
+
+            <div class="mini-formula">
+
+                T(K) = T(°C) + 273,15
+
+            </div>
+
+        </div>
+
+    </details>
+
+
+    <!-- ENTROPY LIMIT -->
+
+    <details>
+
+        <summary>
+            Apa yang Terjadi Saat T Mendekati 0 K?
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Ketika temperatur semakin mendekati 0 K,
+                entropi kristal sempurna juga semakin
+                mendekati nol.
+            </p>
+
+            <p>
+                Dalam simulasi, kondisi tersebut ditampilkan
+                melalui:
+            </p>
+
+            <ul>
+
+                <li>
+                    Gerakan partikel semakin kecil.
+                </li>
+
+                <li>
+                    Susunan partikel semakin teratur.
+                </li>
+
+                <li>
+                    Nilai entropi relatif semakin mendekati nol.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </details>
+
+</section>
+
+
+<!-- =====================================================
+     SIMULATION
+===================================================== -->
+
+<section class="simulation-panel">
+
+    <div class="section-title">
+
+        <div>
+
+            <h2>
+                Simulasi Kristal
+            </h2>
+
+            <p>
+                Amati perubahan gerakan dan keteraturan
+                partikel ketika temperatur diubah.
+            </p>
+
+        </div>
+
+        <span id="temperatureBadge">
+            300 K
+        </span>
+
+    </div>
+
+
+    <!-- CRYSTAL -->
+
+    <div
+        class="crystal-container"
+        id="crystalContainer"
+    >
+
+        <div
+            class="crystal-grid"
+            id="crystalGrid"
+        >
+
+            <!-- ROW 1 -->
+
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+
+
+            <!-- ROW 2 -->
+
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+
+
+            <!-- ROW 3 -->
+
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+
+
+            <!-- ROW 4 -->
+
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+
+
+            <!-- ROW 5 -->
+
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+
+
+            <!-- ROW 6 -->
+
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+            <div class="crystal-particle"></div>
+
+        </div>
+
+
+        <div class="crystal-label">
+
+            <span>
+                Kristal
+            </span>
+
+            <small id="orderLabel">
+                Keteraturan tinggi
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- BUTTON -->
+
+    <div class="simulation-buttons">
+
+        <button id="startBtn">
+            ▶ Mulai
+        </button>
+
+        <button id="pauseBtn">
+            ⏸ Jeda
+        </button>
+
+        <button id="resetBtn">
+            ↻ Reset
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTROL
+===================================================== -->
+
+<section class="control-panel">
+
+    <h2>
+        Kontrol Simulasi
+    </h2>
+
+
+    <!-- UNIT -->
+
+    <div class="control-group">
+
+        <label for="unitSelect">
+            Satuan Temperatur
+        </label>
+
+        <select id="unitSelect">
+
+            <option value="kelvin">
+                Kelvin (K)
+            </option>
+
+            <option value="celsius">
+                Celsius (°C)
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- TEMPERATURE -->
+
+    <div class="control-group">
+
+        <label for="temperatureInput">
+
+            Temperatur
+
+            <span id="temperatureValue">
+                300 K
+            </span>
+
+        </label>
+
+        <input
+            type="range"
+            id="temperatureInput"
+            min="0.1"
+            max="500"
+            value="300"
+            step="0.1"
+        >
+
+    </div>
+
+
+    <div
+        class="info-box"
+        id="temperatureInfo"
+    >
+
+        Temperatur yang lebih rendah menyebabkan
+        gerakan partikel semakin kecil dan susunan
+        kristal menjadi semakin teratur.
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     DATA
+===================================================== -->
+
+<section class="data-panel">
+
+    <h2>
+        Data Termodinamika
+    </h2>
+
+    <div class="data-grid">
+
+
+        <div class="data-card">
+
+            <span>
+                Temperature
+            </span>
+
+            <strong id="temperatureDisplay">
+                300 K
+            </strong>
+
+            <small id="temperatureAlt">
+                26.85 °C
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                Entropy
+            </span>
+
+            <strong id="entropyDisplay">
+                1.0000
+            </strong>
+
+            <small>
+                S / S₀
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                Particle Motion
+            </span>
+
+            <strong id="motionDisplay">
+                Tinggi
+            </strong>
+
+            <small id="motionValue">
+                60%
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                Crystal Order
+            </span>
+
+            <strong id="orderDisplay">
+                Sedang
+            </strong>
+
+            <small id="orderValue">
+                40%
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                Absolute Zero
+            </span>
+
+            <strong id="absoluteZeroDisplay">
+                300 K
+            </strong>
+
+            <small>
+                Target: 0 K
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                Distance to 0 K
+            </span>
+
+            <strong id="distanceDisplay">
+                300 K
+            </strong>
+
+            <small>
+                Semakin kecil semakin dekat
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     GRAPH
+===================================================== -->
+
+<section class="graph-panel">
+
+    <div class="section-title">
+
+        <div>
+
+            <h2>
+                Hubungan Temperatur dan Entropi
+            </h2>
+
+            <p>
+                Entropi kristal sempurna mendekati nol
+                ketika temperatur mendekati 0 K.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <canvas id="entropyGraph"></canvas>
+
+</section>
+
+
+<!-- =====================================================
+     CONTOH KEHIDUPAN SEHARI-HARI
+===================================================== -->
+
+<section class="explanation-panel">
+
+    <h2>
+        Hukum III dalam Kehidupan Sehari-hari
+    </h2>
+
+    <div class="explanation-content">
+
+        <p>
+            Hukum III Termodinamika berkaitan dengan fenomena
+            pada temperatur sangat rendah. Beberapa penerapannya
+            dapat ditemukan dalam teknologi pendinginan dan
+            penelitian material.
+        </p>
+
+
+        <details>
+
+            <summary>
+                Teknologi kriogenik
+            </summary>
+
+            <div class="details-content">
+
+                <p>
+                    Kriogenik merupakan bidang yang mempelajari
+                    dan memanfaatkan temperatur yang sangat rendah.
+                    Sistem kriogenik digunakan untuk menghasilkan
+                    dan mempertahankan kondisi temperatur rendah.
+                </p>
+
+            </div>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                Superkonduktivitas
+            </summary>
+
+            <div class="details-content">
+
+                <p>
+                    Beberapa material dapat menunjukkan fenomena
+                    superkonduktivitas pada temperatur rendah.
+                    Karena itu, pemahaman mengenai perilaku material
+                    pada temperatur rendah berkaitan dengan konsep
+                    termodinamika dan Hukum III.
+                </p>
+
+            </div>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                Pendinginan ekstrem
+            </summary>
+
+            <div class="details-content">
+
+                <p>
+                    Sistem pendingin khusus digunakan dalam penelitian
+                    fisika untuk mencapai temperatur yang sangat
+                    mendekati nol absolut.
+                </p>
+
+                <p>
+                    Semakin dekat temperatur terhadap 0 K,
+                    semakin sulit melakukan pendinginan lebih lanjut.
+                </p>
+
+            </div>
+
+        </details>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTOH SOAL
+===================================================== -->
+
+<section class="explanation-panel">
+
+    <h2>
+        Contoh Soal
+    </h2>
+
+
+    <details>
+
+        <summary>
+            Contoh Soal 1 — Konsep
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Sebuah kristal sempurna didinginkan hingga
+                temperaturnya semakin mendekati 0 K.
+                Bagaimana perubahan entropinya?
+            </p>
+
+            <p>
+                <strong>Jawaban:</strong>
+            </p>
+
+            <p>
+                Berdasarkan Hukum III Termodinamika, entropi
+                kristal sempurna semakin mendekati nol ketika
+                temperatur mendekati 0 K.
+            </p>
+
+        </div>
+
+    </details>
+
+
+    <details>
+
+        <summary>
+            Contoh Soal 2 — Konversi Suhu
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Sebuah sistem memiliki temperatur −253,15 °C.
+                Berapakah temperaturnya dalam Kelvin?
+            </p>
+
+            <div class="mini-formula">
+
+                T(K) = T(°C) + 273,15
+
+            </div>
+
+            <p>
+
+                T = −253,15 + 273,15
+
+                <br>
+
+                T = <strong>20 K</strong>
+
+            </p>
+
+        </div>
+
+    </details>
+
+
+    <details>
+
+        <summary>
+            Contoh Soal 3 — Pemahaman
+        </summary>
+
+        <div class="details-content">
+
+            <p>
+                Mengapa temperatur 0 K tidak dapat dicapai
+                dengan mudah melalui proses pendinginan biasa?
+            </p>
+
+            <p>
+                <strong>Jawaban:</strong>
+            </p>
+
+            <p>
+                Karena 0 K merupakan batas temperatur terendah.
+                Ketika sistem semakin mendekati nol absolut,
+                proses untuk mengurangi temperatur lebih lanjut
+                menjadi semakin sulit.
+            </p>
+
+        </div>
+
+    </details>
+
+</section>
+
+
+<!-- =====================================================
+     KESIMPULAN
+===================================================== -->
+
+<section class="law-panel">
+
+    <h2>
+        Kesimpulan
+    </h2>
+
+    <div class="explanation-content">
+
+        <p>
+            Hukum III Termodinamika menyatakan bahwa entropi
+            kristal sempurna mendekati nol ketika temperatur
+            mendekati nol absolut.
+        </p>
+
+        <p>
+            Dalam simulasi ini, hubungan tersebut ditunjukkan
+            melalui perubahan gerakan partikel dan keteraturan
+            kristal ketika temperatur diturunkan.
+        </p>
+
+        <p>
+            Semakin dekat temperatur terhadap <strong>0 K</strong>,
+            gerakan termal semakin kecil dan entropi semakin
+            mendekati nilai minimum.
+        </p>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
