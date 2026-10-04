@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Heat & Temperature | THERMPYX</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="site-header">
+
+    <a href="#" class="brand">
+
+        <span class="brand-mark">T</span>
+
+        <span class="brand-text">
+            <strong>THERMPYX</strong>
+            <small>THERMODYNAMICS</small>
+        </span>
+
+    </a>
+
+    <div class="header-actions">
+
+        <a href="#" class="header-btn">
+            ← Back to Home
+        </a>
+
+        <button
+            class="header-btn"
+            id="darkBtn"
+            type="button"
+        >
+            ☾ Dark Mode
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <!-- =================================================
+         HERO
+    ================================================== -->
+
+    <section class="hero">
+
+        <div class="badge">
+            THERMODYNAMICS • HEAT & TEMPERATURE
+        </div>
+
+        <h1>
+            Heat & Temperature
+        </h1>
+
+        <p>
+            Explore how heat transfer affects temperature
+            and the motion of particles.
+        </p>
+
+    </section>
+
+
+    <!-- =================================================
+         SIMULATION
+    ================================================== -->
+
+    <section class="panel simulation-panel">
+
+        <div class="section-heading">
+
+            <div>
+                <h2>
+                    Heating Simulation
+                </h2>
+
+                <p>
+                    Supply heat and observe how the temperature
+                    and particle motion change.
+                </p>
+            </div>
+
+            <span
+                class="status"
+                id="status"
+            >
+                Ready
+            </span>
+
+        </div>
+
+
+        <!-- SCENE -->
+
+        <div
+            class="scene"
+            id="scene"
+        >
+
+            <!-- WATER CONTAINER -->
+
+            <div
+                class="beaker"
+                id="beaker"
+            >
+
+                <div
+                    class="liquid"
+                    id="liquid"
+                >
+
+                    <div
+                        id="particles"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- HEAT SOURCE -->
+
+            <div
+                class="flame"
+                id="flame"
+            >
+
+                <div class="fire">
+                    🔥
+                </div>
+
+                <span>
+                    Heat source
+                </span>
+
+                <div class="heat-source-info">
+                    <span>Heat supplied</span>
+                    <strong id="heatSourceValue">0 J</strong>
+                </div>
+
+            </div>
+
+
+            <!-- THERMOMETER -->
+
+            <div
+                class="thermometer"
+                id="thermometer"
+            >
+
+                <div class="thermo-scale">
+
+                    <span>100°</span>
+                    <span>75°</span>
+                    <span>50°</span>
+                    <span>25°</span>
+                    <span>0°</span>
+
+                </div>
+
+
+                <div class="thermo-tube">
+
+                    <div
+                        class="mercury"
+                        id="mercury"
+                    ></div>
+
+                </div>
+
+
+                <div class="thermo-bulb"></div>
+
+
+                <strong id="thermoRead">
+                    25.0 °C
+                </strong>
+
+            </div>
+
+
+            <!-- MATERIAL LABEL -->
+
+            <div
+                class="material-label"
+                id="materialLabel"
+            >
+
+                <strong id="materialName">
+                    Water
+                </strong>
+
+                <span id="motion">
+                    Low particle motion
+                </span>
+
+            </div>
+
+
+            <!-- SIMULATION TOOLTIP -->
+
+            <div
+                class="simulation-tooltip"
+                id="simulationTooltip"
+            >
+
+                <strong>
+                    Water
+                </strong>
+
+                <span>
+                    Temperature: 25.0 °C
+                </span>
+
+                <span>
+                    Heat: 0 J
+                </span>
+
+                <span>
+                    ΔT: 0.0 °C
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+
+        <div class="controls">
+
+            <div class="control-card">
+
+                <div class="control-top">
+
+                    <label for="q">
+                        Heat Q
+                    </label>
+
+                    <strong id="qValue">
+                        0 J
+                    </strong>
+
+                </div>
+
+                <input
+                    id="q"
+                    type="range"
+                    min="0"
+                    max="300000"
+                    value="0"
+                    step="1000"
+                >
+
+            </div>
+
+
+            <div class="control-card">
+
+                <div class="control-top">
+
+                    <label for="m">
+                        Mass m
+                    </label>
+
+                    <strong id="mValue">
+                        1.0 kg
+                    </strong>
+
+                </div>
+
+                <input
+                    id="m"
+                    type="range"
+                    min="0.5"
+                    max="5"
+                    value="1"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="control-card">
+
+                <label for="material">
+                    Material
+                </label>
+
+                <select id="material">
+
+                    <option value="water">
+                        Water — 4200 J/kg·K
+                    </option>
+
+                    <option value="aluminum">
+                        Aluminum — 900 J/kg·K
+                    </option>
+
+                    <option value="iron">
+                        Iron — 450 J/kg·K
+                    </option>
+
+                    <option value="copper">
+                        Copper — 385 J/kg·K
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="simulation-buttons">
+
+            <button
+                class="primary"
+                id="start"
+                type="button"
+            >
+                ▶ Start
+            </button>
+
+            <button
+                id="pause"
+                type="button"
+            >
+                ⏸ Pause
+            </button>
+
+            <button
+                id="reset"
+                type="button"
+            >
+                ↻ Reset
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         DATA
+    ================================================== -->
+
+    <section class="data-grid">
+
+        <div class="data-card">
+
+            <span>
+                Heat Q
+            </span>
+
+            <strong id="dq">
+                0 J
+            </strong>
+
+            <small>
+                Heat supplied
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                Temperature T
+            </span>
+
+            <strong id="temp">
+                25.0 °C
+            </strong>
+
+            <small>
+                Current temperature
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                ΔT
+            </span>
+
+            <strong id="dt">
+                0.0 °C
+            </strong>
+
+            <small>
+                Temperature change
+            </small>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <span>
+                Specific Heat c
+            </span>
+
+            <strong id="c">
+                4200
+            </strong>
+
+            <small>
+                J/kg·K
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         GRAPH
+    ================================================== -->
+
+    <section class="panel graph-panel">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    Heat–Temperature Diagram
+                </h2>
+
+                <p>
+                    Relationship between supplied heat
+                    and temperature.
+                </p>
+
+            </div>
+
+            <div class="graph-legend">
+
+                <span></span>
+
+                Temperature
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="graph-container"
+            id="graphContainer"
+        >
+
+            <canvas
+                id="heatGraph"
+            ></canvas>
+
+
+            <div
+                class="graph-tooltip"
+                id="graphTooltip"
+            ></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         THEORY
+    ================================================== -->
+
+    <section class="panel theory-panel">
+
+        <h2>
+            Heat and Temperature
+        </h2>
+
+
+        <p class="theory-intro">
+
+            Heat is energy transferred between objects because
+            of a temperature difference. When heat is supplied
+            to a material, its temperature can increase.
+
+        </p>
+
+
+        <div class="formula">
+            Q = m × c × ΔT
+        </div>
+
+
+        <div class="formula-grid">
+
+            <div>
+                <strong>Q</strong>
+                <span>Heat supplied (J)</span>
+            </div>
+
+            <div>
+                <strong>m</strong>
+                <span>Mass (kg)</span>
+            </div>
+
+            <div>
+                <strong>c</strong>
+                <span>Specific heat (J/kg·K)</span>
+            </div>
+
+            <div>
+                <strong>ΔT</strong>
+                <span>Temperature change (K)</span>
+            </div>
+
+        </div>
+
+
+        <details open>
+
+            <summary>
+                What happens when heat is supplied?
+            </summary>
+
+            <p>
+
+                When a material receives heat, the energy of
+                its particles increases. The particles move
+                more actively, which can result in an increase
+                in temperature.
+
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                What is specific heat?
+            </summary>
+
+            <p>
+
+                Specific heat is the amount of heat required
+                to increase the temperature of 1 kg of a
+                material by 1 K.
+
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                Why does mass affect temperature change?
+            </summary>
+
+            <p>
+
+                For the same amount of supplied heat, a larger
+                mass requires more energy to produce the same
+                temperature increase.
+
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                How do I read the simulation?
+            </summary>
+
+            <p>
+
+                Move the cursor over the water, flame,
+                thermometer, or particles to see their
+                current values. You can also move the cursor
+                over the graph to inspect a specific point.
+
+            </p>
+
+        </details>
+
+    </section>
+
+
+    <!-- =================================================
+         EXAMPLE
+    ================================================== -->
+
+    <section class="panel example-panel">
+
+        <h2>
+            Example
+        </h2>
+
+        <p>
+
+            Suppose 42,000 J of heat is supplied to 1 kg
+            of water. Since the specific heat of water is
+            approximately 4,200 J/kg·K:
+
+        </p>
+
+
+        <div class="example-box">
+
+            ΔT = Q / (m × c)
+
+            <br><br>
+
+            ΔT = 42,000 / (1 × 4,200)
+
+            <br><br>
+
+            <strong>
+                ΔT = 10 K
+            </strong>
+
+        </div>
+
+        <p>
+
+            If the initial temperature is 25 °C, the final
+            temperature becomes approximately 35 °C.
+
+        </p>
+
+    </section>
+
+
+    <!-- =================================================
+         CONCLUSION
+    ================================================== -->
+
+    <section class="conclusion">
+
+        <strong>
+            Key Idea
+        </strong>
+
+        <p>
+
+            The amount of temperature change depends on the
+            supplied heat, mass, and specific heat of the
+            material.
+
+        </p>
+
+    </section>
+
+</main>
+
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
