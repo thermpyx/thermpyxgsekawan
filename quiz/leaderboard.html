@@ -4,12 +4,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Quiz | THERMPYX</title>
+<title>Leaderboard | THERMPYX</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
+<link href="leaderboard.css" rel="stylesheet"/>
 <link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
@@ -20,58 +21,58 @@
 <span class="theme-text" id="themeText">Dark Mode</span>
 </button>
 </header>
-<main class="quiz-page">
-<section class="quiz-hero quiz-hub-hero">
-<p class="section-label">THERMPYX QUIZ</p>
-<h1>Choose Your Quiz Mode</h1>
-<p>
-                Practice independently at your own pace or enter a live multiplayer room
-                and compete with other learners in real time.
-            </p>
+<main class="quiz-page leaderboard-shell">
+<section class="leaderboard-page">
+<header class="leaderboard-header">
+<div>
+<p class="section-label">QUIZ COMPLETE</p>
+<h1>Quiz Leaderboard</h1>
+<p class="leaderboard-subtitle">Highest score wins. If tied, the player with the fastest total answer time ranks higher.</p>
+</div>
+<div class="leaderboard-room-box">
+<span>ROOM</span>
+<strong id="leaderboardRoomCode">------</strong>
+</div>
+</header>
+<section class="result-summary">
+<div class="summary-item">
+<span>Players</span>
+<strong id="totalPlayers">0</strong>
+</div>
+<div class="summary-item">
+<span>Your Rank</span>
+<strong id="yourRank">-</strong>
+</div>
+<div class="summary-item">
+<span>Your Score</span>
+<strong id="yourScore">-</strong>
+</div>
 </section>
-<section class="quiz-area quiz-hub-area">
-<div class="quiz-mode-selector">
-<div class="quiz-selector-heading">
-<span class="quiz-question-label">SELECT MODE</span>
-<h2>How do you want to learn?</h2>
-<p>Both modes use THERMPYX thermodynamics materials, but the learning experience is different.</p>
+<section class="podium" id="podium">
+<p class="loading-text">Loading results...</p>
+</section>
+<section class="ranking-section">
+<div class="ranking-title">
+<div>
+<span class="quiz-question-label">SCORE ↓ / TOTAL TIME ↑</span>
+<h2>All Players</h2>
 </div>
-<div class="quiz-mode-grid">
-<a class="quiz-mode-card" href="practice.html">
-<span class="quiz-mode-number">01</span>
-<span class="quiz-mode-icon">✓</span>
-<span class="quiz-mode-copy">
-<strong>Practice Quiz</strong>
-<small>Choose a topic, answer at your own pace, and review your score instantly.</small>
-</span>
-<span class="quiz-mode-meta">Self-paced</span>
-<span class="quiz-mode-arrow">→</span>
-</a>
-<a class="quiz-mode-card quiz-mode-card-live" href="live.html">
-<span class="quiz-mode-number">02</span>
-<span class="quiz-mode-icon">⌁</span>
-<span class="quiz-mode-copy">
-<strong>Live Quiz</strong>
-<small>Create or join a room, answer together, and see a realtime leaderboard.</small>
-</span>
-<span class="quiz-mode-meta">Multiplayer</span>
-<span class="quiz-mode-arrow">→</span>
-</a>
+<span class="live-status" id="liveStatus">Connecting...</span>
 </div>
-<div class="quiz-mode-note">
-<span class="quiz-mode-note-icon">i</span>
-<p><strong>New to THERMPYX?</strong> Start with Practice Quiz, then try Live Quiz when you are ready to compete.</p>
+<div class="leaderboard-list" id="leaderboardList">
+<p class="loading-text">Loading leaderboard...</p>
 </div>
+</section>
+<div class="leaderboard-actions">
+<a class="leaderboard-secondary" href="quiz.html">QUIZ MENU</a>
+<a class="leaderboard-primary" href="../index.html#quiz">BACK TO HOME</a>
 </div>
 </section>
 </main>
-<footer class="footer quiz-footer">
-<div>
-<strong>THERMPY<span class="wordmark-accent">X</span></strong>
-<span>Thermodynamic Learning &amp; Calculation Platform</span>
-</div>
-<p>Learn. Calculate. Explore.</p>
-</footer>
 <script src="../js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="score-utils.js"></script>
+<script src="leaderboard.js"></script>
 </body>
 </html>

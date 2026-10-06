@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Host Dashboard | THERMPYX</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/quiz.css" rel="stylesheet"/>
+<link href="host-view.css" rel="stylesheet"/>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<body>
+<div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
+<header class="quiz-topbar">
+<a class="quiz-back" href="../index.html#quiz">Back to Home</a>
+<div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
+<button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
+<span class="theme-icon" id="themeIcon">☾</span><span class="theme-text" id="themeText">Dark Mode</span>
+</button></header>
+<main class="quiz-page host-dashboard">
+<section class="host-header">
+ <div><p class="section-label">THERMPYX / LIVE CONTROL</p>
+ <h1>Host Dashboard</h1>
+ <p>Track each participant independently, monitor the scores, and follow answers in real time.</p></div>
+ <div class="host-room-tag"><span>ROOM CODE</span><strong id="hostRoomCode">------</strong><small id="hostState">Connecting...</small></div>
+</section>
+<section class="host-summary" aria-label="Session overview">
+ <div class="host-stat"><span>PLAYERS</span><strong id="hostPlayers">0</strong></div>
+ <div class="host-stat"><span>FINISHED</span><strong id="hostFinished">0 / 0</strong></div>
+ <div class="host-stat"><span>ANSWERS SAVED</span><strong id="hostAnswers">0</strong></div>
+ <div class="host-stat"><span>SESSION PROGRESS</span><strong id="hostPercent">0%</strong></div>
+</section>
+<div class="host-main-grid">
+ <section class="host-panel">
+  <div class="host-panel-heading"><div><span class="quiz-question-label">INDIVIDUAL TRACKING</span><h2>Participant Progress</h2></div><span class="host-live-dot" id="hostLiveStatus">SYNCING</span></div>
+  <div id="hostPlayerList" class="host-player-list"><p>Loading participants...</p></div>
+ </section>
+ <aside class="host-panel">
+  <div class="host-panel-heading"><div><span class="quiz-question-label">CURRENT STANDINGS</span><h2>Live Ranking</h2></div></div>
+  <p class="host-explanation">Ranked by highest score, then lowest total answer time.</p>
+  <div id="hostStandings" class="host-standings"><p>Waiting for answers...</p></div>
+  <a class="host-board-link" href="leaderboard.html">OPEN LEADERBOARD</a>
+ </aside>
+</div>
+<section class="host-finish-panel">
+ <div><h2>Session control</h2><p id="hostFinishHint">The quiz finishes automatically when all active participants have answered every question.</p></div>
+ <button type="button" id="hostFinishBtn">END SESSION EARLY</button>
+</section>
+</main>
+<script src="../js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="question-bank.js"></script>
+<script src="score-utils.js"></script>
+<script src="host-view.js"></script>
+</body></html>

@@ -1,0 +1,164 @@
+
+/* THERMPYX Rev 04 | Neo Lab Futurism. Light mode only; dark palette retained. */
+body.light-mode {
+ --bg-primary:#edf4f8;
+ --bg-secondary:#f7fbfd;
+ --bg-card:#ffffff;
+ --bg-card-hover:#f1f8fc;
+ --text-primary:#102a3c;
+ --text-secondary:#405b6e;
+ --text-muted:#687f8f;
+ --blue:#08759c;
+ --blue-light:#078bb5;
+ --blue-dark:#125b79;
+ --border:#cbdce6;
+ --border-light:#dce9ef;
+ --shadow-blue:0 14px 35px rgba(26,74,101,.09);
+ --graph-bg:#fff;
+ --graph-grid:#dcecf2;
+ background-color:#edf4f8;
+ background-image:
+   radial-gradient(ellipse at 82% 0%,rgba(80,183,222,.17),transparent 37%),
+   radial-gradient(ellipse at 4% 80%,rgba(72,161,192,.09),transparent 39%),
+   linear-gradient(rgba(34,112,150,.025) 1px,transparent 1px),
+   linear-gradient(90deg,rgba(34,112,150,.025) 1px,transparent 1px);
+ background-size:auto,auto,36px 36px,36px 36px;
+ color:var(--text-primary);
+}
+body.light-mode .sidebar {
+ background:linear-gradient(170deg,#fafdff 0%,#eaf3f8 100%);
+ border-right:1px solid #c3d9e5;
+ box-shadow:7px 0 35px rgba(28,78,104,.035);
+}
+body.light-mode .topbar,
+body.light-mode .theory-topbar,
+body.light-mode .quiz-topbar,
+body.light-mode .thermpyx-sim-header {
+ background:rgba(242,249,252,.88)!important;
+ border-color:#c8dbe5!important;
+ backdrop-filter:blur(20px);
+}
+body.light-mode .home-section {
+ isolation:isolate;
+ background:
+  radial-gradient(ellipse at 73% 40%,rgba(51,171,212,.2),transparent 32%),
+  radial-gradient(ellipse at 45% 100%,rgba(255,118,40,.06),transparent 40%),
+  linear-gradient(128deg,#edf7fb 0%,#f9fcfd 55%,#e7f1f8 100%);
+}
+body.light-mode .home-section .background-grid {
+ opacity:.72!important;
+ background-image:
+  linear-gradient(rgba(17,112,154,.095) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(17,112,154,.095) 1px,transparent 1px);
+ background-size:52px 52px;
+ mask-image:linear-gradient(to right,transparent 4%,black 80%);
+}
+body.light-mode .home-section:after {
+ content:"THERMODYNAMIC RESEARCH / 01";
+ position:absolute;right:clamp(18px,5vw,70px);bottom:22px;
+ font:600 10px/1.4 "Oxanium",sans-serif;
+ letter-spacing:.17em;color:#7398aa;opacity:.72;pointer-events:none;
+}
+body.light-mode .hero-visual .visual-ring {border-color:rgba(0,114,158,.21);}
+body.light-mode .hero-visual .energy-core {
+ background:radial-gradient(circle,#fff 0%,#def3fa 100%);
+ box-shadow:0 0 68px rgba(39,150,198,.16),inset 0 0 25px rgba(43,170,212,.14);
+}
+body.light-mode .hero-title {color:#122e40;}
+body.light-mode :is(.feature-card,.law-choice-card,.simulator-preview-card,.quiz-topic-card,.converter-tool,.calculator-card,
+ .theory-content,.lesson-card,.simulation-panel,.sim-card,.info-card,.data-card,.stat-card) {
+ border-color:#ccdfeb;
+ box-shadow:0 14px 36px rgba(24,71,98,.055),0 1px 1px rgba(12,78,113,.04);
+}
+body.light-mode :is(.feature-card,.law-choice-card,.simulator-preview-card,.quiz-topic-card) {
+ background:linear-gradient(144deg,rgba(255,255,255,.99),rgba(238,248,252,.96));
+}
+body.light-mode :is(.feature-card,.law-choice-card,.simulator-preview-card,.quiz-topic-card):hover {
+ border-color:#5faac7;
+ background:linear-gradient(144deg,#fff,#e5f5fb);
+ box-shadow:0 22px 40px rgba(16,112,157,.12),0 0 0 1px rgba(10,120,163,.13);
+}
+body.light-mode :is(.theory-hero,.quiz-hero,.laws-hero) {
+ background:
+  linear-gradient(135deg,rgba(233,247,252,.91),rgba(255,255,255,.95)),
+  repeating-linear-gradient(90deg,rgba(11,124,170,.06) 0 1px,transparent 1px 40px);
+ border-color:#c6dce8;
+}
+body.light-mode .section-label,
+body.light-mode :is(.law-choice-kicker,.quiz-question-label,.navigation-title) {
+ color:#136d92;
+}
+body.light-mode :is(.theory-section-header,.section-heading) {
+ border-color:#d4e5ec;
+}
+body.light-mode :is(input,select,textarea) {
+ border-color:#c7dce7;
+}
+body.light-mode :is(input,select,textarea):focus-visible {
+ outline:2px solid #1992bc;outline-offset:2px;
+}
+body.light-mode .tpx-mark {
+ border-color:#93bfd0;color:#09698b;background:#e3f3fa;
+}
+body.light-mode.sim-external,
+body.light-mode.sim-zeroth,
+body.light-mode.simulator-standalone {
+ --bg-primary:#edf4f8;--bg-secondary:#f6fbfe;--bg-card:#fff;
+ --bg-card-hover:#eef8fb;--surface-soft:#e8f4f9;
+ --text-primary:#102a3c;--text-secondary:#405b6e;--text-muted:#698395;
+ --blue:#08759c;--blue-light:#078bb5;--blue-dark:#125b79;
+ --border:#cbdee9;--border-light:#d8e8ef;
+ --graph-bg:#fff;--graph-grid:#d9e9f1;
+ --hot-bg:#fff1e9;--hot-text:#b44810;--cold-bg:#e1f1fc;--cold-text:#186ca5;
+ background-color:#edf4f8;
+ background-image:
+  radial-gradient(ellipse at top right,rgba(23,152,200,.13),transparent 43%),
+  linear-gradient(rgba(24,108,150,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(24,108,150,.025) 1px,transparent 1px);
+ background-size:auto,40px 40px,40px 40px;
+ color:var(--text-primary);
+}
+body.light-mode.sim-external :is(.container section,.simulation-section,.theory-section,.control-panel,.data-panel,.engine-section) {
+ border-color:var(--border);
+}
+a.tpx-clickable-card {
+ display:block;color:inherit;text-decoration:none;cursor:pointer;
+}
+a.tpx-clickable-card:focus-visible {outline:2px solid var(--blue);outline-offset:5px;}
+a.tpx-clickable-card .tpx-card-cta {pointer-events:none;}
+a.tpx-clickable-card:hover .tpx-card-cta {color:var(--blue-light);}
+@media(prefers-reduced-motion:reduce) {
+ a.tpx-clickable-card {transition:none!important;}
+}
+
+/* Once the individual CTA becomes part of the parent link, keep its old styling. */
+.feature-card .tpx-card-cta {color:var(--blue);font-size:12px;font-weight:600;}
+.feature-card:hover .tpx-card-cta {color:var(--blue-light);}
+.law-choice-card .tpx-card-cta {pointer-events:none;}
+body.light-mode .law-choice-card .law-choice-number {
+ color:#0b7597;background:linear-gradient(145deg,#e7f5fb,#fff);
+ border-color:#bfd8e5;
+}
+body.light-mode .tpx-page-transition .tpx-loader-caption {color:#587e8e;}
+
+/* The clickable law cards retain their original vertical layout and aligned CTA. */
+a.law-choice-card.tpx-clickable-card {
+  display:flex;
+  flex-direction:column;
+}
+a.feature-card.tpx-clickable-card {display:block;}
+
+/* REV 08: Third Law crystal status contrast in either theme */
+body.sim-third .crystal-label {
+  background:#142637 !important; color:#f3f9ff !important;
+  border:1px solid rgba(56,189,248,.5) !important;
+  box-shadow:0 10px 26px rgba(0,0,0,.22);
+}
+body.sim-third .crystal-label span,
+body.sim-third .crystal-label small {color:#e5f7ff !important;opacity:1 !important;}
+body.sim-third.light-mode .crystal-label {
+  background:#e8f5fc !important;color:#15354b !important;
+  border-color:#9dcfe6 !important;box-shadow:0 8px 25px rgba(22,65,90,.09);
+}
+body.sim-third.light-mode .crystal-label span,
+body.sim-third.light-mode .crystal-label small {color:#15354b !important;}

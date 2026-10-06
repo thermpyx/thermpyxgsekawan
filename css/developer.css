@@ -1,0 +1,1360 @@
+/* =========================================================
+   THERMPYX
+   Meet The Developers
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.dev-main {
+  max-width: 1280px;
+
+  margin: 0 auto;
+  padding: 42px 24px 100px;
+
+  color: var(--text-primary, #eaf3f8);
+}
+
+
+/* =========================================================
+   TOP ACTIONS
+========================================================= */
+
+.dev-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+
+.dev-language {
+  min-width: 34px;
+  min-height: 34px;
+
+  padding: 0 9px;
+
+  border: 1px solid var(--border, rgba(0, 168, 255, 0.22));
+  border-radius: 6px;
+
+  background: transparent;
+  color: var(--text-secondary, #95aaba);
+
+  font: 700 10px "Oxanium", sans-serif;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.dev-language.is-active {
+  color: #ff8a42;
+
+  border-color: rgba(255, 118, 40, 0.5);
+  background: rgba(255, 118, 40, 0.08);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.dev-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  margin-bottom: 28px;
+
+  color: var(--text-muted, #8fa7b8);
+
+  font: 700 11px "Oxanium", sans-serif;
+  letter-spacing: 1.8px;
+}
+
+
+.dev-intro {
+  margin-bottom: 30px;
+}
+
+
+.dev-kicker {
+  margin: 0 0 10px;
+
+  color: #ff8a42;
+
+  font: 700 11px "Oxanium", sans-serif;
+  letter-spacing: 2px;
+}
+
+
+.dev-intro h1 {
+  margin: 0 0 16px;
+
+  font:
+    700 clamp(38px, 6vw, 76px) / 1.02
+    "Oxanium",
+    sans-serif;
+
+  letter-spacing: -0.05em;
+}
+
+
+.dev-intro h1 span {
+  color: #ff7628;
+}
+
+
+.dev-intro-copy {
+  max-width: 740px;
+
+  margin: 0;
+
+  color: var(--text-secondary, #9cb1bf);
+
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.dev-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(340px, 460px)
+    minmax(0, 1fr);
+
+  gap: 22px;
+
+  align-items: stretch;
+
+  perspective: 1800px;
+}
+
+
+/* =========================================================
+   LEFT / RIGHT PANELS
+========================================================= */
+
+.dev-panel {
+  position: relative;
+
+  min-width: 0;
+
+  padding: 28px;
+
+  border: 1px solid var(--border, rgba(0, 168, 255, 0.22));
+  border-radius: 18px;
+
+  background: var(--bg-card, #121d28);
+
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.2);
+
+  transform-style: preserve-3d;
+
+  transition:
+    transform 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+
+.dev-panel::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(56, 189, 248, 0.1),
+      transparent 55%
+    );
+
+  transition: opacity 0.28s ease;
+}
+
+
+.dev-panel-left {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.dev-panel-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+
+  .dev-panel-left:hover {
+    transform:
+      rotateY(3deg)
+      rotateX(-1deg)
+      translateZ(9px);
+
+    border-color: rgba(56, 189, 248, 0.36);
+
+    box-shadow:
+      -12px 22px 48px rgba(0, 0, 0, 0.2);
+  }
+
+
+  .dev-panel-right:hover {
+    transform:
+      rotateY(-3deg)
+      rotateX(-1deg)
+      translateZ(9px);
+
+    border-color: rgba(56, 189, 248, 0.36);
+
+    box-shadow:
+      12px 22px 48px rgba(0, 0, 0, 0.2);
+  }
+
+
+  .dev-panel:hover::before {
+    opacity: 1;
+  }
+
+}
+
+
+/* =========================================================
+   PROFILE TEXT
+========================================================= */
+
+.dev-label,
+.dev-block-label {
+  color: #ff8a42;
+
+  font: 700 10px "Oxanium", sans-serif;
+  letter-spacing: 2px;
+}
+
+
+.dev-nickname {
+  margin: 14px 0 6px;
+
+  font:
+    700 clamp(32px, 4vw, 56px) / 1
+    "Oxanium",
+    sans-serif;
+
+  letter-spacing: -0.04em;
+
+  overflow-wrap: anywhere;
+}
+
+
+.dev-fullname {
+  margin: 0 0 26px;
+
+  color: var(--text-secondary, #95aaba);
+
+  font: 500 13px "IBM Plex Sans", sans-serif;
+}
+
+
+.dev-block {
+  margin-bottom: 22px;
+}
+
+
+.dev-block h3 {
+  margin: 10px 0 0;
+
+  font: 700 22px "Oxanium", sans-serif;
+}
+
+
+.dev-block p {
+  margin: 10px 0 0;
+
+  color: var(--text-secondary, #a1b5c3);
+
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   CENTER
+========================================================= */
+
+.dev-center {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+
+.dev-card-wrap {
+  min-height: 680px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  perspective: 1800px;
+}
+
+
+/* =========================================================
+   OUTER CARD
+========================================================= */
+
+.dev-card {
+  --gx: 50%;
+  --gy: 50%;
+
+  position: relative;
+
+  width: min(100%, 440px);
+  min-height: 650px;
+
+  padding-bottom: 18px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(56, 189, 248, 0.34);
+  border-radius: 28px;
+
+  background:
+    radial-gradient(
+      circle at var(--gx) var(--gy),
+      rgba(255, 118, 40, 0.12),
+      transparent 30%
+    ),
+    linear-gradient(
+      160deg,
+      rgba(17, 32, 45, 0.96),
+      rgba(10, 18, 26, 0.99)
+    );
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  transform-style: preserve-3d;
+}
+
+
+.dev-card-glow {
+  position: absolute;
+  inset: -20%;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at var(--gx) var(--gy),
+      rgba(56, 189, 248, 0.2),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 18% 18%,
+      rgba(255, 118, 40, 0.14),
+      transparent 25%
+    );
+}
+
+
+.dev-card-grid {
+  position: absolute;
+  inset: 0;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  opacity: 0.45;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px
+    );
+
+  background-size: 28px 28px;
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.dev-card-header {
+  position: relative;
+  z-index: 4;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px 20px;
+
+  color: #cae8f5;
+
+  font: 700 10px "Oxanium", sans-serif;
+  letter-spacing: 1.3px;
+}
+
+
+/* =========================================================
+   3D PHOTO SCENE
+========================================================= */
+
+.dev-photo-scene {
+  position: relative;
+  z-index: 5;
+
+  width: calc(100% - 42px);
+  height: 430px;
+
+  margin: 4px auto 0;
+
+  perspective: 1600px;
+
+  cursor: grab;
+
+  user-select: none;
+
+  /*
+    Allows normal vertical page scrolling on mobile
+    while horizontal movement rotates the card.
+  */
+  touch-action: pan-y;
+}
+
+
+.dev-photo-scene:active {
+  cursor: grabbing;
+}
+
+
+/* =========================================================
+   3D PHOTO OBJECT
+========================================================= */
+
+.dev-photo-3d {
+  --photo-rotate-x: 0deg;
+  --photo-rotate-y: 0deg;
+
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  transform-style: preserve-3d;
+
+  transform:
+    rotateX(var(--photo-rotate-x))
+    rotateY(var(--photo-rotate-y));
+
+  transition:
+    transform 0.12s ease-out;
+
+  will-change: transform;
+}
+
+
+/* =========================================================
+   PHOTO FACES
+========================================================= */
+
+.dev-photo-face {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 22px;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  transform-style: preserve-3d;
+
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================================
+   PHOTO FRONT
+========================================================= */
+
+.dev-photo-front {
+  background: #09141d;
+
+  transform: translateZ(10px);
+}
+
+
+.dev-photo-front img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+
+  pointer-events: none;
+}
+
+
+/* Dark gradient over photo */
+
+.dev-photo-front::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 56%,
+      rgba(3, 10, 16, 0.1) 69%,
+      rgba(3, 10, 16, 0.88) 100%
+    );
+}
+
+
+/* =========================================================
+   PHOTO GLARE
+========================================================= */
+
+.dev-photo-glare {
+  --glare-x: 50%;
+  --glare-y: 30%;
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 4;
+
+  pointer-events: none;
+
+  opacity: 0.7;
+
+  background:
+    radial-gradient(
+      circle at
+      var(--glare-x)
+      var(--glare-y),
+      rgba(255, 255, 255, 0.32),
+      rgba(56, 189, 248, 0.1) 18%,
+      transparent 44%
+    );
+
+  mix-blend-mode: screen;
+}
+
+
+/* =========================================================
+   PHOTO FRONT INFO
+========================================================= */
+
+.dev-photo-overlay {
+  position: absolute;
+
+  left: 18px;
+  right: 18px;
+  bottom: 17px;
+
+  z-index: 6;
+
+  transform: translateZ(35px);
+}
+
+
+.dev-photo-overlay span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #89cce9;
+
+  font: 700 9px "Oxanium", sans-serif;
+  letter-spacing: 1.4px;
+}
+
+
+.dev-photo-overlay strong {
+  color: #ffffff;
+
+  font: 700 25px "Oxanium", sans-serif;
+}
+
+
+/* =========================================================
+   PHOTO BACK
+========================================================= */
+
+.dev-photo-back {
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(56, 189, 248, 0.12),
+      transparent 44%
+    ),
+    linear-gradient(
+      145deg,
+      #102735,
+      #07121b
+    );
+
+  transform:
+    rotateY(180deg)
+    translateZ(10px);
+}
+
+
+.dev-back-grid {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.4;
+
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(56, 189, 248, 0.08) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(56, 189, 248, 0.08) 1px,
+      transparent 1px
+    );
+
+  background-size: 24px 24px;
+}
+
+
+.dev-back-code,
+.dev-back-logo,
+.dev-photo-back h3,
+.dev-photo-back p,
+.dev-photo-back small {
+  position: relative;
+  z-index: 2;
+}
+
+
+.dev-back-code {
+  margin-bottom: 28px;
+
+  color: #ff8b45;
+
+  font: 700 9px "Oxanium", sans-serif;
+  letter-spacing: 2px;
+}
+
+
+.dev-back-logo {
+  color: #ecf8fd;
+
+  font: 700 27px "Syncopate", sans-serif;
+
+  letter-spacing: -2px;
+}
+
+
+.dev-back-logo span {
+  color: #ff7628;
+}
+
+
+.dev-photo-back h3 {
+  margin: 24px 0 4px;
+
+  color: #ffffff;
+
+  font: 700 27px "Oxanium", sans-serif;
+}
+
+
+.dev-photo-back p {
+  margin: 0 0 12px;
+
+  color: #b2c8d3;
+
+  font-size: 13px;
+}
+
+
+.dev-photo-back small {
+  max-width: 230px;
+
+  color: #82a2b3;
+
+  font:
+    600 9px / 1.6
+    "Oxanium",
+    sans-serif;
+
+  letter-spacing: 1.1px;
+}
+
+
+/* =========================================================
+   FRAME THICKNESS
+========================================================= */
+
+.dev-photo-3d::before,
+.dev-photo-3d::after {
+  content: "";
+
+  position: absolute;
+
+  top: 14px;
+  bottom: 14px;
+
+  width: 20px;
+
+  z-index: -1;
+
+  border-radius: 7px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #376172,
+      #152f3c
+    );
+}
+
+
+.dev-photo-3d::before {
+  left: -8px;
+
+  transform:
+    rotateY(90deg)
+    translateZ(10px);
+}
+
+
+.dev-photo-3d::after {
+  right: -8px;
+
+  transform:
+    rotateY(90deg)
+    translateZ(-10px);
+}
+
+
+/* =========================================================
+   ROTATION CONTROLS
+========================================================= */
+
+.dev-rotation-controls {
+  position: relative;
+  z-index: 8;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+
+.dev-rotation-controls button {
+  min-width: 44px;
+  min-height: 36px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: 7px;
+
+  background: rgba(255, 255, 255, 0.025);
+  color: #b9d0dc;
+
+  font: 700 10px "Oxanium", sans-serif;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.dev-rotation-controls button:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(255, 118, 40, 0.55);
+  color: #ff985e;
+}
+
+
+.dev-rotate-hint {
+  position: relative;
+  z-index: 8;
+
+  margin: 9px 0 0;
+
+  text-align: center;
+
+  color: var(--text-muted, #7c909d);
+
+  font: 700 9px "Oxanium", sans-serif;
+  letter-spacing: 1.4px;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+========================================================= */
+
+.dev-card-footer {
+  position: relative;
+  z-index: 5;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  gap: 12px;
+
+  padding: 20px 21px 0;
+}
+
+
+.dev-card-footer strong {
+  display: block;
+
+  color: #f4fbff;
+
+  font: 700 26px "Oxanium", sans-serif;
+}
+
+
+.dev-card-footer small {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #a7c1cf;
+
+  font: 500 12px "IBM Plex Sans", sans-serif;
+}
+
+
+.dev-card-footer > span {
+  color: #ff8a42;
+
+  font: 700 10px "Oxanium", sans-serif;
+  letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   DEVELOPER SELECTOR
+========================================================= */
+
+.dev-selector {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+
+.dev-chip {
+  min-width: 0;
+
+  padding: 10px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  border: 1px solid var(--border, rgba(0, 168, 255, 0.22));
+  border-radius: 12px;
+
+  background: var(--bg-card, #121d28);
+
+  color: inherit;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transform-style: preserve-3d;
+
+  transition:
+    transform 0.23s ease,
+    border-color 0.23s ease,
+    box-shadow 0.23s ease;
+}
+
+
+.dev-chip:hover,
+.dev-chip.is-active {
+  transform:
+    translateY(-3px)
+    translateZ(9px);
+
+  border-color: #ff7628;
+
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+
+.dev-chip img {
+  width: 45px;
+  height: 45px;
+
+  flex: 0 0 45px;
+
+  object-fit: cover;
+
+  border-radius: 9px;
+
+  transition:
+    transform 0.23s ease,
+    box-shadow 0.23s ease;
+}
+
+
+.dev-chip:hover img {
+  transform:
+    translateZ(15px)
+    scale(1.06);
+
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+
+.dev-chip-text {
+  min-width: 0;
+}
+
+
+.dev-chip-text strong,
+.dev-chip-text small {
+  display: block;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+.dev-chip-text strong {
+  color: var(--text-primary, #f1f7fb);
+
+  font: 700 13px "Oxanium", sans-serif;
+}
+
+
+.dev-chip-text small {
+  margin-top: 4px;
+
+  color: var(--text-secondary, #8fa5b5);
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.dev-history {
+  list-style: none;
+
+  padding: 0;
+  margin: 15px 0 0;
+
+  display: grid;
+  gap: 11px;
+}
+
+
+.dev-history li {
+  position: relative;
+
+  padding: 14px 14px 14px 18px;
+
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  color: var(--text-secondary, #9eb1bf);
+
+  font-size: 13px;
+  line-height: 1.65;
+
+  transform-style: preserve-3d;
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease;
+}
+
+
+.dev-history li::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+
+  width: 3px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #38bdf8,
+      #ff7628
+    );
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+
+  .dev-history li:hover {
+    transform:
+      translateX(5px)
+      translateZ(8px);
+
+    border-color: rgba(56, 189, 248, 0.36);
+  }
+
+}
+
+
+/* =========================================================
+   SOCIALS
+========================================================= */
+
+.dev-socials {
+  display: grid;
+
+  gap: 10px;
+
+  margin-top: 14px;
+}
+
+
+.dev-social {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 13px 15px;
+
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  color: var(--text-primary, #eff8fd);
+
+  text-decoration: none;
+
+  transform-style: preserve-3d;
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease;
+}
+
+
+.dev-social:not(.is-disabled):hover {
+  transform:
+    translateY(-3px)
+    translateZ(10px);
+
+  border-color: #ff7628;
+}
+
+
+.dev-social.is-disabled {
+  opacity: 0.45;
+
+  cursor: default;
+}
+
+
+.dev-social span {
+  font: 700 13px "Oxanium", sans-serif;
+}
+
+
+.dev-social small {
+  color: var(--text-secondary, #97aab9);
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   OUTRO
+========================================================= */
+
+.dev-outro {
+  padding: 70px 0 0;
+
+  text-align: center;
+}
+
+
+.dev-outro > span {
+  color: #ff8a42;
+
+  font: 700 11px "Oxanium", sans-serif;
+  letter-spacing: 2px;
+}
+
+
+.dev-outro h2 {
+  margin: 10px 0;
+
+  font:
+    700 clamp(24px, 4vw, 46px)
+    "Oxanium",
+    sans-serif;
+}
+
+
+.dev-outro p {
+  max-width: 650px;
+
+  margin: 14px auto;
+
+  color: var(--text-secondary, #9db1be);
+
+  line-height: 1.8;
+}
+
+
+.dev-outro a {
+  display: inline-block;
+
+  margin-top: 10px;
+  padding: 12px 18px;
+
+  border: 1px solid var(--border, rgba(0, 168, 255, 0.22));
+  border-radius: 9px;
+
+  color: var(--text-primary, #eef8fd);
+
+  text-decoration: none;
+
+  font: 700 12px "Oxanium", sans-serif;
+}
+
+
+/* =========================================================
+   LIGHT MODE
+========================================================= */
+
+body.light-mode .dev-panel,
+body.light-mode .dev-chip {
+  background: #ffffff;
+
+  border-color: #d7e5ed;
+}
+
+
+body.light-mode .dev-card {
+  background:
+    radial-gradient(
+      circle at var(--gx) var(--gy),
+      rgba(255, 118, 40, 0.1),
+      transparent 30%
+    ),
+    linear-gradient(
+      160deg,
+      #f8fcfe,
+      #e6f2f7
+    );
+
+  border-color: #b7d9e7;
+}
+
+
+body.light-mode .dev-card-header,
+body.light-mode .dev-card-footer strong {
+  color: #173244;
+}
+
+
+body.light-mode .dev-card-footer small,
+body.light-mode .dev-fullname,
+body.light-mode .dev-block p,
+body.light-mode .dev-history li,
+body.light-mode .dev-social small,
+body.light-mode .dev-intro-copy,
+body.light-mode .dev-outro p {
+  color: #5b7383;
+}
+
+
+body.light-mode .dev-history li,
+body.light-mode .dev-social {
+  background: #f7fbfd;
+
+  border-color: #d6e6ee;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .dev-layout {
+    grid-template-columns: 1fr;
+  }
+
+
+  .dev-card-wrap {
+    min-height: auto;
+  }
+
+
+  .dev-selector {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 640px) {
+
+  .dev-main {
+    padding:
+      28px 16px
+      88px;
+  }
+
+
+  .dev-top-actions {
+    gap: 4px;
+  }
+
+
+  .dev-language {
+    min-width: 30px;
+  }
+
+
+  .dev-card {
+    min-height: 600px;
+  }
+
+
+  .dev-card-wrap {
+    perspective: 1200px;
+  }
+
+
+  .dev-photo-scene {
+    width: calc(100% - 30px);
+    height: 370px;
+  }
+
+
+  .dev-selector {
+    grid-template-columns: 1fr;
+  }
+
+
+  .dev-photo-back {
+    padding: 20px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .dev-panel,
+  .dev-chip,
+  .dev-history li,
+  .dev-social,
+  .dev-photo-3d {
+    transition: none;
+  }
+
+}

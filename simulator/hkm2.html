@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Simulasi Hukum II Termodinamika</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="modules/second-law/css/style.css" rel="stylesheet"/>
+<link href="shared/simulator-theme.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<body class="sim-external sim-second"><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
+<header class="thermpyx-sim-header">
+<a aria-label="THERMPYX Home" class="tpx-brand" href="../index.html#home">
+<span class="tpx-mark">T</span>
+<span class="tpx-brand-copy"><strong>THERMPY<span class="wordmark-accent">X</span></strong><small>THERMODYNAMICS</small></span>
+</a>
+<nav aria-label="Simulator navigation" class="tpx-header-actions">
+<a class="tpx-header-button" href="../index.html#home">Back to Home</a>
+<a class="tpx-header-button" href="index.html">All Simulations</a>
+<button aria-label="Toggle color mode" class="tpx-header-button tpx-theme-button" id="themeToggle" type="button">
+<span aria-hidden="true" id="themeIcon">☀</span><span id="themeText">Light Mode</span>
+</button>
+</nav>
+</header>
+<!-- =====================================================
+     HERO
+===================================================== -->
+<header class="hero">
+<div class="hero-content">
+<div class="eyebrow">
+            PHYSICS LEARNING SIMULATION
+        </div>
+<h1>
+            Hukum II Termodinamika
+        </h1>
+<p>
+            Interactive Second Law of Thermodynamics Simulation
+        </p>
+</div>
+<div class="hero-status">
+<span class="status-light"></span>
+
+        SIMULASI AKTIF
+
+    </div>
+</header>
+<main class="container">
+<!-- =====================================================
+     SECTION 1 ,  THEORY
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            01
+        </span>
+<div>
+<h2>
+                Teori Hukum II Termodinamika
+            </h2>
+<div class="section-subtitle">
+                Arah alami proses termodinamika
+            </div>
+</div>
+</div>
+<p class="theory-text">
+
+        Hukum II Termodinamika menjelaskan arah suatu proses
+        termodinamika dan memperkenalkan konsep entropi.
+        Hukum I menjelaskan bahwa energi harus kekal,
+        tetapi tidak menjelaskan apakah suatu proses dapat
+        berlangsung secara spontan atau ke arah mana proses
+        tersebut terjadi.
+
+        Hukum II memberikan batasan terhadap arah proses
+        tersebut. Salah satu bentuk pernyataannya adalah
+        kalor secara spontan berpindah dari benda bersuhu
+        lebih tinggi menuju benda bersuhu lebih rendah.
+
+    </p>
+<div class="result-box">
+<strong>
+            Prinsip utama:
+        </strong>
+
+        Kalor secara spontan berpindah dari suhu tinggi
+        menuju suhu rendah.
+
+    </div>
+</section>
+<!-- =====================================================
+     SECTION 2 ,  HEAT DIRECTION
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            02
+        </span>
+<div>
+<h2>
+                Arah Perpindahan Kalor
+            </h2>
+<div class="section-subtitle">
+                Kalor mengalir dari suhu tinggi ke suhu rendah
+            </div>
+</div>
+</div>
+<div class="direction-diagram">
+<div class="thermal-object hot-object">
+<div class="object-icon">
+                🔥
+            </div>
+<strong>
+                Benda Panas
+            </strong>
+<span id="directionHotTemp">
+                353.2 K
+            </span>
+</div>
+<div class="direction-flow">
+<div class="heat-particles">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<div class="big-arrow" id="mainHeatArrow">
+                →
+            </div>
+<small>
+                ARAH KALOR
+            </small>
+</div>
+<div class="thermal-object cold-object">
+<div class="object-icon">
+                ❄️
+            </div>
+<strong>
+                Benda Dingin
+            </strong>
+<span id="directionColdTemp">
+                298.2 K
+            </span>
+</div>
+</div>
+<div class="result-box">
+
+        Kalor tidak berpindah secara spontan dari benda
+        dingin ke benda panas. Perpindahan tersebut
+        membutuhkan proses tambahan dan masukan energi,
+        seperti pada kulkas atau AC.
+
+    </div>
+</section>
+<!-- =====================================================
+     SECTION 3 ,  MAIN SIMULATION
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            03
+        </span>
+<div>
+<h2>
+                Simulasi Perpindahan Kalor
+            </h2>
+<div class="section-subtitle">
+                Amati perubahan suhu dan entropi sistem
+            </div>
+</div>
+</div>
+<!-- UNIT -->
+<div class="unit-control">
+<label for="unitSelect">
+            Satuan Temperatur
+        </label>
+<select id="unitSelect">
+<option value="K">
+                Kelvin (K)
+            </option>
+<option value="C">
+                Celsius (°C)
+            </option>
+</select>
+</div>
+<!-- SIMULATION -->
+<div class="simulation-stage">
+<!-- HOT -->
+<div class="body-container">
+<div class="body-title hot-title">
+                RESERVOIR PANAS
+            </div>
+<div class="thermal-body hot-body">
+<canvas id="hotCanvas">
+</canvas>
+<div class="body-temp">
+<span>
+                        Temperatur
+                    </span>
+<strong id="hotDisplay">
+                        353.2 K
+                    </strong>
+</div>
+</div>
+</div>
+<!-- HEAT FLOW -->
+<div class="heat-transfer">
+<div class="heat-flow-label">
+                HEAT FLOW
+            </div>
+<div class="heat-flow-arrow" id="heatFlowArrow">
+                →
+            </div>
+<div class="heat-flow-label" id="heatFlowValue">
+                0 J
+            </div>
+</div>
+<!-- COLD -->
+<div class="body-container">
+<div class="body-title cold-title">
+                RESERVOIR DINGIN
+            </div>
+<div class="thermal-body cold-body">
+<canvas id="coldCanvas">
+</canvas>
+<div class="body-temp">
+<span>
+                        Temperatur
+                    </span>
+<strong id="coldDisplay">
+                        298.2 K
+                    </strong>
+</div>
+</div>
+</div>
+</div>
+<!-- CONTROLS -->
+<div class="controls-grid">
+<div class="control">
+<div class="control-top">
+<label for="hotInput">
+                    Temperatur Panas
+                </label>
+<strong id="hotInputValue">
+                    353.2 K
+                </strong>
+</div>
+<input id="hotInput" max="1000" min="300" step="1" type="range" value="353"/>
+<div class="range-info">
+<span id="hotMin">
+                    300 K
+                </span>
+<span id="hotMax">
+                    1000 K
+                </span>
+</div>
+</div>
+<div class="control">
+<div class="control-top">
+<label for="coldInput">
+                    Temperatur Dingin
+                </label>
+<strong id="coldInputValue">
+                    298.2 K
+                </strong>
+</div>
+<input id="coldInput" max="700" min="250" step="1" type="range" value="298"/>
+<div class="range-info">
+<span id="coldMin">
+                    250 K
+                </span>
+<span id="coldMax">
+                    700 K
+                </span>
+</div>
+</div>
+</div>
+<!-- BUTTONS -->
+<div class="simulation-controls">
+<button class="btn primary" id="startBtn">
+            ▶ Mulai
+        </button>
+<button class="btn secondary" id="pauseBtn">
+            ⏸ Jeda
+        </button>
+<button class="btn danger" id="resetBtn">
+            ↻ Reset
+        </button>
+</div>
+</section>
+<!-- =====================================================
+     SECTION 4 ,  ENTROPY
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            04
+        </span>
+<div>
+<h2>
+                Entropi
+            </h2>
+<div class="section-subtitle">
+                Ukuran perubahan keadaan dan arah proses
+            </div>
+</div>
+</div>
+<p class="theory-text">
+
+        Entropi dilambangkan dengan S. Entropi merupakan
+        besaran keadaan yang digunakan untuk menjelaskan
+        arah proses dan tingkat irreversibilitas suatu sistem.
+
+        Untuk proses reversibel:
+
+    </p>
+<div class="entropy-equation">
+
+        ΔS = Q<sub>rev</sub> / T
+
+    </div>
+<div class="entropy-display">
+<div class="entropy-main">
+<span>
+                Perubahan Entropi Total
+            </span>
+<strong id="entropyDisplay">
+                0.000 J/K
+            </strong>
+</div>
+<div class="entropy-badge" id="entropyBadge">
+            ΔS ≥ 0
+        </div>
+</div>
+<p class="explanation">
+
+        Untuk sistem terisolasi, perubahan entropi total
+        memenuhi hubungan ΔS<sub>total</sub> ≥ 0.
+
+    </p>
+</section>
+<!-- =====================================================
+     SECTION 5 ,  REVERSIBLE
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            05
+        </span>
+<div>
+<h2>
+                Proses Reversibel dan Irreversibel
+            </h2>
+</div>
+</div>
+<div class="process-selector">
+<button class="process-btn active" id="reversibleBtn">
+            Reversibel
+        </button>
+<button class="process-btn" id="irreversibleBtn">
+            Irreversibel
+        </button>
+</div>
+<div class="process-description">
+<h3 id="processTitle">
+            Proses Reversibel
+        </h3>
+<p id="processDescription">
+
+            Proses ideal yang dapat dibalik sehingga sistem
+            dan lingkungan dapat kembali ke keadaan awal
+            tanpa perubahan bersih.
+
+        </p>
+<div class="process-value">
+<span>
+                ΔS total
+            </span>
+<strong id="processEntropy">
+                = 0
+            </strong>
+</div>
+</div>
+</section>
+<!-- =====================================================
+     SECTION 6 ,  HEAT ENGINE
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            06
+        </span>
+<div>
+<h2>
+                Simulasi Mesin Kalor
+            </h2>
+<div class="section-subtitle">
+                Konversi sebagian kalor menjadi usaha
+            </div>
+</div>
+</div>
+<p class="theory-text">
+
+        Mesin kalor menerima kalor dari reservoir panas,
+        mengubah sebagian kalor menjadi usaha, kemudian
+        membuang sebagian kalor ke reservoir dingin.
+
+    </p>
+<!-- ENGINE DIAGRAM -->
+<div class="engine-diagram">
+<!-- HOT RESERVOIR -->
+<div class="engine-reservoir hot-engine">
+<div class="engine-icon">
+                🔥
+            </div>
+<strong>
+                RESERVOIR PANAS
+            </strong>
+<span id="engineHotTemp">
+                800 K
+            </span>
+</div>
+<!-- QH -->
+<div class="engine-flow qh-flow">
+<strong>
+                Q<sub>H</sub>
+</strong>
+<div class="engine-arrow">
+                →
+            </div>
+</div>
+<!-- REAL ENGINE -->
+<div class="real-engine">
+<div class="engine-label">
+                HEAT ENGINE
+            </div>
+<!-- BEBAN -->
+<div class="engine-weight" id="engineWeight">
+</div>
+<!-- CYLINDER -->
+<div class="engine-cylinder">
+<!-- PISTON -->
+<div class="engine-piston" id="enginePiston">
+<div class="piston-handle"></div>
+</div>
+<!-- GAS -->
+<div class="engine-gas" id="engineGas"></div>
+</div>
+<!-- WORK -->
+<div class="engine-work">
+<strong>
+                    W
+                </strong>
+<span>
+                    USAHA
+                </span>
+</div>
+<!-- FLYWHEEL -->
+<div class="engine-wheel" id="engineWheel">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<div class="wheel-center"></div>
+</div>
+</div>
+<!-- QC -->
+<div class="engine-flow qc-flow">
+<strong>
+                Q<sub>C</sub>
+</strong>
+<div class="engine-arrow">
+                →
+            </div>
+</div>
+<!-- COLD RESERVOIR -->
+<div class="engine-reservoir cold-engine">
+<div class="engine-icon">
+                ❄️
+            </div>
+<strong>
+                RESERVOIR DINGIN
+            </strong>
+<span id="engineColdTemp">
+                300 K
+            </span>
+</div>
+</div>
+<!-- ENGINE DATA -->
+<div class="engine-data">
+<div class="engine-data-card">
+<span>
+                Q<sub>H</sub>
+</span>
+<strong id="qhDisplay">
+                1000 J
+            </strong>
+</div>
+<div class="engine-data-card">
+<span>
+                W
+            </span>
+<strong id="workDisplay">
+                0 J
+            </strong>
+</div>
+<div class="engine-data-card">
+<span>
+                Q<sub>C</sub>
+</span>
+<strong id="qcDisplay">
+                1000 J
+            </strong>
+</div>
+<div class="engine-data-card">
+<span>
+                η
+            </span>
+<strong id="efficiencyDisplay">
+                0 %
+            </strong>
+</div>
+<div class="engine-data-card">
+<span>
+                η Carnot
+            </span>
+<strong id="carnotDisplay">
+                0 %
+            </strong>
+</div>
+</div>
+<!-- FORMULAS -->
+<div class="engine-formulas">
+<div>
+            Q<sub>H</sub> = W + Q<sub>C</sub>
+</div>
+<div>
+            η = W / Q<sub>H</sub>
+</div>
+<div>
+            η<sub>Carnot</sub>
+            =
+            1 − T<sub>C</sub>/T<sub>H</sub>
+</div>
+</div>
+<div class="engine-note">
+<strong>
+            Catatan:
+        </strong>
+
+        Tidak semua kalor Q<sub>H</sub> dapat diubah
+        menjadi usaha. Sebagian kalor harus dilepaskan
+        ke reservoir dingin.
+
+    </div>
+</section>
+<!-- =====================================================
+     SECTION 7 ,  APPLICATION
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            07
+        </span>
+<div>
+<h2>
+                Penerapan Hukum II
+            </h2>
+</div>
+</div>
+<div class="core-points">
+<div>
+<strong>
+                Mesin Kendaraan
+            </strong>
+<span>
+                Mengubah sebagian energi kalor menjadi usaha
+                mekanik.
+            </span>
+</div>
+<div>
+<strong>
+                PLTU
+            </strong>
+<span>
+                Menggunakan mesin kalor untuk menghasilkan
+                energi listrik.
+            </span>
+</div>
+<div>
+<strong>
+                Kulkas
+            </strong>
+<span>
+                Memindahkan kalor dari daerah dingin dengan
+                bantuan energi dari luar.
+            </span>
+</div>
+<div>
+<strong>
+                AC
+            </strong>
+<span>
+                Memindahkan kalor dari ruangan menuju
+                lingkungan.
+            </span>
+</div>
+</div>
+</section>
+<!-- =====================================================
+     SECTION 8 ,  CORE
+===================================================== -->
+<section class="card">
+<div class="section-heading">
+<span class="section-number">
+            08
+        </span>
+<div>
+<h2>
+                Inti Materi
+            </h2>
+</div>
+</div>
+<div class="core-points">
+<div>
+<strong>
+                Arah Proses
+            </strong>
+<span>
+                Hukum II menentukan arah alami suatu proses.
+            </span>
+</div>
+<div>
+<strong>
+                Entropi
+            </strong>
+<span>
+                ΔS total ≥ 0 untuk sistem terisolasi.
+            </span>
+</div>
+<div>
+<strong>
+                Mesin Kalor
+            </strong>
+<span>
+                Tidak semua kalor dapat diubah menjadi usaha.
+            </span>
+</div>
+<div>
+<strong>
+                Irreversibilitas
+            </strong>
+<span>
+                Sebagian besar proses nyata bersifat
+                irreversibel.
+            </span>
+</div>
+</div>
+</section>
+</main>
+<script src="modules/second-law/js/script.js"></script>
+<script src="shared/theme.js"></script>
+</body>
+</html>
