@@ -1,0 +1,269 @@
+/* THERMPYX | shared simulator design layer. Loaded AFTER each simulator's own CSS.
+   Simulation-only graphics and animations remain defined by their original styles. */
+
+/* 0. Shared brand palette */
+body.sim-external,
+body.sim-zeroth {
+ --bg-primary:#05070a;
+ --bg-secondary:#080d13;
+ --bg-card:#0d141c;
+ --bg-card-hover:#111c27;
+ --surface-soft:#101b26;
+ --text-primary:#e6edf3;
+ --text-secondary:#8b9aad;
+ --text-muted:#75869a;
+ --blue:#00a8ff;
+ --blue-light:#38bdf8;
+ --blue-dark:#028cd7;
+ --border:rgba(0,168,255,.25);
+ --border-light:rgba(255,255,255,.09);
+ --shadow:0 16px 36px rgba(0,0,0,.14);
+ --graph-bg:#0d141c;
+ --graph-grid:rgba(160,182,204,.17);
+ --hot-bg:rgba(239,68,68,.12);
+ --cold-bg:rgba(0,168,255,.11);
+ --hot-text:#ffa0a0;
+ --cold-text:#78d6ff;
+ --accent-orange:#ff7628;
+ font-family:"IBM Plex Sans",sans-serif;
+ background:var(--bg-primary);
+ color:var(--text-primary);
+ min-height:100vh;
+}
+body.sim-external.light-mode,
+body.sim-zeroth.light-mode {
+ --bg-primary:#f4f7fb;
+ --bg-secondary:#fff;
+ --bg-card:#fff;
+ --bg-card-hover:#f4f7fb;
+ --surface-soft:#f0f6fc;
+ --text-primary:#172033;
+ --text-secondary:#475569;
+ --text-muted:#64748b;
+ --blue:#2563eb;
+ --blue-light:#0891b2;
+ --blue-dark:#1d4ed8;
+ --border:#dce4ef;
+ --border-light:#e2e8f0;
+ --shadow:0 12px 30px rgba(23,32,51,.045);
+ --graph-bg:#fff;
+ --graph-grid:#e3eaf3;
+ --hot-bg:#fee2e2;
+ --cold-bg:#dbeafe;
+ --hot-text:#b91c1c;
+ --cold-text:#1d4ed8;
+}
+body.sim-external *, body.sim-zeroth * { box-sizing:border-box; }
+body.sim-external h1,body.sim-external h2,body.sim-external h3,
+body.sim-zeroth h1,body.sim-zeroth h2,body.sim-zeroth h3 {
+ font-family:"Oxanium",sans-serif;
+}
+body.sim-external button, body.sim-external select,body.sim-external input,
+body.sim-zeroth button,body.sim-zeroth select,body.sim-zeroth input {
+ font-family:"IBM Plex Sans",sans-serif;
+}
+body.sim-external a,body.sim-zeroth a {text-decoration:none;}
+body.sim-external :is(input,select,button,a):focus-visible,
+body.sim-zeroth :is(input,select,button,a):focus-visible {
+ outline:2px solid var(--blue);outline-offset:3px;
+}
+body.sim-external input[type="range"],body.sim-zeroth input[type="range"] {accent-color:var(--blue);}
+
+/* 1. Shared 72px header for new simulations */
+.thermpyx-sim-header {
+ position:sticky;top:0;z-index:1100;
+ display:flex;align-items:center;justify-content:space-between;gap:18px;
+ min-height:72px;padding:12px clamp(18px,4vw,56px);
+ border-bottom:1px solid var(--border-light);
+ background:rgba(5,7,10,.92);
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+body.sim-external.light-mode .thermpyx-sim-header {background:rgba(244,247,251,.94);}
+.tpx-brand {display:inline-flex;align-items:center;gap:11px;min-width:0;color:var(--text-primary);}
+.tpx-mark {
+ width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;
+ border:1px solid var(--border);border-radius:9px;
+ color:var(--blue-light);background:rgba(0,168,255,.09);
+ font:700 17px/1 "Oxanium",sans-serif;
+}
+.tpx-brand-copy {display:flex;flex-direction:column;gap:5px;line-height:1;}
+.tpx-brand-copy strong {font:700 16px/1 "Syncopate","Oxanium",sans-serif;letter-spacing:-.055em;white-space:nowrap;}
+.tpx-brand-copy small {font:500 8px/1 "IBM Plex Sans",sans-serif;letter-spacing:1.45px;color:var(--text-muted);}
+.wordmark-accent {color:var(--accent-orange,#ff7628);}
+.tpx-header-actions {display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.tpx-header-button {
+ min-height:38px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ padding:0 13px;border:1px solid var(--border);border-radius:9px;
+ background:rgba(0,168,255,.035);color:var(--text-secondary);
+ font:600 12px/1 "IBM Plex Sans",sans-serif;cursor:pointer;
+ transition:border-color .2s,color .2s,background .2s;
+}
+.tpx-header-button:hover {color:var(--blue-light);border-color:var(--blue);background:rgba(0,168,255,.075);}
+
+/* 2. Unified spacing and page hero */
+body.sim-external .container {width:min(1280px,calc(100% - 44px));margin:0 auto 70px;}
+body.sim-external.sim-heat .container {padding-top:44px;}
+body.sim-external .hero,
+body.sim-external .simulator-hero {
+ width:min(1280px,calc(100% - 44px));max-width:none;
+ margin:0 auto; padding:45px 0 30px;
+ border:0;background:transparent;
+ text-align:left;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;
+}
+body.sim-external .hero-content {width:auto;max-width:850px;margin:0;}
+body.sim-external .hero :is(h1),
+body.sim-external .simulator-hero h1 {
+ margin:6px 0 12px;font:700 clamp(32px,4.5vw,52px)/1.1 "Oxanium",sans-serif;
+ letter-spacing:-.035em;color:var(--text-primary);
+}
+body.sim-external .hero p,body.sim-external .simulator-hero p {
+ margin:0;max-width:720px;color:var(--text-secondary);font-size:14px;line-height:1.75;
+}
+body.sim-external .hero .badge,body.sim-external .eyebrow,body.sim-external .hero-badge {
+ padding:0;margin:0 0 10px;border:0;background:none;border-radius:0;
+ color:var(--blue-light);font:700 11px/1.4 "Oxanium",sans-serif;letter-spacing:2px;
+}
+body.sim-external .hero-status {background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.25);color:#34b981;}
+body.sim-external .container > :first-child {min-width:0;}
+
+/* 3. Content surfaces */
+body.sim-external .panel,
+body.sim-external .card,
+body.sim-external :is(.simulation-panel,.control-panel,.data-panel,.law-panel,.explanation-panel,.graph-panel,.theory-panel,.example-panel) {
+ border:1px solid var(--border);border-radius:16px;background:var(--bg-card);
+ box-shadow:var(--shadow);color:var(--text-primary);
+}
+body.sim-external :is(.panel,.card,.simulation-panel,.control-panel,.data-panel,.law-panel,.explanation-panel,.graph-panel,.theory-panel,.example-panel) h2 {
+ font-family:"Oxanium",sans-serif;color:var(--text-primary);
+}
+body.sim-external :is(.section-heading h2,.section-title h2,.explanation-panel h2,.graph-panel h2) {
+ font-size:clamp(19px,2.2vw,23px);
+}
+body.sim-external :is(.section-heading p,.section-title p,.theory-text,.explanation-content p,.details-content p) {
+ color:var(--text-secondary);
+}
+body.sim-external :is(.control-card,.data-card,.formula-grid div,.engine-data-card,.formula-explanation div,.example-box,.info-box,.result-box,.process-description,.process-value,.engine-formulas div,.entropy-display,.conclusion) {
+ background:var(--surface-soft);border:1px solid var(--border-light);color:var(--text-primary);box-shadow:none;
+}
+body.sim-external :is(.data-card strong,.formula-grid strong,.engine-data-card strong) {color:var(--blue-light);}
+body.sim-external :is(.graph-container,.direction-diagram,.simulation-stage,.engine-diagram,.crystal-container,.scene) {
+ background:var(--surface-soft);border-color:var(--border-light);
+}
+body.sim-external :is(.material-label,.heat-source-info,.graph-tooltip,.simulation-tooltip) {
+ background:var(--bg-card);border-color:var(--border);color:var(--text-primary);
+}
+body.sim-external :is(select,input:not([type="range"])){
+ background:var(--surface-soft);color:var(--text-primary);border-color:var(--border);
+}
+body.sim-external :is(.section-number,#temperatureBadge,.entropy-badge) {
+ background:rgba(0,168,255,.09);color:var(--blue-light);border-color:var(--border);
+}
+body.sim-external .formula {
+ background:var(--surface-soft);border-color:var(--border);color:var(--blue-light);
+}
+body.sim-external :is(.hot-object,.hot-engine,.hot-body) {background:var(--hot-bg);color:var(--hot-text);}
+body.sim-external :is(.cold-object,.cold-engine,.cold-body) {background:var(--cold-bg);color:var(--cold-text);}
+body.sim-external .hot-object :is(strong,span),body.sim-external .hot-body .body-temp strong {color:var(--hot-text);}
+body.sim-external .cold-object :is(strong,span),body.sim-external .cold-body .body-temp strong {color:var(--cold-text);}
+body.sim-external .engine-reservoir {border-color:var(--border);}
+body.sim-external :is(.simulation-buttons button,.simulation-controls button,.process-btn) {
+ border:1px solid var(--border);border-radius:9px;color:var(--text-primary);font-weight:600;
+}
+body.sim-external :is(.simulation-buttons .primary,.simulation-controls .primary,#startBtn) {
+ background:var(--blue);border-color:var(--blue);color:#fff;
+}
+body.sim-external :is(.simulation-buttons button,.simulation-controls button,.process-btn):hover:not(:disabled) {
+ border-color:var(--blue);
+}
+body.sim-external .process-btn.active {background:rgba(0,168,255,.13);border-color:var(--blue);color:var(--blue-light);}
+body.sim-external :is(.graph-container,#entropyGraph) {border-color:var(--border-light);}
+body.sim-external.sim-third #entropyGraph {background:var(--graph-bg);}
+body.sim-external :is(.example-panel,.law-panel,.theory-panel) p {line-height:1.75;}
+
+/* 4. Zeroth Law: bridge its legacy color tokens to the exact same THERMPYX palette. */
+body.sim-zeroth {
+ --bg:var(--bg-primary);
+ --hero:var(--bg-primary);
+ --card:var(--bg-card);
+ --panel:var(--surface-soft);
+ --text:var(--text-primary);
+ --muted:var(--text-secondary);
+ --accent:var(--blue-light);
+ background:var(--bg-primary);color:var(--text-primary);
+}
+body.sim-zeroth .topbar {
+ height:auto;min-height:72px;position:sticky;top:0;z-index:1100;
+ padding:12px clamp(18px,4vw,56px);
+ gap:18px;flex-direction:row;flex-wrap:wrap;
+ background:rgba(5,7,10,.92);backdrop-filter:blur(16px);
+ border-bottom:1px solid var(--border-light);
+}
+body.sim-zeroth.light-mode .topbar {background:rgba(244,247,251,.94);}
+body.sim-zeroth .brand-icon {
+ width:34px;height:34px;border-radius:9px;flex:0 0 34px;
+ font:700 17px/1 "Oxanium",sans-serif;
+ border-color:var(--border);color:var(--blue-light);background:rgba(0,168,255,.09);
+}
+body.sim-zeroth .brand-wrap {gap:11px;}
+body.sim-zeroth .brand-text h1 {font:700 16px/1 "Syncopate","Oxanium",sans-serif;letter-spacing:-.055em;}
+body.sim-zeroth .brand-text > span {display:block;margin-top:5px;font-size:8px;letter-spacing:1.45px;}
+body.sim-zeroth .brand-text h1 .wordmark-accent {color:#ff7628;}
+body.sim-zeroth .topbar-actions {display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+body.sim-zeroth .topbar-btn {
+ min-height:38px;display:inline-flex;align-items:center;justify-content:center;
+ padding:0 13px;border-radius:9px;border:1px solid var(--border);
+ background:rgba(0,168,255,.035);color:var(--text-secondary);
+ font:600 12px/1 "IBM Plex Sans",sans-serif;
+}
+body.sim-zeroth .topbar-btn:hover {background:rgba(0,168,255,.075);border-color:var(--blue);color:var(--blue-light);}
+body.sim-zeroth .hero-banner {
+ padding:45px max(22px,calc((100% - 1280px)/2)) 30px;
+ background:transparent;
+}
+body.sim-zeroth .hero-content {max-width:760px;}
+body.sim-zeroth .hero-label {
+ color:var(--blue-light);font:700 11px/1.4 "Oxanium",sans-serif;letter-spacing:2px;
+}
+body.sim-zeroth .hero-content h2 {
+ margin:12px 0;font:700 clamp(32px,4.5vw,52px)/1.1 "Oxanium",sans-serif;
+ letter-spacing:-.035em;color:var(--text-primary);
+}
+body.sim-zeroth .hero-desc {font-size:14px;line-height:1.75;color:var(--text-secondary);}
+body.sim-zeroth .container {width:min(1280px,calc(100% - 44px));max-width:none;padding:0 0 70px;margin:0 auto;}
+body.sim-zeroth .law-panel {
+ background:var(--bg-card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);
+}
+body.sim-zeroth :is(.container-box,.data-card,.law-result,.formula){
+ background:var(--surface-soft);border-color:var(--border-light);color:var(--text-primary);
+}
+body.sim-zeroth :is(.simulation-buttons button,.control-group select){
+ border-radius:9px;border-color:var(--border);color:var(--text-primary);
+}
+body.sim-zeroth :is(.section-title,.heat-info) {color:var(--text-primary);}
+body.sim-zeroth #statusBadge {color:var(--blue-light);border-color:var(--border);background:rgba(0,168,255,.08);}
+body.sim-zeroth #heatArrow {color:#ff7628;}
+body.sim-zeroth .data-card strong {color:var(--blue-light);}
+body.sim-zeroth .container-box.hot {border-color:rgba(239,68,68,.5);}
+body.sim-zeroth .container-box.cold {border-color:rgba(0,168,255,.48);}
+
+/* Responsive layout, keeping navigational actions usable on mobile. */
+@media (max-width:760px) {
+ .thermpyx-sim-header {align-items:flex-start;flex-wrap:wrap;gap:13px;}
+ .tpx-header-actions {width:100%;gap:7px;}
+ .tpx-header-button {min-height:35px;padding:0 10px;font-size:11px;}
+ body.sim-external .hero,body.sim-external .simulator-hero {width:calc(100% - 32px);padding:32px 0 20px;flex-direction:column;gap:12px;}
+ body.sim-external .container,body.sim-zeroth .container {width:calc(100% - 32px);}
+ body.sim-zeroth .hero-banner {padding:32px 16px 20px;}
+ body.sim-zeroth .topbar {padding:12px 16px;gap:12px;}
+ body.sim-external .direction-diagram {grid-template-columns:1fr;}
+ body.sim-external .graph-panel {min-width:0;}
+}
+@media (prefers-reduced-motion:reduce) {
+ body.sim-external *,body.sim-zeroth * {scroll-behavior:auto;}
+}
+
+/* Five-card collection layout. */
+.simulator-selection-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:18px;}
+.simulator-selection-grid .law-choice-card {display:flex;flex-direction:column;min-width:0;}
+.simulator-selection-grid .law-choice-card .law-choice-button {margin-top:auto;align-self:flex-start;}
+.simulator-selection-grid .law-choice-number {font-family:"Oxanium",sans-serif;}

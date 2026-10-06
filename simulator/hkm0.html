@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>
+THERMPYX | Zeroth Law of Thermodynamics
+</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<script>
+try {
+    document.documentElement.dataset.theme =
+        localStorage.getItem('thermpyx-theme') === 'light' ? 'light' : 'dark';
+} catch (_) {
+    document.documentElement.dataset.theme = 'dark';
+}
+</script>
+<link href="css hkm 0/style.css" rel="stylesheet"/>
+<link href="shared/simulator-theme.css" rel="stylesheet"/>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<body class="sim-zeroth"><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
+<!-- ==========================
+HEADER
+=========================== -->
+<header class="topbar">
+<div class="brand-wrap">
+<div class="brand-icon">
+T
+</div>
+<div class="brand-text">
+<h1>THERMPY<span class="wordmark-accent">X</span></h1>
+<span>
+THERMODYNAMICS
+</span>
+</div>
+</div>
+<div class="topbar-actions">
+<a class="topbar-btn" href="../index.html#home">
+
+ Back to Home
+
+</a>
+<a aria-label="Browse all thermodynamics simulators" class="topbar-btn" href="index.html">All Simulations</a>
+<button aria-label="Aktifkan light mode" aria-pressed="true" class="topbar-btn" id="themeToggle" type="button">
+
+☀ Light Mode
+
+</button>
+</div>
+</header>
+<!-- ==========================
+HERO
+=========================== -->
+<section class="hero-banner">
+<div class="hero-content">
+<p class="hero-label">
+
+INTERACTIVE SIMULATION
+
+</p>
+<h2>
+
+Zeroth Law of Thermodynamics
+
+</h2>
+<p class="hero-desc">
+
+Explore how thermal equilibrium works between System A,
+System B, and System C through particle motion,
+temperature exchange, and heat transfer.
+
+</p>
+</div>
+</section>
+<main class="container">
+<!-- ==========================
+CONCEPT
+=========================== -->
+<section class="intro-panel">
+<h2>
+
+Hukum 0 Termodinamika
+
+</h2>
+<p>
+
+Jika Sistem A berada dalam kesetimbangan termal dengan Sistem C,
+dan Sistem B juga berada dalam kesetimbangan termal dengan Sistem C,
+maka Sistem A dan Sistem B berada dalam kesetimbangan termal.
+
+</p>
+<div class="formula">
+
+
+T<sub>A</sub> = T<sub>C</sub>
+<br/>
+
+
+T<sub>B</sub> = T<sub>C</sub>
+<br/><br/>
+<strong>
+
+T<sub>A</sub> = T<sub>B</sub>
+</strong>
+</div>
+</section>
+<!-- ==========================
+SIMULATION
+=========================== -->
+<section class="simulation-panel">
+<div class="section-title">
+<h2>
+
+Thermal Equilibrium Simulation
+
+</h2>
+<span id="statusBadge">
+
+Belum Setimbang
+
+</span>
+</div>
+<div class="simulation-area">
+<!-- SYSTEM A -->
+<div class="system" id="systemA">
+<h3>
+
+🔥 Sistem A
+
+</h3>
+<div class="container-box" id="boxA">
+<canvas id="canvasA">
+</canvas>
+</div>
+<div class="temperature-display">
+<strong id="tempADisplay">
+
+80 °C
+
+</strong>
+</div>
+</div>
+<!-- SYSTEM C -->
+<div class="thermometer-area">
+<h3>
+
+🌡 Sistem C
+
+</h3>
+<p>
+
+Thermal Reference
+
+</p>
+<div class="thermometer">
+<div class="tube">
+<div class="liquid" id="thermometerLiquid">
+</div>
+</div>
+<div class="bulb">
+</div>
+</div>
+<strong id="thermoDisplay">
+
+50 °C
+
+</strong>
+</div>
+<!-- SYSTEM B -->
+<div class="system" id="systemB">
+<h3>
+
+❄ Sistem B
+
+</h3>
+<div class="container-box" id="boxB">
+<canvas id="canvasB">
+</canvas>
+</div>
+<div class="temperature-display">
+<strong id="tempBDisplay">
+
+20 °C
+
+</strong>
+</div>
+</div>
+</div>
+<!-- HEAT INFO -->
+<div class="heat-info">
+<h3>
+
+Heat Transfer
+
+</h3>
+<div id="heatArrow">
+
+A → C  B
+
+</div>
+<p id="heatText">
+
+Kalor berpindah dari temperatur tinggi menuju temperatur rendah.
+
+</p>
+</div>
+<!-- BUTTON -->
+<div class="simulation-buttons">
+<button id="startBtn">
+
+▶ Start
+
+</button>
+<button id="pauseBtn">
+
+⏸ Pause
+
+</button>
+<button id="resetBtn">
+
+↻ Reset
+
+</button>
+</div>
+</section>
+<!-- ==========================
+CONTROL
+=========================== -->
+<section class="control-panel">
+<h2>
+
+Temperature Control
+
+</h2>
+<div class="control-group">
+<label>
+
+System A
+
+<span id="tempAValue">
+
+80°C
+
+</span>
+</label>
+<input id="tempAInput" max="100" min="0" type="range" value="80"/>
+</div>
+<div class="control-group">
+<label>
+
+System B
+
+<span id="tempBValue">
+
+20°C
+
+</span>
+</label>
+<input id="tempBInput" max="100" min="0" type="range" value="20"/>
+</div>
+<div class="control-group">
+<label>
+
+System C
+
+<span id="thermoValue">
+
+50°C
+
+</span>
+</label>
+<input id="thermoInput" max="100" min="0" type="range" value="50"/>
+</div>
+</section>
+<!-- ==========================
+DATA
+=========================== -->
+<section class="data-panel">
+<h2>
+
+Temperature Data
+
+</h2>
+<div class="data-grid">
+<div class="data-card">
+<span>
+
+System A
+
+</span>
+<strong id="dataA">
+
+80°C
+
+</strong>
+</div>
+<div class="data-card">
+<span>
+
+System C
+
+</span>
+<strong id="dataThermo">
+
+50°C
+
+</strong>
+</div>
+<div class="data-card">
+<span>
+
+System B
+
+</span>
+<strong id="dataB">
+
+20°C
+
+</strong>
+</div>
+<div class="data-card">
+<span>
+
+Temperature Difference
+
+</span>
+<strong id="deltaT">
+
+60°C
+
+</strong>
+</div>
+</div>
+</section>
+<!-- ==========================
+RESULT
+=========================== -->
+<section class="law-panel">
+<h2>
+
+Simulation Result
+
+</h2>
+<div class="law-result" id="lawResult">
+System has not reached thermal equilibrium.
+</div>
+</section>
+</main>
+<script src="js hkm 0/script.js"></script>
+<script src="js hkm 0/ui.js"></script>
+</body>
+</html>

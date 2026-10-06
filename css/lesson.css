@@ -1,0 +1,53 @@
+
+/* THERMPYX / content pages introduced in the 02 revision */
+.lesson-page .lesson-hero { max-width: 980px; padding-bottom: 60px; }
+.lesson-page .lesson-hero h1 { font-size: clamp(2.5rem, 6vw, 4.6rem); }
+.lesson-section { scroll-margin-top: 92px; }
+.lesson-card { padding: clamp(24px, 3.5vw, 44px); }
+.lesson-card p { line-height: 1.8; max-width: 76ch; margin: 0 0 16px; color: var(--text-secondary); }
+.lesson-card p strong { color: var(--text-primary); }
+.lesson-card p:last-child { margin-bottom: 0; }
+.lesson-card .lesson-formula {
+    display: block; width: fit-content; max-width: 100%;
+    margin: 22px 0; padding: 18px clamp(16px, 2.8vw, 30px);
+    font-family: "Oxanium", sans-serif; font-weight: 700;
+    font-size: clamp(1.08rem, 2.3vw, 1.8rem); line-height: 1.45;
+    overflow-wrap: anywhere; text-align: left;
+    letter-spacing: 0.005em;
+}
+.lesson-formula sub,.lesson-formula sup {font-size:.68em;}
+.lesson-caption { font-size: .82rem; margin-top: -12px !important; }
+.lesson-list { color: var(--text-secondary); padding-left: 23px; line-height: 1.85; margin: 12px 0 4px; }
+.lesson-list li { padding-left: 6px; margin: 4px 0; }
+.lesson-list li::marker { color: var(--blue); }
+.lesson-card .variable-grid { margin: 18px 0 20px; }
+.lesson-example {
+    margin-top: 8px; border-left: 3px solid var(--blue);
+    padding: 9px 0 9px clamp(16px, 3vw, 28px);
+}
+.lesson-example .lesson-eyebrow {display:block;margin-bottom:14px;color:var(--blue-light);
+    font:700 .77rem/1.4 "Oxanium",sans-serif;letter-spacing:.12em;}
+.lesson-steps { margin-top: 12px; }
+.lesson-example .example-answer {
+    margin-top:18px;color:var(--blue-light);font-family:"Oxanium",sans-serif;
+    font-weight:700;font-size:clamp(1.1rem,2vw,1.35rem);
+}
+.lesson-inline-link { display: inline-flex; margin-top: 22px; padding: 11px 15px;
+    border-radius: 6px; border: 1px solid var(--border);
+    color: var(--blue-light); font: 700 .85rem/1.4 "Oxanium", sans-serif;
+    transition: background .2s, border-color .2s; }
+.lesson-inline-link:hover {border-color:var(--blue);background:var(--bg-card-hover);}
+.lesson-comparison {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px;}
+.lesson-comparison>div {padding:20px 16px;border:1px solid var(--border-light);background:var(--bg-secondary);border-radius:8px;}
+.lesson-comparison strong {display:block;margin-bottom:8px;font-family:"Oxanium",sans-serif;color:var(--text-primary);}
+.lesson-comparison span {font-size:.88rem;line-height:1.6;color:var(--text-secondary);}
+.lesson-table-wrap {overflow-x:auto; margin-bottom:18px;}
+.lesson-table {width:100%;border-collapse:collapse;min-width:530px;color:var(--text-secondary);line-height:1.5;font-size:.92rem;}
+.lesson-table th,.lesson-table td {padding:14px 12px;border-bottom:1px solid var(--border-light);text-align:left;}
+.lesson-table th {color:var(--blue-light);font:700 .8rem "Oxanium",sans-serif;letter-spacing:.04em;}
+.lesson-table td:first-child {font-weight:700;color:var(--text-primary);}
+@media(max-width:680px){
+ .lesson-comparison{grid-template-columns:1fr;}
+ .lesson-example{padding-left:14px;}
+ .lesson-card .lesson-formula{width:100%;}
+}

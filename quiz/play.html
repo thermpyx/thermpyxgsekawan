@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Live Quiz | THERMPYX</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/quiz.css" rel="stylesheet"/>
+<link href="play.css" rel="stylesheet"/>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
+<header class="quiz-topbar">
+<a class="quiz-back" href="../index.html#quiz" id="leavePlayBtn">
+           Back to Home
+        </a>
+<div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
+<button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
+<span class="theme-icon" id="themeIcon">☾</span>
+<span class="theme-text" id="themeText">Dark Mode</span>
+</button>
+</header>
+<main class="quiz-page live-play-shell">
+<section class="play-stage">
+<div class="play-session-bar">
+<div class="play-session-item">
+<span class="play-session-label">PLAYER / ROLE</span>
+<strong id="playRole">Loading...</strong>
+</div>
+<div class="play-session-item play-room-item">
+<span class="play-session-label">ROOM</span>
+<strong id="playRoomCode">------</strong>
+</div>
+<div class="timer-box" id="timerBox">
+<span class="play-session-label">TIME</span>
+<strong id="quizTimer">20</strong>
+<small>sec</small>
+</div>
+</div>
+<div aria-hidden="true" class="timer-track">
+<span class="timer-progress" id="timerProgress"></span>
+</div>
+<section class="play-question-card" id="quizArea">
+<div class="play-question-head">
+<span class="quiz-question-label">LIVE QUESTION</span>
+<span class="play-question-number" id="questionNumber">Loading question...</span>
+</div>
+<h1 id="questionText">Please wait...</h1>
+<div class="play-options" id="answerOptions"></div>
+<div aria-live="polite" class="play-message" id="playMessage"></div>
+</section>
+<section class="host-controls" id="hostPlayControls" style="display: none;">
+<div class="host-controls-copy">
+<span class="quiz-question-label">HOST CONTROL</span>
+<p id="hostAnswerStatus">Waiting for players...</p>
+</div>
+<button disabled="" id="nextQuestionBtn" type="button">NEXT QUESTION</button>
+</section>
+</section>
+</main>
+<script src="../js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="question-bank.js"></script>
+<script src="score-utils.js"></script>
+<script src="play.js"></script>
+</body>
+</html>

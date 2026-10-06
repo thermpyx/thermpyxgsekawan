@@ -4,74 +4,54 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Quiz | THERMPYX</title>
+<title>Join Quiz | THERMPYX</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
+<link href="live.css" rel="stylesheet"/>
 <link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
-<a class="quiz-back" href="../index.html#quiz">Back to Home</a>
+<a class="quiz-back" href="live.html">Back to Live Quiz</a>
 <div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
 <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
 <span class="theme-icon" id="themeIcon">☾</span>
 <span class="theme-text" id="themeText">Dark Mode</span>
 </button>
 </header>
-<main class="quiz-page">
-<section class="quiz-hero quiz-hub-hero">
-<p class="section-label">THERMPYX QUIZ</p>
-<h1>Choose Your Quiz Mode</h1>
-<p>
-                Practice independently at your own pace or enter a live multiplayer room
-                and compete with other learners in real time.
-            </p>
+<main class="quiz-page live-page-shell">
+<section class="quiz-hero live-hero-compact">
+<p class="section-label">LIVE QUIZ · PLAYER</p>
+<h1>Join a Quiz Room</h1>
+<p>Enter the six-digit code from the host and choose the nickname that will appear on the leaderboard.</p>
 </section>
-<section class="quiz-area quiz-hub-area">
-<div class="quiz-mode-selector">
-<div class="quiz-selector-heading">
-<span class="quiz-question-label">SELECT MODE</span>
-<h2>How do you want to learn?</h2>
-<p>Both modes use THERMPYX thermodynamics materials, but the learning experience is different.</p>
+<section class="live-area">
+<div class="live-panel">
+<div class="live-panel-heading">
+<span class="quiz-question-label">JOIN SESSION</span>
+<h2>Enter room details</h2>
+<p>Room codes only work while the host is still waiting for players.</p>
 </div>
-<div class="quiz-mode-grid">
-<a class="quiz-mode-card" href="practice.html">
-<span class="quiz-mode-number">01</span>
-<span class="quiz-mode-icon">✓</span>
-<span class="quiz-mode-copy">
-<strong>Practice Quiz</strong>
-<small>Choose a topic, answer at your own pace, and review your score instantly.</small>
-</span>
-<span class="quiz-mode-meta">Self-paced</span>
-<span class="quiz-mode-arrow">→</span>
-</a>
-<a class="quiz-mode-card quiz-mode-card-live" href="live.html">
-<span class="quiz-mode-number">02</span>
-<span class="quiz-mode-icon">⌁</span>
-<span class="quiz-mode-copy">
-<strong>Live Quiz</strong>
-<small>Create or join a room, answer together, and see a realtime leaderboard.</small>
-</span>
-<span class="quiz-mode-meta">Multiplayer</span>
-<span class="quiz-mode-arrow">→</span>
-</a>
+<div class="live-form">
+<div class="live-field">
+<label for="roomCode">Room Code</label>
+<input autocomplete="off" id="roomCode" inputmode="numeric" maxlength="6" placeholder="Example: 583291" type="text"/>
 </div>
-<div class="quiz-mode-note">
-<span class="quiz-mode-note-icon">i</span>
-<p><strong>New to THERMPYX?</strong> Start with Practice Quiz, then try Live Quiz when you are ready to compete.</p>
+<div class="live-field">
+<label for="nickname">Nickname</label>
+<input autocomplete="off" id="nickname" maxlength="30" placeholder="Enter your nickname" type="text"/>
+<span class="live-field-hint">Use a name that other players can recognize.</span>
+</div>
+<button class="live-primary-button" id="joinRoomBtn" type="button">JOIN QUIZ</button>
 </div>
 </div>
 </section>
 </main>
-<footer class="footer quiz-footer">
-<div>
-<strong>THERMPY<span class="wordmark-accent">X</span></strong>
-<span>Thermodynamic Learning &amp; Calculation Platform</span>
-</div>
-<p>Learn. Calculate. Explore.</p>
-</footer>
 <script src="../js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="join.js"></script>
 </body>
 </html>

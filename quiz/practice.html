@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thermodynamics Quiz | THERMPYX</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/quiz.css" rel="stylesheet"/>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
+<header class="quiz-topbar">
+<a class="quiz-back" href="../index.html#quiz">Back to Home</a>
+<div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
+<button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
+<span class="theme-icon" id="themeIcon">☾</span>
+<span class="theme-text" id="themeText">Dark Mode</span>
+</button>
+</header>
+<main class="quiz-page">
+<section class="quiz-hero">
+<p class="section-label">THERMPYX PRACTICE</p>
+<h1>Thermodynamics Quiz</h1>
+<p>
+                Choose a topic first, then test your understanding with a focused quiz.
+                You can also select All Materials for a mixed thermodynamics challenge.
+            </p>
+</section>
+<section class="quiz-area">
+<!-- Topic selection shown before the quiz starts -->
+<div class="quiz-topic-selector" id="quizTopicSelector">
+<div class="quiz-selector-heading">
+<span class="quiz-question-label">CHOOSE MATERIAL</span>
+<h2>Select Quiz Topic</h2>
+<p>Pick one material to practice, or combine them all.</p>
+</div>
+<div class="quiz-topic-grid">
+<button class="quiz-topic-card" data-topic="heat" type="button">
+<span class="quiz-topic-icon">ΔT</span>
+<span class="quiz-topic-copy">
+<strong>Heat &amp; Temperature</strong>
+<small>Heat transfer, temperature, specific heat, and Q = mcΔT.</small>
+</span>
+<span class="quiz-topic-count">5 Questions</span>
+</button>
+<button class="quiz-topic-card" data-topic="work" type="button">
+<span class="quiz-topic-icon">W</span>
+<span class="quiz-topic-copy">
+<strong>Work &amp; Energy</strong>
+<small>Thermodynamic work, internal energy, and energy transfer.</small>
+</span>
+<span class="quiz-topic-count">5 Questions</span>
+</button>
+<button class="quiz-topic-card" data-topic="first-law" type="button">
+<span class="quiz-topic-icon">Σ</span>
+<span class="quiz-topic-copy">
+<strong>First Law</strong>
+<small>Heat, work, internal energy, and the First Law equation.</small>
+</span>
+<span class="quiz-topic-count">5 Questions</span>
+</button>
+<button class="quiz-topic-card" data-topic="processes" type="button">
+<span class="quiz-topic-icon">PV</span>
+<span class="quiz-topic-copy">
+<strong>Thermodynamic Processes</strong>
+<small>Isobaric, isochoric, isothermal, and adiabatic processes.</small>
+</span>
+<span class="quiz-topic-count">5 Questions</span>
+</button>
+<button class="quiz-topic-card quiz-topic-card-all" data-topic="all" type="button">
+<span class="quiz-topic-icon">∞</span>
+<span class="quiz-topic-copy">
+<strong>All Materials</strong>
+<small>A balanced mixed quiz covering every material above.</small>
+</span>
+<span class="quiz-topic-count">12 Questions</span>
+</button>
+</div>
+</div>
+<!-- Quiz container is hidden until a topic is selected -->
+<div class="quiz-container" hidden="" id="quizContainer">
+<div class="quiz-session-header">
+<div>
+<span class="quiz-session-label">CURRENT MATERIAL</span>
+<strong id="quizTopicName">Heat &amp; Temperature</strong>
+</div>
+<button class="quiz-change-topic" id="quizChangeTopicButton" type="button">
+                        CHANGE TOPIC
+                    </button>
+</div>
+<div class="quiz-progress">
+<span id="quizQuestionNumber">Question 1 of 5</span>
+<span id="quizScore">Score: 0</span>
+</div>
+<div aria-hidden="true" class="quiz-progress-track">
+<span id="quizProgressBar"></span>
+</div>
+<div class="quiz-question">
+<span class="quiz-question-label">QUESTION</span>
+<h2 id="questionText"></h2>
+</div>
+<div class="quiz-options" id="quizOptions"></div>
+<div aria-live="polite" class="quiz-feedback" id="quizFeedback"></div>
+<button class="quiz-next-button" disabled="" id="quizNextButton" type="button">
+                    NEXT
+                </button>
+</div>
+<div class="quiz-result" id="quizResult">
+<p class="section-label">QUIZ COMPLETE</p>
+<span class="quiz-result-topic" id="quizResultTopic"></span>
+<h2>Your Score</h2>
+<div class="quiz-final-score" id="quizFinalScore">0 / 5</div>
+<p class="quiz-final-message" id="quizFinalMessage">Good job!</p>
+<div class="quiz-result-actions">
+<button class="quiz-restart-button" id="quizRestartButton" type="button">
+                        RETAKE QUIZ
+                    </button>
+<button class="quiz-home-button quiz-topic-again-button" id="quizChooseTopicButton" type="button">
+                        CHOOSE ANOTHER TOPIC
+                    </button>
+<a class="quiz-home-button" href="../index.html#quiz">BACK TO HOME</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="footer quiz-footer">
+<div>
+<strong>THERMPY<span class="wordmark-accent">X</span></strong>
+<span>Thermodynamic Learning &amp; Calculation Platform</span>
+</div>
+<p>Learn. Calculate. Explore.</p>
+</footer>
+<script src="../js/script.js"></script>
+<script src="../js/quiz.js"></script>
+</body>
+</html>

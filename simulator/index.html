@@ -1,443 +1,131 @@
 <!DOCTYPE html>
-<html lang="id">
+
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Simulasi Hukum I Termodinamika</title>
-
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-
-<header>
-    <h1>Simulasi Hukum I Termodinamika</h1>
-    <p>Interactive First Law of Thermodynamics Simulation</p>
-</header>
-
-
-<main class="container">
-
-    <!-- ================= SIMULATOR ================= -->
-
-    <section class="simulation-panel">
-
-        <div class="section-title">
-            <h2>Gas dalam Silinder</h2>
-
-            <span id="processBadge">
-                Isobaric
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thermodynamics Simulator | THERMPYX</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="../css/style.css" rel="stylesheet"/>
+<link href="../css/theory.css" rel="stylesheet"/>
+<link href="shared/simulator-theme.css" rel="stylesheet"/>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
+<header class="theory-topbar">
+<a class="theory-back" href="../index.html">
+            Back to Home
+        </a>
+<div class="theory-logo">THERMPY<span class="wordmark-accent">X</span></div>
+<button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
+<span class="theme-icon" id="themeIcon">
+                ☾
             </span>
-        </div>
-
-
-        <div class="cylinder">
-
-            <!-- BEBAN -->
-            <div class="weight" id="weight">
-                BEBAN
-            </div>
-
-
-            <!-- PISTON -->
-            <div class="piston" id="piston">
-
-                <div class="piston-handle"></div>
-
-            </div>
-
-
-            <!-- GAS -->
-            <div class="gas" id="gas">
-
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-
-            </div>
-
-
-            <!-- HEATER -->
-            <div class="heater" id="heater">
-
-                <div class="flame">
-                    🔥
-                </div>
-
-                <div class="heater-base"></div>
-
-            </div>
-
-        </div>
-
-
-        <!-- BUTTON -->
-        <div class="simulation-buttons">
-
-            <button id="startBtn">
-                ▶ Mulai
-            </button>
-
-            <button id="pauseBtn">
-                ⏸ Jeda
-            </button>
-
-            <button id="resetBtn">
-                ↻ Reset
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= CONTROL ================= -->
-
-    <section class="control-panel">
-
-        <h2>Kontrol Simulasi</h2>
-
-
-        <label for="processSelect">
-            Proses Termodinamika
-        </label>
-
-        <select id="processSelect">
-
-            <option value="isobaric">
-                Isobaric — Tekanan Tetap
-            </option>
-
-            <option value="isochoric">
-                Isochoric — Volume Tetap
-            </option>
-
-            <option value="isothermal">
-                Isothermal — Temperatur Tetap
-            </option>
-
-            <option value="adiabatic">
-                Adiabatic — Q = 0
-            </option>
-
-        </select>
-
-
-        <!-- KALOR -->
-
-        <div class="control-group">
-
-            <label>
-                Kalor Q
-                <span id="heatValue">
-                    0 J
+<span class="theme-text" id="themeText">
+                Dark Mode
+            </span>
+</button>
+</header>
+<main class="theory-page laws-page">
+<section class="theory-hero laws-hero">
+<p class="section-label">
+                SIMULATOR COLLECTION
+            </p>
+<h1>
+                Thermodynamics Simulator
+            </h1>
+<p>
+                Choose from all five interactive experiments. Each simulator shares the THERMPYX theme and navigation.
+            </p>
+</section>
+<section class="theory-content laws-selection-section">
+<div class="theory-section-header">
+<span>
+                    01
                 </span>
-            </label>
-
-            <input
-                type="range"
-                id="heatInput"
-                min="0"
-                max="1000"
-                value="0"
-                step="10"
-            >
-
-        </div>
-
-
-        <!-- TEKANAN -->
-
-        <div class="control-group">
-
-            <label>
-                Tekanan Awal
-                <span id="pressureValue">
-                    100 kPa
-                </span>
-            </label>
-
-            <input
-                type="range"
-                id="pressureInput"
-                min="50"
-                max="200"
-                value="100"
-                step="5"
-            >
-
-        </div>
-
-
-        <!-- VOLUME -->
-
-        <div class="control-group">
-
-            <label>
-                Volume Awal
-                <span id="volumeValue">
-                    2.00 L
-                </span>
-            </label>
-
-            <input
-                type="range"
-                id="volumeInput"
-                min="1"
-                max="5"
-                value="2"
-                step="0.1"
-            >
-
-        </div>
-
-
-        <!-- SUHU -->
-
-        <div class="control-group">
-
-            <label>
-                Temperatur Awal
-                <span id="temperatureValue">
-                    300 K
-                </span>
-            </label>
-
-            <input
-                type="range"
-                id="temperatureInput"
-                min="250"
-                max="500"
-                value="300"
-                step="10"
-            >
-
-        </div>
-
-
-        <!-- INFO PROSES -->
-
-        <div
-            class="info-box"
-            id="processInfo"
-        >
-            Tekanan tetap selama proses.
-            Ketika gas menerima kalor,
-            volume dan temperatur berubah.
-        </div>
-
-    </section>
-
-
-    <!-- ================= DATA ================= -->
-
-    <section class="data-panel">
-
-        <h2>Data Termodinamika</h2>
-
-
-        <div class="data-grid">
-
-            <!-- PRESSURE -->
-
-            <div class="data-card">
-
-                <span>
-                    Pressure
-                </span>
-
-                <strong id="pressureDisplay">
-                    100 kPa
-                </strong>
-
-                <small id="pressureAlt">
-                    0.987 atm
-                </small>
-
-                <small id="pressurePa">
-                    100000 Pa
-                </small>
-
-            </div>
-
-
-            <!-- VOLUME -->
-
-            <div class="data-card">
-
-                <span>
-                    Volume
-                </span>
-
-                <strong id="volumeDisplay">
-                    2.00 L
-                </strong>
-
-                <small id="volumeAlt">
-                    0.00200 m³
-                </small>
-
-            </div>
-
-
-            <!-- TEMPERATURE -->
-
-            <div class="data-card">
-
-                <span>
-                    Temperature
-                </span>
-
-                <strong id="temperatureDisplay">
-                    300 K
-                </strong>
-
-                <small id="temperatureAlt">
-                    26.85 °C
-                </small>
-
-            </div>
-
-
-            <!-- Q -->
-
-            <div class="data-card">
-
-                <span>
-                    Heat Q
-                </span>
-
-                <strong id="qDisplay">
-                    0 J
-                </strong>
-
-            </div>
-
-
-            <!-- W -->
-
-            <div class="data-card">
-
-                <span>
-                    Work W
-                </span>
-
-                <strong id="wDisplay">
-                    0 J
-                </strong>
-
-            </div>
-
-
-            <!-- DELTA U -->
-
-            <div class="data-card">
-
-                <span>
-                    ΔU
-                </span>
-
-                <strong id="uDisplay">
-                    0 J
-                </strong>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= HUKUM I ================= -->
-
-    <section class="law-panel">
-
-        <h2>
-            Hukum I Termodinamika
-        </h2>
-
-
-        <div class="formula">
-
-            ΔU = Q − W
-
-        </div>
-
-
-        <div class="formula-explanation">
-
-            <div>
-
-                <strong>ΔU</strong>
-
-                <span>
-                    Perubahan energi dalam
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <strong>Q</strong>
-
-                <span>
-                    Kalor yang diterima gas
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <strong>W</strong>
-
-                <span>
-                    Usaha yang dilakukan gas
-                </span>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= GRAPH ================= -->
-
-    <section class="graph-panel">
-
-        <h2>
-            Diagram P–V
-        </h2>
-
-        <div class="graph-wrapper">
-
-            <canvas id="pvGraph"></canvas>
-
-            <div id="graphTooltip" class="graph-tooltip"></div>
-
-        </div>
-
-    </section>
-
+<h2>
+                    Choose a Simulation
+                </h2>
+</div>
+<div class="laws-grid simulator-selection-grid">
+<a aria-label="Zeroth Law of Thermodynamics" class="law-choice-card is-available tpx-clickable-card" href="hkm0.html">
+<div class="law-choice-number">
+                        0
+                    </div>
+<p class="law-choice-kicker">
+                        ZEROTH LAW
+                    </p>
+<h3>
+                        Zeroth Law of Thermodynamics
+                    </h3>
+<p>
+                        Thermal equilibrium simulation between systems A, B, and C.
+                    </p>
+<span class="law-choice-button tpx-card-cta">
+                        OPEN ZERO LAW
+                    </span>
+</a>
+<a aria-label="First Law of Thermodynamics" class="law-choice-card is-available tpx-clickable-card" href="hkm1.html">
+<div class="law-choice-number">
+                        1
+                    </div>
+<p class="law-choice-kicker">
+                        FIRST LAW
+                    </p>
+<h3>
+                        First Law of Thermodynamics
+                    </h3>
+<p>
+                        Energy conservation through heat, work, and changes in internal energy.
+                    </p>
+<span class="law-choice-button tpx-card-cta">
+                        OPEN FIRST LAW
+                    </span>
+</a>
+<a aria-label="Second Law of Thermodynamics" class="law-choice-card is-available tpx-clickable-card" href="hkm2.html">
+<div class="law-choice-number">2</div>
+<p class="law-choice-kicker">SECOND LAW</p>
+<h3>Second Law of Thermodynamics</h3>
+<p>Follow spontaneous heat transfer, entropy, and heat-engine efficiency.</p>
+<span class="law-choice-button tpx-card-cta">OPEN SECOND LAW</span>
+</a>
+<a aria-label="Third Law of Thermodynamics" class="law-choice-card is-available tpx-clickable-card" href="hkm3.html">
+<div class="law-choice-number">3</div>
+<p class="law-choice-kicker">THIRD LAW</p>
+<h3>Third Law of Thermodynamics</h3>
+<p>Observe particle movement and entropy as temperature approaches absolute zero.</p>
+<span class="law-choice-button tpx-card-cta">OPEN THIRD LAW</span>
+</a>
+<a aria-label="Heat &amp; Temperature" class="law-choice-card is-available tpx-clickable-card" href="heat-temperature.html">
+<div class="law-choice-number">Q</div>
+<p class="law-choice-kicker">HEAT &amp; TEMPERATURE</p>
+<h3>Heat &amp; Temperature</h3>
+<p>Explore heating, material properties, thermometer readings, and heat graphs.</p>
+<span class="law-choice-button tpx-card-cta">OPEN SIMULATION</span>
+</a>
+</div>
+</section>
+<section class="theory-navigation">
+<a class="theory-navigation-button" href="../index.html#theory">
+                Back to Theory
+            </a>
+<a class="theory-navigation-button" href="heat-temperature.html">
+                Open Heat &amp; Temperature
+            </a>
+</section>
 </main>
-
-
-<script src="js/script.js"></script>
-
+<footer class="footer theory-footer">
+<div>
+<strong>THERMPY<span class="wordmark-accent">X</span></strong>
+<span>
+                Thermodynamic Learning &amp; Calculation Platform
+            </span>
+</div>
+<p>
+            Learn. Calculate. Explore.
+        </p>
+</footer>
+<script src="../js/script.js"></script>
 </body>
 </html>

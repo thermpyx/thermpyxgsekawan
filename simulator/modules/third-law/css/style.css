@@ -1,0 +1,1092 @@
+
+
+/* =====================================================
+   ROOT
+===================================================== */
+
+:root {
+    --bg-primary: #F4F7FB;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F4F7FB;
+
+    --text-primary: #172033;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+
+    --blue: #2563EB;
+    --blue-dark: #1D4ED8;
+    --blue-light: #0891B2;
+
+    --cyan: #06B6D4;
+    --cyan-light: #67E8F9;
+
+    --green: #16A34A;
+    --orange: #F59E0B;
+
+    --border: #DCE4EF;
+    --border-light: #E8EEF6;
+
+    --shadow:
+        0 10px 30px rgba(23, 32, 51, 0.07);
+
+    --radius: 16px;
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.simulator-hero {
+    padding: 65px 20px 48px;
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(37, 99, 235, 0.10),
+            transparent 55%
+        );
+}
+
+.hero-content {
+    width: min(900px, 100%);
+    margin: auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+
+    padding: 7px 14px;
+
+    border-radius: 999px;
+
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.16);
+
+    color: var(--blue);
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+}
+
+.simulator-hero h1 {
+    margin-top: 18px;
+
+    font-family: 'Oxanium', sans-serif;
+
+    font-size: clamp(32px, 4.5vw, 52px);
+    line-height: 1.08;
+
+    letter-spacing: -1.5px;
+}
+
+.simulator-hero p {
+    margin-top: 14px;
+
+    color: var(--text-secondary);
+
+    font-size: 16px;
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container {
+    width: min(1100px, calc(100% - 32px));
+
+    margin: 0 auto 70px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+/* =====================================================
+   PANELS
+===================================================== */
+
+.simulation-panel,
+.control-panel,
+.data-panel,
+.law-panel,
+.explanation-panel,
+.graph-panel {
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+
+/* =====================================================
+   HEADINGS
+===================================================== */
+
+.simulation-panel h2,
+.control-panel h2,
+.data-panel h2,
+.law-panel h2,
+.explanation-panel h2,
+.graph-panel h2 {
+    font-family: 'Oxanium', sans-serif;
+
+    color: var(--text-primary);
+
+    font-size: 21px;
+}
+
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-title {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.section-title p {
+    margin-top: 7px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+#temperatureBadge {
+    flex-shrink: 0;
+
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    background: rgba(37, 99, 235, 0.09);
+
+    border: 1px solid rgba(37, 99, 235, 0.18);
+
+    color: var(--blue);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   EXPLANATION
+===================================================== */
+
+.explanation-panel {
+    padding: 26px;
+}
+
+.explanation-content {
+    margin-top: 17px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+.explanation-content p {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+
+    line-height: 1.8;
+}
+
+.explanation-content strong {
+    color: var(--text-primary);
+}
+
+
+/* =====================================================
+   DETAILS / ACCORDION
+===================================================== */
+
+details {
+    margin-top: 12px;
+
+    border: 1px solid var(--border-light);
+
+    border-radius: 12px;
+
+    background: var(--surface-soft);
+
+    overflow: hidden;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+details:first-child {
+    margin-top: 0;
+}
+
+details[open] {
+    border-color: var(--border-light);
+
+    background: var(--bg-card);
+}
+
+summary {
+    position: relative;
+
+    min-height: 50px;
+
+    padding: 14px 46px 14px 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    cursor: pointer;
+
+    list-style: none;
+
+    color: var(--text-primary);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    user-select: none;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+summary::after {
+    content: "+";
+
+    position: absolute;
+
+    right: 17px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--blue);
+
+    font-size: 22px;
+    font-weight: 400;
+
+    transition: transform 0.2s ease;
+}
+
+details[open] summary::after {
+    content: "−";
+}
+
+summary:hover {
+    background: rgba(37, 99, 235, 0.035);
+}
+
+.details-content {
+    padding: 0 17px 17px;
+
+    color: var(--text-secondary);
+
+    font-size: 13.5px;
+
+    line-height: 1.75;
+}
+
+.details-content p {
+    margin-top: 10px;
+}
+
+.details-content p:first-child {
+    margin-top: 0;
+}
+
+.details-content ul {
+    margin-top: 10px;
+
+    padding-left: 22px;
+}
+
+.details-content li {
+    margin-bottom: 6px;
+}
+
+
+/* =====================================================
+   MINI FORMULA
+===================================================== */
+
+.mini-formula {
+    width: fit-content;
+
+    margin: 14px 0;
+
+    padding: 10px 17px;
+
+    border-radius: 9px;
+
+    background: rgba(37, 99, 235, 0.06);
+
+    border: 1px solid rgba(37, 99, 235, 0.13);
+
+    color: var(--blue-dark);
+
+    font-family: 'Oxanium', sans-serif;
+
+    font-size: 17px;
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   LAW PANEL
+===================================================== */
+
+.law-panel {
+    padding: 28px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--bg-card),
+            var(--surface-soft)
+        );
+}
+
+.formula {
+    width: fit-content;
+    max-width: 100%;
+
+    margin: 24px auto;
+
+    padding: 17px 30px;
+
+    border-radius: 13px;
+
+    background: rgba(37, 99, 235, 0.065);
+
+    border: 1px solid rgba(37, 99, 235, 0.15);
+
+    color: var(--blue-dark);
+
+    font-family: 'Oxanium', sans-serif;
+
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 600;
+}
+
+.formula-explanation {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.formula-explanation div {
+    padding: 15px;
+
+    border-radius: 11px;
+
+    background: var(--surface-soft);
+
+    border: 1px solid var(--border-light);
+}
+
+.formula-explanation strong {
+    display: block;
+
+    color: var(--blue);
+
+    font-family: 'Oxanium', sans-serif;
+
+    font-size: 20px;
+}
+
+.formula-explanation span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   SIMULATION
+===================================================== */
+
+.simulation-panel {
+    padding: 26px;
+}
+
+
+/* =====================================================
+   CRYSTAL
+===================================================== */
+
+.crystal-container {
+    position: relative;
+
+    width: 100%;
+    height: 460px;
+
+    margin-top: 24px;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--surface-soft),
+            var(--surface-soft)
+        );
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        inset 0 0 50px
+        rgba(37, 99, 235, 0.035);
+}
+
+.crystal-grid {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: min(620px, 80%);
+    height: min(340px, 75%);
+
+    transform: translate(-50%, -50%);
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(8, 1fr);
+
+    grid-template-rows:
+        repeat(6, 1fr);
+
+    align-items: center;
+    justify-items: center;
+
+    border: 1px solid rgba(37, 99, 235, 0.10);
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            rgba(37, 99, 235, 0.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(37, 99, 235, 0.035) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        12.5% 16.666%;
+}
+
+
+/* =====================================================
+   PARTICLES
+===================================================== */
+
+.crystal-particle {
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            var(--bg-card),
+            #67E8F9 35%,
+            #0891B2 75%,
+            #0E7490
+        );
+
+    border:
+        1px solid rgba(8, 145, 178, 0.35);
+
+    box-shadow:
+        0 0 10px rgba(6, 182, 212, 0.22);
+
+    transition:
+        transform 0.08s linear,
+        box-shadow 0.2s ease;
+}
+
+
+/* =====================================================
+   CRYSTAL LABEL
+===================================================== */
+
+.crystal-label {
+    position: absolute;
+
+    right: 16px;
+    top: 16px;
+
+    left: auto;
+    bottom: auto;
+
+    transform: none;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 9px 16px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.90);
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 5px 18px
+        rgba(23, 32, 51, 0.07);
+
+    backdrop-filter: blur(8px);
+
+    z-index: 5;
+}
+
+.crystal-label span {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.crystal-label small {
+    margin-top: 2px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.simulation-buttons {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 22px;
+}
+
+.simulation-buttons button {
+    min-height: 44px;
+
+    padding: 10px 18px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--border);
+
+    background: var(--bg-secondary);
+
+    color: var(--text-secondary);
+
+    font-family: 'IBM Plex Sans', sans-serif;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.simulation-buttons button:hover {
+    background: var(--bg-card-hover);
+
+    border-color: #C7D2E2;
+}
+
+.simulation-buttons button:active {
+    transform: translateY(1px);
+}
+
+.simulation-buttons button:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+#startBtn {
+    background: var(--blue);
+
+    border-color: var(--blue);
+
+    color: white;
+}
+
+#startBtn:hover:not(:disabled) {
+    background: var(--blue-dark);
+
+    border-color: var(--blue-dark);
+}
+
+#pauseBtn {
+    color: var(--orange);
+}
+
+
+/* =====================================================
+   CONTROL
+===================================================== */
+
+.control-panel {
+    padding: 26px;
+}
+
+.control-group {
+    margin-top: 22px;
+}
+
+.control-group label {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 10px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.control-group label span {
+    color: var(--blue);
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+select {
+    width: 100%;
+
+    min-height: 46px;
+
+    padding: 10px 13px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--border);
+
+    background: white;
+
+    color: var(--text-primary);
+
+    font-family: 'IBM Plex Sans', sans-serif;
+
+    font-size: 14px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: var(--blue);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.10);
+}
+
+
+/* =====================================================
+   RANGE
+===================================================== */
+
+input[type="range"] {
+    width: 100%;
+
+    height: 6px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    border-radius: 999px;
+
+    background: var(--border-light);
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: var(--blue);
+
+    border: 3px solid white;
+
+    box-shadow:
+        0 2px 7px
+        rgba(23, 32, 51, 0.20);
+
+    cursor: grab;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: var(--blue);
+
+    border: 3px solid white;
+
+    box-shadow:
+        0 2px 7px
+        rgba(23, 32, 51, 0.20);
+
+    cursor: grab;
+}
+
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.info-box {
+    margin-top: 22px;
+
+    padding: 15px 17px;
+
+    border-radius: 11px;
+
+    background:
+        rgba(37, 99, 235, 0.055);
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.13);
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+/* =====================================================
+   DATA
+===================================================== */
+
+.data-panel {
+    padding: 26px;
+}
+
+.data-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-top: 20px;
+}
+
+.data-card {
+    min-width: 0;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: var(--surface-soft);
+
+    border: 1px solid var(--border-light);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.data-card:hover {
+    background: var(--bg-card-hover);
+
+    border-color: var(--border);
+}
+
+.data-card span {
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.data-card strong {
+    display: block;
+
+    margin-top: 6px;
+
+    font-family: 'Oxanium', sans-serif;
+
+    font-size: 23px;
+
+    line-height: 1.2;
+
+    word-break: break-word;
+}
+
+.data-card small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   GRAPH
+===================================================== */
+
+.graph-panel {
+    padding: 26px;
+}
+
+#entropyGraph {
+    display: block;
+
+    width: 100%;
+    height: 330px;
+
+    margin-top: 20px;
+
+    border-radius: 12px;
+
+    background: var(--surface-soft);
+
+    border: 1px solid var(--border-light);
+}
+
+
+/* =====================================================
+   FOCUS
+===================================================== */
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+    outline: 3px solid
+        rgba(37, 99, 235, 0.22);
+
+    outline-offset: 2px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 800px) {
+
+    .data-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .formula-explanation {
+        grid-template-columns: 1fr;
+    }
+
+    .crystal-container {
+        height: 400px;
+    }
+
+    .crystal-grid {
+        width: 88%;
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 560px) {
+
+    .simulator-hero {
+        padding: 45px 16px 30px;
+    }
+
+    .simulator-hero h1 {
+        font-size: 32px;
+
+        letter-spacing: -1px;
+    }
+
+    .container {
+        width: calc(100% - 20px);
+
+        margin-bottom: 45px;
+    }
+
+    .simulation-panel,
+    .control-panel,
+    .data-panel,
+    .law-panel,
+    .explanation-panel,
+    .graph-panel {
+        padding: 19px;
+    }
+
+    .section-title {
+        flex-direction: column;
+    }
+
+    #temperatureBadge {
+        align-self: flex-start;
+    }
+
+    .crystal-container {
+        height: 330px;
+    }
+
+    .crystal-grid {
+        width: 92%;
+        height: 250px;
+    }
+
+    .crystal-particle {
+        width: 13px;
+        height: 13px;
+    }
+
+    .simulation-buttons {
+        display: grid;
+
+        grid-template-columns: 1fr;
+    }
+
+    .simulation-buttons button {
+        width: 100%;
+    }
+
+    .data-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .data-card strong {
+        font-size: 21px;
+    }
+
+    .formula {
+        padding: 15px 18px;
+
+        font-size: 24px;
+    }
+
+    #entropyGraph {
+        height: 270px;
+    }
+
+    summary {
+        font-size: 13px;
+    }
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+    }
+}

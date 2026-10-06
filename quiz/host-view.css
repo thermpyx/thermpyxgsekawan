@@ -1,0 +1,40 @@
+
+.quiz-page.host-dashboard{width:100%;max-width:none;box-sizing:border-box;min-height:100vh;margin:0;
+padding:108px max(18px,calc((100vw - 1260px)/2)) 90px;color:var(--text-primary)}
+.host-header{display:flex;justify-content:space-between;gap:28px;align-items:center;padding:0 0 30px}
+.host-header h1{font:700 clamp(30px,4.5vw,55px)/1.2 Oxanium,sans-serif;margin:8px 0 12px}
+.host-header p:not(.section-label){color:var(--text-secondary);font-size:14px;max-width:610px;line-height:1.7}
+.host-room-tag,.host-stat,.host-panel,.host-finish-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:14px}
+.host-room-tag{min-width:180px;display:grid;gap:5px;padding:19px 22px}
+.host-room-tag span,.host-stat span{color:var(--text-muted);font:700 10px Oxanium;letter-spacing:1.2px}
+.host-room-tag strong{font:700 32px Oxanium;color:var(--blue);letter-spacing:4px}
+.host-room-tag small{color:var(--text-secondary);font-size:11px}
+.host-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:12px 0 18px}
+.host-stat{padding:21px;display:grid;gap:9px;border-top:2px solid var(--blue)}
+.host-stat strong{font:700 29px Oxanium}
+.host-main-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:16px}
+.host-panel{padding:25px;min-width:0}
+.host-panel-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:23px}
+.host-panel-heading h2,.host-finish-panel h2{font:700 20px Oxanium;margin:5px 0}
+.host-live-dot{font:700 10px Oxanium;letter-spacing:.6px;color:var(--blue);border:1px solid var(--border);padding:8px 10px;border-radius:50px}
+.host-player-list,.host-standings{display:grid;gap:10px}
+.host-player{border:1px solid var(--border-light);border-radius:10px;padding:16px;background:var(--bg-secondary)}
+.host-player-header{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}
+.host-player-header strong{font:600 15px "IBM Plex Sans",sans-serif;overflow-wrap:anywhere}
+.host-player-header small,.host-explanation{font-size:12px;color:var(--text-secondary)}
+.host-track{height:7px;background:var(--border-light);border-radius:8px;overflow:hidden}
+.host-track span{height:100%;display:block;background:linear-gradient(90deg,var(--blue),#ff7a28);transition:width .3s}
+.host-player-stats{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:11px;color:var(--text-secondary);font-size:11px}
+.host-player-stats b{color:var(--text-primary);font-family:Oxanium}
+.host-standing{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border-light)}
+.host-standing .number{color:var(--blue);font:700 17px Oxanium}
+.host-standing .name{min-width:0;overflow-wrap:anywhere;font-weight:600;font-size:13px}
+.host-standing .points{text-align:right;font:700 16px Oxanium}
+.host-standing .points small{display:block;color:var(--text-secondary);font:400 10px "IBM Plex Sans"}
+.host-board-link{display:block;text-align:center;margin-top:22px;padding:13px;background:var(--blue);border-radius:9px;color:white;text-decoration:none;font:700 11px Oxanium;letter-spacing:.7px}
+.host-finish-panel{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:23px 26px;margin-top:17px}
+.host-finish-panel p{font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px}
+#hostFinishBtn{padding:13px 18px;min-width:175px;border:1px solid #dc7141;border-radius:9px;background:transparent;color:var(--text-primary);font:700 11px Oxanium;cursor:pointer}
+#hostFinishBtn:hover{background:rgba(255,112,45,.11)}#hostFinishBtn:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:850px){.host-main-grid{grid-template-columns:1fr}.host-summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.host-header,.host-finish-panel{flex-direction:column;align-items:stretch}.host-summary{gap:8px}.host-stat{padding:15px}.host-stat strong{font-size:23px}.host-panel{padding:18px}}

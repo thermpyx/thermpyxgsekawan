@@ -1,0 +1,1022 @@
+/* =====================================================
+   THERMPYX
+   ZEROTH LAW OF THERMODYNAMICS
+   STYLE SHEET
+===================================================== */
+
+
+/* ===============================
+   COLOR SYSTEM
+================================ */
+
+:root {
+
+    --bg: #f4f8fc;
+    --hero: #e8f2fb;
+
+    --card: #ffffff;
+    --panel: #f8fbff;
+
+    --text: #18233b;
+    --muted: #64748b;
+
+    --accent: #0ea5e9;
+
+    --border: #dbe5ef;
+
+    --shadow:
+    0 15px 40px rgba(15,23,42,.06);
+
+}
+
+
+
+html[data-theme="dark"],
+body.dark {
+
+    --bg: #07111f;
+
+    --hero: #0d1b2f;
+
+    --card: #101b2b;
+
+    --panel: #0b1525;
+
+    --text: #f8fafc;
+
+    --muted: #94a3b8;
+
+    --accent: #38bdf8;
+
+    --border:
+    rgba(255,255,255,.1);
+
+    --shadow:none;
+
+}
+
+
+
+
+
+
+
+
+/* ===============================
+   GLOBAL
+================================ */
+
+
+* {
+
+    box-sizing:border-box;
+
+}
+
+
+
+body {
+
+    margin:0;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    font-family:
+    "IBM Plex Sans",
+    sans-serif;
+
+    transition:.3s ease;
+
+}
+
+
+
+h1,
+h2,
+h3 {
+
+    font-family:
+    "Oxanium",
+    sans-serif;
+
+}
+
+
+
+button,
+input {
+
+    font-family:inherit;
+
+}
+
+
+
+
+
+
+
+
+
+/* ===============================
+   HEADER
+================================ */
+
+
+.topbar {
+
+    height:104px;
+
+    padding:
+    0 55px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    border-bottom:
+    1px solid var(--border);
+
+    background:
+    var(--bg);
+
+}
+
+
+
+
+.brand-wrap {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+
+
+.brand-icon {
+
+    width:52px;
+
+    height:52px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#0284c7;
+
+    border:
+    1px solid #7dd3fc;
+
+    background:
+    rgba(14,165,233,.08);
+
+}
+
+
+
+.brand-text h1 {
+
+    margin:0;
+
+    font-size:22px;
+
+    letter-spacing:.5px;
+
+}
+
+
+
+.brand-text span {
+
+    font-size:11px;
+
+    letter-spacing:3px;
+
+    color:var(--muted);
+
+}
+
+
+
+
+
+
+.topbar-actions {
+
+    display:flex;
+
+    gap:16px;
+
+}
+
+
+
+
+.topbar-btn {
+
+    padding:
+    15px 22px;
+
+    border-radius:16px;
+
+    border:
+    1px solid var(--border);
+
+    background:
+    var(--panel);
+
+    color:var(--text);
+
+    font-weight:600;
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+
+
+.topbar-btn:hover {
+
+    transform:translateY(-2px);
+
+}
+
+
+
+
+
+
+
+
+
+
+/* ===============================
+   HERO
+================================ */
+
+
+.hero-banner {
+
+    padding:
+    70px 80px;
+
+    background:
+    var(--hero);
+
+}
+
+
+
+.hero-content {
+
+    max-width:1100px;
+
+}
+
+
+
+.hero-label {
+
+    color:
+    #2563eb;
+
+    letter-spacing:
+    4px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+
+
+.hero-content h2 {
+
+    margin:
+
+    20px 0;
+
+    font-size:
+
+    clamp(42px,6vw,78px);
+
+    line-height:
+
+    1.05;
+
+}
+
+
+
+.hero-desc {
+
+    max-width:900px;
+
+    font-size:21px;
+
+    line-height:1.7;
+
+    color:var(--muted);
+
+}
+
+
+
+
+
+
+
+
+
+/* ===============================
+   MAIN CONTAINER
+================================ */
+
+
+.container {
+
+    width:
+    min(1200px,92%);
+
+    margin:
+
+    40px auto;
+
+}
+
+
+
+.intro-panel,
+.simulation-panel,
+.control-panel,
+.data-panel,
+.law-panel {
+
+
+    background:
+    var(--card);
+
+    border:
+    1px solid var(--border);
+
+    border-radius:28px;
+
+    padding:35px;
+
+    margin-bottom:30px;
+
+    box-shadow:
+    var(--shadow);
+
+}
+
+
+
+
+
+
+
+
+
+/* ===============================
+   INTRO
+================================ */
+
+
+.intro-panel p {
+
+    color:var(--muted);
+
+    line-height:1.8;
+
+}
+
+
+
+.formula {
+
+    margin-top:25px;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    background:
+    var(--panel);
+
+    color:
+    var(--accent);
+
+    font-size:26px;
+
+}
+
+
+
+
+
+
+
+
+
+
+/* ===============================
+   SIMULATION
+================================ */
+
+
+.section-title {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+
+#statusBadge {
+
+    padding:
+    8px 18px;
+
+    border-radius:20px;
+
+    background:#ef4444;
+
+    color:white;
+
+    font-size:14px;
+
+}
+
+
+
+#statusBadge.equal {
+
+    background:#22c55e;
+
+    box-shadow:
+    0 0 20px rgba(34,197,94,.5);
+
+}
+
+
+
+
+
+
+.simulation-area {
+
+    display:grid;
+
+    grid-template-columns:
+
+    1fr 220px 1fr;
+
+    gap:40px;
+
+    align-items:center;
+
+    margin-top:40px;
+
+}
+
+
+
+
+.system {
+
+    text-align:center;
+
+}
+
+
+
+
+
+
+
+
+/* ===============================
+   PARTICLE BOX
+================================ */
+
+
+.container-box {
+
+    height:240px;
+
+    background:
+
+    radial-gradient(
+        circle,
+        rgba(14,165,233,.12),
+        #020617
+    );
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    border:
+    1px solid rgba(14,165,233,.35);
+
+    transition:.3s;
+
+}
+
+
+
+
+.container-box.hot {
+
+    border-color:#ef4444;
+
+    box-shadow:
+
+    0 0 35px rgba(239,68,68,.4);
+
+}
+
+
+
+.container-box.cold {
+
+    border-color:#38bdf8;
+
+    box-shadow:
+
+    0 0 35px rgba(56,189,248,.4);
+
+}
+
+
+
+canvas {
+
+    width:100%;
+
+    height:100%;
+
+}
+
+
+
+
+
+
+
+
+.temperature-display {
+
+    margin-top:15px;
+
+    font-size:28px;
+
+    color:var(--accent);
+
+}
+
+
+
+
+
+
+
+
+
+/* ===============================
+   THERMOMETER
+================================ */
+
+
+.thermometer-area {
+
+    text-align:center;
+
+}
+
+
+
+.thermometer {
+
+    height:260px;
+
+    position:relative;
+
+}
+
+
+
+.tube {
+
+    position:absolute;
+
+    bottom:40px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:30px;
+
+    height:200px;
+
+    border:
+
+    3px solid white;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    background:#020617;
+
+}
+
+
+
+.liquid {
+
+    position:absolute;
+
+    bottom:0;
+
+    width:100%;
+
+    height:50%;
+
+    background:
+
+    linear-gradient(
+        #ef4444,
+        #f97316
+    );
+
+    transition:.5s;
+
+}
+
+
+
+.bulb {
+
+    position:absolute;
+
+    bottom:0;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:50%;
+
+    background:#ef4444;
+
+}
+
+
+
+
+
+
+
+
+
+
+/* ===============================
+   HEAT INFO
+================================ */
+
+
+.heat-info {
+
+    text-align:center;
+
+    margin-top:35px;
+
+}
+
+
+
+#heatArrow {
+
+    font-size:34px;
+
+    color:#f97316;
+
+}
+
+
+
+#heatText {
+
+    color:var(--muted);
+
+}
+
+
+
+
+
+
+
+
+
+/* ===============================
+   BUTTON
+================================ */
+
+
+.simulation-buttons {
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin-top:30px;
+
+}
+
+
+
+button {
+
+    border:none;
+
+    cursor:pointer;
+
+}
+
+
+
+.simulation-buttons button {
+
+    padding:
+
+    12px 25px;
+
+    border-radius:14px;
+
+    background:
+
+    rgba(14,165,233,.15);
+
+    border:
+
+    1px solid var(--border);
+
+    color:var(--text);
+
+    font-weight:600;
+
+}
+
+
+
+
+
+
+/* ===============================
+   CONTROL
+================================ */
+
+
+.control-group {
+
+    margin-bottom:25px;
+
+}
+
+
+
+.control-group label {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    color:var(--muted);
+
+}
+
+
+
+input[type="range"] {
+
+    width:100%;
+
+    accent-color:
+
+    var(--accent);
+
+}
+
+
+
+
+
+
+
+
+
+
+/* ===============================
+   DATA
+================================ */
+
+
+.data-grid {
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+
+
+.data-card {
+
+    padding:25px;
+
+    text-align:center;
+
+    border-radius:20px;
+
+    background:
+
+    var(--panel);
+
+    border:
+
+    1px solid var(--border);
+
+}
+
+
+
+.data-card span {
+
+    color:var(--muted);
+
+}
+
+
+
+.data-card strong {
+
+    display:block;
+
+    margin-top:10px;
+
+    font-size:25px;
+
+    color:var(--accent);
+
+}
+
+
+
+
+
+
+
+.law-result {
+
+    padding:25px;
+
+    border-radius:18px;
+
+    background:
+
+    var(--panel);
+
+    text-align:center;
+
+}
+
+
+
+
+
+
+
+
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+
+@media(max-width:900px){
+
+
+.topbar {
+
+    padding:20px;
+
+}
+
+
+.hero-banner {
+
+    padding:50px 25px;
+
+}
+
+
+.simulation-area {
+
+    grid-template-columns:
+
+    1fr;
+
+}
+
+
+.data-grid {
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+}
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+.data-grid {
+
+    grid-template-columns:
+
+    1fr;
+
+}
+
+
+.topbar {
+
+    flex-direction:column;
+
+    height:auto;
+
+    gap:20px;
+
+}
+
+
+}
+/* Shared THERMPYX typography on the standalone Zeroth Law simulator. */
+.brand-text h1 {font:700 17px/1.2 "Syncopate","Oxanium",sans-serif;letter-spacing:-.05em;}
+.brand-text h1 .wordmark-accent {color:#ff7628;font:inherit;}
+
+/* Header links may wrap on narrow screens after adding Home + Collection routes. */
+@media (max-width: 740px) {
+ .topbar {height:auto; min-height:88px; flex-wrap:wrap; padding:18px 22px; gap:14px;}
+ .topbar-actions {gap:8px;flex-wrap:wrap;}
+ .topbar-btn {padding:10px 13px;border-radius:10px;font-size:12px;}
+}

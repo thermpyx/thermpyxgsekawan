@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Meet the THERMPYX development team."
+  >
+
+  <title>Meet The Developers | THERMPYX</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Oxanium:wght@400;500;600;700;800&family=Syncopate:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Existing THERMPYX CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/theory.css">
+  <link rel="stylesheet" href="css/neo-lab.css">
+  <link rel="stylesheet" href="css/global-ui.css">
+  <link rel="stylesheet" href="css/site-experience.css">
+
+  <!-- Developer Page -->
+  <link rel="stylesheet" href="css/developer.css">
+
+  <!-- Existing THERMPYX Scripts -->
+  <script defer src="js/i18n-dictionary.js"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/site-experience.js"></script>
+
+  <!-- Developer Page -->
+  <script defer src="js/developer-profile.js"></script>
+</head>
+
+
+<body>
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    class="tpx-page-transition tpx-show"
+    role="status"
+    aria-label="THERMPYX loading"
+  >
+    <div class="tpx-loader-panel">
+
+      <div
+        class="tpx-loader-orbit"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="tpx-loader-wordmark"
+        aria-label="THERMPYX"
+      >
+        THERMPY<span class="wordmark-accent">X</span>
+      </div>
+
+      <div class="tpx-loader-caption">
+        ACCESSING DEVELOPER PROTOCOL
+      </div>
+
+      <div class="tpx-loader-rail"></div>
+
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       TOPBAR
+  ====================================================== -->
+
+  <header class="theory-topbar">
+
+    <a
+      class="theory-back"
+      href="index.html#about"
+      id="devBackLink"
+    >
+      Back to About
+    </a>
+
+    <a
+      class="theory-logo"
+      href="index.html"
+      aria-label="THERMPYX Home"
+    >
+      THERMPY<span class="wordmark-accent">X</span>
+    </a>
+
+    <div class="dev-top-actions">
+
+      <button
+        class="dev-language is-active"
+        type="button"
+        data-language="en"
+      >
+        EN
+      </button>
+
+      <button
+        class="dev-language"
+        type="button"
+        data-language="id"
+      >
+        ID
+      </button>
+
+      <button
+        class="page-theme-toggle"
+        id="themeToggle"
+        type="button"
+      >
+        <span
+          class="theme-icon"
+          id="themeIcon"
+        >
+          ☾
+        </span>
+
+        <span
+          class="theme-text"
+          id="themeText"
+        >
+          Dark Mode
+        </span>
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       PAGE
+  ====================================================== -->
+
+  <main class="dev-main">
+
+    <!-- Header Info -->
+
+    <section class="dev-topline">
+
+      <span>
+        THERMPYX / ORIGIN FILE / TEAM
+      </span>
+
+      <span>
+        FOUR MINDS. ONE VISION.
+      </span>
+
+    </section>
+
+
+    <!-- Intro -->
+
+    <section class="dev-intro">
+
+      <p class="dev-kicker">
+        MEET THE DEVELOPERS
+      </p>
+
+      <h1>
+        The Creative Minds
+        <span>Behind THERMPYX.</span>
+      </h1>
+
+      <p
+        class="dev-intro-copy"
+        id="devIntroCopy"
+      >
+        A collaborative team of four students building
+        their first interactive thermodynamics learning website.
+      </p>
+
+    </section>
+
+
+    <!-- ===================================================
+         MAIN LAYOUT
+    ==================================================== -->
+
+    <section
+      class="dev-layout"
+      id="devLayout"
+    >
+
+      <!-- =================================================
+           LEFT PROFILE
+      ================================================== -->
+
+      <aside class="dev-panel dev-panel-left">
+
+        <p class="dev-label">
+          DEVELOPER ID
+        </p>
+
+        <h2
+          class="dev-nickname"
+          id="devNickname"
+        >
+          Nathan
+        </h2>
+
+        <p
+          class="dev-fullname"
+          id="devFullname"
+        >
+          Reinhart Van Diaz
+        </p>
+
+
+        <div class="dev-block">
+
+          <span class="dev-block-label">
+            ROLE / PERAN
+          </span>
+
+          <h3 id="devRole">
+            Project Contributor
+          </h3>
+
+        </div>
+
+
+        <div class="dev-block">
+
+          <span class="dev-block-label">
+            MOTTO
+          </span>
+
+          <p id="devMotto">
+            Stay curious, stay growing.
+          </p>
+
+        </div>
+
+
+        <div class="dev-block">
+
+          <span
+            class="dev-block-label"
+            id="devAboutLabel"
+          >
+            ABOUT
+          </span>
+
+          <p id="devBio"></p>
+
+        </div>
+
+      </aside>
+
+
+      <!-- =================================================
+           CENTER
+      ================================================== -->
+
+      <section class="dev-center">
+
+        <div class="dev-card-wrap">
+
+          <article class="dev-card">
+
+            <!-- Decorative Background -->
+
+            <div
+              class="dev-card-glow"
+              aria-hidden="true"
+            ></div>
+
+            <div
+              class="dev-card-grid"
+              aria-hidden="true"
+            ></div>
+
+
+            <!-- Header -->
+
+            <div class="dev-card-header">
+
+              <span>
+                THERMPYX // DEV CARD
+              </span>
+
+              <span id="devMiniRole">
+                Project Contributor
+              </span>
+
+            </div>
+
+
+            <!-- ==========================================
+                 INTERACTIVE 3D PHOTO
+            =========================================== -->
+
+            <div
+              class="dev-photo-scene"
+              id="devPhotoScene"
+              aria-label="Interactive developer card"
+            >
+
+              <div
+                class="dev-photo-3d"
+                id="devPhoto3D"
+              >
+
+                <!-- FRONT -->
+
+                <div class="dev-photo-face dev-photo-front">
+
+                  <div
+                    class="dev-photo-glare"
+                    id="devPhotoGlare"
+                  ></div>
+
+                  <img
+                    id="devImage"
+                    src="assets/developers/dev-1.jpg"
+                    alt="Reinhart Van Diaz"
+                  >
+
+                  <div class="dev-photo-overlay">
+
+                    <span>
+                      THERMPYX / DEV ID
+                    </span>
+
+                    <strong id="devPhotoNickname">
+                      Nathan
+                    </strong>
+
+                  </div>
+
+                </div>
+
+
+                <!-- BACK -->
+
+                <div class="dev-photo-face dev-photo-back">
+
+                  <div
+                    class="dev-back-grid"
+                    aria-hidden="true"
+                  ></div>
+
+                  <span class="dev-back-code">
+                    THERMPYX / TEAM 04
+                  </span>
+
+                  <div class="dev-back-logo">
+                    THERMPY<span>X</span>
+                  </div>
+
+                  <h3 id="devBackNickname">
+                    Nathan
+                  </h3>
+
+                  <p id="devBackName">
+                    Reinhart Van Diaz
+                  </p>
+
+                  <small id="devBackRole">
+                    Project Contributor
+                  </small>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- Rotation Controls -->
+
+            <div
+              class="dev-rotation-controls"
+              aria-label="3D card rotation controls"
+            >
+
+              <button
+                id="rotateLeft"
+                type="button"
+                aria-label="Rotate card left"
+              >
+                ↶
+              </button>
+
+              <button
+                id="resetRotation"
+                type="button"
+              >
+                RESET
+              </button>
+
+              <button
+                id="rotateRight"
+                type="button"
+                aria-label="Rotate card right"
+              >
+                ↷
+              </button>
+
+            </div>
+
+
+            <p
+              class="dev-rotate-hint"
+              id="devRotateHint"
+            >
+              DRAG / TOUCH TO ROTATE 360°
+            </p>
+
+
+            <!-- Footer -->
+
+            <div class="dev-card-footer">
+
+              <div>
+
+                <strong id="devCardNickname">
+                  Nathan
+                </strong>
+
+                <small id="devCardName">
+                  Reinhart Van Diaz
+                </small>
+
+              </div>
+
+              <span id="devTeamNumber">
+                TEAM / 01
+              </span>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+        <!-- Developer Selector -->
+
+        <div
+          class="dev-selector"
+          id="devSelector"
+        ></div>
+
+      </section>
+
+
+      <!-- =================================================
+           RIGHT PROFILE
+      ================================================== -->
+
+      <aside class="dev-panel dev-panel-right">
+
+        <div class="dev-block">
+
+          <span
+            class="dev-block-label"
+            id="devJourneyLabel"
+          >
+            JOURNEY / HISTORY
+          </span>
+
+          <ul
+            class="dev-history"
+            id="devHistory"
+          ></ul>
+
+        </div>
+
+
+        <div class="dev-block">
+
+          <span
+            class="dev-block-label"
+            id="devSocialLabel"
+          >
+            SOCIAL MEDIA
+          </span>
+
+          <div
+            class="dev-socials"
+            id="devSocials"
+          ></div>
+
+        </div>
+
+      </aside>
+
+    </section>
+
+
+    <!-- ===================================================
+         OUTRO
+    ==================================================== -->
+
+    <section class="dev-outro">
+
+      <span>
+        THERMPYX CREATIVE TEAM
+      </span>
+
+      <h2>
+        FOUR MINDS.
+        ONE VISION.
+        THERMPYX.
+      </h2>
+
+      <p id="devOutroText">
+        Four minds working together to make thermodynamics
+        more interactive, visual, and engaging.
+      </p>
+
+      <a href="index.html#home">
+        RETURN TO THE LAB ↗
+      </a>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
