@@ -1,10 +1,10 @@
-/* THERMPYX | Site-wide private activity journal and original ambient soundscapes */
+/* THERMPYX | Site-wide private learning journal and music controls */
 (() => {
 "use strict";
 const KEY="thermpyx-activity-v1", MIGRATION="thermpyx-activity-migrated-v1";
 const tr=(en,id)=>window.TPX?.getLanguage()==="id"?id:en;
 const safe=(v,len=180)=>String(v??"").replace(/[\x00-\x1f]/g," ").trim().slice(0,len);
-const TYPES=new Set(["theory","simulator","video","calculation","quiz","navigation"]);
+const TYPES=new Set(["theory","simulator","video","calculation","quiz","flashcard","converter","navigation"]);
 const load=()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x:[];}catch(_){return [];}};
 const save=items=>{try{localStorage.setItem(KEY,JSON.stringify(items.slice(0,120)));}catch(_){}};
 function migrate(){
@@ -28,9 +28,9 @@ function log(kind,title,detail="",url=""){
   list.unshift(entry);save(list);render();
  }catch(_){}
 }
-const icons={theory:"▣",simulator:"◉",video:"▷",calculation:"∑",quiz:"✓",navigation:"◇"};
+const icons={theory:"▣",simulator:"◉",video:"▷",calculation:"∑",quiz:"✓",flashcard:"✦",converter:"⇄",navigation:"◇"};
 const labels={theory:["Theory","Teori"],simulator:["Simulator","Simulator"],video:["Video learning","Video pembelajaran"],
- calculation:["Calculation","Perhitungan"],quiz:["Quiz","Kuis"],navigation:["Explore","Jelajah"]};
+ calculation:["Calculation","Perhitungan"],quiz:["Quiz","Kuis"],flashcard:["Flashcard","Flashcard"],converter:["Unit Converter","Konverter Satuan"],navigation:["Explore","Jelajah"]};
 function render(){
  const listNode=document.getElementById("historyList");
  if(!listNode)return;
@@ -41,7 +41,7 @@ function render(){
  if(!entries.length){
   const empty=document.createElement("div");empty.className="history-empty";
   const title=document.createElement("h3");title.textContent=lang?"Belum ada aktivitas":"No activity yet";
-  const copy=document.createElement("p");copy.textContent=lang?"Buka Teori, Simulator, Kuis, Video, atau Kalkulator. Riwayat tersimpan di browser ini.":"Visit Theory, Simulator, Quiz, Video or Calculators. History stays in this browser.";
+  const copy=document.createElement("p");copy.textContent=lang?"Buka Teori, Simulator, Latihan, Video, Kalkulator, atau Konverter. Riwayat tersimpan di browser ini.":"Visit Theory, Simulator, Practice, Video, Calculators or Converters. History stays in this browser.";
   empty.append(title,copy);listNode.append(empty);return;
  }
  const fragment=document.createDocumentFragment();
@@ -77,7 +77,9 @@ document.addEventListener("DOMContentLoaded",()=>{
  let kind=null;
  if(/\/theory\//.test(pathname))kind="theory";
  else if(/\/simulator\//.test(pathname)&&!/\/simulator\/index\.html$/.test(pathname))kind="simulator";
+ else if(/\/quiz\/flashcards\.html$/.test(pathname))kind="flashcard";
  else if(/\/quiz\//.test(pathname))kind="quiz";
+ else if(/converters\.html$/.test(pathname))kind="converter";
  else if(/calculators\.html$/.test(pathname))kind="calculation";
  if(kind)log(kind,heading,tr("Page opened","Halaman dibuka"),location.href);
  const filter=document.getElementById("historyFilter");filter?.addEventListener("change",render);
@@ -103,7 +105,9 @@ document.addEventListener("click",e=>{
    let kind=null;
    if(u.pathname.includes("/theory/"))kind="theory";
    else if(u.pathname.includes("/simulator/"))kind="simulator";
+   else if(u.pathname.endsWith("/quiz/flashcards.html"))kind="flashcard";
    else if(u.pathname.includes("/quiz/"))kind="quiz";
+   else if(u.pathname.endsWith("/converters.html"))kind="converter";
    else if(u.pathname.endsWith("/calculators.html"))kind="calculation";
    if(kind)log(kind,safe(link.textContent.replace(/\s+/g," "),100),tr("Opened from navigation","Dibuka lewat navigasi"),u.href);
   }catch(_){}
@@ -121,87 +125,14 @@ document.addEventListener("change",e=>{
    log("simulator",headingForCurrent(),tr("Experiment control adjusted","Kontrol eksperimen diubah"),location.href);
  }
 },true);
-
-/* Three originally synthesised, low-volume instrumental atmospheres.
-   No copyrighted audio is downloaded or bundled. NEVER autoplay on load. */
-const presets={
- orbit:{freq:[110,164.81,220,329.63],wave:"sine",lfo:.10},
- cryo:{freq:[98,146.83,196,293.66],wave:"sine",lfo:.065},
- pulse:{freq:[130.81,196,261.63,392],wave:"triangle",lfo:.28}
-};
-let audio=null, master=null, nodes=[];
-let preset="orbit", volume=.24, playing=false;
-try{preset=Object.hasOwn(presets,localStorage.getItem("tpx-audio-preset"))?localStorage.getItem("tpx-audio-preset"):"orbit";
- volume=Math.min(.65,Math.max(.05,Number(localStorage.getItem("tpx-audio-volume"))||.24));}catch(_){}
-function stopAudio(){
- if(!audio)return;
- try{
-  const now=audio.currentTime;master.gain.cancelScheduledValues(now);
-  master.gain.setTargetAtTime(0,now,.055);
-  const old=audio;window.setTimeout(()=>{try{old.close();}catch(_){}},240);
- }catch(_){try{audio.close();}catch(_){}}
- audio=null;master=null;nodes=[];playing=false;updateAudioUI();
+function stopAudio(){window.TPXMusic?.pause();}
+const musicSource=document.currentScript?.src;
+function loadMusic(){
+ if(!musicSource)return;
+ const script=document.createElement("script");
+ script.src=new URL("music-player.js",musicSource).href;
+ document.head.append(script);
 }
-function startAudio(){
- const C=window.AudioContext||window.webkitAudioContext;
- if(!C){setStatus(tr("Audio not supported in this browser.","Audio tidak didukung browser ini."));return;}
- stopAudio();
- try{
-  audio=new C();
-  master=audio.createGain();master.gain.value=0;master.connect(audio.destination);
-  const p=presets[preset],now=audio.currentTime;
-  p.freq.forEach((freq,i)=>{
-   const osc=audio.createOscillator(),gain=audio.createGain();
-   osc.type=p.wave;osc.frequency.value=freq;osc.detune.value=[-2,0,2,1][i];
-   gain.gain.value=[.21,.12,.10,.07][i];
-   osc.connect(gain);gain.connect(master);osc.start();nodes.push(osc,gain);
-  });
-  const lfo=audio.createOscillator(),depth=audio.createGain();
-  lfo.frequency.value=p.lfo;lfo.type="sine";depth.gain.value=.007;
-  lfo.connect(depth);depth.connect(master.gain);lfo.start();nodes.push(lfo,depth);
-  master.gain.setTargetAtTime(volume*.075,now,.1);
-  audio.resume();playing=true;updateAudioUI();
- }catch(err){stopAudio();setStatus(tr("Unable to start audio.","Tidak dapat memutar audio."));}
-}
-let ui;
-function setStatus(t){if(ui)ui.querySelector(".tpx-audio-status").textContent=t;}
-function updateAudioUI(){
- if(!ui)return;
- const button=ui.querySelector(".tpx-audio-play");
- button.textContent=playing?tr("PAUSE","JEDA"):tr("PLAY","PUTAR");
- button.setAttribute("aria-pressed",String(playing));
- ui.querySelector(".tpx-audio-pill").textContent=playing?"♫ "+preset.toUpperCase():"♫ "+tr("AMBIENCE","AMBIENS");
- setStatus(playing?tr("Ambient audio playing","Audio ambient diputar"):tr("Off by default, click Play to listen.","Mati secara default, tekan Putar untuk mendengar."));
-}
-function mountAudio(){
- ui=document.createElement("aside");ui.className="tpx-audio-dock";
- ui.innerHTML=`<button class="tpx-audio-pill" type="button" aria-expanded="false" aria-controls="tpx-audio-panel">♫ AMBIENCE</button>
- <div class="tpx-audio-panel" id="tpx-audio-panel" hidden>
- <div class="tpx-audio-heading"><strong>THERMPYX / SOUND LAB</strong><button class="tpx-audio-close" aria-label="Close music panel" type="button">×</button></div>
- <p class="tpx-audio-intro">Original ambient soundscapes, synthesised in your browser.</p>
- <label class="tpx-audio-caption" for="tpx-track">SOUND MODE / MUSIK</label>
- <select id="tpx-track"><option value="orbit">01 / ORBIT DRIFT</option><option value="cryo">02 / CRYO FIELD</option><option value="pulse">03 / ENERGY PULSE</option></select>
- <div class="tpx-audio-controls"><button class="tpx-audio-play" type="button">PLAY</button><label for="tpx-volume">VOL <input type="range" min=".05" max=".65" value="${volume}" step=".01" id="tpx-volume"></label></div>
- <p class="tpx-audio-status" role="status"></p>
- <small>No autoplay. Pause before watching learning videos.</small></div>`;
- document.body.append(ui);
- const pill=ui.querySelector(".tpx-audio-pill"),panel=ui.querySelector(".tpx-audio-panel");
- pill.onclick=()=>{panel.hidden=!panel.hidden;pill.setAttribute("aria-expanded",String(!panel.hidden));};
- ui.querySelector(".tpx-audio-close").onclick=()=>{panel.hidden=true;pill.setAttribute("aria-expanded","false");};
- ui.querySelector("#tpx-track").value=preset;
- ui.querySelector("#tpx-track").onchange=e=>{
-  const wasPlaying=playing;preset=e.target.value;
-  try{localStorage.setItem("tpx-audio-preset",preset);}catch(_){}
-  if(wasPlaying)startAudio();else updateAudioUI();
- };
- ui.querySelector("#tpx-volume").oninput=e=>{
-  volume=Number(e.target.value);try{localStorage.setItem("tpx-audio-volume",String(volume));}catch(_){}
-  if(audio&&master)master.gain.setTargetAtTime(volume*.075,audio.currentTime,.07);
- };
- ui.querySelector(".tpx-audio-play").onclick=()=>playing?stopAudio():startAudio();
- updateAudioUI();
-}
-document.addEventListener("DOMContentLoaded",mountAudio);
-window.addEventListener("pagehide",()=>stopAudio());
-window.addEventListener("thermpyx:languagechange",updateAudioUI);
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",loadMusic,{once:true});
+else if(document.readyState)loadMusic();
 })();

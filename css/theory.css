@@ -277,79 +277,47 @@ body.light-mode .theory-topbar {
 }
 .variable-grid > div {
     display: flex;
-
     flex-direction: column;
-
     gap: 6px;
-
     padding: 18px;
-
     background:
         var(--bg-primary);
-
     border: 1px solid var(--border-light);
-
     border-radius: 10px;
-
     transition: all var(--transition);
 }
-
-
 .variable-grid > div:hover {
     border-color: var(--border);
-
     transform: translateY(-2px);
 }
-
-
 .variable-grid strong {
     color: var(--blue);
-
     font-family: "Oxanium", sans-serif;
-
     font-size: 20px;
 }
-
-
 .variable-grid span {
     color: var(--text-muted);
-
     font-size: 11px;
-
     line-height: 1.5;
 }
-
-
 /* =========================================================
    7. EXAMPLE PROBLEM
 ========================================================= */
-
 .example-card {
     position: relative;
 }
-
-
 .example-solution {
     margin-top: 24px;
-
     padding: 22px;
-
     background:
         var(--bg-primary);
-
     border: 1px solid var(--border-light);
-
     border-radius: 10px;
 }
-
-
 .example-solution p {
     margin-bottom: 8px;
-
     color: var(--text-primary);
-
     font-family: "Oxanium", sans-serif;
-
     font-size: 14px;
 }
 .example-solution p:nth-last-child(1) {
@@ -539,24 +507,20 @@ body.light-mode .theory-topbar {
         display: none;
     }
 }
-
 /* =========================================================
    LAWS OF THERMODYNAMICS - SELECTION PAGE
 ========================================================= */
 .laws-hero {
     max-width: 800px;
 }
-
 .laws-selection-section {
     padding-bottom: 36px;
 }
-
 .laws-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
 }
-
 .law-choice-card {
     position: relative;
     min-height: 285px;
@@ -569,7 +533,6 @@ body.light-mode .theory-topbar {
     border-radius: 16px;
     transition: var(--transition);
 }
-
 .law-choice-card::before {
     content: "";
     position: absolute;
@@ -578,13 +541,11 @@ body.light-mode .theory-topbar {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(0,168,255,.55), transparent);
 }
-
 .law-choice-card.is-available:hover {
     transform: translateY(-4px);
     border-color: rgba(0,168,255,.58);
     box-shadow: 0 16px 40px rgba(0,168,255,.08);
 }
-
 .law-choice-number {
     position: absolute;
     top: 17px;
@@ -596,7 +557,6 @@ body.light-mode .theory-topbar {
     line-height: 1;
     pointer-events: none;
 }
-
 .law-choice-kicker {
     position: relative;
     margin-bottom: 12px;
@@ -605,7 +565,6 @@ body.light-mode .theory-topbar {
     font-weight: 700;
     letter-spacing: 1.6px;
 }
-
 .law-choice-card h3 {
     position: relative;
     max-width: 78%;
@@ -615,7 +574,6 @@ body.light-mode .theory-topbar {
     font-size: 21px;
     line-height: 1.25;
 }
-
 .law-choice-card > p:not(.law-choice-kicker) {
     position: relative;
     max-width: 92%;
@@ -624,7 +582,6 @@ body.light-mode .theory-topbar {
     font-size: 12.5px;
     line-height: 1.7;
 }
-
 .law-choice-button {
     position: relative;
     width: fit-content;
@@ -643,13 +600,11 @@ body.light-mode .theory-topbar {
     cursor: pointer;
     transition: var(--transition);
 }
-
 .law-choice-button:not(.is-disabled):hover {
     background: var(--blue);
     color: #fff;
     transform: translateY(-2px);
 }
-
 .law-choice-button.is-disabled {
     border-color: var(--border);
     background: rgba(127,127,127,.045);
@@ -657,7 +612,6 @@ body.light-mode .theory-topbar {
     cursor: default;
     opacity: .72;
 }
-
 @media (max-width: 760px) {
     .laws-grid {
         grid-template-columns: 1fr;

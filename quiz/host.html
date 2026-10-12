@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -11,6 +10,7 @@
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
 <link href="live.css" rel="stylesheet"/>
+<link href="custom-questions.css" rel="stylesheet"/>
 <link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
@@ -24,19 +24,26 @@
 <main class="quiz-page live-page-shell">
 <section class="quiz-hero live-hero-compact">
 <p class="section-label">LIVE QUIZ · HOST</p>
-<h1>Create a Quiz Room</h1>
-<p>Select the thermodynamics material for this session. A unique room code will be generated automatically.</p>
+<h1>Buat Ruang Kuis</h1>
+<p>Gunakan bank soal termodinamika atau masukkan pertanyaan sendiri untuk latihan bersama kelas. Kode ruang dibuat otomatis.</p>
 </section>
-<section class="live-area">
+<section class="live-area host-setup-area">
 <div class="live-panel">
 <div class="live-panel-heading">
 <span class="quiz-question-label">ROOM SETUP</span>
-<h2>Choose quiz material</h2>
-<p>Players who join your room will receive questions from the selected material.</p>
+<h2>Siapkan latihan bersama</h2>
+<p>Semua peserta mendapat rangkaian soal yang sama. Pertanyaan dikunci saat ruang dibuat.</p>
 </div>
 <div class="live-form">
-<div class="live-field">
-<label for="topic">Quiz Topic</label>
+<fieldset class="question-source-choice" id="questionSourceChoice">
+<legend>SUMBER PERTANYAAN</legend>
+<div class="question-source-grid">
+<label class="question-source-card is-selected"><input type="radio" name="questionSource" value="builtin" checked/><span><strong>Bank soal THERMPYX</strong><small>Pilih topik dan langsung mulai sesi.</small></span></label>
+<label class="question-source-card"><input type="radio" name="questionSource" value="custom"/><span><strong>Pertanyaan sendiri</strong><small>Susun latihan sesuai materi kelas Anda.</small></span></label>
+</div>
+</fieldset>
+<div class="live-field" id="builtinTopicField">
+<label for="topic">Topik kuis</label>
 <select id="topic">
 <option value="heat">Heat &amp; Temperature</option>
 <option value="work">Work &amp; Energy</option>
@@ -44,13 +51,31 @@
 <option value="process">Thermodynamic Processes</option>
 <option value="all">All Materials</option>
 </select>
-<span class="live-field-hint">You can create another room later to use a different topic.</span>
+<span class="live-field-hint">Buat ruang baru untuk mengganti topik sesi.</span>
 </div>
-<button class="live-primary-button" id="createRoomBtn" type="button">CREATE ROOM</button>
+<section class="custom-questions-panel" id="customQuestionsPanel" hidden aria-label="Editor pertanyaan sendiri">
+<div class="custom-editor-heading"><h3>Daftar pertanyaan Anda</h3><span class="custom-count" id="customQuestionCount">0 / 100 soal</span></div>
+<div class="custom-question-list" id="customQuestionList" data-tpx-no-translate></div>
+<form class="custom-question-form" id="customQuestionForm" novalidate>
+<div class="live-field"><label for="customQuestion">Pertanyaan</label><textarea id="customQuestion" maxlength="500" placeholder="Contoh: Apa yang terjadi pada suhu saat kalor ditambahkan?" required></textarea></div>
+<div class="custom-options-grid">
+<div class="live-field"><label for="customOption0">Pilihan A</label><input id="customOption0" maxlength="240" autocomplete="off" placeholder="Jawaban A" required/></div>
+<div class="live-field"><label for="customOption1">Pilihan B</label><input id="customOption1" maxlength="240" autocomplete="off" placeholder="Jawaban B" required/></div>
+<div class="live-field"><label for="customOption2">Pilihan C</label><input id="customOption2" maxlength="240" autocomplete="off" placeholder="Jawaban C" required/></div>
+<div class="live-field"><label for="customOption3">Pilihan D</label><input id="customOption3" maxlength="240" autocomplete="off" placeholder="Jawaban D" required/></div>
+</div>
+<div class="live-field"><label for="customCorrect">Jawaban benar</label><select id="customCorrect" required><option value="">Pilih kunci jawaban</option><option value="0">A · Pilihan pertama</option><option value="1">B · Pilihan kedua</option><option value="2">C · Pilihan ketiga</option><option value="3">D · Pilihan keempat</option></select></div>
+<div class="custom-form-actions"><button class="live-primary-button" id="saveCustomQuestionBtn" type="submit">Tambahkan pertanyaan</button><button class="custom-secondary-button" id="cancelCustomEditBtn" type="button" hidden>Batal edit</button></div>
+<p class="custom-editor-message" id="customEditorMessage" role="status" aria-live="polite"></p>
+</form>
+<p class="custom-draft-status" id="customDraftStatus">Draf disimpan di browser ini. Soal dibagikan kepada peserta saat ruang dibuat.</p>
+</section>
+<button class="live-primary-button host-create-button" id="createRoomBtn" type="button">BUAT RUANG KUIS</button>
+<p class="host-create-message" id="hostCreateMessage" role="status" aria-live="polite"></p>
 </div>
 <div class="live-info-strip">
 <span class="live-info-dot"></span>
-<span>After the room is created, you will move to the waiting room and see players join in realtime.</span>
+<span>Bagikan kode ruang kepada peserta. Setiap soal memiliki empat pilihan jawaban dan waktu 20 detik.</span>
 </div>
 </div>
 </section>
@@ -58,6 +83,8 @@
 <script src="../js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="question-bank.js"></script>
+<script src="custom-questions.js"></script>
 <script src="host.js"></script>
 </body>
 </html>

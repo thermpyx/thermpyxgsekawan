@@ -6,15 +6,15 @@ const playerId=sessionStorage.getItem("playerId");
 const userRole=sessionStorage.getItem("userRole");
 const $=id=>document.getElementById(id);
 const S=window.TPXQuizScores;
-let channel=null,poll=null,busy=false,lastPlayers=[],lastAnswers=[];
+let channel=null,poll=null,busy=false,lastPlayers=[],lastAnswers=[],questionCount=0;
 const t=(en,id)=>window.TPX?.t ? window.TPX.t(en,id) : en;
 const elt=(tag,cls,text)=>{
   const el=document.createElement(tag);if(cls)el.className=cls;
   if(text!=null)el.textContent=text;return el;
 };
 function rankings(players,answers){
-  // The quiz can be observed before everyone finishes; questionCount only bounds valid indexes.
-  return S.calculateRankings(players,answers,1000);
+  // Use the same immutable room questions as participants and the host.
+  return S.calculateRankings(players,answers,questionCount);
 }
 function resultCard(p,rank){
  const card=elt("article",`podium-card rank-${rank}`);
@@ -55,9 +55,10 @@ async function refresh(){
    const [p,a,room]=await Promise.all([
      supabaseClient.from("quiz_players").select("id,nickname,joined_at,current_question").eq("room_id",roomId),
      supabaseClient.from("quiz_answers").select("*").eq("room_id",roomId),
-     supabaseClient.from("quiz_rooms").select("status").eq("id",roomId).single()
+     supabaseClient.from("quiz_rooms").select("*").eq("id",roomId).single()
    ]);
    if(p.error||a.error||room.error)throw(p.error||a.error||room.error);
+   questionCount=getQuestionsForRoom(room.data).length;
    lastPlayers=p.data||[];lastAnswers=a.data||[];render();
    const ended=room.data?.status==="finished";
    $("liveStatus").textContent=ended?t("Final Results","Hasil Akhir"):t("Live / provisional","Langsung / sementara");

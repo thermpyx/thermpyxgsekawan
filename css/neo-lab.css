@@ -1,4 +1,3 @@
-
 /* THERMPYX Rev 04 | Neo Lab Futurism. Light mode only; dark palette retained. */
 body.light-mode {
  --bg-primary:#edf4f8;
@@ -130,7 +129,6 @@ a.tpx-clickable-card:hover .tpx-card-cta {color:var(--blue-light);}
 @media(prefers-reduced-motion:reduce) {
  a.tpx-clickable-card {transition:none!important;}
 }
-
 /* Once the individual CTA becomes part of the parent link, keep its old styling. */
 .feature-card .tpx-card-cta {color:var(--blue);font-size:12px;font-weight:600;}
 .feature-card:hover .tpx-card-cta {color:var(--blue-light);}
@@ -140,14 +138,12 @@ body.light-mode .law-choice-card .law-choice-number {
  border-color:#bfd8e5;
 }
 body.light-mode .tpx-page-transition .tpx-loader-caption {color:#587e8e;}
-
 /* The clickable law cards retain their original vertical layout and aligned CTA. */
 a.law-choice-card.tpx-clickable-card {
   display:flex;
   flex-direction:column;
 }
 a.feature-card.tpx-clickable-card {display:block;}
-
 /* REV 08: Third Law crystal status contrast in either theme */
 body.sim-third .crystal-label {
   background:#142637 !important; color:#f3f9ff !important;

@@ -29,7 +29,6 @@ assert.equal(ctx.getQuestionsForTopic('heat').length,3);
 assert.equal(ctx.getQuestionsForTopic('work').length,3);
 assert.ok(ctx.getQuestionsForTopic('all').length>ctx.getQuestionsForTopic('heat').length);
 console.log('PASS ranking: score first, total time second, duplicate protection, shared question bank');
-
 async function playerFlow(progressMode='normal'){
  const rows={
   quiz_rooms:[{id:15,room_code:'654321',topic:'heat',status:'playing'}],
@@ -129,7 +128,6 @@ async function playerFlow(progressMode='normal'){
  assert.ok(transitions.includes('leaderboard.html'));
  console.log('PASS participant '+progressMode+': visible question 1, saved-answer gating, retry, timeout, completion');
 }
-
 async function hostFlow(){
  const rows={
   quiz_rooms:[{id:19,topic:'heat',status:'playing'}],
@@ -190,4 +188,3 @@ playerFlow('normal')
   .then(()=>playerFlow('blocked'))
   .then(hostFlow)
   .catch(e=>{console.error(e);process.exitCode=1});
-

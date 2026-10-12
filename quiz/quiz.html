@@ -1,66 +1,70 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Quiz | THERMPYX</title>
+<title>Latihan | THERMPYX</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
+<link href="../css/flashcards.css" rel="stylesheet"/>
 <link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
-<a class="quiz-back" href="../index.html#quiz">Back to Home</a>
+<a class="quiz-back" data-en="Back to Home" data-id="Kembali ke Beranda" href="../index.html#quiz">Back to Home</a>
 <div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
 <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
 <span class="theme-icon" id="themeIcon">☾</span>
 <span class="theme-text" id="themeText">Dark Mode</span>
 </button>
 </header>
-<main class="quiz-page">
+<main class="quiz-page practice-hub">
 <section class="quiz-hero quiz-hub-hero">
-<p class="section-label">THERMPYX QUIZ</p>
-<h1>Choose Your Quiz Mode</h1>
-<p>
-                Practice independently at your own pace or enter a live multiplayer room
-                and compete with other learners in real time.
-            </p>
+<p class="section-label" data-en="THERMPYX PRACTICE" data-id="LATIHAN THERMPYX">THERMPYX PRACTICE</p>
+<h1 data-en="Practice Your Way" data-id="Latihan Sesuai Gayamu">Practice Your Way</h1>
+<p data-en="Test your understanding with a quiz, learn together in a live room, or recall concepts with flashcards you can create yourself." data-id="Uji pemahaman dengan kuis, belajar bersama di ruang live, atau ingat konsep melalui flashcard yang bisa kamu buat sendiri.">Test your understanding with a quiz, learn together in a live room, or recall concepts with flashcards you can create yourself.</p>
 </section>
 <section class="quiz-area quiz-hub-area">
 <div class="quiz-mode-selector">
 <div class="quiz-selector-heading">
-<span class="quiz-question-label">SELECT MODE</span>
-<h2>How do you want to learn?</h2>
-<p>Both modes use THERMPYX thermodynamics materials, but the learning experience is different.</p>
+<span class="quiz-question-label" data-en="CHOOSE YOUR ACTIVITY" data-id="PILIH AKTIVITAS">CHOOSE YOUR ACTIVITY</span>
+<h2 data-en="Quiz & Flashcards" data-id="Kuis & Flashcard">Quiz &amp; Flashcards</h2>
+<p data-en="Start with the thermodynamics collection, or bring your own teaching materials." data-id="Mulai dari koleksi termodinamika atau gunakan materi belajarmu sendiri.">Start with the thermodynamics collection, or bring your own teaching materials.</p>
 </div>
-<div class="quiz-mode-grid">
+<div class="quiz-mode-grid practice-mode-grid">
 <a class="quiz-mode-card" href="practice.html">
 <span class="quiz-mode-number">01</span>
 <span class="quiz-mode-icon">✓</span>
 <span class="quiz-mode-copy">
-<strong>Practice Quiz</strong>
-<small>Choose a topic, answer at your own pace, and review your score instantly.</small>
+<strong data-en="Practice Quiz" data-id="Kuis Mandiri">Practice Quiz</strong>
+<small data-en="Choose a topic, answer at your own pace, and review your score instantly." data-id="Pilih topik, jawab sesuai ritmemu, dan langsung tinjau hasilnya.">Choose a topic, answer at your own pace, and review your score instantly.</small>
 </span>
-<span class="quiz-mode-meta">Self-paced</span>
+<span class="quiz-mode-meta" data-en="Self-paced" data-id="Belajar mandiri">Self-paced</span>
 <span class="quiz-mode-arrow">→</span>
 </a>
 <a class="quiz-mode-card quiz-mode-card-live" href="live.html">
 <span class="quiz-mode-number">02</span>
 <span class="quiz-mode-icon">⌁</span>
 <span class="quiz-mode-copy">
-<strong>Live Quiz</strong>
-<small>Create or join a room, answer together, and see a realtime leaderboard.</small>
+<strong data-en="Live Quiz" data-id="Kuis Live">Live Quiz</strong>
+<small data-en="Host a room with your own questions or join your classmates for a shared challenge." data-id="Buat ruang dengan soalmu sendiri atau bergabung bersama teman untuk latihan bersama.">Host a room with your own questions or join your classmates for a shared challenge.</small>
 </span>
-<span class="quiz-mode-meta">Multiplayer</span>
+<span class="quiz-mode-meta" data-en="Learn together" data-id="Belajar bersama">Learn together</span>
 <span class="quiz-mode-arrow">→</span>
+</a>
+<a class="quiz-mode-card quiz-mode-card-flash" href="flashcards.html">
+<span class="quiz-mode-number">03</span>
+<span aria-hidden="true" class="quiz-mode-icon">▱</span>
+<span class="quiz-mode-copy"><strong>Flashcard</strong><small data-en="Flip concept cards, add your own material, and import or export your personal collection." data-id="Balik kartu konsep, tambah materi sendiri, lalu impor atau ekspor koleksi pribadimu.">Flip concept cards, add your own material, and import or export your personal collection.</small></span>
+<span class="quiz-mode-meta" data-en="Your own material" data-id="Materimu sendiri">Your own material</span>
+<span aria-hidden="true" class="quiz-mode-arrow">→</span>
 </a>
 </div>
 <div class="quiz-mode-note">
 <span class="quiz-mode-note-icon">i</span>
-<p><strong>New to THERMPYX?</strong> Start with Practice Quiz, then try Live Quiz when you are ready to compete.</p>
+<p data-en="Flashcards are saved in this browser. Export your collection to keep a backup or share it with students." data-id="Flashcard tersimpan di browser ini. Ekspor koleksimu untuk menyimpan cadangan atau membagikannya kepada siswa.">Flashcards are saved in this browser. Export your collection to keep a backup or share it with students.</p>
 </div>
 </div>
 </section>

@@ -23,7 +23,6 @@
       else if ((m=clean.match(/^Incorrect\. (.+)$/))) result="Salah. "+(enId[m[1]]||m[1]);
       else if ((m=clean.match(/^Temperature:\s*(.+)$/))) result="Temperatur: "+m[1];
       else if ((m=clean.match(/^Heat:\s*(.+)$/))) result="Kalor: "+m[1];
-
     }
     if (result === undefined && lang === "en") {
       let m;
@@ -42,6 +41,12 @@
   }
   function translateNode(node) {
     if (!eligible(node) || !node.nodeValue.trim()) return;
+    const parent = node.parentElement;
+    if (parent.hasAttribute("data-en") && parent.hasAttribute("data-id") && !parent.childElementCount) {
+      const translated = parent.getAttribute("data-" + language);
+      if (node.nodeValue !== translated) node.nodeValue = translated;
+      return;
+    }
     let record = memo.get(node);
     if (!record) { record = {source:node.nodeValue,shown:null};memo.set(node,record); }
     else if (node.nodeValue !== record.shown && node.nodeValue !== record.source) record.source=node.nodeValue;

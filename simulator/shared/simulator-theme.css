@@ -1,6 +1,5 @@
 /* THERMPYX | shared simulator design layer. Loaded AFTER each simulator's own CSS.
    Simulation-only graphics and animations remain defined by their original styles. */
-
 /* 0. Shared brand palette */
 body.sim-external,
 body.sim-zeroth {
@@ -68,7 +67,6 @@ body.sim-zeroth :is(input,select,button,a):focus-visible {
  outline:2px solid var(--blue);outline-offset:3px;
 }
 body.sim-external input[type="range"],body.sim-zeroth input[type="range"] {accent-color:var(--blue);}
-
 /* 1. Shared 72px header for new simulations */
 .thermpyx-sim-header {
  position:sticky;top:0;z-index:1100;
@@ -99,7 +97,6 @@ body.sim-external.light-mode .thermpyx-sim-header {background:rgba(244,247,251,.
  transition:border-color .2s,color .2s,background .2s;
 }
 .tpx-header-button:hover {color:var(--blue-light);border-color:var(--blue);background:rgba(0,168,255,.075);}
-
 /* 2. Unified spacing and page hero */
 body.sim-external .container {width:min(1280px,calc(100% - 44px));margin:0 auto 70px;}
 body.sim-external.sim-heat .container {padding-top:44px;}
@@ -125,7 +122,6 @@ body.sim-external .hero .badge,body.sim-external .eyebrow,body.sim-external .her
 }
 body.sim-external .hero-status {background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.25);color:#34b981;}
 body.sim-external .container > :first-child {min-width:0;}
-
 /* 3. Content surfaces */
 body.sim-external .panel,
 body.sim-external .card,
@@ -179,7 +175,6 @@ body.sim-external .process-btn.active {background:rgba(0,168,255,.13);border-col
 body.sim-external :is(.graph-container,#entropyGraph) {border-color:var(--border-light);}
 body.sim-external.sim-third #entropyGraph {background:var(--graph-bg);}
 body.sim-external :is(.example-panel,.law-panel,.theory-panel) p {line-height:1.75;}
-
 /* 4. Zeroth Law: bridge its legacy color tokens to the exact same THERMPYX palette. */
 body.sim-zeroth {
  --bg:var(--bg-primary);
@@ -245,7 +240,6 @@ body.sim-zeroth #heatArrow {color:#ff7628;}
 body.sim-zeroth .data-card strong {color:var(--blue-light);}
 body.sim-zeroth .container-box.hot {border-color:rgba(239,68,68,.5);}
 body.sim-zeroth .container-box.cold {border-color:rgba(0,168,255,.48);}
-
 /* Responsive layout, keeping navigational actions usable on mobile. */
 @media (max-width:760px) {
  .thermpyx-sim-header {align-items:flex-start;flex-wrap:wrap;gap:13px;}
@@ -261,7 +255,6 @@ body.sim-zeroth .container-box.cold {border-color:rgba(0,168,255,.48);}
 @media (prefers-reduced-motion:reduce) {
  body.sim-external *,body.sim-zeroth * {scroll-behavior:auto;}
 }
-
 /* Five-card collection layout. */
 .simulator-selection-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:18px;}
 .simulator-selection-grid .law-choice-card {display:flex;flex-direction:column;min-width:0;}

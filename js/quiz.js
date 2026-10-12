@@ -1,7 +1,6 @@
 /* =========================================================
    THERMPYX - TOPIC BASED THERMODYNAMICS QUIZ
 ========================================================= */
-
 /* =========================================================
    1. QUIZ DATA
 ========================================================= */
@@ -51,7 +50,6 @@ const quizTopics = {
             }
         ]
     },
-
     work: {
         name: "Work & Energy",
         questions: [
@@ -87,7 +85,6 @@ const quizTopics = {
             }
         ]
     },
-
     "first-law": {
         name: "First Law of Thermodynamics",
         questions: [
@@ -128,7 +125,6 @@ const quizTopics = {
             }
         ]
     },
-
     processes: {
         name: "Thermodynamic Processes",
         questions: [
@@ -165,35 +161,27 @@ const quizTopics = {
         ]
     }
 };
-
 const allMaterialQuestionCount = 12;
-
 /* =========================================================
    2. HELPERS
 ========================================================= */
 function shuffleArray(array) {
     const shuffled = [...array];
-
     for (let i = shuffled.length - 1; i > 0; i--) {
         const randomIndex = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[i]];
     }
-
     return shuffled;
 }
-
 function buildAllMaterialsQuiz() {
     const topicKeys = Object.keys(quizTopics);
     const selected = [];
-
     // Three randomized questions from each topic keeps the mixed quiz balanced.
     topicKeys.forEach(function (topicKey) {
         selected.push(...shuffleArray(quizTopics[topicKey].questions).slice(0, 3));
     });
-
     return shuffleArray(selected).slice(0, allMaterialQuestionCount);
 }
-
 /* =========================================================
    3. ELEMENTS
 ========================================================= */
@@ -215,7 +203,6 @@ const quizChangeTopicButton = document.getElementById("quizChangeTopicButton");
 const quizChooseTopicButton = document.getElementById("quizChooseTopicButton");
 const quizTopicName = document.getElementById("quizTopicName");
 const quizResultTopic = document.getElementById("quizResultTopic");
-
 /* =========================================================
    4. QUIZ STATE
 ========================================================= */
@@ -225,7 +212,6 @@ let shuffledQuestions = [];
 let currentQuestion = 0;
 let score = 0;
 let answered = false;
-
 /* =========================================================
    5. SCREEN MANAGEMENT
 ========================================================= */
@@ -236,21 +222,17 @@ function showTopicSelection() {
     currentQuestion = 0;
     score = 0;
     answered = false;
-
     quizTopicSelector.hidden = false;
     quizContainer.hidden = true;
     quizContainer.style.display = "";
     quizResult.classList.remove("show");
-
     quizTopicSelector.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-
 function startQuiz(topicKey) {
     selectedTopic = topicKey;
     currentQuestion = 0;
     score = 0;
     answered = false;
-
     if (topicKey === "all") {
         selectedTopicName = "All Materials";
         shuffledQuestions = buildAllMaterialsQuiz();
@@ -260,48 +242,38 @@ function startQuiz(topicKey) {
     } else {
         return;
     }
-
     quizTopicName.textContent = selectedTopicName;
     quizResultTopic.textContent = selectedTopicName;
-
     quizTopicSelector.hidden = true;
     quizResult.classList.remove("show");
     quizContainer.hidden = false;
     quizContainer.style.display = "block";
-
     loadQuestion();
     quizContainer.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-
 /* =========================================================
    6. LOAD QUESTION
 ========================================================= */
 function loadQuestion() {
     const current = shuffledQuestions[currentQuestion];
-
     if (!current) {
         showResult();
         return;
     }
-
     quizQuestionNumber.textContent =
         `Question ${currentQuestion + 1} of ${shuffledQuestions.length}`;
     quizScore.textContent = `Score: ${score}`;
     questionText.textContent = current.question;
-
     const progressPercentage =
         ((currentQuestion + 1) / shuffledQuestions.length) * 100;
     quizProgressBar.style.width = `${progressPercentage}%`;
-
     quizOptions.innerHTML = "";
     quizFeedback.textContent = "";
     quizFeedback.className = "quiz-feedback";
     quizNextButton.disabled = true;
     quizNextButton.textContent = "NEXT";
     answered = false;
-
     const shuffledOptions = shuffleArray(current.options);
-
     shuffledOptions.forEach(function (option) {
         const button = document.createElement("button");
         button.type = "button";
@@ -314,7 +286,6 @@ function loadQuestion() {
         quizOptions.appendChild(button);
     });
 }
-
 /* =========================================================
    7. SELECT ANSWER
 ========================================================= */
@@ -322,19 +293,15 @@ function selectAnswer(selectedButton) {
     if (answered) {
         return;
     }
-
     answered = true;
-
     const selectedAnswer = selectedButton.dataset.answer;
     const current = shuffledQuestions[currentQuestion];
     const correctAnswer = current.answer;
     const explanation = current.explanation;
     const allOptions = quizOptions.querySelectorAll(".quiz-option");
-
     allOptions.forEach(function (button) {
         button.disabled = true;
     });
-
     if (selectedAnswer === correctAnswer) {
         score++;
         selectedButton.classList.add("correct");
@@ -342,25 +309,20 @@ function selectAnswer(selectedButton) {
         quizFeedback.classList.add("correct");
     } else {
         selectedButton.classList.add("incorrect");
-
         allOptions.forEach(function (button) {
             if (button.dataset.answer === correctAnswer) {
                 button.classList.add("correct");
             }
         });
-
         quizFeedback.textContent = `Incorrect. ${explanation}`;
         quizFeedback.classList.add("incorrect");
     }
-
     quizScore.textContent = `Score: ${score}`;
     quizNextButton.disabled = false;
-
     if (currentQuestion === shuffledQuestions.length - 1) {
         quizNextButton.textContent = "SEE RESULT";
     }
 }
-
 /* =========================================================
    8. RESULT
 ========================================================= */
@@ -372,11 +334,9 @@ function showResult() {
     quizResult.classList.add("show");
     quizResultTopic.textContent = selectedTopicName;
     quizFinalScore.textContent = `${score} / ${shuffledQuestions.length}`;
-
     const percentage = shuffledQuestions.length
         ? (score / shuffledQuestions.length) * 100
         : 0;
-
     if (percentage === 100) {
         quizFinalMessage.textContent = "Excellent! You got every question correct.";
     } else if (percentage >= 80) {
@@ -386,10 +346,8 @@ function showResult() {
     } else {
         quizFinalMessage.textContent = "Keep learning! Review the theory and try the quiz again.";
     }
-
     quizResult.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-
 /* =========================================================
    9. EVENTS
 ========================================================= */
@@ -398,16 +356,13 @@ quizTopicCards.forEach(function (card) {
         startQuiz(card.dataset.topic);
     });
 });
-
 if (quizNextButton) {
     quizNextButton.addEventListener("click", function () {
         if (!answered) {
             return;
         }
-
         quizNextButton.disabled = true;
         currentQuestion++;
-
         if (currentQuestion < shuffledQuestions.length) {
             loadQuestion();
         } else {
@@ -415,7 +370,6 @@ if (quizNextButton) {
         }
     });
 }
-
 if (quizRestartButton) {
     quizRestartButton.addEventListener("click", function () {
         if (selectedTopic) {
@@ -423,15 +377,12 @@ if (quizRestartButton) {
         }
     });
 }
-
 if (quizChangeTopicButton) {
     quizChangeTopicButton.addEventListener("click", showTopicSelection);
 }
-
 if (quizChooseTopicButton) {
     quizChooseTopicButton.addEventListener("click", showTopicSelection);
 }
-
 /* =========================================================
    10. INITIAL STATE
 ========================================================= */
@@ -440,5 +391,4 @@ if (quizTopicSelector && quizContainer && quizResult) {
     quizContainer.hidden = true;
     quizResult.classList.remove("show");
 }
-
 console.log("THERMPYX Quiz: topic selection ready.");

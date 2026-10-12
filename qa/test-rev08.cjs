@@ -4,7 +4,6 @@ const assert=require("node:assert/strict"),fs=require("node:fs"),vm=require("nod
 const root=path.join(__dirname,"..");
 let checks=0;
 function check(name,fn){fn();checks++;process.stdout.write("PASS "+name+"\n");}
-
 /* Calculator Lab end-to-end through its real DOM submit listeners. */
 function calculator(fields,mode,lang="en"){
  const inputs=Object.entries(fields).filter(([name])=>name!=="_key").map(([name,value])=>({name,value:String(value)}));
@@ -54,7 +53,6 @@ check("Isobaric work kPa.L equals Joule",()=>{
 check("Reversible adiabatic pressure relation",()=>{
  const [v]=calculator({_key:"processes",p1:120,v1:2,v2:4,gamma:1.4},"adiabatic");assert.match(v,/45\.47/);
 });
-
 /* Actual Third Law script evaluated against minimal DOM/canvas: temperature stays K internally. */
 const labels=[];
 function el(id){
@@ -83,7 +81,6 @@ labels.length=0;get("temperatureInput").value="-253.15";get("temperatureInput").
 check("Changing Celsius slider updates Kelvin physics and graph",()=>{assert.ok(Math.abs(vm.runInContext("temperatureK",context3)-20)<1e-8);assert.ok(labels.some(x=>String(x).includes("-253.15 °C")));});
 labels.length=0;get("unitSelect").value="kelvin";get("unitSelect").handlers.change();
 check("Switching back to Kelvin restores proper slider and axis",()=>{assert.ok(Math.abs(Number(get("temperatureInput").value)-20)<1e-8);assert.ok(labels.includes("Temperature (K)"));});
-
 /* Private cross-page history load/migration and sanitised log (no database). */
 const mem=new Map();
 mem.set("thermpyx-history",JSON.stringify([{type:"Heat",formula:"Q=mcΔT",result:"200 J",time:"previous"}]));

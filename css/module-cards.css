@@ -1,0 +1,33 @@
+.tpx-module-card{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;gap:clamp(24px,5vw,65px);padding:clamp(26px,5vw,58px);border:1px solid #396f89;border-radius:22px;background:radial-gradient(ellipse at 95% 0%,#1d6e8566,transparent 62%),linear-gradient(130deg,#14243a,#19374a 60%,#134f62);box-shadow:0 20px 50px #0002;transition:border-color .2s,transform .2s}
+.tpx-module-card:hover{border-color:#5fbdce;transform:translateY(-3px)}
+.tpx-module-converter{background:radial-gradient(ellipse at 95% 0%,#58bdbb44,transparent 60%),linear-gradient(125deg,#112c31,#153d4a 55%,#13646a);border-color:#438987}
+.tpx-module-practice{background:radial-gradient(ellipse at 90% 0%,#9269d44d,transparent 60%),linear-gradient(125deg,#25213d,#323052 58%,#493f76);border-color:#716297}
+.tpx-module-symbol{display:grid;place-items:center;flex:0 0 clamp(70px,14vw,140px);width:clamp(70px,14vw,140px);aspect-ratio:1;border:1px solid #a5effb44;border-radius:24px;background:linear-gradient(145deg,#a3eafb22,#a3eafb05);font:600 clamp(38px,6vw,68px) Oxanium,sans-serif;color:#a2ebee;box-shadow:inset 0 0 30px #84d9fa0a}
+.tpx-module-practice .tpx-module-symbol{color:#e3caff;border-color:#d9b5ff55;background:linear-gradient(145deg,#d9b5ff22,#d9b5ff05)}
+.tpx-module-copy{position:relative;z-index:1;max-width:690px;min-width:0}
+.tpx-module-copy h3{font-family:Oxanium,sans-serif;font-size:clamp(23px,3vw,33px);margin:12px 0;color:#f0faff;line-height:1.25}
+.tpx-module-copy p:not(.calculator-label){color:#c5dce8;line-height:1.75;margin:0 0 25px}
+.tpx-module-copy .calculator-label{color:#9ddbe5;letter-spacing:2px;font-size:10px}
+.tpx-module-practice .calculator-label{color:#d1b9f2}
+.tpx-module-copy .primary-button{gap:18px;border-radius:9px}
+.tpx-module-orbit{position:absolute;right:-90px;bottom:-125px;width:370px;height:370px;border:1px solid #c1e6ff16;border-radius:50%;box-shadow:0 0 0 40px #c1e6ff08,0 0 0 80px #c1e6ff04;pointer-events:none;z-index:-1}
+body .simulator-preview-card.tpx-module-simulator{background:radial-gradient(ellipse at 95% 0%,#fb9a4844,transparent 60%),linear-gradient(125deg,#242637,#3d3439 55%,#66503d);border-color:#936848;border-radius:22px;box-shadow:0 20px 50px #0002}
+.tpx-module-simulator .simulator-preview-content p{color:#e6d2c4}
+.tpx-module-simulator .simulator-preview-content h3{color:#fff4e9}
+.tpx-module-simulator .simulator-preview-icon{background:linear-gradient(145deg,#f7ba7944,#f7ba7911);border-color:#dfb18766;color:#ffce9e;border-radius:24px}
+body.light-mode .tpx-module-card{background:radial-gradient(ellipse at 95% 0%,#7ccee833,transparent 62%),linear-gradient(130deg,#f9fcff,#e4f0f8 60%,#cfebf7);border-color:#a9ccd9}
+body.light-mode .tpx-module-converter{background:linear-gradient(125deg,#f7fdfb,#e4f7f2 55%,#c6eae4);border-color:#8cc6bc}
+body.light-mode .tpx-module-practice{background:linear-gradient(125deg,#fbf9ff,#ece5fb 58%,#dbd0f5);border-color:#b5a4d5}
+body.light-mode .tpx-module-copy h3{color:#142e41}
+body.light-mode .tpx-module-copy p:not(.calculator-label){color:#405c6e}
+body.light-mode .tpx-module-copy .calculator-label{color:#246b80}
+body.light-mode .tpx-module-practice .calculator-label{color:#6a409d}
+body.light-mode .tpx-module-symbol{background:linear-gradient(145deg,#fff9,#afdce888);border-color:#7fafc4;color:#126c86}
+body.light-mode .tpx-module-practice .tpx-module-symbol{background:linear-gradient(145deg,#fff9,#d9c4f188);border-color:#b39acd;color:#6b429d}
+body.light-mode .simulator-preview-card.tpx-module-simulator{background:linear-gradient(125deg,#fffaf3,#f9ecdc 55%,#efdbc1);border-color:#d7b98d}
+body.light-mode .tpx-module-simulator .simulator-preview-content p{color:#695840}
+body.light-mode .tpx-module-simulator .simulator-preview-content h3{color:#4b3925}
+body.light-mode .tpx-module-simulator .simulator-preview-icon{color:#ad5b1c;border-color:#d09b65;background:linear-gradient(145deg,#fff9,#f1d3b288)}
+@media(max-width:600px){.tpx-module-card{align-items:flex-start;flex-direction:column;gap:22px;padding:27px 24px}.tpx-module-symbol{width:76px;flex-basis:auto}.tpx-module-copy h3{font-size:25px}.tpx-module-copy .primary-button{width:100%;justify-content:center}.tpx-module-orbit{width:280px;height:280px;right:-140px}}
+@media(max-width:768px){.main-content{transition:none}}
+@media(prefers-reduced-motion:reduce){.tpx-module-card{transition:none}.tpx-module-card:hover{transform:none}}

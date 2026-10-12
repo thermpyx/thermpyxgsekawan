@@ -3,7 +3,6 @@
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
     const themeText = document.getElementById('themeText');
-
     function readSavedTheme() {
         try {
             return localStorage.getItem('thermpyx-theme');
@@ -18,7 +17,6 @@
             // The simulator still works if storage is unavailable.
         }
     }
-
     function applyTheme(theme) {
         const light = theme === 'light';
         body.classList.toggle('light-mode', light);
@@ -27,15 +25,11 @@
         saveTheme(theme);
         window.dispatchEvent(new Event('resize'));
     }
-
     function toggleTheme() {
         applyTheme(body.classList.contains('light-mode') ? 'dark' : 'light');
     }
-
     applyTheme(readSavedTheme() || 'dark');
     themeToggle?.addEventListener('click', toggleTheme);
-
-
     /* Custom process selector */
     const processSelector = document.getElementById('processSelector');
     const processSelect = document.getElementById('processSelect');
@@ -43,29 +37,24 @@
     const processSelectCurrent = document.getElementById('processSelectCurrent');
     const processSelectDescription = document.getElementById('processSelectDescription');
     const processOptions = [...document.querySelectorAll('.process-option')];
-
     function closeProcessSelector() {
         if (!processSelector || !processSelectTrigger) return;
         processSelector.classList.remove('is-open');
         processSelectTrigger.setAttribute('aria-expanded', 'false');
     }
-
     function openProcessSelector() {
         if (!processSelector || !processSelectTrigger) return;
         processSelector.classList.add('is-open');
         processSelectTrigger.setAttribute('aria-expanded', 'true');
     }
-
     function syncProcessSelector(value) {
         const option = processOptions.find(item => item.dataset.value === value);
         if (!option) return;
-
         processOptions.forEach(item => {
             const selected = item === option;
             item.classList.toggle('is-selected', selected);
             item.setAttribute('aria-selected', selected ? 'true' : 'false');
         });
-
         if (processSelectCurrent) {
             processSelectCurrent.textContent = option.querySelector('span')?.textContent || value;
         }
@@ -73,12 +62,10 @@
             processSelectDescription.textContent = option.dataset.description || '';
         }
     }
-
     processSelectTrigger?.addEventListener('click', () => {
         if (processSelector?.classList.contains('is-open')) closeProcessSelector();
         else openProcessSelector();
     });
-
     processOptions.forEach(option => {
         option.addEventListener('click', () => {
             if (!processSelect) return;
@@ -89,7 +76,6 @@
             processSelectTrigger?.focus();
         });
     });
-
     document.addEventListener('click', event => {
         if (processSelector && !processSelector.contains(event.target)) closeProcessSelector();
     });
