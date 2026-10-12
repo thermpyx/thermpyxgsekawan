@@ -11,7 +11,7 @@
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
 <link href="live.css" rel="stylesheet"/>
-<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script><link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script></head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
 <a class="quiz-back" href="live.html">Back to Live Quiz</a>
@@ -34,7 +34,11 @@
 <h2>Choose quiz material</h2>
 <p>Players who join your room will receive questions from the selected material.</p>
 </div>
+<div class="tpx-learning-links"><a href="question-editor.html">Bank Soal / Insert Soal</a><a href="flashcards.html">Flashcard / Insert Materi</a></div>
 <div class="live-form">
+<div class="live-field"><label for="questionSource">Sumber soal</label><select id="questionSource"><option value="builtin">Topik bawaan THERMPYX</option><option value="custom">Paket soal saya</option></select></div>
+<div id="customQuestions" hidden><div class="live-field"><label for="questionSet">Paket soal tersimpan</label><select id="questionSet"><option value="">Pilih paket soal</option></select><button type="button" class="live-secondary-button" id="refreshQuestionSets">Muat ulang paket</button><span class="live-field-hint">Buat paket di Bank Soal, lalu simpan ke cloud agar peserta menerima soal yang sama.</span></div></div>
+<div id="builtinQuestions">
 <div class="live-field">
 <label for="topic">Quiz Topic</label>
 <select id="topic">
@@ -46,8 +50,10 @@
 </select>
 <span class="live-field-hint">You can create another room later to use a different topic.</span>
 </div>
+</div>
 <button class="live-primary-button" id="createRoomBtn" type="button">CREATE ROOM</button>
 </div>
+<p id="hostStatus" role="status" aria-live="polite" class="live-field-hint"></p><div data-content-auth></div>
 <div class="live-info-strip">
 <span class="live-info-dot"></span>
 <span>After the room is created, you will move to the waiting room and see players join in realtime.</span>
@@ -58,6 +64,7 @@
 <script src="../js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="../js/content-store.js"></script>
 <script src="host.js"></script>
 </body>
 </html>

@@ -79,12 +79,12 @@ async function refresh(){
  busy=true;
  try {
    const [r,p,a]=await Promise.all([
-    supabaseClient.from("quiz_rooms").select("id,topic,status").eq("id",roomId).single(),
+    supabaseClient.from("quiz_rooms").select("*").eq("id",roomId).single(),
     supabaseClient.from("quiz_players").select("id,nickname,joined_at,current_question").eq("room_id",roomId),
     supabaseClient.from("quiz_answers").select("*").eq("room_id",roomId)
    ]);
    if(r.error||p.error||a.error)throw(r.error||p.error||a.error);
-   questionCount=getQuestionsForTopic(r.data.topic).length;
+   questionCount=getQuestionsForRoom(r.data).length;
    snapshot={room:r.data,players:p.data||[],answers:a.data||[]};
    render();
    const ranked=S.calculateRankings(snapshot.players,snapshot.answers,questionCount);

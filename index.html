@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <!-- CSS -->
 <link href="css/style.css" rel="stylesheet"/>
-<link href="css/neo-lab.css" rel="stylesheet"/><link href="css/global-ui.css" rel="stylesheet"/><script defer="" src="js/i18n-dictionary.js"></script><script defer="" src="js/i18n.js"></script><link rel="stylesheet" href="css/site-experience.css"><script defer src="js/site-experience.js"></script></head>
+<link href="css/neo-lab.css" rel="stylesheet"/><link href="css/global-ui.css" rel="stylesheet"/><script defer="" src="js/i18n-dictionary.js"></script><script defer="" src="js/i18n.js"></script><link rel="stylesheet" href="css/site-experience.css"><script defer src="js/site-experience.js"></script><link rel="stylesheet" href="css/custom-select.css"><link rel="stylesheet" href="css/content-library.css"><script defer src="js/custom-select.js"></script></head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <!-- ==============================
          SIDEBAR
@@ -536,13 +536,13 @@
 </div>
 <div class="converter-select-area">
 <div class="converter-select-group">
-<label>From</label>
-<div class="converter-unit-display" id="temperatureFromDisplay">Celsius (°C)</div>
+<label for="temperatureFromUnit">From</label>
+<select class="converter-unit-select" id="temperatureFromUnit" aria-label="Temperature from unit"><option value="C" selected>Celsius (°C)</option><option value="F">Fahrenheit (°F)</option><option value="K">Kelvin (K)</option><option value="Re">Réaumur (°Ré)</option><option value="R">Rankine (°R)</option><option value="De">Delisle (°De)</option><option value="N">Newton (°N)</option><option value="Ro">Rømer (°Rø)</option></select>
 </div>
 <button aria-label="Reverse temperature conversion" class="converter-swap" id="temperatureSwapButton" type="button">⇄</button>
 <div class="converter-select-group">
-<label>To</label>
-<div class="converter-unit-display" id="temperatureToDisplay">Kelvin (K)</div>
+<label for="temperatureToUnit">To</label>
+<select class="converter-unit-select" id="temperatureToUnit" aria-label="Temperature to unit"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option><option value="K" selected>Kelvin (K)</option><option value="Re">Réaumur (°Ré)</option><option value="R">Rankine (°R)</option><option value="De">Delisle (°De)</option><option value="N">Newton (°N)</option><option value="Ro">Rømer (°Rø)</option></select>
 </div>
 </div>
 <div class="converter-input">
@@ -552,7 +552,7 @@
 <button class="converter-button" id="convertTemperatureButton" type="button">CONVERT</button>
 <div class="converter-result" id="temperatureConversionResult">
 <span>Result</span>
-<strong id="temperatureConversionValue">...</strong>
+<strong id="temperatureConversionValue" role="status" aria-live="polite">...</strong>
 </div>
 </div>
 <!-- Pressure Converter -->
@@ -627,9 +627,7 @@
                 </p>
 </div>
 <div class="quiz-preview">
-<div class="quiz-icon">
-                    ?
-                </div>
+<div class="quiz-icon"><span class="tpx-learning-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 8v9m0-8c-2-2-4-2-6-2v8c2 0 4 0 6 2 2-2 4-2 6-2V7c-2 0-4 0-6 2Z"/></svg></span></div>
 <div class="quiz-content">
 <h3>
                         Thermodynamics Quiz
@@ -641,6 +639,7 @@
 <a class="primary-button" href="quiz/quiz.html">
                       START QUIZ
                    </a>
+<div class="tpx-learning-links"><a href="quiz/flashcards.html"><span class="tpx-learning-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 8v9m0-8c-2-2-4-2-6-2v8c2 0 4 0 6 2 2-2 4-2 6-2V7c-2 0-4 0-6 2Z"/></svg></span> FLASHCARD</a><a href="quiz/question-editor.html">BANK SOAL</a></div>
 </div>
 </div>
 </section>
@@ -719,5 +718,6 @@
 </main>
 <!-- JavaScript -->
 <script src="js/script.js"></script>
+<script src="js/temperature-converter.js"></script>
 </body>
 </html>

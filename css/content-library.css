@@ -1,0 +1,15 @@
+/* Shared account controls and THERMPYX learning mark. */
+.tpx-content-auth{padding:16px 18px;border:1px solid var(--border,#28424f);border-radius:12px;background:var(--bg-card,#101c27);color:var(--text-primary,#e6f5fb);font-family:"IBM Plex Sans",sans-serif;margin:18px 0}
+.tpx-auth-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tpx-auth-state{font-size:12px;color:var(--text-secondary,#a9c2cd);overflow-wrap:anywhere}
+.tpx-content-auth button{border:1px solid var(--border,#345361);background:var(--bg-secondary,#162b38);color:var(--text-primary,#e6f5fb);padding:9px 13px;border-radius:9px;font:600 12px Oxanium,sans-serif;cursor:pointer}
+.tpx-content-auth button:hover{border-color:#3ad4da}.tpx-content-auth button:disabled{opacity:.5;cursor:wait}
+.tpx-content-auth button:focus-visible,.tpx-content-auth input:focus-visible{outline:2px solid #39d5d9;outline-offset:3px}
+.tpx-auth-fields{margin-top:16px}.tpx-auth-fields[hidden],.tpx-auth-form[hidden],.tpx-auth-signout[hidden]{display:none}
+.tpx-auth-form{display:grid;gap:12px;grid-template-columns:1fr 1fr;max-width:620px}
+.tpx-auth-form label{display:grid;gap:6px;font-size:12px}.tpx-auth-form input{min-width:0;width:100%;box-sizing:border-box;padding:11px;border-radius:8px;border:1px solid var(--border,#335260);background:var(--bg-primary,#0b1620);color:var(--text-primary,#ecf8ff);font:14px "IBM Plex Sans",sans-serif}
+.tpx-auth-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap}.tpx-auth-actions button[type=submit]{background:#ff873f;color:#102330;border-color:#ff873f}
+.tpx-auth-note,.tpx-auth-message{font-size:12px;line-height:1.6;color:var(--text-secondary,#a4c2ce);margin:10px 0 0}.tpx-auth-message:empty{display:none}.tpx-content-auth a{font-size:12px;color:var(--blue-light,#4cd8e0)}
+.tpx-learning-mark{display:inline-grid;place-items:center;color:#52d5d5}.tpx-learning-mark svg{width:1.05em;height:1.05em;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.quiz-icon .tpx-learning-mark{font-size:52px}.quiz-mode-icon .tpx-learning-mark{font-size:35px}.tpx-learning-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.tpx-learning-links a{display:inline-flex;align-items:center;gap:9px;padding:11px 16px;border:1px solid var(--border,#2b4857);border-radius:10px;color:var(--text-primary,#def4fa);text-decoration:none;font:600 12px Oxanium,sans-serif;background:var(--bg-card,#112331)}.tpx-learning-links a:hover{border-color:#46cdd3;color:#46cdd3}
+@media(max-width:540px){.tpx-auth-form{grid-template-columns:1fr}.tpx-auth-summary{align-items:flex-start}.tpx-learning-links a{flex:1;justify-content:center}}

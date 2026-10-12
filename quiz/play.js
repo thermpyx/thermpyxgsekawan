@@ -181,12 +181,12 @@ async function initialize(){
   }
   roleEl.textContent="Player: "+(nickname||"Guest");
   roomEl.textContent=roomCode||"------";
-  const {data:room,error}=await supabaseClient.from("quiz_rooms").select("topic,status")
+  const {data:room,error}=await supabaseClient.from("quiz_rooms").select("*")
     .eq("id",roomId).single();
   if(error||!room){showRetry(initialize,"Unable to load room.","Ruang kuis gagal dimuat.");return;}
   if(room.status==="finished"){location.replace("leaderboard.html");return;}
   if(room.status!=="playing"){location.replace("waiting-room.html");return;}
-  questions=getQuestionsForTopic(room.topic);
+  questions=getQuestionsForRoom(room);
   if(!questions.length){message("No questions for this topic.","Tidak ada soal pada topik ini.");return;}
   await restorePlayer();
   channel=supabaseClient.channel("tpx-player-status-"+roomId+"-"+playerId)

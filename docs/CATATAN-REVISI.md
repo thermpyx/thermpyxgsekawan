@@ -1,0 +1,50 @@
+# Catatan revisi THERMPYX
+
+Revisi dikerjakan pada salinan terpisah `thermpyx-revisi`. Berkas ZIP yang dikirim sesuai dengan versi checkout asal, dengan tambahan berkas SQL pemeriksaan jawaban ganda. Fitur flashcard, penyisipan paket soal host, dan input link musik YouTube yang Anda jelaskan belum ada pada sumber tersebut; fitur itu ditambahkan agar sesuai dengan versi web yang ingin Anda gunakan.
+
+## Perubahan yang diminta
+
+- Pilihan satuan dan menu pilihan mengikuti tampilan web, menggunakan sudut melengkung, warna sesuai tema, serta navigasi keyboard.
+- Panel musik menyediakan enam lagu bawaan bernomor 01–06, file audio pilihan sendiri, ambiens, dan opsi link YouTube. Nama lagu tidak ditampilkan. Menutup panel pengaturan tidak memanggil pause; kontrol putar/jeda terpisah dari visibilitas panel.
+- Ikon latihan diganti dengan bentuk yang berkaitan dengan kegiatan belajar, sesuai visual THERMPYX.
+- Bank soal menyediakan paket soal yang dapat dipilih untuk host. Salinan soal tersimpan pada ruang sehingga sesi menggunakan soal yang konsisten.
+- Flashcard menyediakan editor kartu dan impor PDF/DOCX menjadi draf yang dapat diperiksa sebelum disimpan.
+- SQL tambahan dan [panduan Supabase bertahap](PANDUAN-SUPABASE.md) disertakan untuk penyimpanan konten dengan akun pengguna.
+
+## Musik tanpa YouTube
+
+Keenam audio lolos pemeriksaan codec dan dekode penuh tanpa galat. Pemutaran keenam lagu bawaan juga diuji langsung di browser, termasuk pergantian nomor, lanjut ke lagu berikutnya, dan pemulihan pilihan setelah muat ulang tanpa autoplay.
+
+Keenam berkas yang diberikan sudah disertakan sebagai `assets/music/01.mp3` hingga `06.mp3`, sesuai urutan lampiran. Audio asli berformat MP3 meskipun ekstensi lampirannya `.mpeg`; hanya nama/ekstensi berkas yang disesuaikan, tanpa konversi atau perubahan kualitas. Daftar lagu dan indikator pemutaran hanya memakai nomor 01–06. Lagu bawaan diputar langsung dari situs tanpa YouTube atau Supabase. Tekan Putar untuk mulai; pemutaran tidak berjalan otomatis saat membuka halaman.
+
+Pemilih file audio sendiri tetap tersedia. File hingga 50 MB disimpan di IndexedDB browser dan dipulihkan setelah muat ulang; tekan Putar lagi untuk mendengar. Nama file yang dipilih tidak ditampilkan pada panel. Jika penyimpanan browser gagal, file hanya tersedia pada halaman yang sedang terbuka.
+
+Opsi link YouTube tetap tersedia. Browser membutuhkan tindakan pengguna untuk memulai audio; beberapa video tidak mengizinkan pemutaran melalui embed. Menutup panel pengaturan saat musik sedang diputar tidak menghentikannya. Perpindahan ke halaman HTML lain atau muat ulang halaman membuat dokumen browser baru dan masih dapat menghentikan pemutaran; pemutar lintas halaman memerlukan perubahan arsitektur tersendiri.
+
+## Impor dokumen
+
+PDF yang memiliki teks dan DOCX dapat dibaca di browser. Teks dijadikan draf kartu, bukan ringkasan AI atau hasil yang otomatis dijamin benar. Periksa isi serta pasangan depan/belakang sebelum menyimpan. PDF hasil scan membutuhkan OCR yang belum termasuk. Gambar, formula, dan tata letak dokumen tidak diubah menjadi kartu gambar.
+
+PDF/DOCX asli tidak diunggah ke Supabase. Hanya data kartu dan metadata sumber yang disimpan; Storage bucket tidak diperlukan. Draf lokal memungkinkan mencoba editor sebelum konfigurasi cloud selesai.
+
+## Supabase dan multiplayer
+
+Migrasi `supabase/01-content-library.sql` menambahkan tabel pustaka soal dan flashcard. RLS membatasi penulisan kepada pemilik akun; deck dapat dibaca publik hanya jika `is_public` bernilai `true`. Akses menulis anonim tidak diberikan.
+
+Tidak ada perubahan remote database dalam paket revisi ini. URL dan browser key yang sudah ada dapat dipakai kembali bila Anda memilih proyek yang sama. Jangan menaruh key `service_role` atau `sb_secret_...` pada frontend.
+
+Skema dan policy database multiplayer lama tidak tersedia lengkap pada sumber ZIP. SQL hanya menambahkan kolom opsional soal pada `quiz_rooms` bila tabel itu sudah ada; policy lama tidak diperluas atau dimatikan. Alur cloud dan multiplayer perlu diuji pada proyek nyata setelah Anda menjalankan SQL dan masuk dengan akun aplikasi.
+
+Paket soal cloud bersifat pribadi sebelum digunakan dalam ruang. Salinan soal di ruang mengikuti hak baca ruang yang sudah ada dan menyertakan jawaban benar sesuai cara penilaian kuis di browser.
+
+## Validasi SQL
+
+Migrasi dijalankan pada PostgreSQL lokal melalui PGlite dengan role dan fungsi autentikasi simulasi. **48 pemeriksaan lulus**: eksekusi ulang, proyek dengan/tanpa tabel ruang lama, payload tidak valid, akses pemilik, penolakan akses lintas akun/anonim, akses baca deck publik, serta policy ruang lama yang tetap identik.
+
+Pengujian lokal ini memeriksa perilaku SQL dan RLS; ia tidak membuktikan konfigurasi Authentication, koneksi, atau policy multiplayer pada proyek Supabase Anda. Pengujian remote dilakukan setelah tahap panduan selesai.
+
+## Validasi web
+
+Suite lama lulus: 20/20 pemeriksaan kalkulator, simulator, dan riwayat; seluruh lima grup kuis juga lulus. Empat tes impor dokumen lulus, termasuk ekstraksi DOCX sungguhan. Browser menguji PDF dua halaman melalui worker PDF.js, DOCX, edit dan penyimpanan lokal, kartu bolak-balik, musik dari WAV, penutupan panel tanpa berhenti, dropdown dan pergantian bahasa, serta tampilan mobile.
+
+Alur cloud diuji dengan backend simulasi: login/penggantian akun, simpan/update/hapus konten, klik ganda, snapshot soal kustom, jumlah soal pemain, dan penyelesaian host. Ini bukan bukti sambungan Supabase remote. API YouTube sebenarnya diblokir proxy di lingkungan uji; kontrak player dan pesan kegagalan diuji secara terpisah.

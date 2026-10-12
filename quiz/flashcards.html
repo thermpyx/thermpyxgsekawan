@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flashcard | THERMPYX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link href="../css/style.css" rel="stylesheet">
+  <link href="../css/quiz.css" rel="stylesheet">
+  <link href="../css/neo-lab.css" rel="stylesheet">
+  <link href="../css/global-ui.css" rel="stylesheet">
+  <link href="flashcards.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/i18n-dictionary.js"></script><script defer src="../js/i18n.js"></script><script defer src="../js/site-experience.js"></script></head>
+<body class="flashcards-page">
+  <header class="quiz-topbar">
+    <a class="quiz-back" href="../index.html#quiz" data-fc-id="← Kembali ke Latihan" data-fc-en="← Back to Practice">← Kembali ke Latihan</a>
+    <a class="quiz-logo" href="../index.html" aria-label="THERMPYX home">THERMPY<span class="wordmark-accent">X</span></a>
+    <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☾</span><span class="theme-text" id="themeText">Dark Mode</span></button>
+  </header>
+  <main class="fc-shell" data-tpx-no-translate>
+    <section class="fc-hero" aria-labelledby="fcTitle">
+      <div>
+        <p class="fc-eyebrow">THERMPYX / STUDY CARDS</p>
+        <h1 id="fcTitle"><svg class="fc-hero-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="5" width="28" height="34" rx="5"></rect><path d="M16 14h9M13 21h14M13 27h11M34 12h4a5 5 0 0 1 5 5v21a5 5 0 0 1-5 5H18"></path></svg>Flashcard</h1>
+        <p data-fc-id="Pahami satu ide, balik kartunya, lalu lanjutkan. Susun materi sendiri atau mulai dari PDF dan DOCX." data-fc-en="Learn one idea, flip the card, and keep going. Build your own deck or start with a PDF or DOCX.">Pahami satu ide, balik kartunya, lalu lanjutkan. Susun materi sendiri atau mulai dari PDF dan DOCX.</p>
+      </div>
+      <div class="fc-hero-mark" aria-hidden="true"><span>01</span><span>QUESTION<br>ANSWER</span><svg viewBox="0 0 24 24"><path d="M4 6h13l-3-3m3 3-3 3M20 18H7l3 3m-3-3 3-3"></path></svg></div>
+    </section>
+    <div data-content-auth class="fc-auth"></div>
+    <p id="fcStatus" class="fc-status" role="status" aria-live="polite" hidden></p>
+    <div class="fc-workspace">
+      <aside class="fc-library" aria-labelledby="fcLibraryTitle">
+        <div class="fc-library-heading"><h2 id="fcLibraryTitle" data-fc-id="Koleksi kartu" data-fc-en="Your decks">Koleksi kartu</h2><span id="fcDeckCount" class="fc-count">0</span></div>
+        <button id="fcNewDeck" class="fc-button fc-button-primary fc-full" type="button" data-fc-id="＋ Susun materi baru" data-fc-en="＋ Create a new deck">＋ Susun materi baru</button>
+        <div id="fcDeckList" class="fc-deck-list"></div>
+        <p class="fc-library-note" data-fc-id="Draf tersimpan di browser ini. Masuk untuk menyimpan materi ke akun Supabase Anda." data-fc-en="Drafts stay in this browser. Sign in to save material to your Supabase account.">Draf tersimpan di browser ini. Masuk untuk menyimpan materi ke akun Supabase Anda.</p>
+      </aside>
+      <section class="fc-content" aria-label="Flashcard workspace">
+        <div class="fc-tabs" role="tablist" aria-label="Flashcard mode">
+          <button id="fcStudyTab" class="fc-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="fcStudyPanel" data-fc-id="Belajar" data-fc-en="Study">Belajar</button>
+          <button id="fcEditTab" class="fc-tab" type="button" role="tab" aria-selected="false" aria-controls="fcEditPanel" tabindex="-1" data-fc-id="Susun materi" data-fc-en="Edit material">Susun materi</button>
+        </div>
+        <section id="fcStudyPanel" class="fc-panel" role="tabpanel" aria-labelledby="fcStudyTab">
+          <div class="fc-study-heading"><div><p id="fcStudyTopic" class="fc-eyebrow"></p><h2 id="fcStudyTitle"></h2></div><button id="fcEditCurrent" type="button" class="fc-button fc-button-quiet" data-fc-id="Edit materi" data-fc-en="Edit deck">Edit materi</button></div>
+          <div id="fcProgressLabel" class="fc-progress-label" aria-live="polite"></div>
+          <div class="fc-progress-track" aria-hidden="true"><div id="fcProgressFill"></div></div>
+          <button id="fcStudyCard" class="fc-study-card" type="button" aria-describedby="fcStudyHint" aria-pressed="false">
+            <span id="fcCardSide" class="fc-card-side"></span>
+            <span id="fcCardText" class="fc-card-text" data-tpx-no-translate></span>
+            <span class="fc-card-flip" data-fc-id="↻ Balik kartu" data-fc-en="↻ Flip card">↻ Balik kartu</span>
+          </button>
+          <p id="fcStudyHint" class="fc-study-hint" data-fc-id="Klik kartu atau tekan Space untuk melihat jawaban. Gunakan panah kiri dan kanan untuk berpindah." data-fc-en="Click the card or press Space to reveal the answer. Use the left and right arrows to move.">Klik kartu atau tekan Space untuk melihat jawaban. Gunakan panah kiri dan kanan untuk berpindah.</p>
+          <div class="fc-study-controls">
+            <button id="fcPrev" class="fc-button" type="button" data-fc-id="← Sebelumnya" data-fc-en="← Previous">← Sebelumnya</button>
+            <button id="fcShuffle" class="fc-button fc-button-quiet" type="button" data-fc-id="Acak kartu" data-fc-en="Shuffle">Acak kartu</button>
+            <button id="fcNext" class="fc-button fc-button-primary" type="button" data-fc-id="Berikutnya →" data-fc-en="Next →">Berikutnya →</button>
+          </div>
+        </section>
+        <section id="fcEditPanel" class="fc-panel" role="tabpanel" aria-labelledby="fcEditTab" hidden>
+          <div class="fc-edit-heading"><div><p class="fc-eyebrow" data-fc-id="RUANG MATERI" data-fc-en="MATERIAL STUDIO">RUANG MATERI</p><h2 data-fc-id="Ide Anda, kartu Anda." data-fc-en="Your ideas. Your cards.">Ide Anda, kartu Anda.</h2></div><span id="fcDirtyLabel" class="fc-dirty" hidden data-fc-id="Belum disimpan" data-fc-en="Unsaved changes">Belum disimpan</span></div>
+          <div class="fc-meta-fields">
+            <label class="fc-field"><span data-fc-id="Judul materi" data-fc-en="Deck title">Judul materi</span><input id="fcDeckTitle" type="text" maxlength="120" required placeholder="Contoh: Hukum I Termodinamika" data-fc-placeholder-id="Contoh: Hukum I Termodinamika" data-fc-placeholder-en="Example: First Law of Thermodynamics"></label>
+            <label class="fc-field"><span data-fc-id="Topik" data-fc-en="Topic">Topik</span><input id="fcDeckTopic" type="text" maxlength="80" placeholder="Contoh: Energi & kalor" data-fc-placeholder-id="Contoh: Energi & kalor" data-fc-placeholder-en="Example: Energy & heat"></label>
+          </div>
+          <details class="fc-import" id="fcImportPanel">
+            <summary><span class="fc-import-symbol" aria-hidden="true">↥</span><span data-fc-id="Impor materi dari PDF / DOCX" data-fc-en="Import material from PDF / DOCX">Impor materi dari PDF / DOCX</span><span class="fc-import-tag">LOCAL</span></summary>
+            <div class="fc-import-body">
+              <p data-fc-id="Dokumen dibaca di perangkat Anda. Yang disimpan ke cloud hanyalah teks kartu setelah Anda menekan Simpan; berkas asli tidak diunggah." data-fc-en="Documents are read on your device. Only card text is saved to the cloud after you press Save; the original file is never uploaded.">Dokumen dibaca di perangkat Anda. Yang disimpan ke cloud hanyalah teks kartu setelah Anda menekan Simpan; berkas asli tidak diunggah.</p>
+              <label class="fc-file-field"><span data-fc-id="Pilih dokumen" data-fc-en="Choose a document">Pilih dokumen</span><input id="fcImportFile" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+              <p class="fc-small" data-fc-id="Maks. 8 MB · PDF maks. 32 halaman · PDF scan membutuhkan OCR terlebih dahulu · .DOC lama: simpan ulang sebagai .DOCX." data-fc-en="Max. 8 MB · PDFs up to 32 pages · Scanned PDFs need OCR first · Old .DOC files: save as .DOCX.">Maks. 8 MB · PDF maks. 32 halaman · PDF scan membutuhkan OCR terlebih dahulu · .DOC lama: simpan ulang sebagai .DOCX.</p>
+              <p id="fcImportStatus" class="fc-import-status" role="status" aria-live="polite"></p>
+              <label class="fc-field fc-source-field"><span data-fc-id="Pratinjau teks / tempel materi" data-fc-en="Text preview / paste material">Pratinjau teks / tempel materi</span><textarea id="fcSourceText" rows="7" maxlength="120000" placeholder="Teks dari dokumen akan tampil di sini. Anda juga bisa menempel materi sendiri." data-fc-placeholder-id="Teks dari dokumen akan tampil di sini. Anda juga bisa menempel materi sendiri." data-fc-placeholder-en="Document text will appear here. You can also paste your own material."></textarea></label>
+              <div class="fc-import-actions"><button id="fcGenerate" class="fc-button" type="button" data-fc-id="Buat draf kartu dari teks" data-fc-en="Draft cards from text">Buat draf kartu dari teks</button><span id="fcSourceCount" class="fc-small">0 / 120.000</span></div>
+              <p class="fc-small" data-fc-id="Draf mengikuti judul dan paragraf, bukan dibuat oleh AI. Periksa pertanyaan, rumus, dan jawaban sebelum menyimpan. Maksimal 100 kartu per materi." data-fc-en="Drafts follow headings and paragraphs; they are not generated by AI. Review questions, formulas and answers before saving. Up to 100 cards per deck.">Draf mengikuti judul dan paragraf, bukan dibuat oleh AI. Periksa pertanyaan, rumus, dan jawaban sebelum menyimpan. Maksimal 100 kartu per materi.</p>
+            </div>
+          </details>
+          <div class="fc-card-editor-heading"><h3><span data-fc-id="Kartu materi" data-fc-en="Study cards">Kartu materi</span> <span id="fcEditCount" class="fc-count">0 / 100</span></h3><button id="fcAddCard" type="button" class="fc-button fc-button-quiet" data-fc-id="＋ Tambah kartu" data-fc-en="＋ Add card">＋ Tambah kartu</button></div>
+          <div id="fcCardEditor" class="fc-card-editor"></div>
+          <div class="fc-save-options">
+            <label><input id="fcCloudSave" type="checkbox"><span data-fc-id="Simpan ke akun Supabase" data-fc-en="Save to Supabase account">Simpan ke akun Supabase</span></label>
+            <label id="fcPublicOption" hidden><input id="fcPublicDeck" type="checkbox"><span data-fc-id="Izinkan pengguna lain membaca materi" data-fc-en="Allow other users to read this deck">Izinkan pengguna lain membaca materi</span></label>
+          </div>
+          <div class="fc-save-actions"><button id="fcSaveDeck" type="button" class="fc-button fc-button-primary" data-fc-id="Simpan materi" data-fc-en="Save deck">Simpan materi</button><button id="fcCancelEdit" type="button" class="fc-button fc-button-quiet" data-fc-id="Batal" data-fc-en="Cancel">Batal</button></div>
+          <p class="fc-small" data-fc-id="Tanpa masuk, Anda tetap bisa membuat, mengimpor, dan belajar menggunakan materi lokal." data-fc-en="You can create, import and study local decks without signing in.">Tanpa masuk, Anda tetap bisa membuat, mengimpor, dan belajar menggunakan materi lokal.</p>
+        </section>
+      </section>
+    </div>
+  </main>
+  <dialog id="fcConfirmDialog" class="fc-confirm-dialog" data-tpx-no-translate><form method="dialog"><h2 id="fcConfirmTitle"></h2><p id="fcConfirmText"></p><div class="fc-save-actions"><button class="fc-button" value="cancel" autofocus data-fc-id="Batal" data-fc-en="Cancel">Batal</button><button id="fcConfirmAction" class="fc-button fc-button-primary" value="confirm" data-fc-id="Lanjutkan" data-fc-en="Continue">Lanjutkan</button></div></form></dialog>
+  <script src="../js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="../js/content-store.js"></script>
+  <script src="../js/document-import.js"></script>
+  <script src="flashcards.js"></script>
+</body>
+</html>

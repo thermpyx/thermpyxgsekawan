@@ -3383,6 +3383,18 @@ a:focus-visible {
     gap: 7px;
     min-width: 0;
 }
+.converter-select-group .tpx-select > .tpx-select-trigger {
+    min-height: 50px;
+    padding: 10px 12px;
+    gap: 7px;
+}
+.converter-select-group .tpx-select-label {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    font-size: 12px;
+    line-height: 1.35;
+}
 .converter-select-group label {
     color: var(--text-secondary);
     font-size: 11px;

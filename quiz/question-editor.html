@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Soal | THERMPYX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/quiz.css">
+  <link rel="stylesheet" href="../css/neo-lab.css">
+  <link rel="stylesheet" href="../css/global-ui.css">
+  <link rel="stylesheet" href="../css/site-experience.css">
+  <link rel="stylesheet" href="../css/content-library.css">
+  <link rel="stylesheet" href="question-editor.css">
+  <script defer src="../js/i18n-dictionary.js"></script>
+  <script defer src="../js/i18n.js"></script>
+  <script defer src="../js/site-experience.js"></script>
+<link rel="stylesheet" href="../css/custom-select.css"><script defer src="../js/custom-select.js"></script></head>
+<body>
+  <header class="quiz-topbar">
+    <a class="quiz-back" href="host.html">Kembali ke Host Kuis</a>
+    <div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
+    <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Ubah tema">
+      <span class="theme-icon" id="themeIcon">☾</span>
+      <span class="theme-text" id="themeText">Dark Mode</span>
+    </button>
+  </header>
+
+  <main class="quiz-page qe-page">
+    <section class="quiz-hero qe-hero">
+      <div class="qe-hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="21" height="24" rx="3"></rect><path d="M11 5V3h11v5H11V5M11 14l2 2 3-4M19 14h4M11 22l2 2 3-4M19 22h4"></path></svg>
+      </div>
+      <p class="section-label">LATIHAN · BANK SOAL</p>
+      <h1>Susun soal untuk kuismu.</h1>
+      <p>Tulis pertanyaan, tentukan jawaban yang benar, lalu simpan set soal untuk di-host bersama peserta.</p>
+    </section>
+
+    <div class="qe-workspace">
+      <aside class="qe-library" aria-label="Koleksi set soal">
+        <section class="qe-panel">
+          <div class="qe-section-heading"><h2>Draf perangkat ini</h2><span id="localSetCount" class="qe-count">0</span></div>
+          <p class="qe-caption">Tersimpan otomatis di browser ini. Tetap bisa diedit tanpa login.</p>
+          <button id="newSetButton" class="qe-button qe-button-primary qe-button-full" type="button">+ Buat set soal</button>
+          <div id="localSetList" class="qe-set-list"></div>
+        </section>
+
+        <section class="qe-panel">
+          <div class="qe-section-heading"><h2>Set soal di cloud</h2><button id="refreshCloudButton" class="qe-icon-button" type="button" aria-label="Muat ulang set soal cloud" title="Muat ulang">↻</button></div>
+          <p class="qe-caption">Koleksi pribadi akunmu. Set yang disimpan di sini bisa dipilih pada halaman Host Kuis.</p>
+          <div data-content-auth></div>
+          <p id="cloudLibraryStatus" class="qe-library-status" role="status">Login untuk melihat koleksi cloud.</p>
+          <div id="cloudSetList" class="qe-set-list"></div>
+        </section>
+      </aside>
+
+      <section class="qe-editor qe-panel" aria-label="Editor set soal">
+        <div class="qe-editor-heading">
+          <div><p class="section-label">EDITOR SET SOAL</p><h2 id="editorHeading">Set soal baru</h2></div>
+          <span id="draftBadge" class="qe-badge">Draf lokal</span>
+        </div>
+        <p id="draftStatus" class="qe-caption" role="status">Perubahan tersimpan otomatis di perangkat ini.</p>
+        <form id="questionEditorForm" novalidate>
+          <fieldset id="editorFields" class="qe-fields">
+            <div class="qe-metadata">
+              <div class="qe-field"><label for="setTitle">Nama set soal</label><input id="setTitle" name="title" type="text" maxlength="140" placeholder="Contoh: Latihan kalor kelas XI" autocomplete="off" required></div>
+              <div class="qe-field"><label for="setTopic">Topik</label><select id="setTopic" name="topic"><option value="heat">Kalor &amp; Suhu</option><option value="work">Usaha &amp; Energi</option><option value="first-law">Hukum I Termodinamika</option><option value="process">Proses Termodinamika</option><option value="all">Semua Materi</option></select></div>
+            </div>
+            <div class="qe-questions-heading"><h3>Pertanyaan <span id="questionCount">1 / 100</span></h3><span class="qe-caption">Pilih satu jawaban benar per soal.</span></div>
+            <div id="questionList" class="qe-question-list"></div>
+            <button id="addQuestionButton" class="qe-button qe-button-secondary qe-button-full" type="button">+ Tambah pertanyaan</button>
+          </fieldset>
+          <div id="validationMessage" class="qe-validation" role="alert" hidden></div>
+          <div class="qe-editor-actions">
+            <button id="publishButton" class="qe-button qe-button-primary" type="submit">Simpan ke cloud</button>
+            <button id="checkQuestionsButton" class="qe-button qe-button-secondary" type="button">Periksa soal</button>
+            <a class="qe-button qe-button-secondary" href="host.html">Buka Host Kuis ↗</a>
+          </div>
+          <p id="publishStatus" class="qe-publish-status" role="status">Login untuk menyimpan ke cloud. Draf lokal tetap tersedia.</p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="../js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="../js/content-store.js"></script>
+  <script src="question-editor.js"></script>
+</body>
+</html>
