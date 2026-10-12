@@ -3,6 +3,8 @@
 "use strict";
 const KEY="thermpyx-activity-v1", MIGRATION="thermpyx-activity-migrated-v1";
 const tr=(en,id)=>window.TPX?.getLanguage()==="id"?id:en;
+let embeddedShell;
+try{if(window.parent!==window&&window.parent?.TPXPersistentShell?.owns(window))embeddedShell=window.parent.TPXPersistentShell;}catch(_){}
 const safe=(v,len=180)=>String(v??"").replace(/[\x00-\x1f]/g," ").trim().slice(0,len);
 const TYPES=new Set(["theory","simulator","video","calculation","quiz","navigation"]);
 const load=()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x:[];}catch(_){return [];}};
@@ -179,6 +181,7 @@ function stopAmbient(){
  }catch(_){try{old.close();}catch(_){} }
 }
 function stopAudio(){
+ if(embeddedShell){embeddedShell.pauseMusic();return;}
  playVersion++;playing=false;pending=false;status="paused";
  stopAmbient();
  if(media)media.pause();
@@ -419,7 +422,7 @@ function updateAudioUI(){
  put(".tpx-audio-now-playing",nowPlaying);
  put(".tpx-audio-status",tr(...(messages[status]||messages.idle)));
  ui.querySelector(".tpx-audio-status").classList.toggle("is-error",/Error|Invalid|Restricted|Unavailable|Network|Unsupported|wrongFile|largeFile/.test(status));
- put(".tpx-audio-footnote",tr("Closing settings keeps music playing on this page.","Menutup pengaturan tetap memutar musik di halaman ini."));
+ put(".tpx-audio-footnote",tr("Music keeps playing as you browse this site.","Musik tetap berjalan saat berpindah halaman web ini."));
  ui.querySelector(".tpx-audio-close").setAttribute("aria-label",tr("Close music settings","Tutup pengaturan musik"));
  ui.querySelector("#tpx-volume").setAttribute("aria-label",tr("Music volume","Volume musik"));
  put(".tpx-volume-value",Math.round(volume*100)+"%");
@@ -485,7 +488,10 @@ function mountAudio(){
   useLocalFile(track.blob);if(source==="local"&&!playing&&!pending)setStatus("localReady");
  }).catch(()=>{});
 }
-document.addEventListener("DOMContentLoaded",mountAudio);
-window.addEventListener("pagehide",()=>{sourceVersion++;stopAudio();destroyYouTube();});
-window.addEventListener("thermpyx:languagechange",updateAudioUI);
+if(!embeddedShell){
+ window.TPXMusic={pause:stopAudio,dismiss:()=>setPanelOpen(false)};
+ document.addEventListener("DOMContentLoaded",mountAudio);
+ window.addEventListener("pagehide",()=>{sourceVersion++;stopAudio();destroyYouTube();});
+ window.addEventListener("thermpyx:languagechange",updateAudioUI);
+}
 })();

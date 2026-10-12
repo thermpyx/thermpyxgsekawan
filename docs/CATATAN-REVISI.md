@@ -19,7 +19,13 @@ Keenam berkas yang diberikan sudah disertakan sebagai `assets/music/01.mp3` hing
 
 Pemilih file audio sendiri tetap tersedia. File hingga 50 MB disimpan di IndexedDB browser dan dipulihkan setelah muat ulang; tekan Putar lagi untuk mendengar. Nama file yang dipilih tidak ditampilkan pada panel. Jika penyimpanan browser gagal, file hanya tersedia pada halaman yang sedang terbuka.
 
-Opsi link YouTube tetap tersedia. Browser membutuhkan tindakan pengguna untuk memulai audio; beberapa video tidak mengizinkan pemutaran melalui embed. Menutup panel pengaturan saat musik sedang diputar tidak menghentikannya. Perpindahan ke halaman HTML lain atau muat ulang halaman membuat dokumen browser baru dan masih dapat menghentikan pemutaran; pemutar lintas halaman memerlukan perubahan arsitektur tersendiri.
+Opsi link YouTube tetap tersedia. Browser membutuhkan tindakan pengguna untuk memulai audio; beberapa video tidak mengizinkan pemutaran melalui embed. Menutup panel pengaturan atau berpindah ke halaman lain di dalam situs tidak menghentikan musik. Pemutar ditempatkan pada halaman aplikasi yang tetap hidup, sementara halaman Teori, Simulator, Kalkulator, dan Konverter berganti di dalamnya. Muat ulang seluruh aplikasi atau membuka tab baru membuat sesi browser baru dan memerlukan tombol Putar lagi.
+
+## Halaman kalkulator dan konverter
+
+Perhitungan dan konversi tidak lagi memenuhi beranda dengan formulir. Keduanya memiliki kartu pembuka seperti Simulator. Halaman Kalkulator memuat seluruh tujuh modul yang telah tersedia. Unit Converter memuat suhu, tekanan, volume, energi, daya, massa, panjang, luas, dan waktu, dengan pilihan dua satuan, tukar arah, serta hasil dan validasi input.
+
+Gradasi teal/cyan dan amber ditambahkan hanya pada beberapa kartu pilihan. Latar halaman, input, dan kartu lain tetap menggunakan permukaan biasa sehingga tampilan tidak monoton tanpa membuat seluruh web bergradasi.
 
 ## Impor dokumen
 
@@ -48,3 +54,5 @@ Pengujian lokal ini memeriksa perilaku SQL dan RLS; ia tidak membuktikan konfigu
 Suite lama lulus: 20/20 pemeriksaan kalkulator, simulator, dan riwayat; seluruh lima grup kuis juga lulus. Empat tes impor dokumen lulus, termasuk ekstraksi DOCX sungguhan. Browser menguji PDF dua halaman melalui worker PDF.js, DOCX, edit dan penyimpanan lokal, kartu bolak-balik, musik dari WAV, penutupan panel tanpa berhenti, dropdown dan pergantian bahasa, serta tampilan mobile.
 
 Alur cloud diuji dengan backend simulasi: login/penggantian akun, simpan/update/hapus konten, klik ganda, snapshot soal kustom, jumlah soal pemain, dan penyelesaian host. Ini bukan bukti sambungan Supabase remote. API YouTube sebenarnya diblokir proxy di lingkungan uji; kontrak player dan pesan kegagalan diuji secara terpisah.
+
+Untuk revisi halaman terhubung, pemutaran MP3 nyata diuji saat membuka Teori, Simulator, Kalkulator, Konverter, dan memakai Kembali/Maju browser. Elemen audio tetap sama, waktunya terus bertambah, dan tidak ada jeda atau pemuatan ulang audio pada perpindahan tersebut. Tujuh kalkulator, sembilan kategori konverter, bahasa, tema, tampilan mobile, serta impor PDF/DOCX di dalam aplikasi juga diperiksa. Tujuh tes numerik konverter memeriksa definisi satuan, seluruh pasangan satuan, batas suhu, dan input tidak valid.

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="js/persistent-navigation.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Convert temperature, pressure, volume, energy, power, mass, length, area and time with THERMPYX.">
+  <title>Unit Converter | THERMPYX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Oxanium:wght@400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/theory.css">
+  <link rel="stylesheet" href="css/neo-lab.css">
+  <link rel="stylesheet" href="css/global-ui.css">
+  <link rel="stylesheet" href="css/site-experience.css">
+  <link rel="stylesheet" href="css/custom-select.css">
+  <link rel="stylesheet" href="css/unit-converter.css">
+  <script defer src="js/i18n-dictionary.js"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/site-experience.js"></script>
+  <script defer src="js/unit-converter.js"></script>
+  <script defer src="js/custom-select.js"></script>
+<link rel="stylesheet" href="css/card-accents.css"></head>
+<body>
+  <div aria-label="THERMPYX loading" class="tpx-page-transition tpx-show" role="status">
+    <div class="tpx-loader-panel">
+      <div aria-hidden="true" class="tpx-loader-orbit"></div>
+      <div class="tpx-loader-wordmark" aria-label="THERMPYX">THERMPY<span class="wordmark-accent">X</span></div>
+      <div class="tpx-loader-caption">PREPARING LABORATORY</div>
+      <div class="tpx-loader-rail"></div>
+    </div>
+  </div>
+  <header class="theory-topbar uc-topbar">
+    <a class="theory-back" href="index.html#converter" data-en="Back to Home" data-id="Kembali ke Beranda">Back to Home</a>
+    <a class="theory-logo" href="index.html">THERMPY<span class="wordmark-accent">X</span></a>
+    <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+      <span class="theme-icon" id="themeIcon" aria-hidden="true">☾</span>
+      <span class="theme-text" id="themeText">Light Mode</span>
+    </button>
+  </header>
+  <main class="uc-main">
+    <section class="uc-hero" aria-labelledby="converterHeading">
+      <p class="uc-kicker">THERMPYX / UNIT CONVERTER / 09</p>
+      <h1 id="converterHeading" data-en="Unit Converter" data-id="Konverter Satuan">Unit Converter</h1>
+      <p data-en="Nine quantities. One laboratory. Choose your units, enter a value, and compare the result instantly." data-id="Sembilan besaran. Satu laboratorium. Pilih satuan, masukkan nilai, dan lihat hasil konversinya langsung.">Nine quantities. One laboratory. Choose your units, enter a value, and compare the result instantly.</p>
+      <div class="uc-hero-tags"><span data-en="SI + everyday units" data-id="SI + satuan sehari-hari">SI + everyday units</span><span data-en="Instant conversion" data-id="Konversi langsung">Instant conversion</span><span data-en="9 categories" data-id="9 kategori">9 categories</span></div>
+    </section>
+    <nav class="uc-nav" id="converterNav" aria-label="Conversion categories"></nav>
+    <section class="uc-grid" id="converterGrid" aria-label="Unit conversion tools"></section>
+    <noscript><p class="uc-note">Enable JavaScript to use the unit conversion tools. / Aktifkan JavaScript untuk menggunakan konverter satuan.</p></noscript>
+    <aside class="uc-note">
+      <p data-en="Temperature values are absolute readings, not temperature differences; values below 0 K are rejected. Other categories also accept signed values for changes or mathematical calculations." data-id="Nilai suhu adalah pembacaan mutlak, bukan selisih suhu; nilai di bawah 0 K ditolak. Kategori lainnya juga menerima nilai bertanda untuk selisih atau perhitungan matematis.">Temperature values are absolute readings, not temperature differences; values below 0 K are rejected. Other categories also accept signed values for changes or mathematical calculations.</p>
+      <p data-en="Definitions: US liquid gallon; mechanical horsepower; thermochemical calorie (4.184 J); international-table BTU. Results display up to 15 significant digits; the conversion itself is not rounded." data-id="Definisi: galon cair AS; daya kuda mekanis; kalori termokimia (4,184 J); BTU international table. Hasil menampilkan hingga 15 angka signifikan; perhitungan konversinya tidak dibulatkan.">Definitions: US liquid gallon; mechanical horsepower; thermochemical calorie (4.184 J); international-table BTU. Results display up to 15 significant digits; the conversion itself is not rounded.</p>
+    </aside>
+    <nav class="uc-footer-nav" aria-label="More learning tools"><a href="calculators.html" data-en="Open Calculator Lab →" data-id="Buka Laboratorium Kalkulator →">Open Calculator Lab →</a><a href="simulator/index.html" data-en="Open Simulator →" data-id="Buka Simulator →">Open Simulator →</a></nav>
+  </main>
+</body>
+</html>

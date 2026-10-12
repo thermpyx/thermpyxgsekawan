@@ -2,6 +2,7 @@
 
 <html lang="en">
 <head>
+<script src="js/persistent-navigation.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>THERMPYX | Thermodynamic Learning &amp; Calculation Platform</title>
@@ -11,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <!-- CSS -->
 <link href="css/style.css" rel="stylesheet"/>
-<link href="css/neo-lab.css" rel="stylesheet"/><link href="css/global-ui.css" rel="stylesheet"/><script defer="" src="js/i18n-dictionary.js"></script><script defer="" src="js/i18n.js"></script><link rel="stylesheet" href="css/site-experience.css"><script defer src="js/site-experience.js"></script><link rel="stylesheet" href="css/custom-select.css"><link rel="stylesheet" href="css/content-library.css"><script defer src="js/custom-select.js"></script></head>
+<link href="css/neo-lab.css" rel="stylesheet"/><link href="css/global-ui.css" rel="stylesheet"/><script defer="" src="js/i18n-dictionary.js"></script><script defer="" src="js/i18n.js"></script><link rel="stylesheet" href="css/site-experience.css"><script defer src="js/site-experience.js"></script><link rel="stylesheet" href="css/custom-select.css"><link rel="stylesheet" href="css/content-library.css"><script defer src="js/custom-select.js"></script><link rel="stylesheet" href="css/tool-preview.css"><link rel="stylesheet" href="css/card-accents.css"></head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <!-- ==============================
          SIDEBAR
@@ -250,240 +251,9 @@
 <!-- ==============================
      CALCULATION
 ============================== -->
-<section class="content-section calculation-section" id="calculation">
-<div class="section-heading">
-<p class="section-label">
-            CALCULATE
-        </p>
-<h2>
-            Thermodynamic Calculations
-        </h2>
-<p>
-            Select a calculation and solve thermodynamic problems
-            with step-by-step solutions.
-        </p>
-</div>
-<p class="tpx-calculator-intro"><a class="primary-button" href="calculators.html">EXPLORE ALL 7 CALCULATORS ↗</a></p>
-<!-- ==============================
-         HEAT CALCULATOR
-    =============================== -->
-<div class="heat-calculator">
-<div class="calculator-header">
-<div>
-<p class="calculator-label">
-                    CALCULATOR 01
-                </p>
-<h3>
-                    Heat Calculator
-                </h3>
-<p>
-                    Calculate the amount of heat transferred using
-                    mass, specific heat capacity, and temperature change.
-                </p>
-</div>
-<div class="calculator-symbol">
-                Q
-            </div>
-</div>
-<!-- Formula -->
-<div class="formula-box">
-<span>Formula</span>
-<strong>
-                Q = m × c × ΔT
-            </strong>
-</div>
-<!-- Input Area -->
-<div class="calculator-inputs">
-<!-- Mass -->
-<div class="input-group">
-<label for="heatMass">
-                    Mass (m)
-                </label>
-<div class="input-with-unit">
-<input id="heatMass" placeholder="Enter mass" step="any" type="number"/>
-<span>kg</span>
-</div>
-</div>
-<!-- Specific Heat -->
-<div class="input-group">
-<label for="heatSpecificHeat">
-                    Specific Heat Capacity (c)
-                </label>
-<div class="input-with-unit">
-<input id="heatSpecificHeat" placeholder="Enter specific heat" step="any" type="number"/>
-<span>J/kg·K</span>
-</div>
-</div>
-<!-- Temperature Change -->
-<div class="input-group">
-<label for="heatTemperature">
-                    Temperature Change (ΔT)
-                </label>
-<div class="input-with-unit">
-<input id="heatTemperature" placeholder="Enter temperature change" step="any" type="number"/>
-<span>K</span>
-</div>
-</div>
-</div>
-<!-- Calculate Button -->
-<button class="calculate-button" id="calculateHeatButton" type="button">
-            CALCULATE
-        </button>
-<!-- Result -->
-<div class="calculation-result" id="heatResult">
-<div class="result-header">
-<span>
-                    RESULT
-                </span>
-<strong id="heatResultValue">
-                    ...
-                </strong>
-</div>
-<!-- Solution -->
-<div class="solution-box">
-<h4>
-                    Step by Step Solution
-                </h4>
-<div class="solution-step">
-<span>
-                        Step 1: Formula
-                    </span>
-<p id="heatStep1">
-                        Q = m × c × ΔT
-                    </p>
-</div>
-<div class="solution-step">
-<span>
-                        Step 2: Substitute
-                    </span>
-<p id="heatStep2">
-                        ...
-                    </p>
-</div>
-<div class="solution-step">
-<span>
-                        Step 3: Calculate
-                    </span>
-<p id="heatStep3">
-                        ...
-                    </p>
-</div>
-<div class="final-answer">
-<span>
-                        Final Answer
-                    </span>
-<strong id="heatFinalAnswer">
-                        ...
-                    </strong>
-</div>
-</div>
-</div>
-</div>
-<!-- ==============================
-     WORK CALCULATOR
-============================== -->
-<div class="work-calculator">
-<div class="calculator-header">
-<div>
-<p class="calculator-label">
-                CALCULATOR 02
-            </p>
-<h3>
-                Work Calculator
-            </h3>
-<p>
-                Calculate thermodynamic work using pressure
-                and change in volume.
-            </p>
-</div>
-<div class="calculator-symbol">
-            W
-        </div>
-</div>
-<!-- Formula -->
-<div class="formula-box">
-<span>Formula</span>
-<strong>
-            W = P × ΔV
-        </strong>
-</div>
-<!-- Input Area -->
-<div class="calculator-inputs">
-<!-- Pressure -->
-<div class="input-group">
-<label for="workPressure">
-                Pressure (P)
-            </label>
-<div class="input-with-unit">
-<input id="workPressure" placeholder="Enter pressure" step="any" type="number"/>
-<span>Pa</span>
-</div>
-</div>
-<!-- Volume Change -->
-<div class="input-group">
-<label for="workVolume">
-                Volume Change (ΔV)
-            </label>
-<div class="input-with-unit">
-<input id="workVolume" placeholder="Enter volume change" step="any" type="number"/>
-<span>m³</span>
-</div>
-</div>
-</div>
-<!-- Calculate Button -->
-<button class="calculate-button" id="calculateWorkButton" type="button">
-        CALCULATE
-    </button>
-<!-- Result -->
-<div class="calculation-result" id="workResult">
-<div class="result-header">
-<span>
-                RESULT
-            </span>
-<strong id="workResultValue">
-                ...
-            </strong>
-</div>
-<!-- Solution -->
-<div class="solution-box">
-<h4>
-                Step-by-Step Solution
-            </h4>
-<div class="solution-step">
-<span>
-                    Step 1: Formula
-                </span>
-<p id="workStep1">
-                    W = P × ΔV
-                </p>
-</div>
-<div class="solution-step">
-<span>
-                    Step 2: Substitute
-                </span>
-<p id="workStep2">
-                    ...
-                </p>
-</div>
-<div class="solution-step">
-<span>
-                    Step 3: Calculate
-                </span>
-<p id="workStep3">
-                    ...
-                </p>
-</div>
-<div class="final-answer">
-<span>
-                    Final Answer
-                </span>
-<strong id="workFinalAnswer">
-                    ...
-                </strong>
-</div>
-</div>
-</div>
-</div>
+<section class="content-section calculation-section" id="calculation" data-tpx-no-translate>
+<div class="section-heading"><p class="section-label" data-tool-en="CALCULATE" data-tool-id="HITUNG">CALCULATE</p><h2 data-tool-en="Calculator Lab" data-tool-id="Laboratorium Kalkulator">Calculator Lab</h2><p data-tool-en="Choose a dedicated calculator and work with clearly stated formulas, units, and assumptions." data-tool-id="Pilih kalkulator khusus dengan rumus, satuan, dan asumsi yang jelas.">Choose a dedicated calculator and work with clearly stated formulas, units, and assumptions.</p></div>
+<article class="tool-preview-card" data-tool="calculator"><div class="tool-preview-visual" aria-hidden="true"><span class="tool-preview-symbol">∑</span><span class="tool-preview-count">07</span></div><div class="tool-preview-content"><p class="calculator-label" data-tool-en="SEVEN CONNECTED TOOLS" data-tool-id="TUJUH ALAT TERHUBUNG">SEVEN CONNECTED TOOLS</p><h3 data-tool-en="All your calculations, in one lab." data-tool-id="Seluruh perhitungan dalam satu laboratorium.">All your calculations, in one lab.</h3><p data-tool-en="Explore the four thermodynamic laws, heat, work, and ideal-gas processes. Open the lab to choose your calculator." data-tool-id="Jelajahi empat hukum termodinamika, kalor, usaha, dan proses gas ideal. Buka laboratorium untuk memilih kalkulator.">Explore the four thermodynamic laws, heat, work, and ideal-gas processes. Open the lab to choose your calculator.</p><div class="tool-preview-tags"><span data-tool-en="Laws 0–III" data-tool-id="Hukum 0–III">Laws 0–III</span><span data-tool-en="Heat &amp; work" data-tool-id="Kalor &amp; usaha">Heat &amp; work</span><span data-tool-en="Gas processes" data-tool-id="Proses gas">Gas processes</span></div><a class="primary-button" href="calculators.html" data-tool-en="OPEN CALCULATOR" data-tool-id="BUKA KALKULATOR">OPEN CALCULATOR</a></div></article>
 </section>
 <!-- ==============================
      SIMULATOR PREVIEW
@@ -512,104 +282,9 @@
 <!-- ==============================
      UNIT CONVERTER
 ============================== -->
-<section class="content-section converter-section" id="converter">
-<div class="section-heading">
-<p class="section-label">
-            EXPLORE
-        </p>
-<h2>
-            Unit Converter
-        </h2>
-<p>
-            Convert common thermodynamic units quickly and easily.
-        </p>
-</div>
-<!-- ==============================
-         CONVERTER GRID
-    =============================== -->
-<div class="converter-preview">
-<!-- Temperature Converter -->
-<div class="converter-item converter-tool">
-<div class="converter-item-header">
-<span>Temperature</span>
-<strong id="temperatureDirection">°C → K</strong>
-</div>
-<div class="converter-select-area">
-<div class="converter-select-group">
-<label for="temperatureFromUnit">From</label>
-<select class="converter-unit-select" id="temperatureFromUnit" aria-label="Temperature from unit"><option value="C" selected>Celsius (°C)</option><option value="F">Fahrenheit (°F)</option><option value="K">Kelvin (K)</option><option value="Re">Réaumur (°Ré)</option><option value="R">Rankine (°R)</option><option value="De">Delisle (°De)</option><option value="N">Newton (°N)</option><option value="Ro">Rømer (°Rø)</option></select>
-</div>
-<button aria-label="Reverse temperature conversion" class="converter-swap" id="temperatureSwapButton" type="button">⇄</button>
-<div class="converter-select-group">
-<label for="temperatureToUnit">To</label>
-<select class="converter-unit-select" id="temperatureToUnit" aria-label="Temperature to unit"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option><option value="K" selected>Kelvin (K)</option><option value="Re">Réaumur (°Ré)</option><option value="R">Rankine (°R)</option><option value="De">Delisle (°De)</option><option value="N">Newton (°N)</option><option value="Ro">Rømer (°Rø)</option></select>
-</div>
-</div>
-<div class="converter-input">
-<label for="temperatureValue">Value</label>
-<input id="temperatureValue" placeholder="Enter temperature" step="any" type="number"/>
-</div>
-<button class="converter-button" id="convertTemperatureButton" type="button">CONVERT</button>
-<div class="converter-result" id="temperatureConversionResult">
-<span>Result</span>
-<strong id="temperatureConversionValue" role="status" aria-live="polite">...</strong>
-</div>
-</div>
-<!-- Pressure Converter -->
-<div class="converter-item converter-tool">
-<div class="converter-item-header">
-<span>Pressure</span>
-<strong id="pressureDirection">atm → Pa</strong>
-</div>
-<div class="converter-select-area">
-<div class="converter-select-group">
-<label>From</label>
-<div class="converter-unit-display" id="pressureFromDisplay">Atmosphere (atm)</div>
-</div>
-<button aria-label="Reverse pressure conversion" class="converter-swap" id="pressureSwapButton" type="button">⇄</button>
-<div class="converter-select-group">
-<label>To</label>
-<div class="converter-unit-display" id="pressureToDisplay">Pascal (Pa)</div>
-</div>
-</div>
-<div class="converter-input">
-<label for="pressureConverterValue">Value</label>
-<input id="pressureConverterValue" placeholder="Enter pressure" step="any" type="number"/>
-</div>
-<button class="converter-button" id="convertPressureButton" type="button">CONVERT</button>
-<div class="converter-result" id="pressureConversionResult">
-<span>Result</span>
-<strong id="pressureConversionValue">...</strong>
-</div>
-</div>
-<!-- Volume Converter -->
-<div class="converter-item converter-tool">
-<div class="converter-item-header">
-<span>Volume</span>
-<strong id="volumeDirection">L → m³</strong>
-</div>
-<div class="converter-select-area">
-<div class="converter-select-group">
-<label>From</label>
-<div class="converter-unit-display" id="volumeFromDisplay">Liter (L)</div>
-</div>
-<button aria-label="Reverse volume conversion" class="converter-swap" id="volumeSwapButton" type="button">⇄</button>
-<div class="converter-select-group">
-<label>To</label>
-<div class="converter-unit-display" id="volumeToDisplay">Cubic Meter (m³)</div>
-</div>
-</div>
-<div class="converter-input">
-<label for="volumeConverterValue">Value</label>
-<input id="volumeConverterValue" placeholder="Enter volume" step="any" type="number"/>
-</div>
-<button class="converter-button" id="convertVolumeButton" type="button">CONVERT</button>
-<div class="converter-result" id="volumeConversionResult">
-<span>Result</span>
-<strong id="volumeConversionValue">...</strong>
-</div>
-</div>
-</div>
+<section class="content-section converter-section" id="converter" data-tpx-no-translate>
+<div class="section-heading"><p class="section-label" data-tool-en="CONVERT" data-tool-id="KONVERSI">CONVERT</p><h2 data-tool-en="Unit Converter" data-tool-id="Konverter Satuan">Unit Converter</h2><p data-tool-en="Nine categories of units for experiments, calculations, and everyday comparisons." data-tool-id="Sembilan kategori satuan untuk eksperimen, perhitungan, dan perbandingan sehari-hari.">Nine categories of units for experiments, calculations, and everyday comparisons.</p></div>
+<article class="tool-preview-card" data-tool="converter"><div class="tool-preview-visual" aria-hidden="true"><span class="tool-preview-symbol">⇄</span><span class="tool-preview-count">09</span></div><div class="tool-preview-content"><p class="calculator-label" data-tool-en="NINE CONVERSION MODULES" data-tool-id="SEMBILAN MODUL KONVERSI">NINE CONVERSION MODULES</p><h3 data-tool-en="More than temperature." data-tool-id="Lebih dari sekadar suhu.">More than temperature.</h3><p data-tool-en="Convert temperature, pressure, volume, energy, power, mass, length, area, and time. Choose both units and swap the direction with one click." data-tool-id="Konversi suhu, tekanan, volume, energi, daya, massa, panjang, luas, dan waktu. Pilih kedua satuan dan tukar arah dalam satu klik.">Convert temperature, pressure, volume, energy, power, mass, length, area, and time. Choose both units and swap the direction with one click.</p><div class="tool-preview-tags"><span data-tool-en="Pressure &amp; volume" data-tool-id="Tekanan &amp; volume">Pressure &amp; volume</span><span data-tool-en="Energy &amp; power" data-tool-id="Energi &amp; daya">Energy &amp; power</span><span data-tool-en="Mass, length &amp; more" data-tool-id="Massa, panjang &amp; lainnya">Mass, length &amp; more</span></div><a class="primary-button" href="unit-converter.html" data-tool-en="OPEN UNIT CONVERTER" data-tool-id="BUKA KONVERTER SATUAN">OPEN UNIT CONVERTER</a></div></article>
 </section>
 <!-- ==============================
              QUIZ
@@ -718,6 +393,6 @@
 </main>
 <!-- JavaScript -->
 <script src="js/script.js"></script>
-<script src="js/temperature-converter.js"></script>
+<script defer src="js/tool-preview.js"></script>
 </body>
 </html>
