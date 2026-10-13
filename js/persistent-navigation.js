@@ -8,7 +8,11 @@
     let route=location.pathname.startsWith(base.pathname)?location.pathname.slice(base.pathname.length):"index.html";
     if(!route||route.endsWith("/"))route+="index.html";
     if(location.pathname===app.pathname)return;
-    app.searchParams.set("page",route+location.search+location.hash);
+    // Recovery credentials stay in a fragment, which the browser does not send
+    // to the HTTP server. Ordinary anchors remain part of the content route.
+    const authFragment = /(?:^#|&)(?:access_token|refresh_token|error_description)=/.test(location.hash);
+    app.searchParams.set("page",route+location.search+(authFragment?"":location.hash));
+    if(authFragment)app.hash=location.hash;
     location.replace(app.href);
     return;
   }

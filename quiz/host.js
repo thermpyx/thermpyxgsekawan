@@ -8,6 +8,16 @@ const hostStatus = document.getElementById("hostStatus");
 const hostText = (en, id) => window.TPX?.getLanguage() === "id" ? id : en;
 let ownedSets = new Map(), creating = false, loadingSets = false, authRevision = 0;
 function status(en, id) { if (hostStatus) hostStatus.textContent = hostText(en, id || en); }
+const questionCountLabel = count => hostText(count === 1 ? "question" : "questions", "soal");
+function localizeSavedSets() {
+  if (!setSelect) return;
+  for (const option of setSelect.options) {
+    const item = ownedSets.get(String(option.value));
+    if (item) option.textContent = `${item.title} · ${item.questions.length} ${questionCountLabel(item.questions.length)}`;
+  }
+  window.ThermpyxSelect?.refresh(setSelect);
+}
+window.addEventListener("thermpyx:languagechange", localizeSavedSets);
 function showSource() {
   const custom = sourceSelect?.value === "custom";
   document.getElementById("builtinQuestions").hidden = custom;
@@ -36,7 +46,7 @@ async function loadQuestionSets() {
     for (const item of result.data || []) {
       ownedSets.set(String(item.id), item);
       const option = document.createElement("option"); option.value = item.id;
-      option.textContent = `${item.title} · ${item.questions.length} ${hostText("questions", "soal")}`;
+      option.textContent = `${item.title} · ${item.questions.length} ${questionCountLabel(item.questions.length)}`;
       option.setAttribute("data-tpx-no-translate", ""); setSelect.append(option);
     }
     if (ownedSets.has(previous)) setSelect.value = previous;

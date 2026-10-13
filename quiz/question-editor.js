@@ -36,6 +36,14 @@
     return element;
   }
 
+  function protectUserText(element, active = true) {
+    element.toggleAttribute('data-tpx-no-translate', active);
+    element.toggleAttribute('data-tpx-user-content', active);
+    return element;
+  }
+
+  const tr = (en, id) => window.TPX?.t ? window.TPX.t(en, id) : en;
+
   function newId() {
     return window.crypto && window.crypto.randomUUID
       ? window.crypto.randomUUID()
@@ -132,6 +140,7 @@
           : draft.cloudId
             ? 'Perubahan tersimpan di perangkat ini. Simpan ke cloud untuk memperbarui versi yang di-host.'
             : 'Perubahan tersimpan otomatis di browser ini; belum tersimpan di cloud.';
+    protectUserText(ui.heading, !!draft.title.trim());
     ui.heading.textContent = draft.title.trim() || 'Set soal baru';
     ui.questionCount.textContent = draft.questions.length + ' / ' + MAX_QUESTIONS;
     updateControls();
@@ -141,14 +150,18 @@
     ui.fields.disabled = busy;
     ui.create.disabled = busy;
     ui.refresh.disabled = busy || cloudLoading || !currentSession || !content;
-    ui.publish.disabled = busy || !currentSession || !content;
+    ui.publish.disabled = busy || !content;
+    // Let signed-out users open account access without validating an unfinished draft.
+    ui.publish.formNoValidate = !currentSession;
     ui.check.disabled = busy;
     ui.add.disabled = busy || active().questions.length >= MAX_QUESTIONS;
-    ui.publish.textContent = busy ? 'Sedang memproses…' : 'Simpan ke cloud';
+    ui.publish.textContent = busy ? 'Sedang memproses…' : currentSession ? 'Simpan ke cloud' : tr('Sign in to save', 'Masuk untuk menyimpan');
     document.querySelectorAll('.qe-set-open, .qe-set-delete').forEach(button => { button.disabled = busy; });
   }
 
-  function publishStatus(message, style) {
+  function publishStatus(message, style, copy) {
+    if (copy) { ui.status.dataset.en = copy.en; ui.status.dataset.id = copy.id; }
+    else { delete ui.status.dataset.en; delete ui.status.dataset.id; }
     ui.status.textContent = message;
     ui.status.className = 'qe-publish-status' + (style ? ' is-' + style : '');
   }
@@ -179,7 +192,9 @@
     const card = node('div', 'qe-set-card' + (selected ? ' is-active' : ''));
     const openButton = node('button', 'qe-set-open');
     openButton.type = 'button';
-    openButton.append(node('strong', '', title || 'Set soal tanpa nama'), node('small', '', caption));
+    const name = node('strong', '', title || 'Set soal tanpa nama');
+    if (title) protectUserText(name);
+    openButton.append(name, node('small', '', caption));
     openButton.addEventListener('click', open);
     if (selected) openButton.setAttribute('aria-current', 'true');
     const deleteButton = node('button', 'qe-icon-button qe-delete qe-set-delete', '×');
@@ -393,6 +408,7 @@
   }
 
   function errorMessage(error) {
+    if (content?.errorMessage) return content.errorMessage(error);
     return error && typeof error.message === 'string' ? error.message : 'Permintaan tidak berhasil. Coba lagi setelah memeriksa koneksi dan konfigurasi Supabase.';
   }
 
@@ -440,11 +456,15 @@
 
   async function saveCloud(event) {
     event.preventDefault();
-    if (busy || !validate()) return;
+    if (busy) return;
     if (!currentSession || !content) {
       publishStatus('Login terlebih dahulu untuk menyimpan ke cloud.', 'error');
+      const authPanel = document.querySelector('[data-content-auth]');
+      content?.mountAuth(authPanel)?.showSignIn?.();
+      authPanel?.scrollIntoView({ behavior: 'auto', block: 'center' });
       return;
     }
+    if (!validate()) return;
     const draft = active();
     const userId = currentSession.user.id;
     const data = payload(draft);
@@ -461,10 +481,18 @@
       draft.cloudOwner = typeof saved.owner_id === 'string' ? saved.owner_id : userId;
       draft.savedFingerprint = fingerprint(draft);
       persist();
-      publishStatus('Set soal berhasil disimpan ke cloud. Pilih set ini pada halaman Host Kuis.', 'success');
+      const savedCopy = localWriteFailed ? {
+        en: 'Questions saved to your THERMPYX account. Browser storage is unavailable, so a device copy was not saved.',
+        id: 'Soal tersimpan di akun THERMPYX. Penyimpanan browser tidak tersedia, jadi salinan perangkat belum tersimpan.'
+      } : { en: 'The question set was saved to the cloud. Select it on the Host Quiz page.', id: 'Set soal berhasil disimpan ke cloud. Pilih set ini pada halaman Host Kuis.' };
+      publishStatus(tr(savedCopy.en, savedCopy.id), 'success', savedCopy);
       await loadCloudSets();
     } catch (error) {
-      publishStatus(errorMessage(error) + ' Draf lokal tetap tersimpan.', 'error');
+      const suffix = localWriteFailed
+        ? { en: ' Your draft remains on this page and has not been saved; keep it open and try again.', id: ' Draf masih ada di halaman ini dan belum tersimpan; jangan tutup halaman dan coba lagi.' }
+        : { en: ' Your local draft is still saved.', id: ' Draf lokal tetap tersimpan.' };
+      const copy = { en: (error.messageEn || errorMessage(error)) + suffix.en, id: (error.messageId || errorMessage(error)) + suffix.id };
+      publishStatus(tr(copy.en, copy.id), 'error', copy);
     } finally {
       busy = false;
       updateControls();

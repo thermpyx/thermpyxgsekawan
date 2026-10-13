@@ -13,3 +13,20 @@
 .tpx-learning-mark{display:inline-grid;place-items:center;color:#52d5d5}.tpx-learning-mark svg{width:1.05em;height:1.05em;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .quiz-icon .tpx-learning-mark{font-size:52px}.quiz-mode-icon .tpx-learning-mark{font-size:35px}.tpx-learning-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.tpx-learning-links a{display:inline-flex;align-items:center;gap:9px;padding:11px 16px;border:1px solid var(--border,#2b4857);border-radius:10px;color:var(--text-primary,#def4fa);text-decoration:none;font:600 12px Oxanium,sans-serif;background:var(--bg-card,#112331)}.tpx-learning-links a:hover{border-color:#46cdd3;color:#46cdd3}
 @media(max-width:540px){.tpx-auth-form{grid-template-columns:1fr}.tpx-auth-summary{align-items:flex-start}.tpx-learning-links a{flex:1;justify-content:center}}
+
+/* Shared sign-in, email verification and account recovery. */
+.tpx-content-auth [hidden]{display:none!important}
+.tpx-auth-modes{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tpx-auth-modes button[aria-pressed="true"]{background:rgba(66,209,210,.13);border-color:#40cdd1;color:var(--text-primary,#e7fbff)}
+.tpx-auth-verify,.tpx-auth-reset,.tpx-auth-recovery{display:grid;gap:12px;max-width:620px}
+.tpx-auth-verify h3,.tpx-auth-reset h3,.tpx-auth-recovery h3{font:600 18px Oxanium,sans-serif;margin:0;color:var(--text-primary,#e6f5fb)}
+.tpx-auth-verify p,.tpx-auth-reset p,.tpx-auth-password-note{font-size:13px;line-height:1.65;margin:0;color:var(--text-secondary,#a9c2cd)}
+.tpx-auth-verify label,.tpx-auth-reset label,.tpx-auth-recovery label{display:grid;gap:7px;font-size:13px}
+.tpx-auth-verify input,.tpx-auth-reset input,.tpx-auth-recovery input{box-sizing:border-box;min-width:0;width:100%;border:1px solid var(--border,#335260);border-radius:9px;background:var(--bg-primary,#0b1620);color:var(--text-primary,#ecf8ff);padding:12px;font:15px "IBM Plex Sans",sans-serif}
+.tpx-auth-verify input[name=token]{max-width:280px;letter-spacing:.2em;font-size:21px;font-variant-numeric:tabular-nums}
+.tpx-auth-verify-address{overflow-wrap:anywhere}
+.tpx-auth-password-note{grid-column:1/-1}
+.tpx-auth-confirm{grid-column:1/-1}
+.tpx-auth-guide{display:inline-block;margin-top:10px}
+.tpx-auth-message{overflow-wrap:anywhere}
+.tpx-auth-actions button{min-height:42px}

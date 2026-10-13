@@ -17,7 +17,7 @@ joinRoomBtn.addEventListener("click", async () => {
         return;
     }
 
-    if (roomCode.length !== 6) {
+    if (!/^\d{6}$/.test(roomCode)) {
         alert("Room code must contain 6 digits.");
         return;
     }
@@ -65,8 +65,6 @@ joinRoomBtn.addEventListener("click", async () => {
 
         return;
     }
-
-    console.log("Player joined:", player);
 
     // Simpan sementara agar halaman berikutnya tahu siapa pemainnya
     sessionStorage.setItem("roomId", room.id);

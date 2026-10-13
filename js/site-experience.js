@@ -1,49 +1,110 @@
 /* THERMPYX | Private activity journal and persistent music controls */
 (() => {
 "use strict";
-const KEY="thermpyx-activity-v1", MIGRATION="thermpyx-activity-migrated-v1";
+const KEY="thermpyx-activity-v1", MIGRATION="thermpyx-activity-migrated-v1", POLICY="thermpyx-activity-policy-v2";
+const LIMIT=50, MAX_STORED_CHARS=256000, MAX_SCAN=500, DUPLICATE_MS=60000;
 const tr=(en,id)=>window.TPX?.getLanguage()==="id"?id:en;
 let embeddedShell;
 try{if(window.parent!==window&&window.parent?.TPXPersistentShell?.owns(window))embeddedShell=window.parent.TPXPersistentShell;}catch(_){}
-const safe=(v,len=180)=>String(v??"").replace(/[\x00-\x1f]/g," ").trim().slice(0,len);
-const TYPES=new Set(["theory","simulator","video","calculation","quiz","navigation"]);
-const load=()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x:[];}catch(_){return [];}};
-const save=items=>{try{localStorage.setItem(KEY,JSON.stringify(items.slice(0,120)));}catch(_){}};
+const safe=(value,length=180)=>(typeof value==="string"||typeof value==="number"?String(value):"").replace(/[\x00-\x1f]/g," ").replace(/\s+/g," ").trim().slice(0,length);
+const TYPES=new Set(["calculation","quiz","simulator","flashcard"]);
+const NOISE=new Set(["page opened","halaman dibuka","opened from navigation","dibuka lewat navigasi","experiment control adjusted","kontrol eksperimen diubah","control changed"]);
+const SIMULATOR_CONTROLS=new Set(["start","start simulation","start simulator","start experiment","mulai","mulai simulasi","mulai eksperimen","pause","pause simulation","paused","jeda","reset","reset simulation","reset simulator","reset experiment","ulang","atur ulang","reset simulasi","reset eksperimen","resume","continue","continue simulation","lanjutkan"]);
+function meaningful(kind,detail){
+ const label=detail.toLowerCase().replace(/^[▶⏸↻]\uFE0F?\s*/,"");
+ return TYPES.has(kind)&&!NOISE.has(detail.toLowerCase())&&!!detail&&!(kind==="simulator"&&SIMULATOR_CONTROLS.has(label));
+}
+function translations(metadata){
+ if(!metadata||typeof metadata!=="object"||Array.isArray(metadata))return null;
+ const result={};
+ for(const field of ["title","detail"]){
+  const en=safe(metadata[field+"En"],field==="title"?180:500),id=safe(metadata[field+"Id"],field==="title"?180:500);
+  if(en&&id){result[field+"En"]=en;result[field+"Id"]=id;}
+ }
+ return Object.keys(result).length?result:null;
+}
+function normalise(row){
+ if(!row||typeof row!=="object"||Array.isArray(row))return null;
+ const kind=row.kind,title=safe(row.title),detail=safe(row.detail,500),date=safe(row.date,65);
+ if(!title||!meaningful(kind,detail)||!Number.isFinite(Date.parse(date)))return null;
+ const entry={kind,title,detail,date,url:safe(row.url,700)};
+ if(row.legacyTime)entry.legacyTime=safe(row.legacyTime,65);
+ const i18n=translations(row.i18n);if(i18n)entry.i18n=i18n;
+ return entry;
+}
+function parseStored(raw){
+ if(raw===null||raw===undefined||raw==="")return {items:[],valid:true,changed:false};
+ if(typeof raw!=="string"||raw.length>MAX_STORED_CHARS)return {items:[],valid:false,changed:false};
+ try{
+  const rows=JSON.parse(raw);if(!Array.isArray(rows))return {items:[],valid:false,changed:false};
+  const items=[];
+  for(const row of rows.slice(0,MAX_SCAN)){const entry=normalise(row);if(entry)items.push(entry);if(items.length===LIMIT)break;}
+  return {items,valid:true,changed:JSON.stringify(items)!==raw};
+ }catch(_){return {items:[],valid:false,changed:false};}
+}
+function readStored(){try{return parseStored(localStorage.getItem(KEY));}catch(_){return {items:[],valid:false,changed:false};}}
+function owner(){try{const api=embeddedShell&&window.parent.TPXHistory;return api&&api!==window.TPXHistory?api:null;}catch(_){return null;}}
+let cached=[],revision=0,visible=false,lastRender="";
+function list(){return owner()?.list()||cached.map(entry=>({...entry,...(entry.i18n?{i18n:{...entry.i18n}}:{})}));}
+function notifyChild(){
+ // The shell and its content share one cached journal. This event affects only
+ // history rendering; it never touches the persistent media instances.
+ try{for(let i=0;i<window.frames.length;i++){const child=window.frames[i];if(child.location.origin===location.origin)child.dispatchEvent(new child.Event("thermpyx:historychange"));}}catch(_){}
+}
+function save(items){
+ cached=items.slice(0,LIMIT);revision++;
+ try{localStorage.setItem(KEY,JSON.stringify(cached));}catch(_){}
+ render();notifyChild();
+}
 function migrate(){
- try {
-  if(localStorage.getItem(MIGRATION))return;
-  const old=JSON.parse(localStorage.getItem("thermpyx-history")||"[]");
-  if(Array.isArray(old)&&old.length){
-   const events=old.map(o=>({kind:"calculation",title:safe(o.type||"Previous calculation"),
-    detail:safe([o.formula,o.result].filter(Boolean).join(" | ")),date:new Date().toISOString(),legacyTime:safe(o.time,65),url:""}));
-   save([...load(),...events].slice(0,120));
+ if(owner())return;
+ const stored=readStored();cached=stored.items;
+ try{
+  if(stored.valid&&!localStorage.getItem(POLICY)){
+   if(stored.changed)save(cached);
+   localStorage.setItem(POLICY,"1");
   }
+  if(localStorage.getItem(MIGRATION))return;
+  const raw=localStorage.getItem("thermpyx-history");
+  if(raw&&raw.length>MAX_STORED_CHARS)return;
+  const old=raw?JSON.parse(raw):[];if(!Array.isArray(old))return;
+  const events=[];
+  for(const row of old.slice(0,MAX_SCAN)){
+   if(!row||typeof row!=="object"||Array.isArray(row))continue;
+   const detail=safe([safe(row.formula,250),safe(row.result,250)].filter(Boolean).join(" | "),500);
+   if(!detail)continue;
+   events.push({kind:"calculation",title:safe(row.type)||"Previous calculation",detail,date:new Date().toISOString(),legacyTime:safe(row.time,65),url:""});
+   if(events.length===LIMIT)break;
+  }
+  if(events.length)save([...cached,...events]);
   localStorage.setItem(MIGRATION,"1");
  }catch(_){}
 }
-function log(kind,title,detail="",url=""){
- try {
-  kind=TYPES.has(kind)?kind:"navigation";
-  const list=load(),entry={kind,title:safe(title),detail:safe(detail),date:new Date().toISOString(),url:safe(url,700)};
-  if(list[0]&&list[0].kind===entry.kind&&list[0].title===entry.title&&list[0].detail===entry.detail
-       &&Date.now()-Date.parse(list[0].date)<18000)return;
-  list.unshift(entry);save(list);render();
+function log(kind,title,detail="",url="",metadata){
+ try{
+  const i18n=translations(metadata);
+  title=i18n?.titleEn||safe(title);detail=i18n?.detailEn||safe(detail,500);url=safe(url,700);
+  if(!title||!meaningful(kind,detail))return;
+  const shared=owner();if(shared){shared.log(kind,title,detail,url,i18n);return;}
+  const now=Date.now();
+  if(cached.some(entry=>entry.kind===kind&&entry.title===title&&entry.detail===detail&&entry.url===url&&now-Date.parse(entry.date)>=0&&now-Date.parse(entry.date)<DUPLICATE_MS))return;
+  const entry={kind,title,detail,date:new Date(now).toISOString(),url};if(i18n)entry.i18n=i18n;
+  save([entry,...cached]);
  }catch(_){}
 }
-const icons={theory:"▣",simulator:"◉",video:"▷",calculation:"∑",quiz:"✓",navigation:"◇"};
-const labels={theory:["Theory","Teori"],simulator:["Simulator","Simulator"],video:["Video learning","Video pembelajaran"],
- calculation:["Calculation","Perhitungan"],quiz:["Quiz","Kuis"],navigation:["Explore","Jelajah"]};
+const icons={calculation:"∑",quiz:"✓",simulator:"◉",flashcard:"▤"};
+const labels={calculation:["Calculation","Perhitungan"],quiz:["Quiz result","Hasil kuis"],simulator:["Experiment result","Hasil eksperimen"],flashcard:["Flashcards","Kartu Belajar"]};
 function render(){
- const listNode=document.getElementById("historyList");
- if(!listNode)return;
- const lang=window.TPX?.getLanguage()==="id"?1:0;
- const filter=document.getElementById("historyFilter")?.value||"all";
- const entries=load().filter(e=>filter==="all"||e.kind===filter);
+ const listNode=document.getElementById("historyList");if(!listNode||!visible)return;
+ const lang=window.TPX?.getLanguage()==="id"?1:0,filter=document.getElementById("historyFilter")?.value||"all";
+ const signature=revision+"/"+lang+"/"+filter;
+ if(lastRender===signature)return;lastRender=signature;
+ const entries=list().filter(entry=>filter==="all"||entry.kind===filter);
  listNode.replaceChildren();
  if(!entries.length){
   const empty=document.createElement("div");empty.className="history-empty";
-  const title=document.createElement("h3");title.textContent=lang?"Belum ada aktivitas":"No activity yet";
-  const copy=document.createElement("p");copy.textContent=lang?"Buka Teori, Simulator, Kuis, Video, atau Kalkulator. Riwayat tersimpan di browser ini.":"Visit Theory, Simulator, Quiz, Video or Calculators. History stays in this browser.";
+  const title=document.createElement("h3");title.textContent=lang?"Belum ada hasil belajar":"No learning results yet";
+  const copy=document.createElement("p");copy.textContent=lang?"Hasil perhitungan, kuis, eksperimen, dan sesi kartu belajar yang selesai disimpan di sini. Maksimal 50 hasil terbaru tersimpan di browser ini.":"Completed calculations, quizzes, experiments and flashcard sessions appear here. This browser keeps your latest 50 results.";
   empty.append(title,copy);listNode.append(empty);return;
  }
  const fragment=document.createDocumentFragment();
@@ -51,18 +112,19 @@ function render(){
   const el=document.createElement("article");el.className="history-item tpx-activity";
   const row=document.createElement("div");row.className="history-item-header";
   const tag=document.createElement("span");tag.className="history-item-type";
-  tag.textContent=(icons[entry.kind]||"◇")+" "+(labels[entry.kind]?.[lang]||entry.kind);
+  tag.textContent=icons[entry.kind]+" "+labels[entry.kind][lang];
   const time=document.createElement("time");time.className="history-item-time";
-  const d=new Date(entry.date);time.textContent=entry.legacyTime||(!isNaN(d)?d.toLocaleString(lang?"id-ID":"en-US",{dateStyle:"medium",timeStyle:"short"}):"");
+  const date=new Date(entry.date);time.dateTime=entry.date;
+  time.textContent=entry.legacyTime||date.toLocaleString(lang?"id-ID":"en-US",{dateStyle:"medium",timeStyle:"short"});
   row.append(tag,time);
-  const heading=document.createElement("h3");heading.textContent=entry.title||entry.kind;
+  const heading=document.createElement("h3");heading.textContent=entry.i18n?.[lang?"titleId":"titleEn"]||entry.title;heading.dataset.tpxNoTranslate="";
   el.append(row,heading);
-  if(entry.detail){const detail=document.createElement("p");detail.textContent=entry.detail;el.append(detail);}
+  if(entry.detail){const detail=document.createElement("p");detail.textContent=entry.i18n?.[lang?"detailId":"detailEn"]||entry.detail;detail.dataset.tpxNoTranslate="";el.append(detail);}
   if(entry.url){
    try{const target=new URL(entry.url,location.href);
-    if(target.origin===location.origin && /^https?:$/.test(target.protocol)){
-      const a=document.createElement("a");a.className="tpx-activity-link";a.href=target.href;
-      a.textContent=lang?"Buka kembali ↗":"Reopen ↗";el.append(a);
+    if(target.origin===location.origin&&/^https?:$/.test(target.protocol)){
+     const link=document.createElement("a");link.className="tpx-activity-link";link.href=target.href;
+     link.textContent=lang?"Buka kembali ↗":"Reopen ↗";el.append(link);
     }
    }catch(_){}
   }
@@ -70,59 +132,28 @@ function render(){
  });
  listNode.append(fragment);
 }
-window.TPXHistory={log,list:load,render,clear:()=>{save([]);render();}};
+function clear(){const shared=owner();if(shared)shared.clear();else save([]);}
+window.TPXHistory={log,list,render,clear};
 migrate();
+window.addEventListener("storage",event=>{
+ if(event.key!==KEY&&event.key!==null)return;
+ if(!owner()){cached=event.key===null?[]:parseStored(event.newValue).items;notifyChild();}
+ revision++;render();
+});
+window.addEventListener("thermpyx:historychange",()=>{revision++;render();});
 document.addEventListener("DOMContentLoaded",()=>{
- const pathname=location.pathname;
- const h1=document.querySelector("main h1, .hero h1, h1");
- const heading=safe(h1?.textContent?.replace(/\s+/g," ")||document.title,100);
- let kind=null;
- if(/\/theory\//.test(pathname))kind="theory";
- else if(/\/simulator\//.test(pathname)&&!/\/simulator\/index\.html$/.test(pathname))kind="simulator";
- else if(/\/quiz\//.test(pathname))kind="quiz";
- else if(/calculators\.html$/.test(pathname))kind="calculation";
- if(kind)log(kind,heading,tr("Page opened","Halaman dibuka"),location.href);
- const filter=document.getElementById("historyFilter");filter?.addEventListener("change",render);
+ const listNode=document.getElementById("historyList");if(!listNode)return;
+ if(typeof IntersectionObserver==="function"){
+  const observer=new IntersectionObserver(entries=>{visible=entries.some(entry=>entry.isIntersecting);if(visible)render();},{rootMargin:"160px"});observer.observe(listNode);
+ }else{visible=true;render();}
+ document.getElementById("historyFilter")?.addEventListener("change",render);
  document.getElementById("clearHistoryButton")?.addEventListener("click",()=>{
-  const msg=tr("Clear all local learning history on this browser?","Hapus semua riwayat belajar lokal di browser ini?");
-  if(confirm(msg)){save([]);try{localStorage.removeItem("thermpyx-history");}catch(_){}render();}
+  if(confirm(tr("Clear saved learning results from this browser?","Hapus hasil belajar yang tersimpan di browser ini?"))){clear();try{localStorage.removeItem("thermpyx-history");}catch(_){}}
  });
- render();
 });
 window.addEventListener("thermpyx:languagechange",render);
-document.addEventListener("click",e=>{
- const video=e.target.closest(".tpx-vl-play");
- if(video){
-   const box=video.closest("[data-video-title]");
-   log("video",box?.dataset.videoTitle||tr("Visual Learning","Video pembelajaran"),"YouTube video",location.href);
-   stopAudio();return;
- }
- const link=e.target.closest("a[href]");
- if(link){
-  try{
-   const u=new URL(link.href,location.href);
-   if(u.origin!==location.origin)return;
-   let kind=null;
-   if(u.pathname.includes("/theory/"))kind="theory";
-   else if(u.pathname.includes("/simulator/"))kind="simulator";
-   else if(u.pathname.includes("/quiz/"))kind="quiz";
-   else if(u.pathname.endsWith("/calculators.html"))kind="calculation";
-   if(kind)log(kind,safe(link.textContent.replace(/\s+/g," "),100),tr("Opened from navigation","Dibuka lewat navigasi"),u.href);
-  }catch(_){}
- }
- if(location.pathname.includes("/simulator/")){
-  const b=e.target.closest("button");
-  if(b&&/start|reset|pause|calculate|compute/i.test(b.id||"")){
-   log("simulator",headingForCurrent(),safe(b.textContent),location.href);
-  }
- }
-},true);
-function headingForCurrent(){return safe(document.querySelector("main h1, h1")?.textContent||document.title,90);}
-document.addEventListener("change",e=>{
- if(location.pathname.includes("/simulator/")&&e.target.matches('input[type="range"],select')){
-   log("simulator",headingForCurrent(),tr("Experiment control adjusted","Kontrol eksperimen diubah"),location.href);
- }
-},true);
+// Learning videos may pause background music, but viewing them is not a result.
+document.addEventListener("click",event=>{if(event.target.closest?.(".tpx-vl-play"))stopAudio();},true);
 
 /* The audio/video instances live outside the settings panel. Closing it never
    pauses playback. A user gesture starts the selected source; no autoplay on load. */

@@ -5,78 +5,207 @@
   const mode = () => { try { return localStorage.getItem(KEY) === "id" ? "id" : "en"; } catch(e) { return "en"; } };
   let language = mode();
   document.documentElement.lang = language;
+  // Authored translations only: user content is never sent to a service or guessed.
   const pairs = window.TPX_TRANSLATIONS || {};
-  const enId = pairs.enId || {};
-  const idEn = pairs.idEn || {};
-  const memo = new WeakMap();
-  let observer, handling = false;
-  function originalTranslation(value, lang = language) {
-    const full = String(value);
-    const clean = full.trim().replace(/\s+/g, " ");
-    if (!clean) return full;
-    let result = lang === "id" ? enId[clean] : idEn[clean];
-    if (result === undefined && lang === "id") {
-      let m;
-      if ((m=clean.match(/^Question (\d+) of (\d+)$/))) result=`Soal ${m[1]} dari ${m[2]}`;
-      else if ((m=clean.match(/^Score: (\d+)$/))) result=`Skor: ${m[1]}`;
-      else if ((m=clean.match(/^Correct! (.+)$/))) result="Benar! "+(enId[m[1]]||m[1]);
-      else if ((m=clean.match(/^Incorrect\. (.+)$/))) result="Salah. "+(enId[m[1]]||m[1]);
-      else if ((m=clean.match(/^Temperature:\s*(.+)$/))) result="Temperatur: "+m[1];
-      else if ((m=clean.match(/^Heat:\s*(.+)$/))) result="Kalor: "+m[1];
+  const normalize = value => String(value).replace(/[\u200b\u00ad]/g, "").trim().replace(/\s+/g, " ");
+  const enId = Object.create(null), idEn = Object.create(null);
+  for (const [key, value] of Object.entries(pairs.enId || {})) enId[normalize(key)] = value;
+  for (const [key, value] of Object.entries(pairs.idEn || {})) idEn[normalize(key)] = value;
+  const memo = new WeakMap(), attrMemo = new WeakMap();
+  const SKIP = "script,style,noscript,code,pre,textarea,[contenteditable]:not([contenteditable='false']),.tpx-language-control,[data-tpx-no-translate]";
+  const ATTRS = ["placeholder", "title", "aria-label", "aria-description", "alt", "label"];
+  const PAIR_SELECTOR = "[data-en][data-id]";
+  const ATTR_SELECTOR = ATTRS.map(key => `[${key}]`).join(",");
+  let observer, handling = false, initialized = false;
 
+  function lookup(value, lang) {
+    const table = lang === "id" ? enId : idEn;
+    return Object.hasOwn(table, value) ? table[value] : undefined;
+  }
+  function dynamicTranslation(text, lang) {
+    let m;
+    const id = lang === "id";
+    const tr = value => originalTranslation(value, lang);
+    // Every pattern is an authored interface template. Captures retain values,
+    // names, formulas and imported content; answer keys are never modified.
+    if ((m = text.match(/^(Question|Soal|Card|Kartu) (\d+) (?:of|dari) (\d+)$/)))
+      return `${/^(Card|Kartu)$/.test(m[1]) ? (id ? "Kartu" : "Card") : (id ? "Soal" : "Question")} ${m[2]} ${id ? "dari" : "of"} ${m[3]}`;
+    if ((m = text.match(/^(Score|Skor):\s*(.+)$/))) return `${id ? "Skor" : "Score"}: ${m[2]}`;
+    if ((m = text.match(/^(\d+) (?:pts|poin)$/))) return `${m[1]} ${id ? "poin" : "pts"}`;
+    if ((m = text.match(/^(Temperature|Temperatur|Suhu|Heat|Kalor):\s*(.+)$/))) return `${/^(Heat|Kalor)$/.test(m[1]) ? (id ? "Kalor" : "Heat") : (id ? "Temperatur" : "Temperature")}: ${m[2]}`;
+    if ((m = text.match(/^(Correct!|Benar!|Incorrect\.|Salah\.) (.+)$/))) return `${/^(Correct!|Benar!)$/.test(m[1]) ? (id ? "Benar!" : "Correct!") : (id ? "Salah." : "Incorrect.")} ${tr(m[2])}`;
+    if ((m = text.match(/^(?:Crystal order:|Keteraturan)\s+(.+)$/))) return `${id ? "Keteraturan" : "Crystal order:"} ${tr(m[1])}`;
+    if ((m = text.match(/^(QUESTION|SOAL) (\d+)$/))) return `${id ? "SOAL" : "QUESTION"} ${m[2]}`;
+    if ((m = text.match(/^(?:QUESTION|SOAL) (\d+) \/ (\d+)$/))) return `${id ? "SOAL" : "QUESTION"} ${m[1]} / ${m[2]}`;
+    if ((m = text.match(/^(\d+)\/(\d+) (?:answers|jawaban)$/))) return `${m[1]}/${m[2]} ${id ? "jawaban" : "answers"}`;
+    if ((m = text.match(/^(Question|Soal) (\d+)(?:: (.+))?$/))) return `${id ? "Soal" : "Question"} ${m[2]}${m[3] ? ": " + tr(m[3]) : ""}`;
+    if ((m = text.match(/^(?:Pindahkan soal (\d+) ke (atas|bawah)|Move question (\d+) (up|down))$/))) return id ? `Pindahkan soal ${m[1] || m[3]} ke ${m[2] || (m[4] === "up" ? "atas" : "bawah")}` : `Move question ${m[1] || m[3]} ${(m[2] ? m[2] === "atas" : m[4] === "up") ? "up" : "down"}`;
+    if ((m = text.match(/^(?:Hapus soal|Delete question) (\d+)$/))) return `${id ? "Hapus soal" : "Delete question"} ${m[1]}`;
+    if ((m = text.match(/^(?:Jadikan pilihan ([A-D]) jawaban benar untuk soal (\d+)|Mark option ([A-D]) as correct for question (\d+))$/))) return id ? `Jadikan pilihan ${m[1] || m[3]} jawaban benar untuk soal ${m[2] || m[4]}` : `Mark option ${m[1] || m[3]} as correct for question ${m[2] || m[4]}`;
+    if ((m = text.match(/^(?:Teks pilihan ([A-D]) untuk soal (\d+)|Option ([A-D]) text for question (\d+))$/))) return id ? `Teks pilihan ${m[1] || m[3]} untuk soal ${m[2] || m[4]}` : `Option ${m[1] || m[3]} text for question ${m[2] || m[4]}`;
+    if ((m = text.match(/^(?:Pilihan|Option) ([A-D])$/))) return `${id ? "Pilihan" : "Option"} ${m[1]}`;
+    if ((m = text.match(/^(\d+) (?:soal|questions?) · (.+)$/))) return `${m[1]} ${id ? "soal" : Number(m[1]) === 1 ? "question" : "questions"} · ${tr(m[2])}`;
+    if ((m = text.match(/^(\d+) (?:set soal tersimpan di akunmu\.|question sets? saved to your account\.)$/))) return id ? `${m[1]} set soal tersimpan di akunmu.` : `${m[1]} question ${Number(m[1]) === 1 ? "set" : "sets"} saved to your account.`;
+    if ((m = text.match(/^(?:Hapus soal (\d+) beserta pilihannya\?|Delete question (\d+) and its options\?)$/))) return id ? `Hapus soal ${m[1] || m[2]} beserta pilihannya?` : `Delete question ${m[1] || m[2]} and its options?`;
+    if ((m = text.match(/^(?:Connected|Terhubung): (.+)$/))) return `${id ? "Terhubung" : "Connected"}: ${m[1]}`;
+    if ((m = text.match(/^(?:Player|Pemain): (.+)$/))) return `${id ? "Pemain" : "Player"}: ${m[1]}`;
+    if ((m = text.match(/^(?:Status): (waiting|playing|finished|menunggu|berlangsung|selesai)$/))) {
+      const statuses = {waiting: "menunggu", playing: "berlangsung", finished: "selesai"};
+      const result = id ? statuses[m[1]] || m[1] : Object.keys(statuses).find(key => statuses[key] === m[1]) || m[1];
+      return `Status: ${result}`;
     }
-    if (result === undefined && lang === "en") {
-      let m;
-      if ((m=clean.match(/^Soal (\d+) dari (\d+)$/))) result=`Question ${m[1]} of ${m[2]}`;
-      else if ((m=clean.match(/^Skor: (\d+)$/))) result=`Score: ${m[1]}`;
-      else if ((m=clean.match(/^Keteraturan\s+(.+)$/))) result="Crystal order: "+(idEn[m[1]]||m[1]);
+    if ((m = text.match(/^(?:pertanyaan sama dengan soal (\d+)\.|duplicate of question (\d+)\.)$/))) return id ? `pertanyaan sama dengan soal ${m[1] || m[2]}.` : `duplicate of question ${m[1] || m[2]}.`;
+    if ((m = text.match(/^(?:Hapus draf lokal|Delete local draft) (.+)$/))) return `${id ? "Hapus draf lokal" : "Delete local draft"} ${m[1]}`;
+    if ((m = text.match(/^(?:Hapus set soal cloud|Delete cloud question set) (.+)$/))) return `${id ? "Hapus set soal cloud" : "Delete cloud question set"} ${m[1]}`;
+    if ((m = text.match(/^(\d+) (?:cards|kartu) · (.+)$/))) return `${m[1]} ${id ? "kartu" : "cards"} · ${tr(m[2])}`;
+    if ((m = text.match(/^(?:UNIT|SATUAN) \/ (\d+)$/))) return `${id ? "SATUAN" : "UNIT"} / ${m[1]}`;
+    if ((m = text.match(/^(\d+) \/ (.+)$/))) { const target = tr(m[2]); if (target !== m[2]) return `${m[1]} / ${target}`; }
+    // A translated explanatory sentence can contain a changing numeric result.
+    if ((m = text.match(/^(?:Distance from absolute zero:|Jarak dari nol mutlak:) (.+? K\. )(.+)$/))) return `${id ? "Jarak dari nol mutlak:" : "Distance from absolute zero:"} ${m[1]}${tr(m[2])}`;
+    return undefined;
+  }
+  function originalTranslation(value, lang = language) {
+    const full = String(value), clean = normalize(full);
+    if (!clean) return full;
+    let result = lookup(clean, lang);
+    // Graph ticks and pure symbols need no template scan on every animation frame.
+    if (result === undefined && !/[A-Za-zÀ-ž]{2}/.test(clean)) return full;
+    if (result === undefined) result = dynamicTranslation(clean, lang);
+    // Decorations belong to buttons, not to the translatable label.
+    if (result === undefined) {
+      const decorated = clean.match(/^([✓✕×＋+▶⏸↻↥←→↗☀☾✷]\s+)?(.+?)(\s+[←→↗])?$/);
+      if (decorated && (decorated[1] || decorated[3])) {
+        const middle = lookup(decorated[2], lang) ?? dynamicTranslation(decorated[2], lang);
+        if (middle !== undefined) result = (decorated[1] || "") + middle + (decorated[3] || "");
+      }
     }
     if (result === undefined) return full;
-    const pre = full.match(/^\s*/)?.[0] || "";
-    const post = full.match(/\s*$/)?.[0] || "";
-    return pre + result + post;
+    return (full.match(/^\s*/)?.[0] || "") + result + (full.match(/\s*$/)?.[0] || "");
+  }
+  function excluded(element) { return !element || Boolean(element.closest(SKIP)); }
+  function pairedTextNode(element) {
+    if (!element?.matches(PAIR_SELECTOR)) return null;
+    const texts = [...element.childNodes].filter(node => node.nodeType === 3 && node.nodeValue.trim());
+    if (texts.length !== 1 || [...element.children].some(child => !child.matches("svg,[aria-hidden='true']"))) return null;
+    return texts[0];
   }
   function eligible(node) {
     const parent = node.parentElement;
-    return parent && !parent.closest("script,style,noscript,svg,code,pre,.tpx-page-transition,.tpx-language-control,[data-tpx-no-translate]");
+    if (excluded(parent)) return false;
+    if (parent.closest("svg") && !parent.closest("text,tspan,title,desc")) return false;
+    // Paired labels are authoritative and may intentionally use different wording
+    // from a shared term. Custom flashcard/tool controllers keep their own scope.
+    const paired = parent.closest(PAIR_SELECTOR);
+    return !paired || paired.childElementCount > 0 && !pairedTextNode(paired);
   }
   function translateNode(node) {
     if (!eligible(node) || !node.nodeValue.trim()) return;
     let record = memo.get(node);
-    if (!record) { record = {source:node.nodeValue,shown:null};memo.set(node,record); }
-    else if (node.nodeValue !== record.shown && node.nodeValue !== record.source) record.source=node.nodeValue;
-    const target=originalTranslation(record.source);
-    if (node.nodeValue !== target) node.nodeValue=target;
-    record.shown=target;
+    if (!record) { record = {source: node.nodeValue, shown: null}; memo.set(node, record); }
+    else if (node.nodeValue !== record.shown && node.nodeValue !== record.source) record.source = node.nodeValue;
+    const target = originalTranslation(record.source);
+    if (node.nodeValue !== target) node.nodeValue = target;
+    record.shown = target;
   }
-  const attrMemo = new WeakMap();
+  function descendants(root, selector) {
+    if (!root) return [];
+    return root.nodeType === 1 ? [root, ...root.querySelectorAll(selector)] : root.nodeType === 9 ? [...root.querySelectorAll(selector)] : [];
+  }
+  function translatePairedLabels(root) {
+    for (const element of descendants(root, PAIR_SELECTOR)) {
+      if (!element.matches(PAIR_SELECTOR) || excluded(element)) continue;
+      const target = element.getAttribute(`data-${language}`);
+      if (element.childElementCount) {
+        // An icon beside a complete paired label can remain in place. Inline
+        // scientific emphasis is translated node by node without flattening it.
+        const text = pairedTextNode(element);
+        if (text) {
+          const next = (text.nodeValue.match(/^\s*/)?.[0] || "") + target + (text.nodeValue.match(/\s*$/)?.[0] || "");
+          if (text.nodeValue !== next) text.nodeValue = next;
+        }
+        continue;
+      }
+      if (element.textContent !== target) {
+        const text = element.childNodes.length === 1 && element.firstChild.nodeType === 3 ? element.firstChild : null;
+        if (text) text.nodeValue = target; else element.textContent = target;
+      }
+    }
+  }
   function translateAttributes(root) {
-    const nodes = root.nodeType===1 ? [root,...root.querySelectorAll("[placeholder],[title],[aria-label],[data-i18n]")] : [];
-    for(const el of nodes) {
-      if (el.closest(".tpx-page-transition,.tpx-language-control,[data-tpx-no-translate]")) continue;
-      let saved=attrMemo.get(el);
-      if(!saved){saved={};attrMemo.set(el,saved);}
-      for (const key of ["placeholder","title","aria-label"]){
-        if(!el.hasAttribute(key)) continue;
-        const value=el.getAttribute(key);
-        const entry=saved[key];
-        if(!entry || (value!==entry.shown && value!==entry.source)){saved[key]={source:value,shown:null};}
-        const next=originalTranslation(saved[key].source);
-        if(value!==next) el.setAttribute(key,next);
-        saved[key].shown=next;
+    for (const element of descendants(root, ATTR_SELECTOR)) {
+      if (excluded(element) && !element.matches("input,textarea")) continue;
+      if (element.closest("[data-tpx-no-translate],.tpx-language-control,[contenteditable]:not([contenteditable='false'])")) continue;
+      let saved = attrMemo.get(element);
+      if (!saved) { saved = Object.create(null); attrMemo.set(element, saved); }
+      for (const key of ATTRS) {
+        if (!element.hasAttribute(key)) continue;
+        const value = element.getAttribute(key), entry = saved[key];
+        if (!entry || (value !== entry.shown && value !== entry.source)) saved[key] = {source: value, shown: null};
+        const explicit = element.getAttribute(`data-${key}-${language}`);
+        const next = explicit === null ? originalTranslation(saved[key].source) : explicit;
+        if (value !== next) element.setAttribute(key, next);
+        saved[key].shown = next;
       }
     }
   }
   function translateTree(root) {
-    if(!root)return;
-    if(root.nodeType===3) {translateNode(root);return;}
-    if(root.nodeType!==1 && root.nodeType!==9)return;
-    if(root.nodeType===1 && root.closest(".tpx-page-transition,.tpx-language-control,[data-tpx-no-translate]"))return;
-    const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let next;while((next=walker.nextNode()))translateNode(next);
+    if (!root) return;
+    if (root.nodeType === 3) { translateNode(root); return; }
+    if (root.nodeType !== 1 && root.nodeType !== 9 && root.nodeType !== 11) return;
+    if (root.nodeType === 1 && excluded(root)) return;
+    translatePairedLabels(root);
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let next; while ((next = walker.nextNode())) translateNode(next);
     translateAttributes(root);
   }
-  const langControls = () => document.querySelectorAll("[data-tpx-language]");
+  function translatedDialogAndCanvasText() {
+    // Existing modules use native dialogs and Canvas rather than DOM text.
+    for (const key of ["alert", "confirm", "prompt"]) {
+      const original = window[key];
+      if (typeof original !== "function") continue;
+      window[key] = function (message, ...args) { return original.call(window, originalTranslation(message), ...args); };
+    }
+    const prototype = window.CanvasRenderingContext2D?.prototype;
+    if (prototype) for (const key of ["fillText", "strokeText", "measureText"]) {
+      const original = prototype[key];
+      if (typeof original !== "function") continue;
+      prototype[key] = function (value, ...args) { return original.call(this, originalTranslation(value), ...args); };
+    }
+  }
+  const NEUTRAL = new Set(["THERMPYX", "THERMPY", "X", "SUPABASE", "Supabase", "YouTube", "PDF", "DOCX", "CSV", "ID", "EN", "Email", "Flashcard", "Flashcards", "flashcard", "flashcards", "Cloud", "cloud", "Kelvin", "Celsius", "Fahrenheit", "Rankine", "Réaumur", "Reaumur", "Delisle", "Newton", "Rømer", "Romer", "Joule", "Watt", "Pascal", "Bar", "Torr", "Reservoir", "Volume", "Simulator", "Ideal", "SI", "Oxanium", "Inter", "GitHub", "Instagram", "TikTok", "eq", "rev", "net", "max", "total", "lim", "ln", "log", "PV", "AC", "Carnot", "η Carnot", "The Royal Institution", "Professor Dave Explains", "Khan Academy", "Shubham Kola", "Nathan", "Reinhart Van Diaz", "John", "Zikri Luthfi", "Van", "edwart Van djovi", "MISEL CINTA NASPAD", "Misel Natalis Sawato Gulo"]);
+  const UNIT_TOKENS = new Set("kg mg g t lb oz kJ MJ J W kW MW kWh Wh cal kcal kPa MPa Pa atm bar Torr psi mmHg BTU L mL m cm mm km ft yd mi in ha ac s ms min h d hp gal US K C F R Re De N Ro P V T Q U S E A c m n R k eq max rev net total ln lim PV QH QC Qrev Stotal TB TC dV limT kelvin nbsp Carnot".split(" "));
+  function neutral(value) {
+    const text = normalize(value);
+    const words = text.match(/[A-Za-z][A-Za-z0-9_]*/g) || [];
+    if (/[=→Δ0-9]/.test(text) && words.length && words.every(word => UNIT_TOKENS.has(word) || /^[A-Z](?:_\w+)?$/.test(word))) return true;
+    if (words.length && /[°·/]/.test(text) && words.every(word => UNIT_TOKENS.has(word))) return true;
+    if (/^VL \/ \d+$/.test(text)) return true;
+    return !/[A-Za-zÀ-ž]{2}/.test(text) || NEUTRAL.has(text) || /^(?:https?:\/\/|[\w.+-]+@[\w.-]+\.[A-Za-z]{2})/.test(text) || /^(?:THERMPYX|Supabase|YouTube|PDF|DOCX|CSV)(?: [\d–+·/]+)?$/.test(text) || /^(?:[-+−–≈=<>0-9.,\s()×÷*/^%°²³₀₁₂₃Δγηℓ→]+|[A-Z][₀₁₂₃_]*)?(?:kg|mg|kJ|MJ|J|J\/K|J\/kg|W|kW|MW|kPa|MPa|Pa|atm|bar|BTU|L|mL|m³|cm³|m²|ft²|cm|mm|km|s|ms|min|K|°C|°F|°R|°Ré|°De|°N|°Rø)(?:\s*\/[\w²³]+)?$/.test(text);
+  }
+  function auditTranslations(root = document.body) {
+    const uncovered = [], seen = new Set(); let total = 0;
+    const add = (kind, value, element) => {
+      const text = normalize(value); if (!text || neutral(text)) return;
+      if (Object.hasOwn(enId, text) || Object.hasOwn(idEn, text) || originalTranslation(text, "id") !== text || originalTranslation(text, "en") !== text) return;
+      const paired = element?.closest(PAIR_SELECTOR); if (paired && (!paired.childElementCount || pairedTextNode(paired))) return;
+      const key = `${kind}:${text}`; if (seen.has(key)) return; seen.add(key);
+      uncovered.push({kind, text, element: element?.id ? "#" + element.id : element?.tagName?.toLowerCase() || ""});
+    };
+    if (root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let node;
+      while ((node = walker.nextNode())) if (eligible(node)) { total++; add("text", memo.get(node)?.source ?? node.nodeValue, node.parentElement); }
+      // Brand words are wrapped separately to preserve the custom X mark.
+      for (const element of descendants(root, "[data-tpx-brand-source]")) if (element.hasAttribute("data-tpx-brand-source")) {
+        const parent = element.parentElement;
+        if (!parent?.closest("[data-tpx-no-translate]")) add("brand-phrase", element.getAttribute("data-tpx-brand-source"), parent);
+      }
+      for (const element of descendants(root, ATTR_SELECTOR)) if (!excluded(element) || element.matches("input,textarea")) {
+        if (element.closest("[data-tpx-no-translate]")) continue;
+        for (const key of ATTRS) if (element.hasAttribute(key) && !element.hasAttribute(`data-${key}-en`) && !element.hasAttribute(`data-${key}-id`)) add(key, attrMemo.get(element)?.[key]?.source ?? element.getAttribute(key), element);
+      }
+    }
+    return {language, totalTextNodes: total, uncovered};
+  }
   function setLanguage(next,save=true){
     language=next==="id"?"id":"en";
     document.documentElement.lang=language;
@@ -163,25 +292,31 @@
   window.TPX={
     getLanguage:()=>language,
     setLanguage,
-    t:(english,indonesian)=>language==="id" ? (indonesian||enId[String(english).trim()]||english) : english,
+    t:(english,indonesian)=>language==="id" ? (indonesian ?? originalTranslation(english, "id")) : english,
     translateText:originalTranslation,
+    auditTranslations,
     refresh:()=>setLanguage(language,false),
     showLoader
   };
-  document.addEventListener("DOMContentLoaded",()=>{
+  function initialize(){
+    if(initialized)return; initialized=true;
     mountSwitchers();
     installNavigation();
     setLanguage(language,false);
     observer=new MutationObserver(records=>{
       if(handling)return;
       handling=true;
-      for(const r of records) {
-        if(r.type==="characterData"){translateNode(r.target);continue;}
-        if(r.type==="attributes"){translateAttributes(r.target);continue;}
-        for(const n of r.addedNodes)translateTree(n);
-      }
-      handling=false;
+      try {
+        for(const r of records) {
+          if(r.type==="characterData"){translatePairedLabels(r.target.parentElement);translateNode(r.target);continue;}
+          if(r.type==="attributes"){translatePairedLabels(r.target);translateAttributes(r.target);continue;}
+          translatePairedLabels(r.target);
+          for(const n of r.addedNodes)translateTree(n);
+        }
+      } finally { handling=false; }
     });
-    observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["placeholder","title","aria-label"]});
-  },{once:true});
+    observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:[...ATTRS,"data-en","data-id",...ATTRS.flatMap(key=>[`data-${key}-en`,`data-${key}-id`])]});
+  }
+  translatedDialogAndCanvasText();
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initialize,{once:true});else initialize();
 })();

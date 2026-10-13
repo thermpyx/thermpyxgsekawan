@@ -12,6 +12,7 @@ const roleEl=$("playRole"), roomEl=$("playRoomCode"), timerEl=$("quizTimer"),
 const QUESTION_MS=20000;
 const dbId=value => /^\d+$/.test(String(value))?Number(value):value;
 let questions=[], index=0, startedMs=0, tick=null, statusPoll=null, channel=null;
+let customQuestions=false;
 let locked=false, saving=false, advancing=false, finished=false, pending=null;
 let progressQueue=Promise.resolve();
 // quiz_answers is authoritative for score and completed questions. Player progress
@@ -30,6 +31,27 @@ function saveProgressBestEffort(target, stamp) {
   return progressQueue;
 }
 const txt=(en,id)=>window.TPX?.t ? window.TPX.t(en,id) : en;
+function protectUserText(element) {
+  element.setAttribute?.("data-tpx-no-translate", "");
+  element.setAttribute?.("data-tpx-user-content", "");
+  return element;
+}
+function renderPlayerName() {
+  const label=document.createElement("span");
+  label.setAttribute?.("data-en", "Player: ");label.setAttribute?.("data-id", "Pemain: ");
+  label.textContent=txt("Player: ","Pemain: ");
+  const name=protectUserText(document.createElement("span"));
+  name.textContent=nickname||txt("Guest","Tamu");
+  roleEl.replaceChildren(label,name);
+}
+window.addEventListener("thermpyx:languagechange", () => {
+  if (roomId && playerId && userRole === "player") renderPlayerName();
+});
+function showQuestionText(value) {
+  questionEl.toggleAttribute?.("data-tpx-no-translate", customQuestions);
+  questionEl.toggleAttribute?.("data-tpx-user-content", customQuestions);
+  questionEl.textContent=value;
+}
 function message(en,id) {messageEl.textContent=txt(en,id);}
 function clearClock(){ if(tick)clearInterval(tick);tick=null; }
 function delay(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
@@ -46,10 +68,11 @@ function render() {
   if(index>=questions.length){complete();return;}
   const item=questions[index];
   numberEl.textContent=`Question ${index+1} of ${questions.length}`;
-  questionEl.textContent=item.question;
+  showQuestionText(item.question);
   optionsEl.replaceChildren();
   item.options.forEach((name,choice)=>{
     const btn=document.createElement("button");btn.type="button";btn.className="answer-option";
+    if(customQuestions)protectUserText(btn);
     btn.textContent=name;btn.addEventListener("click",()=>submit(choice));
     optionsEl.append(btn);
   });
@@ -151,6 +174,8 @@ async function restorePlayer(){
   } catch(err){
     console.error("RESTORE FAILED:",err);
     numberEl.textContent=txt("SESSION ERROR","KESALAHAN SESI");
+    questionEl.removeAttribute?.("data-tpx-no-translate");
+    questionEl.removeAttribute?.("data-tpx-user-content");
     questionEl.textContent=txt("Your question could not be loaded.","Soal belum berhasil dimuat.");
     showRetry(restorePlayer,"Unable to restore your session. Please retry.",
       "Sesi belum dapat dipulihkan. Silakan coba lagi.");
@@ -159,8 +184,11 @@ async function restorePlayer(){
 function complete(){
   if(finished)return;
   finished=true;clearClock();locked=true;
-  window.TPXHistory?.log("quiz","Live Quiz", "All questions submitted", location.href);
+  window.TPXHistory?.log("quiz","Live Quiz", "All questions submitted", location.href,
+    {titleEn:"Live Quiz",titleId:"Kuis Langsung",detailEn:"All questions submitted",detailId:"Semua soal terkirim"});
   numberEl.textContent="Quiz Completed";
+  questionEl.removeAttribute?.("data-tpx-no-translate");
+  questionEl.removeAttribute?.("data-tpx-user-content");
   questionEl.textContent="Great work! Your answers have been submitted.";
   optionsEl.replaceChildren();
   message("Opening leaderboard...","Membuka papan peringkat...");
@@ -179,13 +207,14 @@ async function initialize(){
     if(userRole==="host"&&roomId){location.replace("host-view.html");return;}
     showRetry(()=>location.assign("join.html"),"Join a room to start.","Masuk ke ruang kuis dahulu.");return;
   }
-  roleEl.textContent="Player: "+(nickname||"Guest");
+  renderPlayerName();
   roomEl.textContent=roomCode||"------";
   const {data:room,error}=await supabaseClient.from("quiz_rooms").select("*")
     .eq("id",roomId).single();
   if(error||!room){showRetry(initialize,"Unable to load room.","Ruang kuis gagal dimuat.");return;}
   if(room.status==="finished"){location.replace("leaderboard.html");return;}
   if(room.status!=="playing"){location.replace("waiting-room.html");return;}
+  customQuestions=room.questions!=null;
   questions=getQuestionsForRoom(room);
   if(!questions.length){message("No questions for this topic.","Tidak ada soal pada topik ini.");return;}
   await restorePlayer();

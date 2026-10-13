@@ -689,6 +689,7 @@ if (calculateHeatButton) {
             saveCalculationHistory({
 
                 type: "Heat",
+                historyLabels: { titleEn: "Heat", titleId: "Kalor" },
 
                 formula:
                     "Q = m × c × ΔT",
@@ -841,6 +842,7 @@ if (calculateWorkButton) {
             saveCalculationHistory({
 
                 type: "Work",
+                historyLabels: { titleEn: "Work", titleId: "Usaha" },
 
                 formula:
                     "W = P × ΔV",
@@ -956,13 +958,13 @@ function saveCalculationHistory(calculation) {
   const caption = calculation?.type || "Calculation";
   const detail = [calculation?.formula, calculation?.result].filter(Boolean).join(" | ");
   if (window.TPXHistory) {
-    window.TPXHistory.log("calculation", caption, detail, location.pathname+"#calculation");
+    window.TPXHistory.log("calculation", caption, detail, location.pathname+"#calculation", calculation?.historyLabels);
   } else {
     // Fallback if unified logger was blocked: do not lose a calculation.
     try {
       const list=JSON.parse(localStorage.getItem("thermpyx-history")||"[]");
       list.unshift({...calculation,time:new Date().toLocaleString()});
-      localStorage.setItem("thermpyx-history",JSON.stringify(list.slice(0,60)));
+      localStorage.setItem("thermpyx-history",JSON.stringify(list.slice(0,50)));
     } catch (_) {}
   }
 }

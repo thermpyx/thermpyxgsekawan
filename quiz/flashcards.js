@@ -5,7 +5,28 @@
   const $ = id => document.getElementById(id);
   const api = () => window.TPXContent;
   const lang = () => window.TPX?.getLanguage() || (document.documentElement.lang === "en" ? "en" : "id");
-  const t = (id, en) => lang() === "en" ? en : id;
+  const copyPairs = new Map();
+  const t = (id, en) => { const pair = {id, en}; copyPairs.set(id, pair); copyPairs.set(en, pair); return pair[lang()]; };
+  function errorPair(error) {
+    if (error?.messageId && error?.messageEn) return { id: error.messageId, en: error.messageEn };
+    const registered = copyPairs.get(error?.message);
+    if (registered) return registered;
+    if (error?.name === "ImportError") return { id: error.message, en: window.TPX?.translateText?.(error.message, "en") || error.message };
+    const text = error?.message || "";
+    return { id: text, en: text };
+  }
+  function localizeMessages() {
+    for (const id of ["fcStatus", "fcImportStatus", "fcConfirmTitle", "fcConfirmText", "fcConfirmAction"]) {
+      const node = $(id), original = node.textContent, pair = copyPairs.get(original);
+      if (pair) { node.textContent = pair[lang()]; continue; }
+      // A known status prefix can precede an unchanged server error.
+      for (const [source, translation] of copyPairs) {
+        if (source.length > 20 && /\s$/.test(source) && original.startsWith(source)) {
+          node.textContent = translation[lang()] + original.slice(source.length); break;
+        }
+      }
+    }
+  }
   const clone = value => JSON.parse(JSON.stringify(value));
   const uid = () => "local-" + (window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
   const sample = { id: "builtin-intro", title: "Dasar termodinamika", topic: "Energi & kalor", builtin: true, cards: [
@@ -13,11 +34,24 @@
     { front: "Bagaimana bentuk Hukum I Termodinamika?", back: "ΔU = Q − W, jika W adalah usaha yang dilakukan sistem. Perubahan energi dalam sama dengan kalor yang diterima dikurangi usaha yang dilakukan sistem." },
     { front: "Apa yang dimaksud dengan kesetimbangan termal?", back: "Dua sistem berada dalam kesetimbangan termal ketika suhunya sama sehingga tidak ada perpindahan kalor netto di antara keduanya." }
   ] };
+  const sampleEnglish = { ...sample, title: "Thermodynamics basics", topic: "Energy & heat", cards: [
+    { front: "What is the difference between temperature and heat?", back: "Temperature describes the thermal state of a system. Heat is energy transferred because of a temperature difference; its unit is the joule (J)." },
+    { front: "How is the First Law of Thermodynamics expressed?", back: "ΔU = Q − W, when W is the work done by the system. The change in internal energy equals the heat received minus the work done by the system." },
+    { front: "What is thermal equilibrium?", back: "Two systems are in thermal equilibrium when their temperatures are equal, so there is no net heat transfer between them." }
+  ] };
+  const displayDeck = deck => deck.builtin && lang() === "en" ? sampleEnglish : deck;
   let localDecks = [], cloudDecks = [], user = null, current = sample, draft = null;
   let dirty = false, editing = false, saving = false, importing = false, order = [], index = 0, flipped = false, source = null;
+  let reviewed = new Set(), reviewLogged = false;
   let importTicket = 0, cloudTicket = 0;
-  function message(value, tone = "info") { $("fcStatus").textContent = value; $("fcStatus").dataset.tone = tone; $("fcStatus").hidden = !value; }
-  function importMessage(value, tone = "info") { $("fcImportStatus").textContent = value; $("fcImportStatus").dataset.tone = tone; }
+  function setMessageCopy(node, value) {
+    const pair = copyPairs.get(value);
+    if (pair) { node.dataset.fcId = pair.id; node.dataset.fcEn = pair.en; }
+    else { delete node.dataset.fcId; delete node.dataset.fcEn; }
+    node.textContent = value;
+  }
+  function message(value, tone = "info") { setMessageCopy($("fcStatus"), value); $("fcStatus").dataset.tone = tone; $("fcStatus").hidden = !value; }
+  function importMessage(value, tone = "info") { setMessageCopy($("fcImportStatus"), value); $("fcImportStatus").dataset.tone = tone; }
   function cleanCards(cards) {
     if (!Array.isArray(cards) || !cards.length || cards.length > MAX_CARDS) throw new Error(t("Gunakan 1–100 kartu per materi.", "Use 1–100 cards per deck."));
     return cards.map((card, position) => {
@@ -35,6 +69,7 @@
     } catch (_) { message(t("Koleksi lokal tidak dapat dibaca. Anda masih bisa membuat materi baru.", "Your local library could not be read. You can still create a new deck."), "error"); }
   }
   function persist(deck) {
+    delete deck.session_only;
     const next = [deck, ...localDecks.filter(item => item.id !== deck.id)];
     localStorage.setItem(LOCAL_KEY, JSON.stringify(next));
     localDecks = next;
@@ -50,8 +85,8 @@
     for (const deck of items) {
       const row = document.createElement("div"); row.className = "fc-deck-entry";
       const button = document.createElement("button"); button.type = "button"; button.className = "fc-deck-button"; button.classList.toggle("is-active", deck.id === current?.id); button.setAttribute("aria-pressed", String(deck.id === current?.id));
-      const name = document.createElement("strong"); name.textContent = deck.title;
-      const meta = document.createElement("span"); meta.textContent = `${deck.cards.length} ${t("kartu", "cards")} · ${deck.builtin ? t("Contoh", "Sample") : deck.cloud ? "Cloud" : deck.cloud_id ? deck.cloud_synced ? t("Lokal + cloud", "Local + cloud") : t("Lokal · belum sinkron", "Local · unsynced") : t("Lokal", "Local")}`;
+      const name = document.createElement("strong"); name.textContent = displayDeck(deck).title; name.setAttribute("data-tpx-no-translate", "");
+      const meta = document.createElement("span"); meta.textContent = `${deck.cards.length} ${t("kartu", "cards")} · ${deck.builtin ? t("Contoh", "Sample") : deck.cloud ? "Cloud" : deck.session_only ? deck.cloud_synced ? "Cloud" : t("Halaman ini", "This page") : deck.cloud_id ? deck.cloud_synced ? t("Lokal + cloud", "Local + cloud") : t("Lokal · belum sinkron", "Local · unsynced") : t("Lokal", "Local")}`;
       button.append(name, meta); button.addEventListener("click", async () => { if (await leaveDraft()) select(deck); }); row.append(button);
       if (!deck.builtin && (!deck.cloud || isOwner(deck))) {
         const remove = document.createElement("button"); remove.type = "button"; remove.className = "fc-deck-delete"; remove.textContent = "×"; remove.setAttribute("aria-label", t(`Hapus materi ${deck.title}`, `Delete deck ${deck.title}`));
@@ -63,6 +98,7 @@
   function translateStatic() {
     document.querySelectorAll("[data-fc-id]").forEach(node => { node.textContent = lang() === "en" ? node.dataset.fcEn : node.dataset.fcId; });
     document.querySelectorAll("[data-fc-placeholder-id]").forEach(node => { node.placeholder = lang() === "en" ? node.dataset.fcPlaceholderEn : node.dataset.fcPlaceholderId; });
+    document.querySelectorAll("[data-fc-aria-id]").forEach(node => { node.setAttribute("aria-label", lang() === "en" ? node.dataset.fcAriaEn : node.dataset.fcAriaId); });
     $("fcSourceCount").textContent = `${$("fcSourceText").value.length.toLocaleString(lang() === "en" ? "en-US" : "id-ID")} / ${lang() === "en" ? "120,000" : "120.000"}`;
   }
   function markDirty() { dirty = true; $("fcDirtyLabel").hidden = false; }
@@ -74,9 +110,10 @@
   }
   function renderStudy() {
     if (!current) return;
-    $("fcStudyTitle").textContent = current.title;
-    $("fcStudyTopic").textContent = current.topic || t("Materi Anda", "Your material");
-    const card = current.cards[order[index] ?? 0];
+    const visible = displayDeck(current);
+    $("fcStudyTitle").textContent = visible.title;
+    $("fcStudyTopic").textContent = visible.topic || t("Materi Anda", "Your material");
+    const card = visible.cards[order[index] ?? 0];
     $("fcCardText").textContent = card ? (flipped ? card.back : card.front) : t("Materi belum memiliki kartu.", "This deck has no cards yet.");
     $("fcCardSide").textContent = flipped ? t("JAWABAN", "ANSWER") : t("PERTANYAAN", "QUESTION");
     $("fcStudyCard").classList.toggle("is-flipped", flipped); $("fcStudyCard").setAttribute("aria-pressed", String(flipped));
@@ -87,6 +124,7 @@
   }
   function select(deck) {
     current = deck; index = 0; flipped = false; order = deck.cards.map((_, position) => position); draft = null; dirty = false; source = null;
+    reviewed.clear(); reviewLogged = false;
     $("fcSourceText").value = ""; $("fcImportFile").value = ""; $("fcGenerate").disabled = false; $("fcSaveDeck").disabled = saving; importing = false; importMessage(""); importTicket++;
     setPanel(false); renderLibrary(); renderStudy(); message("");
   }
@@ -111,15 +149,25 @@
       remove.addEventListener("click", async () => { const hasText = card.front.trim() || card.back.trim(); if (hasText && !await confirmAction(t("Hapus kartu ini?", "Remove this card?"), t("Pertanyaan dan jawaban kartu ini akan dihapus dari draf.", "This card's question and answer will be removed from your draft."), t("Hapus", "Remove"))) return; draft.cards.splice(position, 1); markDirty(); renderEditor(); });
       fields.append(remove); row.append(number, fields); container.append(row);
     });
-    refreshCloudOptions();
+    refreshSaveControls();
   }
   function refreshCloudOptions() {
     $("fcCloudSave").disabled = !user || saving;
     if (!user) $("fcCloudSave").checked = false;
     $("fcPublicOption").hidden = !$("fcCloudSave").checked;
   }
+  function refreshSaveControls() {
+    $("fcEditPanel").querySelectorAll("input,textarea,button").forEach(node => { node.disabled = saving; });
+    $("fcNewDeck").disabled = saving;
+    $("fcEditCurrent").disabled = saving;
+    $("fcSaveDeck").disabled = saving || importing;
+    $("fcGenerate").disabled = saving || importing;
+    $("fcAddCard").disabled = saving || (draft?.cards.length || 0) >= MAX_CARDS;
+    refreshCloudOptions();
+  }
   function startEdit(newDeck = false) {
-    draft = newDeck ? { id: uid(), title: "", topic: "", cards: [{ front: "", back: "" }] } : clone(current);
+    if (saving) return;
+    draft = newDeck ? { id: uid(), title: "", topic: "", cards: [{ front: "", back: "" }] } : clone(displayDeck(current));
     if (draft.builtin || (draft.cloud && !isOwner(draft))) { draft.id = uid(); delete draft.cloud; delete draft.cloud_id; delete draft.owner_id; delete draft.builtin; }
     if (draft.cloud && isOwner(draft)) { draft.cloud_id = draft.id; draft.id = uid(); delete draft.cloud; }
     source = draft.source_name ? { sourceName: draft.source_name, sourceType: draft.source_type } : null;
@@ -150,29 +198,46 @@
   }
   async function saveDeck() {
     if (saving || importing || !draft) return;
-    let localSaved = false;
+    let localSaved = false, cloudSaved = false;
     try {
       const title = $("fcDeckTitle").value.trim();
       if (!title) { $("fcDeckTitle").focus(); throw new Error(t("Isi judul materi terlebih dahulu.", "Enter a deck title first.")); }
       const cloudWanted = $("fcCloudSave").checked;
       const deck = { ...draft, title, topic: $("fcDeckTopic").value.trim(), cards: cleanCards(draft.cards), updated_at: new Date().toISOString(), source_name: source?.sourceName || null, source_type: source?.sourceType || null, is_public: cloudWanted && $("fcPublicDeck").checked, cloud_synced: false };
       delete deck.builtin; delete deck.cloud;
-      persist(deck); localSaved = true; dirty = false; saving = true; $("fcSaveDeck").disabled = true;
-      current = deck; order = deck.cards.map((_, position) => position); index = 0; flipped = false; setPanel(false); renderLibrary(); renderStudy();
-      message(cloudWanted ? t("Materi tersimpan lokal. Menyimpan ke cloud…", "Deck saved locally. Saving to cloud…") : t("Materi tersimpan di browser ini. Siap dipelajari.", "Deck saved in this browser. Ready to study."), "success");
+      try { persist(deck); localSaved = true; draft = deck; dirty = false; $("fcDirtyLabel").hidden = true; renderLibrary(); }
+      catch (_) {
+        if (!cloudWanted) throw new Error(t("Browser tidak dapat menyimpan materi. Draf tetap terbuka; kosongkan ruang penyimpanan atau masuk dan pilih Simpan ke akun THERMPYX.", "Your browser cannot save the deck. Your draft stays open; free some storage or sign in and choose Save to THERMPYX account."));
+      }
+      saving = true; refreshSaveControls();
+      message(cloudWanted ? localSaved ? t("Materi tersimpan lokal. Menyimpan ke cloud…", "Deck saved locally. Saving to cloud…") : t("Penyimpanan browser tidak tersedia. Menyimpan ke akun THERMPYX…", "Browser storage is unavailable. Saving to your THERMPYX account…") : t("Materi tersimpan di browser ini. Siap dipelajari.", "Deck saved in this browser. Ready to study."), "info");
       if (cloudWanted) {
         const payload = { title: deck.title, topic: deck.topic, cards: deck.cards, source_name: deck.source_name, source_type: deck.source_type, is_public: deck.is_public };
         if (deck.cloud_id && deck.owner_id === user?.id) payload.id = deck.cloud_id;
         const result = await api().saveDeck(payload);
-        if (result.error || !result.data) throw new Error(result.error?.message || t("Cloud belum mengembalikan materi.", "The cloud did not return the saved deck."));
+        if (result.error) throw Object.assign(new Error(result.error.message), result.error);
+        if (!result.data) throw new Error(t("Cloud belum mengembalikan materi.", "The cloud did not return the saved deck."));
         const saved = result.data;
-        deck.cloud_id = saved.id; deck.owner_id = saved.owner_id; deck.cloud_synced = true; persist(deck);
-        cloudDecks = [{ ...saved, cloud: true }, ...cloudDecks.filter(item => item.id !== saved.id)];
-        renderLibrary(); message(t("Materi tersimpan lokal dan di akun cloud.", "Deck saved locally and to your cloud account."), "success");
+        cloudSaved = true; deck.cloud_id = saved.id; deck.owner_id = saved.owner_id; deck.cloud_synced = true;
+        try { persist(deck); localSaved = true; }
+        catch (_) {
+          deck.session_only = !localSaved;
+          localDecks = [deck, ...localDecks.filter(item => item.id !== deck.id)];
+        }
+        if (saved.owner_id === user?.id) cloudDecks = [{ ...saved, cloud: true }, ...cloudDecks.filter(item => item.id !== saved.id)];
+        message(localSaved ? t("Materi tersimpan lokal dan di akun cloud.", "Deck saved locally and to your cloud account.") : t("Materi tersimpan di akun THERMPYX. Salinan perangkat belum tersimpan karena penyimpanan browser tidak tersedia.", "Deck saved to your THERMPYX account. A device copy was not saved because browser storage is unavailable."), "success");
       }
+      draft = deck; dirty = false; current = deck; order = deck.cards.map((_, position) => position); index = 0; flipped = false;
+      reviewed.clear(); reviewLogged = false;
+      setPanel(false); renderLibrary(); renderStudy();
+      if (!cloudWanted) message(t("Materi tersimpan di browser ini. Siap dipelajari.", "Deck saved in this browser. Ready to study."), "success");
     } catch (error) {
-      message((localSaved ? t("Salinan lokal tetap aman. ", "Your local copy is safe. ") : "") + (error.message || t("Materi belum tersimpan. Periksa ruang penyimpanan browser.", "The deck could not be saved. Check your browser storage.")), "error");
-    } finally { saving = false; $("fcSaveDeck").disabled = false; refreshCloudOptions(); }
+      if (!localSaved && !cloudSaved) { dirty = true; $("fcDirtyLabel").hidden = false; }
+      const pair = errorPair(error), prefix = localSaved
+        ? { id: "Salinan lokal tetap aman. ", en: "Your local copy is safe. " }
+        : { id: "Draf tetap terbuka dan belum tersimpan. ", en: "Your draft stays open and has not been saved. " };
+      message(t(prefix.id + (pair.id || "Materi belum tersimpan. Periksa ruang penyimpanan browser."), prefix.en + (pair.en || "The deck could not be saved. Check your browser storage.")), "error");
+    } finally { saving = false; refreshSaveControls(); }
   }
   async function loadCloud() {
     if (!api()) return;
@@ -180,7 +245,11 @@
     try {
       const result = await api().listDecks();
       if (ticket !== cloudTicket) return;
-      if (result.error) { message(t("Koleksi cloud belum tersedia; materi lokal tetap dapat digunakan. ", "Cloud decks are unavailable; you can keep using local material. ") + result.error.message); return; }
+      if (result.error) {
+        if (result.error.messageEn?.startsWith("Cloud connection is unavailable.")) message(t("Koleksi cloud belum tersedia. Anda tetap bisa belajar dan menyimpan secara lokal.", "Cloud decks are unavailable. You can still study and save locally."));
+        else { const pair = errorPair(result.error); message(t("Koleksi cloud belum tersedia; materi lokal tetap dapat digunakan. " + pair.id, "Cloud decks are unavailable; you can keep using local material. " + pair.en)); }
+        return;
+      }
       cloudDecks = (Array.isArray(result.data) ? result.data : []).filter(deck => { try { cleanCards(deck.cards); return true; } catch (_) { return false; } }).map(deck => ({ ...deck, cloud: true }));
       renderLibrary();
     } catch (error) { if (ticket === cloudTicket) message(t("Koleksi cloud belum tersedia. Anda tetap bisa belajar dan menyimpan secara lokal.", "Cloud decks are unavailable. You can still study and save locally.")); }
@@ -194,9 +263,10 @@
       if (ticket !== importTicket || !draft) return;
       $("fcSourceText").value = result.text; source = result; markDirty();
       if (!$("fcDeckTitle").value.trim()) { draft.title = file.name.replace(/\.(pdf|docx)$/i, "").slice(0, 120); $("fcDeckTitle").value = draft.title; }
-      importMessage(t(`${file.name} berhasil dibaca${result.pages ? ` (${result.pages} halaman)` : ""}. Periksa teks, lalu buat draf kartu.`, `${file.name} read successfully${result.pages ? ` (${result.pages} pages)` : ""}. Review the text, then draft cards.`) + (result.warnings.length ? "\n" + result.warnings.join("\n") : ""));
+      const warnings = language => result.warnings.length ? "\n" + result.warnings.map(value => window.TPX?.translateText?.(value, language) || value).join("\n") : "";
+      importMessage(t(`${file.name} berhasil dibaca${result.pages ? ` (${result.pages} halaman)` : ""}. Periksa teks, lalu buat draf kartu.${warnings("id")}`, `${file.name} read successfully${result.pages ? ` (${result.pages} pages)` : ""}. Review the text, then draft cards.${warnings("en")}`));
       translateStatic();
-    } catch (error) { if (ticket === importTicket) importMessage(error.message || t("Dokumen gagal dibaca. Gunakan PDF dengan teks atau DOCX standar.", "The document could not be read. Use a text PDF or a standard DOCX."), "error"); }
+    } catch (error) { if (ticket === importTicket) { const pair = errorPair(error); importMessage(t(pair.id || "Dokumen gagal dibaca. Gunakan PDF dengan teks atau DOCX standar.", pair.en || "The document could not be read. Use a text PDF or a standard DOCX."), "error"); } }
     finally { if (ticket === importTicket) { importing = false; $("fcGenerate").disabled = false; $("fcSaveDeck").disabled = saving; } }
   }
   async function generateCards() {
@@ -228,16 +298,30 @@
   $("fcImportFile").addEventListener("change", importFile);
   $("fcSourceText").addEventListener("input", () => { source = { sourceName: source?.sourceName || t("Teks ditempel", "Pasted text"), sourceType: source?.sourceType || "text" }; markDirty(); translateStatic(); });
   $("fcGenerate").addEventListener("click", generateCards);
-  $("fcStudyCard").addEventListener("click", () => { flipped = !flipped; renderStudy(); });
+  $("fcStudyCard").addEventListener("click", () => {
+    flipped = !flipped; renderStudy();
+    if (!flipped) return;
+    reviewed.add(order[index]);
+    if (!reviewLogged && reviewed.size === current.cards.length) {
+      reviewLogged = true;
+      const count = current.cards.length;
+      const metadata = { detailEn: `${count} cards reviewed`, detailId: `${count} kartu dipelajari` };
+      if (current.builtin) { metadata.titleEn = sampleEnglish.title; metadata.titleId = sample.title; }
+      window.TPXHistory?.log("flashcard", displayDeck(current).title, t(metadata.detailId, metadata.detailEn), location.pathname, metadata);
+    }
+  });
   $("fcPrev").addEventListener("click", () => move(-1)); $("fcNext").addEventListener("click", () => move(1));
   $("fcShuffle").addEventListener("click", () => { for (let step = order.length - 1; step > 0; step--) { const random = Math.floor(Math.random() * (step + 1)); [order[step], order[random]] = [order[random], order[step]]; } index = 0; flipped = false; renderStudy(); message(t("Urutan kartu diacak.", "Cards shuffled.")); });
   document.addEventListener("keydown", event => { if (editing || $("fcConfirmDialog").open || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.target.closest("input,textarea,select,[contenteditable=true]")) return; if (event.target.closest("button,a") && event.target !== $("fcStudyCard")) return; if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); move(event.key === "ArrowLeft" ? -1 : 1); } });
   window.addEventListener("beforeunload", event => { if (dirty) { event.preventDefault(); event.returnValue = ""; } });
-  window.addEventListener("thermpyx:languagechange", () => { translateStatic(); renderLibrary(); renderStudy(); if (draft && editing) renderEditor(); });
+  window.addEventListener("thermpyx:languagechange", () => { translateStatic(); localizeMessages(); renderLibrary(); renderStudy(); if (draft && editing) renderEditor(); });
   readLocal(); current = localDecks[0] || sample; order = current.cards.map((_, position) => position); translateStatic(); renderLibrary(); renderStudy();
   if (api()) {
+    let authRevision = 0;
+    const applySession = active => { user = active?.user || null; refreshCloudOptions(); cloudDecks = []; renderLibrary(); loadCloud(); };
     api().mountAuth?.(document.querySelector("[data-content-auth]"));
-    api().onAuthChange(active => { user = active?.user || null; refreshCloudOptions(); cloudDecks = []; renderLibrary(); loadCloud(); });
-    api().session().then(active => { user = active?.user || null; refreshCloudOptions(); loadCloud(); }).catch(() => refreshCloudOptions());
+    api().onAuthChange(active => { authRevision++; applySession(active); });
+    const initialRevision = authRevision;
+    api().session().then(active => { if (authRevision === initialRevision) applySession(active); }).catch(() => refreshCloudOptions());
   } else refreshCloudOptions();
 })();

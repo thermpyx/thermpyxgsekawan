@@ -68,3 +68,14 @@ test("keeps PDF reading order line boundaries and normalizes extraction whitespa
   assert.equal(text, "HUKUM I\nEnergi kekal.\nΔU = Q − W");
   assert.equal(importer.normalizeText("  energi\u0000\r\n\r\n\r\n kalor  "), "energi\n\nkalor");
 });
+test("preserves wrapped answers and earlier questions from PDF/DOCX text", () => {
+  const cards = importer.generateDraft("Q: Apa itu kalor?\nA: Energi yang berpindah karena perbedaan suhu.\nSatuan SI-nya adalah joule (J).\nQ: Apa itu kerja?\nEnergi yang dipindahkan melalui gaya dan perpindahan.\nQ: Apa itu suhu?\nA: Besaran keadaan termal suatu sistem.");
+  assert.equal(cards.length, 3);
+  assert.deepEqual(cards[0], { front: "Apa itu kalor?", back: "Energi yang berpindah karena perbedaan suhu.\nSatuan SI-nya adalah joule (J)." });
+  assert.deepEqual(cards[1], { front: "Apa itu kerja?", back: "Energi yang dipindahkan melalui gaya dan perpindahan." });
+  assert.equal(cards[2].front, "Apa itu suhu?");
+  const longAnswer = "Q: Jelaskan materi berikut?\nA: " + "kata ".repeat(1600);
+  const split = importer.generateDraft(longAnswer);
+  assert.equal(split.map(card => card.back).join(" "), "kata ".repeat(1600).trim());
+  assert.ok(split.every(card => card.front === "Jelaskan materi berikut?" && card.back.length <= 5000));
+});

@@ -14,7 +14,7 @@
       image: "assets/developers/dev-1.jpg",
 
       motto: {
-        en: "Stay curious, stay growing.",
+        en: "I leave for an assignment and come home when someone calls.",
         id: "pergi karena tugas, pulang karena di telfon"
       },
 
@@ -62,7 +62,7 @@
       image: "assets/developers/dev-2.jpg",
 
       motto: {
-        en: "Build with logic, improve with purpose.",
+        en: "Insult my lab report, and our hookup is off.",
         id: "laprakku kau hina, kita batal berzina."
       },
 
@@ -110,7 +110,7 @@
       image: "assets/developers/dev-3.jpg",
 
       motto: {
-        en: "Spicy. ",
+        en: "Delicious. ",
         id: "enak. "
       },
 
@@ -158,7 +158,7 @@
       image: "assets/developers/dev-4.jpg",
 
       motto: {
-        en: "Design with feeling, create with intention.",
+        en: "Create with love, code with a little anger and emotion.",
         id: "Mencipta dengan rasa kasih, mencoding dengan sedikit amarah dan emosi."
       },
 
@@ -326,6 +326,17 @@
       document.getElementById("themeText")
   };
 
+  // Personal names and quotes are rendered from their own bilingual data.
+  // Keep global translation and brand decoration away from these values.
+  function protectPersonalText(element) {
+    if (!element) return;
+    element.setAttribute("data-tpx-no-translate", "");
+    element.setAttribute("data-tpx-user-content", "");
+  }
+  [elements.nickname, elements.fullName, elements.motto, elements.cardNickname,
+    elements.cardName, elements.photoNickname, elements.backNickname,
+    elements.backName, elements.image].forEach(protectPersonalText);
+
 
   /* =======================================================
      MEMBER RENDER
@@ -345,7 +356,7 @@
       member.fullName;
 
     elements.role.textContent =
-      member.role;
+      window.TPX?.translateText ? window.TPX.translateText(member.role, currentLanguage) : member.role;
 
     elements.motto.textContent =
       member.motto[currentLanguage];
@@ -362,7 +373,7 @@
 
 
     elements.miniRole.textContent =
-      member.role;
+      elements.role.textContent;
 
     elements.cardNickname.textContent =
       member.nickname;
@@ -384,7 +395,7 @@
       member.fullName;
 
     elements.backRole.textContent =
-      member.role;
+      elements.role.textContent;
 
 
     renderHistory(member);
@@ -458,7 +469,7 @@
 
       value.textContent =
         hasLink
-          ? social.value
+          ? currentLanguage === "id" ? "Ditambahkan" : "Added"
           : currentLanguage === "id"
             ? "Belum ditambahkan"
             : "Not added";
@@ -504,6 +515,7 @@
 
       image.alt =
         member.fullName;
+      protectPersonalText(image);
 
 
       const text =
@@ -518,6 +530,7 @@
 
       nickname.textContent =
         member.nickname;
+      protectPersonalText(nickname);
 
 
       const fullName =
@@ -525,6 +538,7 @@
 
       fullName.textContent =
         member.fullName;
+      protectPersonalText(fullName);
 
 
       text.append(
@@ -731,13 +745,12 @@
      LANGUAGE
   ======================================================= */
 
-  function setLanguage(language) {
+  function setLanguage(language, save = true) {
+    language = language === "id" ? "id" : "en";
     currentLanguage = language;
-
-    localStorage.setItem(
-      "thermpyx-language",
-      language
-    );
+    if (save) {
+      try { localStorage.setItem("thermpyx-language", language); } catch (_) {}
+    }
 
 
     document.documentElement.lang =
@@ -751,6 +764,7 @@
           "is-active",
           button.dataset.language === language
         );
+        button.setAttribute("aria-pressed", String(button.dataset.language === language));
       });
 
 
@@ -924,12 +938,16 @@
       button.addEventListener(
         "click",
         () => {
-          setLanguage(
-            button.dataset.language
-          );
+          const language = button.dataset.language;
+          if (window.TPX?.setLanguage) window.TPX.setLanguage(language);
+          else setLanguage(language);
         }
       );
     });
+
+  window.addEventListener("thermpyx:languagechange", event => {
+    setLanguage(event.detail?.language || window.TPX?.getLanguage() || "en", false);
+  });
 
 
   elements.themeToggle.addEventListener(
@@ -966,6 +984,6 @@
 
   renderSelector();
 
-  setLanguage(currentLanguage);
+  setLanguage(window.TPX?.getLanguage() || currentLanguage, false);
 
 })();

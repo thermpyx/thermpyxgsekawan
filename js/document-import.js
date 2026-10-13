@@ -91,13 +91,18 @@
     return normalizeText(output);
   }
   async function extract(file, options = {}) {
-    const kind = validateFile(file), buffer = await file.arrayBuffer();
+    const kind = validateFile(file);
+    let buffer;
+    try { buffer = await file.arrayBuffer(); }
+    catch (_) { throw new ImportError("file-read", "Dokumen gagal dibaca. Gunakan PDF dengan teks atau DOCX standar."); }
     if (buffer.byteLength > LIMITS.bytes) throw new ImportError("file-too-large", "Ukuran dokumen maksimal 8 MB.");
     let value = "", pages = null, warnings = [];
     if (kind === "docx") {
       inspectDocxZip(buffer);
       const mammoth = options.mammoth || await loadMammoth();
-      const result = await mammoth.extractRawText({ arrayBuffer: buffer });
+      let result;
+      try { result = await mammoth.extractRawText({ arrayBuffer: buffer }); }
+      catch (_) { throw new ImportError("docx-read", "Dokumen gagal dibaca. Gunakan PDF dengan teks atau DOCX standar."); }
       value = result.value;
       if (result.messages && result.messages.length) warnings.push("Sebagian elemen dokumen tidak disertakan. Periksa hasil teks sebelum membuat kartu.");
     } else {
@@ -142,15 +147,16 @@
     const language = options.language === "en" ? "en" : "id", lines = text.split("\n"), cards = [];
     const push = (front, back) => { if (cards.length < LIMITS.cards && back.trim()) cards.push({ front: front.slice(0, 300).trim(), back: back.slice(0, 5000).trim() }); };
     let heading = "", paragraphs = [], question = "";
-    const flush = () => {
+    const flush = (front = heading, wholeAnswer = false) => {
       if (!paragraphs.length) return;
-      const blocks = normalizeText(paragraphs.join("\n")).split(/\n\n/).filter(Boolean);
+      const body = normalizeText(paragraphs.join("\n"));
+      const blocks = wholeAnswer ? [body] : body.split(/\n\n/).filter(Boolean);
       for (const block of blocks) {
         let remaining = block;
         while (remaining && cards.length < LIMITS.cards) {
           let boundary = Math.min(4500, remaining.length);
           if (remaining.length > 4500) { const space = remaining.lastIndexOf(" ", boundary); if (space > 2000) boundary = space; }
-          push(heading || (language === "en" ? `Explain the key idea in section ${cards.length + 1}.` : `Jelaskan gagasan utama pada bagian ${cards.length + 1}.`), remaining.slice(0, boundary));
+          push(front || (language === "en" ? `Explain the key idea in section ${cards.length + 1}.` : `Jelaskan gagasan utama pada bagian ${cards.length + 1}.`), remaining.slice(0, boundary));
           remaining = remaining.slice(boundary).trim();
         }
       }
@@ -158,18 +164,18 @@
     };
     for (const line of lines) {
       const clean = line.trim(), q = clean.match(/^(?:Q(?:uestion)?|Pertanyaan|Soal|P)\s*[:：]\s*(.+)$/i), a = clean.match(/^(?:A(?:nswer)?|Jawaban|J)\s*[:：]\s*(.+)$/i);
-      if (q) { flush(); question = q[1]; continue; }
-      if (a && question) { push(question, a[1]); question = ""; continue; }
-      if (question && clean) { paragraphs.push(clean); continue; }
+      if (q) { flush(question || heading, Boolean(question)); question = q[1]; continue; }
+      // PDF/DOCX extraction commonly wraps an answer across multiple lines.
+      // Keep those lines together until the next question or section boundary.
+      if (a && question) { paragraphs.push(a[1]); continue; }
       const definition = clean.match(/^([^:：]{2,90})\s*[:：]\s*(.{20,})$/);
-      if (definition && !/^https?$/i.test(definition[1])) { flush(); push(language === "en" ? `Explain ${definition[1]}.` : `Jelaskan ${definition[1]}.`, definition[2]); continue; }
+      if (definition && !/^https?$/i.test(definition[1])) { flush(question || heading, Boolean(question)); question = ""; push(language === "en" ? `Explain ${definition[1]}.` : `Jelaskan ${definition[1]}.`, definition[2]); continue; }
       const short = clean.length >= 3 && clean.length <= 110 && clean.split(/\s+/).length <= 13;
       const isHeading = short && !/[.!?]$/.test(clean) && (/^(?:\d+(?:\.\d+)*[.)]?\s|bab\s|chapter\s|bagian\s)/i.test(clean) || clean.endsWith(":") || (clean === clean.toUpperCase() && /[A-ZÀ-ÖØ-Þ]/.test(clean)));
-      if (isHeading) { flush(); heading = clean.replace(/:$/, ""); }
+      if (isHeading) { flush(question || heading, Boolean(question)); question = ""; heading = clean.replace(/:$/, ""); }
       else paragraphs.push(clean);
     }
-    if (question && paragraphs.length) { push(question, paragraphs.join("\n")); paragraphs = []; }
-    flush();
+    flush(question || heading, Boolean(question));
     return cards;
   }
   return Object.freeze({ LIMITS, ImportError, validateFile, inspectDocxZip, normalizeText, textFromPdfItems, extract, generateDraft });

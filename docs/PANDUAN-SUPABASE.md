@@ -1,6 +1,6 @@
 # Hubungkan bank soal dan flashcard ke Supabase
 
-Kode web dan SQL tambahan sudah disiapkan. Database Supabase Anda **belum diubah** oleh revisi ini. Ikuti satu tahap dahulu; kita bisa melanjutkan dari layar yang sedang Anda buka.
+Kode web dan SQL tambahan sudah disiapkan. Paket web tidak mengubah database secara otomatis; SQL dijalankan di Dashboard Supabase. Ikuti satu tahap dahulu; kita bisa melanjutkan dari layar yang sedang Anda buka.
 
 ## 1. Buka proyek yang sudah dipakai web
 
@@ -57,8 +57,8 @@ Tidak perlu membuat Storage bucket untuk impor flashcard: web membaca dokumen di
 
 ## 5. Uji bank soal
 
-1. Buka bagian **Latihan** pada web, lalu fitur **Bank Soal**.
-2. Klik **Akun cloud**, lalu isi email/kata sandi dan klik **Masuk** menggunakan akun aplikasi dari tahap 3.
+1. Di beranda pilih **Masuk** dan gunakan email/kata sandi **akun aplikasi** dari tahap 3. Akun Dashboard Supabase bukan akun masuk web. Anda juga dapat membuat akun dari web setelah email proyek dikonfigurasi; lihat [email THERMPYX](EMAIL-THERMPYX.md).
+2. Buka **Mulai Latihan → Quiz → Bank Soal**. Formulir akun juga tersedia di halaman bank soal.
 3. Buat judul paket dan topik. Tambahkan minimal satu soal, empat pilihan jawaban, serta satu jawaban benar. Pembahasan bersifat opsional.
 4. Draf soal tersimpan otomatis di browser. Setelah masuk, klik **Simpan ke cloud** untuk menyimpan paket ke akun.
 5. Muat ulang halaman dan buka paket yang disimpan ke cloud. Pastikan soal dan pilihan jawaban kembali dengan benar.
@@ -73,7 +73,7 @@ Validasi multiplayer berikutnya dilakukan setelah skema lama dan akses proyek di
 1. Buka **Latihan → Flashcard**.
 2. Klik **Susun materi baru**, lalu isi judul dan topik. Anda dapat menulis kartu langsung atau membuka **Impor materi dari PDF / DOCX → Pilih dokumen**.
 3. Tunggu teks muncul dalam **Pratinjau teks / tempel materi**, lalu klik **Buat draf kartu dari teks**. Hasilnya adalah **draf yang dapat diedit**: periksa pasangan bagian depan dan belakang setiap kartu sebelum menyimpan.
-4. Klik **Simpan materi** untuk menyimpan lokal. Untuk menyimpan ke cloud, masuk melalui **Akun cloud**, centang **Simpan ke akun Supabase**, lalu klik **Simpan materi**. Centang **Izinkan pengguna lain membaca materi** hanya jika deck memang ingin dipublikasikan.
+4. Klik **Simpan materi** untuk menyimpan lokal. Untuk menyimpan ke cloud, masuk ke **akun THERMPYX**, centang **Simpan ke akun THERMPYX**, lalu klik **Simpan materi**. Centang **Izinkan pengguna lain membaca materi** hanya jika deck memang ingin dipublikasikan.
 5. Muat ulang halaman, buka deck, lalu coba membalik dan berpindah kartu.
 
 Dokumen maksimal 8 MB; PDF maksimal 32 halaman. PDF perlu memiliki teks yang bisa diseleksi. PDF hasil foto/pemindaian tanpa teks membutuhkan OCR terlebih dahulu; OCR belum tersedia dalam revisi ini. DOCX didukung; format `.doc` lama perlu disimpan ulang sebagai `.docx`. Tabel, rumus, gambar, dan susunan beberapa kolom mungkin tidak mengikuti tata letak dokumen asal karena yang dibaca adalah teksnya.
@@ -110,3 +110,11 @@ Tidak ada penghapusan otomatis. Jika Anda ingin membatalkan fitur cloud, ekspor 
 Objek tambahan revisi ini adalah `tpx_question_sets`, `tpx_flashcard_decks`, fungsi `tpx_questions_valid`/`tpx_cards_valid`, serta constraint `tpx_quiz_rooms_questions_valid` dan kolom `quiz_rooms.questions`. Hapus hanya setelah memastikan tidak dipakai aplikasi. Jangan menghapus `quiz_rooms`, `quiz_players`, `quiz_answers`, pengguna Authentication, atau policy lama. Jika kolom `questions` sudah ada sebelum menjalankan script, pertahankan kolom tersebut.
 
 Bila pembatalan benar-benar diperlukan, kita dapat menyiapkan kueri penghapusan terbatas setelah melihat objek mana yang sebelumnya sudah ada; panduan ini sengaja tidak mengeksekusi penghapusan data.
+
+## Menjalankan dengan Live Server
+
+Unduh ZIP revisi GitHub, ekstrak, lalu buka folder yang langsung memuat `index.html` dan `app.html` di VS Code. Hentikan Live Server lama, jalankan kembali dari `index.html`, dan muat ulang browser. Jangan menimpa sebagian berkas: JavaScript, CSS, `vendor/`, dan `assets/` harus berasal dari revisi yang sama. Simpan salinan folder lama terlebih dahulu.
+
+Alamat lokal memakai HTTP, bukan `file://`. Untuk pemulihan kata sandi, tambahkan URL `index.html` yang benar-benar tampil di Live Server ke Authentication → URL Configuration → Redirect URLs, misalnya `http://127.0.0.1:5500/index.html#account` dan `http://127.0.0.1:5500/index.html?account=recovery#account`. Sertakan subfolder jika ada. Saat nanti memakai hosting, ganti Site URL serta tambahkan URL HTTPS hosting tersebut.
+
+Impor PDF/DOCX memilih berkas dari komputer; setelah ekstraksi, periksa pratinjau teks lalu buat draf kartu. Simpan lokal tanpa login, atau simpan ke akun setelah masuk. Mengunduh ZIP web, memilih dokumen materi, dan menyimpan koleksi ke akun adalah tiga tindakan berbeda.

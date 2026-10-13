@@ -1,6 +1,6 @@
 # Catatan revisi THERMPYX
 
-Revisi dikerjakan pada salinan terpisah `thermpyx-revisi`. Berkas ZIP yang dikirim sesuai dengan versi checkout asal, dengan tambahan berkas SQL pemeriksaan jawaban ganda. Fitur flashcard, penyisipan paket soal host, dan input link musik YouTube yang Anda jelaskan belum ada pada sumber tersebut; fitur itu ditambahkan agar sesuai dengan versi web yang ingin Anda gunakan.
+Web menggunakan HTML, CSS, dan JavaScript statis, dengan navigasi aplikasi yang menjaga pemutar musik tetap hidup. Paket memuat kode web, panduan, dan SQL yang dijalankan melalui Dashboard Supabase.
 
 ## Perubahan yang diminta
 
@@ -10,6 +10,16 @@ Revisi dikerjakan pada salinan terpisah `thermpyx-revisi`. Berkas ZIP yang dikir
 - Bank soal menyediakan paket soal yang dapat dipilih untuk host. Salinan soal tersimpan pada ruang sehingga sesi menggunakan soal yang konsisten.
 - Flashcard menyediakan editor kartu dan impor PDF/DOCX menjadi draf yang dapat diperiksa sebelum disimpan.
 - SQL tambahan dan [panduan Supabase bertahap](PANDUAN-SUPABASE.md) disertakan untuk penyimpanan konten dengan akun pengguna.
+
+## Akun, Latihan, bahasa, dan riwayat
+
+Beranda memiliki tombol Masuk/Buat akun serta penjelasan manfaat akun. Formulir yang sama tersedia di bank soal dan flashcard, mendukung pendaftaran, ulang kata sandi, verifikasi kode email, kirim ulang kode, keluar, serta pemulihan kata sandi. Sesi akun dipulihkan ketika berpindah halaman atau memuat ulang. Penyimpanan koleksi cloud memerlukan akun aplikasi; draf lokal, impor dokumen, dan alat belajar dapat dipakai tanpa masuk.
+
+Kode email memakai Supabase Auth. Template THERMPYX ada di `supabase/confirm-signup-email.html`; pengirim email milik THERMPYX membutuhkan konfigurasi SMTP serta alamat pengirim yang terverifikasi. Pengiriman nyata belum dibuktikan oleh pengujian backend tiruan. Panduan ada di [EMAIL-THERMPYX.md](EMAIL-THERMPYX.md).
+
+Beranda menyediakan satu tombol Mulai Latihan. Di dalamnya pengguna memilih Quiz atau Flashcard. Terjemahan ID/EN mencakup teks, atribut aksesibilitas, materi contoh, status, dan kontrol dinamis. Rumus dan tulisan pengguna dipertahankan. Wordmark memakai X judul utama, dengan ikon simulator piston/sensor yang digambar khusus.
+
+Riwayat menyimpan maksimal 50 hasil kalkulasi, kuis, simulasi yang benar-benar selesai, serta sesi flashcard setelah seluruh kartu ditinjau. Navigasi, video, slider, mulai/jeda/reset tidak dicatat. Hasil identik dalam satu menit digabung, dan daftar hanya dirender ketika terlihat.
 
 ## Musik tanpa YouTube
 
@@ -37,7 +47,7 @@ PDF/DOCX asli tidak diunggah ke Supabase. Hanya data kartu dan metadata sumber y
 
 Migrasi `supabase/01-content-library.sql` menambahkan tabel pustaka soal dan flashcard. RLS membatasi penulisan kepada pemilik akun; deck dapat dibaca publik hanya jika `is_public` bernilai `true`. Akses menulis anonim tidak diberikan.
 
-Tidak ada perubahan remote database dalam paket revisi ini. URL dan browser key yang sudah ada dapat dipakai kembali bila Anda memilih proyek yang sama. Jangan menaruh key `service_role` atau `sb_secret_...` pada frontend.
+Paket tidak mengubah database remote secara otomatis. SQL perlu dijalankan melalui Dashboard Supabase. URL dan browser key yang sudah ada dapat dipakai kembali bila Anda memilih proyek yang sama. Jangan menaruh key `service_role` atau `sb_secret_...` pada frontend.
 
 Skema dan policy database multiplayer lama tidak tersedia lengkap pada sumber ZIP. SQL hanya menambahkan kolom opsional soal pada `quiz_rooms` bila tabel itu sudah ada; policy lama tidak diperluas atau dimatikan. Alur cloud dan multiplayer perlu diuji pada proyek nyata setelah Anda menjalankan SQL dan masuk dengan akun aplikasi.
 
@@ -56,3 +66,5 @@ Suite lama lulus: 20/20 pemeriksaan kalkulator, simulator, dan riwayat; seluruh 
 Alur cloud diuji dengan backend simulasi: login/penggantian akun, simpan/update/hapus konten, klik ganda, snapshot soal kustom, jumlah soal pemain, dan penyelesaian host. Ini bukan bukti sambungan Supabase remote. API YouTube sebenarnya diblokir proxy di lingkungan uji; kontrak player dan pesan kegagalan diuji secara terpisah.
 
 Untuk revisi halaman terhubung, pemutaran MP3 nyata diuji saat membuka Teori, Simulator, Kalkulator, Konverter, dan memakai Kembali/Maju browser. Elemen audio tetap sama, waktunya terus bertambah, dan tidak ada jeda atau pemuatan ulang audio pada perpindahan tersebut. Tujuh kalkulator, sembilan kategori konverter, bahasa, tema, tampilan mobile, serta impor PDF/DOCX di dalam aplikasi juga diperiksa. Tujuh tes numerik konverter memeriksa definisi satuan, seluruh pasangan satuan, batas suhu, dan input tidak valid.
+
+Pemeriksaan revisi akun memakai backend Auth tiruan, sehingga tidak mengirim email atau mengubah pengguna nyata. Pengujian browser juga memastikan token pemulihan tetap berada dalam fragmen URL, bukan parameter HTTP, selama navigasi aplikasi. Sambungan proyek, kebijakan multiplayer lama, dan SMTP tetap diuji di proyek nyata oleh pemilik.

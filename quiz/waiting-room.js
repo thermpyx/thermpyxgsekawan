@@ -204,6 +204,9 @@ async function loadPlayers() {
                 "player-name"
             );
 
+            playerName.setAttribute("data-tpx-no-translate", "");
+            playerName.setAttribute("data-tpx-user-content", "");
+
             playerName.textContent =
                 player.nickname;
 

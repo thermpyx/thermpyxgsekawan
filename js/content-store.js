@@ -2,35 +2,64 @@
 (() => {
   "use strict";
   const listeners = new Set();
-  let currentSession = null, initialized = false, subscription = null;
-  const tr = (en, id) => window.TPX?.getLanguage() === "id" ? id : en;
+  const mounted = new WeakMap();
+  const siteBase = new URL("../", document.currentScript?.src || new URL("js/content-store.js", location.href));
+  let currentSession = null, initialized = false, subscription = null, lastAuthEvent = "", authSequence = 0;
+  function language() {
+    if (window.TPX?.getLanguage) return window.TPX.getLanguage();
+    try { const stored = localStorage.getItem("thermpyx-language"); if (stored === "id" || stored === "en") return stored; } catch (_) { /* Storage can be unavailable. */ }
+    return document.documentElement.lang === "id" ? "id" : "en";
+  }
+  const tr = (en, id) => language() === "id" ? id : en;
+  const pairedError = (en, id, code) => ({message: tr(en, id), messageEn: en, messageId: id, ...(code ? {code} : {})});
+  const contentErrorMessage = error => error?.messageEn ? tr(error.messageEn, error.messageId) : String(error?.message || "");
   const client = () => typeof supabaseClient !== "undefined" ? supabaseClient : null;
-  function emit(session) {
+  function clearAuthFragment() {
+    if (/^#(?:(?:[^&]*&)*(?:access_token|refresh_token|token_type|error_description)=)/.test(location.hash)) {
+      history.replaceState(history.state, "", location.pathname + location.search + "#account");
+    }
+    try { window.parent.TPXPersistentShell?.reportLocation(window); } catch (_) { /* Standalone page. */ }
+  }
+  function emit(session, event = "") {
     currentSession = session || null;
+    lastAuthEvent = event;
+    if (session && ["SIGNED_IN", "PASSWORD_RECOVERY", "INITIAL_SESSION"].includes(event)) clearAuthFragment();
     for (const callback of listeners) {
-      try { callback(currentSession); } catch (_) { /* One view must not break other views. */ }
+      try { callback(currentSession, event); } catch (_) { /* One view must not break other views. */ }
     }
   }
   function friendly(error) {
     if (!error) return null;
+    const authCopy = {
+      invalid_credentials: ["Email or password is incorrect.", "Email atau kata sandi salah."],
+      email_not_confirmed: ["Confirm your email before signing in. You can request another code below.", "Konfirmasikan email sebelum masuk. Anda bisa meminta kode baru di bawah."],
+      otp_expired: ["The code is invalid or has expired. Request a new code and try again.", "Kode salah atau sudah kedaluwarsa. Minta kode baru lalu coba lagi."],
+      over_email_send_rate_limit: ["Please wait before requesting another email.", "Tunggu sebentar sebelum meminta email berikutnya."],
+      over_request_rate_limit: ["Too many attempts. Please wait and try again.", "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi."],
+      email_address_invalid: ["Enter a valid email address.", "Masukkan alamat email yang valid."],
+      user_already_exists: ["An account with this email already exists. Sign in or reset your password.", "Akun dengan email ini sudah ada. Masuk atau atur ulang kata sandi."],
+      weak_password: ["Use a stronger password that meets the account requirements.", "Gunakan kata sandi yang lebih kuat sesuai ketentuan akun."]
+    };
+    if (authCopy[error.code]) return pairedError(...authCopy[error.code], error.code);
     if (["42P01", "PGRST205", "PGRST204"].includes(error.code))
-      return { message: tr("The content tables are not configured yet. Follow the Supabase guide.", "Tabel konten belum disiapkan. Ikuti panduan Supabase.") };
+      return pairedError("The content tables are not configured yet. Follow the Supabase guide.", "Tabel konten belum disiapkan. Ikuti panduan Supabase.");
     if (error.code === "42501")
-      return { message: tr("Access denied. Sign in as the content owner and check the RLS policies.", "Akses ditolak. Masuk sebagai pemilik konten dan periksa kebijakan RLS.") };
+      return pairedError("Access denied. Sign in as the content owner and check the RLS policies.", "Akses ditolak. Masuk sebagai pemilik konten dan periksa kebijakan RLS.");
     return { message: String(error.message || tr("Connection failed. Your local draft is safe.", "Koneksi gagal. Draf lokal Anda tetap tersimpan.")) };
   }
-  const unavailable = () => ({ data: null, error: { message: tr("Cloud connection is unavailable. You can keep editing locally.", "Koneksi cloud belum tersedia. Anda tetap bisa mengedit secara lokal.") } });
+  const unavailable = () => ({ data: null, error: pairedError("Cloud connection is unavailable. You can keep editing locally.", "Koneksi cloud belum tersedia. Anda tetap bisa mengedit secara lokal.") });
   async function session() {
     const db = client();
     if (!db?.auth) return null;
     if (!initialized) {
       initialized = true;
-      subscription = db.auth.onAuthStateChange((_event, next) => emit(next));
+      subscription = db.auth.onAuthStateChange((event, next) => emit(next, event));
     }
     try {
       const { data, error } = await db.auth.getSession();
       if (error) return null;
       currentSession = data?.session || null;
+      clearAuthFragment();
       return currentSession;
     } catch (_) { return null; }
   }
@@ -51,7 +80,7 @@
     const db = client();
     if (!db?.auth) return unavailable();
     try {
-      const result = await db.auth.signUp({ email: email.trim(), password });
+      const result = await db.auth.signUp({ email: email.trim(), password, options: {emailRedirectTo: new URL("index.html#account", siteBase).href} });
       if (!result.error && result.data.session) emit(result.data.session);
       return { data: result.data, error: friendly(result.error) };
     } catch (error) { return { data: null, error: friendly(error) }; }
@@ -64,6 +93,42 @@
       if (!result.error) emit(null);
       return { data: null, error: friendly(result.error) };
     } catch (error) { return { data: null, error: friendly(error) }; }
+  }
+  async function verifyEmailCode(email, token) {
+    const db = client();
+    if (!db?.auth?.verifyOtp) return unavailable();
+    const cleanToken = String(token || "").trim();
+    if (!/^\d{6,10}$/.test(cleanToken)) return {data: null, error: pairedError("Enter the 6–10 digit code from your email.", "Masukkan kode 6–10 digit dari email Anda.")};
+    try {
+      const result = await db.auth.verifyOtp({email: String(email).trim(), token: cleanToken, type: "signup"});
+      if (!result.error && result.data?.session) emit(result.data.session);
+      return {data: result.data, error: friendly(result.error)};
+    } catch (error) {return {data: null, error: friendly(error)};}
+  }
+  async function resendVerification(email) {
+    const db = client();
+    if (!db?.auth?.resend) return unavailable();
+    try {
+      const result = await db.auth.resend({type: "signup", email: String(email).trim(), options: {emailRedirectTo: new URL("index.html#account", siteBase).href}});
+      return {data: result.data, error: friendly(result.error)};
+    } catch (error) {return {data: null, error: friendly(error)};}
+  }
+  async function requestPasswordReset(email) {
+    const db = client();
+    if (!db?.auth?.resetPasswordForEmail) return unavailable();
+    try {
+      const result = await db.auth.resetPasswordForEmail(String(email).trim(), {redirectTo: new URL("index.html?account=recovery#account", siteBase).href});
+      return {data: result.data, error: friendly(result.error)};
+    } catch (error) {return {data: null, error: friendly(error)};}
+  }
+  async function updatePassword(password) {
+    const db = client();
+    if (!db?.auth?.updateUser) return unavailable();
+    try {
+      const result = await db.auth.updateUser({password});
+      if (!result.error) lastAuthEvent = "USER_UPDATED";
+      return {data: result.data, error: friendly(result.error)};
+    } catch (error) {return {data: null, error: friendly(error)};}
   }
   function text(value, name, max) {
     const result = String(value ?? "").trim();
@@ -109,7 +174,7 @@
     const db = client();
     if (!db) return unavailable();
     const active = await session();
-    if (!active) return { data: null, error: { message: tr("Sign in before saving to cloud. Local editing remains available.", "Masuk sebelum menyimpan ke cloud. Pengeditan lokal tetap tersedia.") } };
+    if (!active) return { data: null, error: pairedError("Sign in before saving to cloud. Local editing remains available.", "Masuk sebelum menyimpan ke cloud. Pengeditan lokal tetap tersedia.") };
     try {
       const payload = { title: text(input.title, tr("Title", "Judul"), 140), topic: String(input.topic || "all").slice(0, 80), owner_id: active.user.id };
       if (kind === "questions") payload.questions = normalizeQuestions(input.questions);
@@ -129,45 +194,161 @@
     const db = client();
     if (!db) return unavailable();
     const active = await session();
-    if (!active) return { data: null, error: { message: tr("Sign in to delete cloud content.", "Masuk untuk menghapus konten cloud.") } };
+    if (!active) return { data: null, error: pairedError("Sign in to delete cloud content.", "Masuk untuk menghapus konten cloud.") };
     try {
       const result = await db.from(table).delete().eq("id", id).eq("owner_id", active.user.id).select("id");
-      if (!result.error && !result.data?.length) return { data: null, error: { message: tr("Content was not deleted. Check ownership or refresh the list.", "Konten belum dihapus. Periksa kepemilikan atau muat ulang daftar.") } };
+      if (!result.error && !result.data?.length) return { data: null, error: pairedError("Content was not deleted. Check ownership or refresh the list.", "Konten belum dihapus. Periksa kepemilikan atau muat ulang daftar.") };
       return { data: result.data, error: friendly(result.error) };
     } catch (error) { return { data: null, error: friendly(error) }; }
   }
-  function mountAuth(container) {
-    if (!container || container.dataset.authMounted) return;
+  function mountAuth(container, options = {}) {
+    if (!container) return null;
+    if (mounted.has(container)) return mounted.get(container);
     container.dataset.authMounted = "true";
     container.classList.add("tpx-content-auth");
-    container.innerHTML = `<div class="tpx-auth-summary"><span class="tpx-auth-state"></span><button class="tpx-auth-toggle" type="button" aria-expanded="false">${tr("Cloud account", "Akun cloud")}</button></div><div class="tpx-auth-fields" hidden><form class="tpx-auth-form"><label>${tr("Email", "Email")}<input name="email" type="email" required autocomplete="username" maxlength="254"></label><label>${tr("Password", "Kata sandi")}<input name="password" type="password" required minlength="6" autocomplete="current-password"></label><div class="tpx-auth-actions"><button type="submit">${tr("Sign in", "Masuk")}</button><button type="button" data-register>${tr("Create account", "Buat akun")}</button></div></form><button type="button" class="tpx-auth-signout" hidden>${tr("Sign out", "Keluar")}</button><p class="tpx-auth-note">${tr("Your cloud library belongs to your account. Local drafts work without signing in.", "Koleksi cloud milik akun Anda. Draf lokal bisa digunakan tanpa masuk.")}</p><a href="../docs/PANDUAN-SUPABASE.md" target="_blank" rel="noopener">${tr("Supabase setup guide", "Panduan setup Supabase")}</a></div><p class="tpx-auth-message" role="status" aria-live="polite"></p>`;
-    const summary = container.querySelector(".tpx-auth-state"), fields = container.querySelector(".tpx-auth-fields"), form = container.querySelector("form"), logout = container.querySelector(".tpx-auth-signout"), status = container.querySelector(".tpx-auth-message"), toggle = container.querySelector(".tpx-auth-toggle");
-    function render(active) {
-      summary.textContent = active ? `${tr("Connected", "Terhubung")}: ${active.user.email || tr("account", "akun")}` : tr("Local drafts · not signed in", "Draf lokal · belum masuk");
-      form.hidden = Boolean(active); logout.hidden = !active;
+    container.setAttribute("data-tpx-no-translate", "");
+    const uid = `tpx-auth-${++authSequence}`;
+    container.innerHTML = `
+      <div class="tpx-auth-summary"><span class="tpx-auth-state"></span><button class="tpx-auth-toggle" type="button" aria-controls="${uid}-fields" aria-expanded="false" data-auth-en="Account" data-auth-id="Akun"></button></div>
+      <div class="tpx-auth-fields" id="${uid}-fields" hidden>
+        <div class="tpx-auth-modes" role="group" data-auth-aria-en="Account options" data-auth-aria-id="Pilihan akun"><button type="button" data-signin aria-pressed="true" data-auth-en="Sign in" data-auth-id="Masuk"></button><button type="button" data-register aria-pressed="false" data-auth-en="Create account" data-auth-id="Buat akun"></button></div>
+        <form class="tpx-auth-form">
+          <label><span data-auth-en="Email" data-auth-id="Email"></span><input name="email" type="email" required autocomplete="username" maxlength="254" autocapitalize="none" spellcheck="false"></label>
+          <label><span data-auth-en="Password" data-auth-id="Kata sandi"></span><input name="password" type="password" required autocomplete="current-password" maxlength="128"></label>
+          <label class="tpx-auth-confirm" hidden><span data-auth-en="Confirm password" data-auth-id="Ulangi kata sandi"></span><input name="confirm_password" type="password" autocomplete="new-password" maxlength="128"></label>
+          <p class="tpx-auth-password-note" hidden data-auth-en="Use at least 6 characters. Your email needs verification before cloud access." data-auth-id="Gunakan minimal 6 karakter. Email perlu diverifikasi sebelum menggunakan cloud."></p>
+          <div class="tpx-auth-actions"><button type="submit" data-auth-submit></button><button type="button" class="tpx-auth-forgot" data-auth-en="Forgot password?" data-auth-id="Lupa kata sandi?"></button><button type="button" class="tpx-auth-confirm-email" data-auth-en="Verify email" data-auth-id="Verifikasi email"></button></div>
+        </form>
+        <form class="tpx-auth-verify" hidden>
+          <h3 data-auth-en="Verify your email" data-auth-id="Verifikasi email Anda"></h3><p class="tpx-auth-verify-address"></p>
+          <label><span data-auth-en="Email confirmation code" data-auth-id="Kode konfirmasi email"></span><input name="token" type="text" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6,10}" minlength="6" maxlength="10"></label>
+          <p data-auth-en="Enter the code in your confirmation email. If the email contains a confirmation link, you can open that link instead." data-auth-id="Masukkan kode dari email konfirmasi. Jika email berisi tautan konfirmasi, Anda juga bisa membuka tautan tersebut."></p>
+          <div class="tpx-auth-actions"><button type="submit" data-auth-en="Verify & sign in" data-auth-id="Verifikasi & masuk"></button><button type="button" data-resend></button><button type="button" data-back data-auth-en="Back to sign in" data-auth-id="Kembali ke masuk"></button></div>
+        </form>
+        <form class="tpx-auth-reset" hidden><h3 data-auth-en="Reset password" data-auth-id="Atur ulang kata sandi"></h3><p data-auth-en="We will email you a secure link to choose a new password." data-auth-id="Kami akan mengirim tautan aman melalui email untuk mengganti kata sandi."></p><label><span data-auth-en="Email" data-auth-id="Email"></span><input name="reset_email" type="email" required autocomplete="username" maxlength="254" autocapitalize="none"></label><div class="tpx-auth-actions"><button type="submit" data-auth-en="Send reset link" data-auth-id="Kirim tautan pemulihan"></button><button type="button" data-back data-auth-en="Back to sign in" data-auth-id="Kembali ke masuk"></button></div></form>
+        <form class="tpx-auth-recovery" hidden><h3 data-auth-en="Choose a new password" data-auth-id="Buat kata sandi baru"></h3><label><span data-auth-en="New password" data-auth-id="Kata sandi baru"></span><input name="new_password" type="password" required minlength="6" maxlength="128" autocomplete="new-password"></label><label><span data-auth-en="Confirm new password" data-auth-id="Ulangi kata sandi baru"></span><input name="confirm_new_password" type="password" required minlength="6" maxlength="128" autocomplete="new-password"></label><div class="tpx-auth-actions"><button type="submit" data-auth-en="Save new password" data-auth-id="Simpan kata sandi baru"></button></div></form>
+        <button type="button" class="tpx-auth-signout" hidden data-auth-en="Sign out" data-auth-id="Keluar"></button>
+        <p class="tpx-auth-note" data-auth-en="Your account keeps your question bank and flashcards together. Local drafts work without signing in." data-auth-id="Akun Anda menyimpan bank soal dan flashcard. Draf lokal tetap bisa digunakan tanpa masuk."></p>
+        <a class="tpx-auth-guide" target="_blank" rel="noopener" data-auth-en="Account setup help" data-auth-id="Bantuan pengaturan akun"></a>
+      </div><p class="tpx-auth-message" role="status" aria-live="polite" aria-atomic="true"></p>`;
+    const summary = container.querySelector(".tpx-auth-state"), fields = container.querySelector(".tpx-auth-fields"), form = container.querySelector(".tpx-auth-form"), verify = container.querySelector(".tpx-auth-verify"), reset = container.querySelector(".tpx-auth-reset"), recovery = container.querySelector(".tpx-auth-recovery"), logout = container.querySelector(".tpx-auth-signout"), status = container.querySelector(".tpx-auth-message"), toggle = container.querySelector(".tpx-auth-toggle"), modes = container.querySelector(".tpx-auth-modes"), resend = container.querySelector("[data-resend]");
+    container.querySelector(".tpx-auth-guide").href = new URL("docs/PANDUAN-SUPABASE.md", siteBase).href;
+    let activeSession = null, statusCopy = null, mode = options.mode === "register" ? "register" : "signin", pendingEmail = "", busy = false, resendUntil = 0, resendTimer = null;
+    function message(en, id) { statusCopy = {en, id}; status.textContent = tr(en, id); }
+    function errorMessage(error) { statusCopy = error.messageEn ? {en: error.messageEn, id: error.messageId} : null; status.textContent = error.message; }
+    function expand(open = true) { fields.hidden = !open; toggle.setAttribute("aria-expanded", String(open)); }
+    function cooldown() {
+      clearTimeout(resendTimer);
+      const seconds = Math.max(0, Math.ceil((resendUntil - Date.now()) / 1000));
+      resend.textContent = seconds ? tr(`Resend in ${seconds}s`, `Kirim ulang dalam ${seconds} dtk`) : tr("Resend code", "Kirim ulang kode");
+      resend.disabled = busy || seconds > 0;
+      if (seconds && container.isConnected) resendTimer = setTimeout(cooldown, 1000);
     }
-    toggle.addEventListener("click", () => { fields.hidden = !fields.hidden; toggle.setAttribute("aria-expanded", String(!fields.hidden)); });
-    let busy = false;
-    async function login(register) {
-      if (busy || !form.reportValidity()) return;
-      busy = true;
-      const buttons = container.querySelectorAll("button");
-      buttons.forEach(button => { button.disabled = true; });
-      status.textContent = tr("Connecting…", "Menghubungkan…");
-      try {
-        const values = new FormData(form);
-        const result = await (register ? signUp : signIn)(String(values.get("email")), String(values.get("password")));
-        status.textContent = result.error?.message || (register && !result.data?.session ? tr("Check your email to confirm the account, then sign in.", "Periksa email untuk konfirmasi akun, lalu masuk.") : tr("Account connected.", "Akun terhubung."));
-        if (!result.error) form.elements.password.value = "";
-      } finally { busy = false; buttons.forEach(button => { button.disabled = false; }); }
+    function render(active, event = "") {
+      activeSession = active;
+      if (!active && event === "SIGNED_OUT") mode = "signin";
+      if (event === "PASSWORD_RECOVERY" && active) { mode = "recovery"; expand(); }
+      if (active && mode !== "recovery") mode = "signin";
+      summary.textContent = active ? `${tr("Connected", "Terhubung")}: ${active.user.email || tr("account", "akun")}` : tr("Sign in to your THERMPYX account", "Masuk ke akun THERMPYX");
+      form.hidden = Boolean(active) || !["signin", "register"].includes(mode);
+      modes.hidden = Boolean(active) || !["signin", "register"].includes(mode);
+      verify.hidden = Boolean(active) || mode !== "verify";
+      reset.hidden = Boolean(active) || mode !== "reset";
+      recovery.hidden = !active || mode !== "recovery";
+      logout.hidden = !active || mode === "recovery";
+      const registering = mode === "register";
+      container.querySelector("[data-signin]").setAttribute("aria-pressed", String(!registering));
+      container.querySelector("[data-register]").setAttribute("aria-pressed", String(registering));
+      form.elements.password.autocomplete = registering ? "new-password" : "current-password";
+      form.elements.password.minLength = registering ? 6 : 1;
+      form.elements.confirm_password.required = registering;
+      form.elements.confirm_password.disabled = !registering;
+      form.querySelector(".tpx-auth-confirm").hidden = !registering;
+      form.querySelector(".tpx-auth-password-note").hidden = !registering;
+      form.querySelector(".tpx-auth-forgot").hidden = registering;
+      form.querySelector(".tpx-auth-confirm-email").hidden = registering;
+      form.querySelector("[data-auth-submit]").textContent = registering ? tr("Create account", "Buat akun") : tr("Sign in", "Masuk");
+      verify.querySelector(".tpx-auth-verify-address").textContent = pendingEmail;
+      cooldown();
     }
-    form.addEventListener("submit", event => { event.preventDefault(); login(false); });
-    container.querySelector("[data-register]").addEventListener("click", () => login(true));
-    logout.addEventListener("click", async () => { logout.disabled = true; const result = await signOut(); status.textContent = result.error?.message || tr("Signed out. Local drafts are unchanged.", "Sudah keluar. Draf lokal tetap tersimpan."); logout.disabled = false; });
-    onAuthChange(render); session().then(render);
+    function localize() {
+      container.querySelectorAll("[data-auth-en]").forEach(node => { node.textContent = tr(node.dataset.authEn, node.dataset.authId); });
+      container.querySelectorAll("[data-auth-aria-en]").forEach(node => { node.setAttribute("aria-label", tr(node.dataset.authAriaEn, node.dataset.authAriaId)); });
+      if (statusCopy) status.textContent = tr(statusCopy.en, statusCopy.id);
+      render(activeSession);
+    }
+    function changeMode(next, focus = false) {
+      if (busy) return;
+      mode = next; expand(); statusCopy = null; status.textContent = "";
+      if (next !== "verify") verify.elements.token.value = "";
+      render(activeSession);
+      if (focus) (next === "verify" ? verify.elements.token : next === "reset" ? reset.elements.reset_email : form.elements.email).focus();
+    }
+    async function perform(task) {
+      if (busy) return;
+      const previousMode = mode;
+      busy = true; container.setAttribute("aria-busy", "true");
+      container.querySelectorAll("button").forEach(button => { button.disabled = true; });
+      message("Connecting…", "Menghubungkan…");
+      try { await task(); } catch (error) {errorMessage(friendly(error));}
+      finally { busy = false; container.removeAttribute("aria-busy"); container.querySelectorAll("button").forEach(button => { button.disabled = false; }); render(activeSession); if (mode === "verify" && previousMode !== "verify" && !verify.hidden) verify.elements.token.focus(); }
+    }
+    toggle.addEventListener("click", () => expand(fields.hidden));
+    container.querySelector("[data-signin]").addEventListener("click", () => changeMode("signin"));
+    container.querySelector("[data-register]").addEventListener("click", () => changeMode("register"));
+    container.querySelectorAll("[data-back]").forEach(button => button.addEventListener("click", () => changeMode("signin", true)));
+    form.addEventListener("submit", event => {
+      event.preventDefault(); if (!form.reportValidity() || busy) return;
+      const register = mode === "register", email = form.elements.email.value.trim(), password = form.elements.password.value;
+      if (register && password !== form.elements.confirm_password.value) {message("Passwords do not match.", "Kata sandi tidak cocok."); form.elements.confirm_password.focus(); return;}
+      perform(async () => {
+        const result = await (register ? signUp : signIn)(email, password);
+        if (result.error) { errorMessage(result.error); if (!register && result.error.code === "email_not_confirmed") {pendingEmail = email; mode = "verify";} }
+        else if (register && !result.data?.session) {
+          pendingEmail = email; mode = "verify"; resendUntil = Date.now() + 60000;
+          message("Check your email for the confirmation code or link.", "Periksa email untuk kode atau tautan konfirmasi.");
+        } else {message("Account connected.", "Akun terhubung.");}
+        if (!result.error) {form.elements.password.value = ""; form.elements.confirm_password.value = "";}
+      });
+    });
+    form.querySelector(".tpx-auth-confirm-email").addEventListener("click", () => {
+      if (!form.elements.email.reportValidity()) return;
+      pendingEmail = form.elements.email.value.trim(); changeMode("verify", true);
+      message("Enter the code from your email, or request a new code.", "Masukkan kode dari email, atau minta kode baru.");
+    });
+    verify.addEventListener("submit", event => {
+      event.preventDefault(); if (!verify.reportValidity()) return;
+      perform(async () => {
+        const result = await verifyEmailCode(pendingEmail, verify.elements.token.value);
+        if (result.error) errorMessage(result.error);
+        else if (result.data?.session) {verify.elements.token.value = ""; message("Email verified. Your account is connected.", "Email terverifikasi. Akun Anda terhubung.");}
+        else {mode = "signin"; message("Email verified. Sign in with your password.", "Email terverifikasi. Masuk dengan kata sandi Anda.");}
+      });
+    });
+    resend.addEventListener("click", () => {
+      if (Date.now() < resendUntil) return;
+      perform(async () => {const result = await resendVerification(pendingEmail); if (result.error) errorMessage(result.error); else {resendUntil = Date.now() + 60000; message("Check your email for the new confirmation code or link.", "Periksa email untuk kode atau tautan konfirmasi baru.");}});
+    });
+    form.querySelector(".tpx-auth-forgot").addEventListener("click", () => {reset.elements.reset_email.value = form.elements.email.value; changeMode("reset", true);});
+    reset.addEventListener("submit", event => {
+      event.preventDefault(); if (!reset.reportValidity()) return;
+      perform(async () => {const result = await requestPasswordReset(reset.elements.reset_email.value); if (result.error) errorMessage(result.error); else message("If this email has an account, check your inbox for the password reset link.", "Jika email ini memiliki akun, periksa kotak masuk untuk tautan pemulihan kata sandi.");});
+    });
+    recovery.addEventListener("submit", event => {
+      event.preventDefault(); if (!recovery.reportValidity()) return;
+      if (recovery.elements.new_password.value !== recovery.elements.confirm_new_password.value) {message("Passwords do not match.", "Kata sandi tidak cocok."); return;}
+      perform(async () => {const result = await updatePassword(recovery.elements.new_password.value); if (result.error) errorMessage(result.error); else {mode = "signin"; recovery.reset(); message("Password updated. Your account is connected.", "Kata sandi diperbarui. Akun Anda terhubung.");}});
+    });
+    logout.addEventListener("click", () => perform(async () => {const result = await signOut(); if (result.error) errorMessage(result.error); else {mode = "signin"; pendingEmail = ""; verify.reset(); form.reset(); message("Signed out. Local drafts are unchanged.", "Sudah keluar. Draf lokal tetap tersimpan.");}}));
+    window.addEventListener("thermpyx:languagechange", localize);
+    localize(); expand(Boolean(options.expanded));
+    onAuthChange(render); session().then(active => render(active, lastAuthEvent));
+    const controller = {open: () => expand(), showSignIn: () => changeMode("signin", true), showRegister: () => changeMode("register", true)};
+    mounted.set(container, controller);
+    return controller;
   }
   window.TPXContent = {
-    session, onAuthChange, signIn, signUp, signOut, mountAuth, normalizeQuestions, normalizeCards,
+    session, onAuthChange, signIn, signUp, signOut, verifyEmailCode, resendVerification, requestPasswordReset, updatePassword, mountAuth, normalizeQuestions, normalizeCards, errorMessage: contentErrorMessage,
     listQuestionSets: () => list("tpx_question_sets", true),
     saveQuestionSet: input => save("tpx_question_sets", input, "questions"),
     deleteQuestionSet: id => remove("tpx_question_sets", id),

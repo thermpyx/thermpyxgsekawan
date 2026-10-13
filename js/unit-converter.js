@@ -32,7 +32,7 @@
         const link = element("a", "", `${String(index + 1).padStart(2, "0")} / ${category.en}`, `${String(index + 1).padStart(2, "0")} / ${category.id}`);
         link.href = "#" + key; nav.append(link);
         const card = element("article", "uc-card"); card.id = key; card.dataset.converter = key;
-        const top = element("div", "uc-card-top"), number = element("span", "", `UNIT / ${String(index + 1).padStart(2, "0")}`);
+        const top = element("div", "uc-card-top"), number = element("span", "", `UNIT / ${String(index + 1).padStart(2, "0")}`, `SATUAN / ${String(index + 1).padStart(2, "0")}`);
         const symbol = element("span", "uc-card-symbol", category.symbol); symbol.setAttribute("aria-hidden", "true"); top.append(number, symbol);
         const heading = element("h2", "", category.en, category.id); heading.id = key + "Heading"; card.setAttribute("aria-labelledby", heading.id);
         const description = element("p", "uc-description", category.description.en, category.description.id);
@@ -69,7 +69,7 @@
         };
         form.addEventListener("submit", event => {
           event.preventDefault(); update();
-          if (!output.classList.contains("uc-error")) win.TPXHistory?.log("calculation", category[language()], equality.textContent, win.location.pathname + "#" + key);
+          if (!output.classList.contains("uc-error")) win.TPXHistory?.log("calculation", category[language()], equality.textContent, win.location.pathname + "#" + key, { titleEn: category.en, titleId: category.id });
         });
         input.addEventListener("input", update); from.select.addEventListener("change", update); to.select.addEventListener("change", update);
         swap.addEventListener("click", () => {
@@ -99,7 +99,6 @@
         try { win.localStorage.setItem("thermpyx-theme", light ? "light" : "dark"); } catch (_) {} updateThemeLabel();
       });
       win.addEventListener("thermpyx:languagechange", localize); localize();
-      win.TPXHistory?.log("calculation", tr("Unit Converter", "Konverter Satuan"), tr("Page opened", "Halaman dibuka"), win.location.href);
     }
     if (root.document.readyState === "loading") root.document.addEventListener("DOMContentLoaded", ready, { once: true }); else ready();
   }
@@ -122,7 +121,7 @@
       unit("m3", "m³", "Cubic metre", "Meter kubik", 1), unit("L", "L", "Litre", "Liter", .001), unit("mL", "mL", "Millilitre", "Mililiter", 1e-6), unit("cm3", "cm³", "Cubic centimetre", "Sentimeter kubik", 1e-6), unit("ft3", "ft³", "Cubic foot", "Kaki kubik", .028316846592), unit("galUS", "gal US", "US liquid gallon", "Galon cair AS", .003785411784)
     ], 1, "L", "mL"),
     energy: category("Energy", "Energi", "E", "Convert heat and work using joules, calories and electrical energy.", "Konversi kalor dan usaha dengan joule, kalori, dan energi listrik.", [
-      unit("J", "J", "Joule", "Joule", 1), unit("kJ", "kJ", "Kilojoule", "Kilojoule", 1000), unit("MJ", "MJ", "Megajoule", "Megajoule", 1e6), unit("cal", "cal", "Calorie (thermochemical)", "Kalori (termokimia)", 4.184), unit("kcal", "kcal", "Kilocalorie (thermochemical)", "Kilokalori (termokimia)", 4184), unit("Wh", "Wh", "Watt-hour", "Watt-jam", 3600), unit("kWh", "kWh", "Kilowatt-hour", "Kilowatt-jam", 3.6e6), unit("BTU", "BTU IT", "BTU (international table)", "BTU (international table)", 1055.05585262)
+      unit("J", "J", "Joule", "Joule", 1), unit("kJ", "kJ", "Kilojoule", "Kilojoule", 1000), unit("MJ", "MJ", "Megajoule", "Megajoule", 1e6), unit("cal", "cal", "Calorie (thermochemical)", "Kalori (termokimia)", 4.184), unit("kcal", "kcal", "Kilocalorie (thermochemical)", "Kilokalori (termokimia)", 4184), unit("Wh", "Wh", "Watt-hour", "Watt-jam", 3600), unit("kWh", "kWh", "Kilowatt-hour", "Kilowatt-jam", 3.6e6), unit("BTU", "BTU IT", "BTU (international table)", "BTU (tabel internasional)", 1055.05585262)
     ], 1, "kWh", "kJ"),
     power: category("Power", "Daya", "W", "Compare energy transfer rates, including mechanical horsepower.", "Bandingkan laju perpindahan energi, termasuk daya kuda mekanis.", [
       unit("W", "W", "Watt", "Watt", 1), unit("kW", "kW", "Kilowatt", "Kilowatt", 1000), unit("MW", "MW", "Megawatt", "Megawatt", 1e6), unit("hp", "hp", "Mechanical horsepower", "Daya kuda mekanis", 745.699871582), unit("BTU-h", "BTU IT/h", "BTU per hour", "BTU per jam", 1055.05585262 / 3600)

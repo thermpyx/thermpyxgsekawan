@@ -12,6 +12,12 @@ const elt=(tag,cls,text)=>{
   const el=document.createElement(tag);if(cls)el.className=cls;
   if(text!=null)el.textContent=text;return el;
 };
+const participantName=(tag,cls,nickname)=>{
+ const name=elt(tag,cls,nickname||t("Player","Peserta"));
+ name.setAttribute?.("data-tpx-no-translate", "");
+ name.setAttribute?.("data-tpx-user-content", "");
+ return name;
+};
 function rankings(players,answers){
   // The quiz can be observed before everyone finishes; questionCount only bounds valid indexes.
   return S.calculateRankings(players,answers,1000);
@@ -21,7 +27,7 @@ function resultCard(p,rank){
  if(String(p.id)===String(playerId))card.classList.add("current-player");
  card.append(elt("div","podium-medal",rank===1?"🏆":rank===2?"🥈":"🥉"),
              elt("span","podium-rank","#"+rank),
-             elt("h3","",p.nickname||"Player"),
+             participantName("h3","",p.nickname),
              elt("strong","podium-score",`${p.score} pts`),
              elt("small","rank-time",S.formatTime(p.totalMs)));
  return card;
@@ -41,7 +47,7 @@ function render(){
   const row=elt("div","leaderboard-row");
   if(String(p.id)===String(playerId))row.classList.add("current-player");
   const detail=elt("div","player-details");
-  detail.append(elt("strong","",p.nickname||"Player"),
+  detail.append(participantName("strong","",p.nickname),
     elt("span","",String(p.id)===String(playerId)?t("You","Kamu"):t("Player","Peserta")));
   const score=elt("div","ranking-score",`${p.score} pts`);
   score.append(elt("small","rank-time",S.formatTime(p.totalMs)));

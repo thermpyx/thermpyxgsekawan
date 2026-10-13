@@ -5,16 +5,20 @@
 <script src="../js/persistent-navigation.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Quiz | THERMPYX</title>
+<title data-en="Practice | THERMPYX" data-id="Latihan | THERMPYX">Practice | THERMPYX</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
-<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script><link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script><link rel="stylesheet" href="../css/card-accents.css"></head>
-<body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script><link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script><link rel="stylesheet" href="../css/card-accents.css"><link rel="stylesheet" href="../css/practice-hub.css"><script defer src="practice-hub.js"></script>
+<link rel="stylesheet" href="../css/ui-consistency.css">
+<link rel="stylesheet" href="../css/brand-identity.css">
+<script defer src="../js/brand-identity.js"></script>
+</head>
+<body class="tpx-practice-hub"><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
-<a class="quiz-back" href="../index.html#quiz">Back to Home</a>
+<a class="quiz-back" href="../index.html#quiz" data-en="← Back to Home" data-id="← Kembali ke Beranda">← Back to Home</a>
 <div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
 <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
 <span class="theme-icon" id="themeIcon">☾</span>
@@ -22,48 +26,54 @@
 </button>
 </header>
 <main class="quiz-page">
-<section class="quiz-hero quiz-hub-hero">
-<p class="section-label">THERMPYX QUIZ</p>
-<h1>Choose Your Quiz Mode</h1>
-<p>
-                Practice independently at your own pace or enter a live multiplayer room
-                and compete with other learners in real time.
-            </p>
+<section class="quiz-hero quiz-hub-hero" aria-labelledby="practiceTitle">
+<p class="section-label" data-en="LEARN AT YOUR OWN PACE" data-id="BELAJAR DENGAN CARA ANDA">LEARN AT YOUR OWN PACE</p>
+<h1 id="practiceTitle" data-en="Practice" data-id="Latihan">Practice</h1>
+<p data-en="Test what you know or revisit an idea. Choose a quiz or flashcards to start your next learning session." data-id="Uji pemahaman atau ulas kembali suatu konsep. Pilih kuis atau flashcard untuk memulai sesi belajar Anda.">Test what you know or revisit an idea. Choose a quiz or flashcards to start your next learning session.</p>
 </section>
-<section class="quiz-area quiz-hub-area">
-<div class="quiz-mode-selector">
+<section class="quiz-area quiz-hub-area" aria-labelledby="practiceChoicesTitle">
+<div class="quiz-mode-selector tpx-practice-selector">
 <div class="quiz-selector-heading">
-<span class="quiz-question-label">SELECT MODE</span>
-<h2>How do you want to learn?</h2>
-<p>Both modes use THERMPYX thermodynamics materials, but the learning experience is different.</p>
+<span class="quiz-question-label" data-en="CHOOSE YOUR ACTIVITY" data-id="PILIH KEGIATAN">CHOOSE YOUR ACTIVITY</span>
+<h2 id="practiceChoicesTitle" data-en="How will you practice today?" data-id="Bagaimana Anda ingin berlatih hari ini?">How will you practice today?</h2>
+<p data-en="Two ways to learn, with room to make the material your own." data-id="Dua cara belajar, dengan ruang untuk menyusun materi sendiri.">Two ways to learn, with room to make the material your own.</p>
+</div>
+<div class="tpx-practice-grid">
+<button class="tpx-practice-card" id="practiceQuizChoice" type="button" aria-expanded="false" aria-controls="quizModes">
+<span class="tpx-practice-number" aria-hidden="true">01</span>
+<span class="tpx-practice-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M11 7h26v34H11zM18 7V4h12v3M18 17l3 3 6-6M18 28h12M18 34h8"/></svg></span>
+<span class="tpx-practice-copy"><strong data-en="Quiz" data-id="Kuis">Quiz</strong><span data-en="Put your understanding into practice. Answer independently or play together in a live room." data-id="Latih pemahaman Anda. Kerjakan soal sendiri atau bermain bersama dalam ruang kuis langsung.">Put your understanding into practice. Answer independently or play together in a live room.</span></span>
+<span class="tpx-practice-meta" data-en="Individual · With friends" data-id="Mandiri · Bersama teman">Individual · With friends</span>
+<span class="tpx-practice-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></svg></span>
+</button>
+<a class="tpx-practice-card tpx-practice-card-flash" href="flashcards.html">
+<span class="tpx-practice-number" aria-hidden="true">02</span>
+<span class="tpx-practice-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="8" y="7" width="26" height="32" rx="4"/><path d="M18 15h8M16 23h12M16 29h9M34 15h3a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H19"/></svg></span>
+<span class="tpx-practice-copy"><strong data-en="Flashcards" data-id="Flashcard">Flashcards</strong><span data-en="Review one idea at a time. Use a ready-made deck, create your own material, or import a PDF or DOCX." data-id="Ulas satu ide setiap kali. Gunakan koleksi yang tersedia, susun materi sendiri, atau impor PDF dan DOCX.">Review one idea at a time. Use a ready-made deck, create your own material, or import a PDF or DOCX.</span></span>
+<span class="tpx-practice-meta" data-en="Study · Create material" data-id="Belajar · Susun materi">Study · Create material</span>
+<span class="tpx-practice-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></svg></span>
+</a>
+</div>
+<section class="tpx-quiz-modes" id="quizModes" aria-labelledby="quizModesTitle" hidden>
+<div class="tpx-quiz-modes-heading">
+<div><span class="quiz-question-label" data-en="QUIZ" data-id="KUIS">QUIZ</span><h2 id="quizModesTitle" tabindex="-1" data-en="Choose a quiz mode" data-id="Pilih cara mengerjakan kuis">Choose a quiz mode</h2><p data-en="Start with independent practice, or create and join a live quiz with friends." data-id="Mulai dari latihan mandiri, atau buat dan ikuti kuis langsung bersama teman.">Start with independent practice, or create and join a live quiz with friends.</p></div>
+<button class="tpx-practice-close" id="practiceCloseModes" type="button" data-aria-label-en="Close quiz choices" data-aria-label-id="Tutup pilihan kuis" aria-label="Close quiz choices"><span aria-hidden="true">×</span></button>
 </div>
 <div class="quiz-mode-grid">
-<a class="quiz-mode-card" href="practice.html">
-<span class="quiz-mode-number">01</span>
-<span class="quiz-mode-icon"><span class="tpx-learning-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 8v9m0-8c-2-2-4-2-6-2v8c2 0 4 0 6 2 2-2 4-2 6-2V7c-2 0-4 0-6 2Z"/></svg></span></span>
-<span class="quiz-mode-copy">
-<strong>Practice Quiz</strong>
-<small>Choose a topic, answer at your own pace, and review your score instantly.</small>
-</span>
-<span class="quiz-mode-meta">Self-paced</span>
-<span class="quiz-mode-arrow">→</span>
+<a class="quiz-mode-card tpx-quiz-mode-card" href="practice.html">
+<span class="quiz-mode-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M11 7h26v34H11zM18 7V4h12v3M18 17l3 3 6-6M18 28h12M18 34h8"/></svg></span>
+<span class="quiz-mode-copy"><strong data-en="Independent Quiz" data-id="Kuis Mandiri">Independent Quiz</strong><small data-en="Choose a topic, answer at your own pace, and review your results and explanations." data-id="Pilih topik, jawab sesuai ritme Anda, lalu tinjau hasil dan penjelasannya.">Choose a topic, answer at your own pace, and review your results and explanations.</small></span>
+<span class="quiz-mode-meta" data-en="Self-paced" data-id="Tanpa batas waktu">Self-paced</span><span class="quiz-mode-arrow" aria-hidden="true">→</span>
 </a>
-<a class="quiz-mode-card quiz-mode-card-live" href="live.html">
-<span class="quiz-mode-number">02</span>
-<span class="quiz-mode-icon">⌁</span>
-<span class="quiz-mode-copy">
-<strong>Live Quiz</strong>
-<small>Create or join a room, answer together, and see a realtime leaderboard.</small>
-</span>
-<span class="quiz-mode-meta">Multiplayer</span>
-<span class="quiz-mode-arrow">→</span>
+<a class="quiz-mode-card quiz-mode-card-live tpx-quiz-mode-card" href="live.html">
+<span class="quiz-mode-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="18" cy="16" r="6"/><path d="M7 37v-5a11 11 0 0 1 22 0v5M32 11a6 6 0 0 1 0 12M34 27a9 9 0 0 1 7 9"/></svg></span>
+<span class="quiz-mode-copy"><strong data-en="Live Quiz" data-id="Kuis Langsung">Live Quiz</strong><small data-en="Create or join a room, answer together, and follow the live leaderboard." data-id="Buat atau masuk ke ruang kuis, jawab bersama, dan pantau peringkat langsung.">Create or join a room, answer together, and follow the live leaderboard.</small></span>
+<span class="quiz-mode-meta" data-en="With friends" data-id="Bersama teman">With friends</span><span class="quiz-mode-arrow" aria-hidden="true">→</span>
 </a>
 </div>
-<div class="tpx-learning-links"><a href="flashcards.html"><span class="tpx-learning-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 8v9m0-8c-2-2-4-2-6-2v8c2 0 4 0 6 2 2-2 4-2 6-2V7c-2 0-4 0-6 2Z"/></svg></span> Flashcard / Insert Materi</a><a href="question-editor.html">Bank Soal / Insert Soal</a></div>
-<div class="quiz-mode-note">
-<span class="quiz-mode-note-icon">i</span>
-<p><strong>New to THERMPYX?</strong> Start with Practice Quiz, then try Live Quiz when you are ready to compete.</p>
-</div>
+<div class="tpx-practice-management"><p data-en="Preparing a quiz for your group?" data-id="Ingin menyiapkan kuis untuk kelompok Anda?">Preparing a quiz for your group?</p><a href="question-editor.html"><span data-en="Manage question bank" data-id="Kelola bank soal">Manage question bank</span><span aria-hidden="true">→</span></a></div>
+</section>
+<p class="tpx-practice-note" data-en="Start with a short session. You can switch activities whenever you want." data-id="Mulai dengan sesi singkat. Anda bisa berganti kegiatan kapan saja.">Start with a short session. You can switch activities whenever you want.</p>
 </div>
 </section>
 </main>

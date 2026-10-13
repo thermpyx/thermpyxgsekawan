@@ -37,7 +37,9 @@
        result.hidden=false;result.classList.remove("cl-error");
        result.querySelector(".cl-result").textContent=answer;
        result.querySelector(".cl-explanation").textContent=note;
-       window.TPXHistory?.log("calculation",card.querySelector("h2").dataset.en,answer,location.pathname+"#"+card.id);
+       const heading=card.querySelector("h2");
+       window.TPXHistory?.log("calculation",heading.dataset.en,answer,location.pathname+"#"+card.id,
+         {titleEn:heading.dataset.en,titleId:heading.dataset.id});
      }catch(err){
        result.hidden=false;result.classList.add("cl-error");
        result.querySelector(".cl-result").textContent=tr("Check inputs","Periksa input");

@@ -28,7 +28,13 @@
     if(location.hash&&!route.includes("#"))route+=location.hash;
     return validRoute(route)||"index.html";
   }
-  function address(route){const url=new URL(appURL);url.searchParams.set("page",route);return url.href;}
+  function address(route){
+    const url=new URL(appURL),marker=route.indexOf("#"),hash=marker<0?"":route.slice(marker);
+    const authFragment=/(?:^#|&)(?:access_token|refresh_token|error_description)=/.test(hash);
+    url.searchParams.set("page",authFragment?route.slice(0,marker):route);
+    if(authFragment)url.hash=hash;
+    return url.href;
+  }
   function owns(child){try{return Boolean(frame&&child===frame.contentWindow&&child.location.origin===base.origin);}catch(_){return false;}}
   function childRoute(){try{return routeFromURL(frame.contentWindow.location.href);}catch(_){return null;}}
   function announce(text){const node=document.getElementById("tpx-app-status");if(node)node.textContent=text;}
