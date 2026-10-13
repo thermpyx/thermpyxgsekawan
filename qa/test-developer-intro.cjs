@@ -13,6 +13,8 @@ const base = process.env.TPX_TEST_URL || "http://127.0.0.1:8003";
   try {
     const context = await browser.newContext({viewport: {width: 390, height: 844}});
     await context.route("https://**", route => route.abort());
+    // An older first-visit preference must not suppress the entrance anymore.
+    await context.addInitScript(() => localStorage.setItem("thermpyx-developer-intro-seen-v1", "1"));
     const page = await context.newPage(), errors = [];
     page.on("pageerror", error => errors.push(error.message));
     await page.goto(base + "/app.html?page=developer.html", {waitUntil: "domcontentloaded"});
@@ -34,10 +36,8 @@ const base = process.env.TPX_TEST_URL || "http://127.0.0.1:8003";
     assert.equal(await frame.locator("#devReplayIntro").evaluate(element => element === document.activeElement), true); checks++;
 
     await page.reload({waitUntil: "domcontentloaded"});
-    await frame.locator(".dev-chip").first().waitFor();
-    await page.waitForTimeout(600);
-    assert.equal(await frame.locator(".dev-entrance").count(), 0); checks++;
-    await frame.locator("#devReplayIntro").click();
+    await frame.locator(".dev-entrance").waitFor();
+    assert.equal(await frame.locator(".dev-entrance-photo").count(), 4); checks++;
     await page.setViewportSize({width: 320, height: 740});
     await frame.locator(".dev-entrance").waitFor({state: "detached"});
     assert.equal(await frame.locator(".dev-selector").evaluate(element => element.classList.contains("is-gathering")), false); checks++;
@@ -47,6 +47,19 @@ const base = process.env.TPX_TEST_URL || "http://127.0.0.1:8003";
     await frame.locator(".dev-entrance").waitFor();
     await frame.locator(".dev-entrance-skip").press("Escape");
     assert.equal(await frame.locator(".dev-entrance").count(), 0); checks++;
+
+    await frame.locator("#devBackLink").click();
+    await page.waitForFunction(() => document.getElementById("tpx-content-frame").contentWindow.location.pathname.endsWith("/index.html"));
+    await page.evaluate(() => TPXPersistentShell.navigate("developer.html"));
+    await frame.locator(".dev-entrance").waitFor();
+    assert.equal(await frame.locator(".dev-entrance-photo").count(), 4); checks++;
+    await frame.locator(".dev-entrance-skip").click();
+
+    // Cover an existing document being restored from the browser's page cache.
+    await frame.locator("body").evaluate(() => window.dispatchEvent(new PageTransitionEvent("pageshow", {persisted: true})));
+    await frame.locator(".dev-entrance").waitFor();
+    assert.equal(await frame.locator(".dev-entrance-photo").count(), 4); checks++;
+    await frame.locator(".dev-entrance-skip").click();
     assert.deepEqual(errors, []); checks++;
     await context.close();
 

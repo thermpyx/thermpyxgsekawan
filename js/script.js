@@ -280,6 +280,18 @@ function updateActiveNavigation() {
     });
 
 
+    // The final section may be shorter than the viewport and cannot reach the
+    // normal topbar threshold. Keep its menu entry active at the page bottom.
+    const pageHeight = document.documentElement.scrollHeight;
+    if (pageHeight > window.innerHeight && window.scrollY + window.innerHeight >= pageHeight - 2) {
+        const lastSection = Array.from(sections).reverse().find(section =>
+            section.offsetHeight > 0 && Array.from(navItems).some(item =>
+                item.getAttribute("href") === "#" + section.id
+            )
+        );
+        if (lastSection) currentSection = lastSection.id;
+    }
+
     navItems.forEach(function (item) {
 
         item.classList.remove("active");

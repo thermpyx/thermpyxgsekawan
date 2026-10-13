@@ -18,7 +18,8 @@ Buka situs melalui HTTP/HTTPS. Halaman `index.html` akan diarahkan ke aplikasi `
 - Tutorial pertama hadir di beranda, teori, kalkulator, konverter, simulator, serta alur kuis. Panduan singkat dapat dibuka lagi, dilewati, dan mengikuti bahasa ID/EN.
 - Latihan menyediakan Quiz dan Flashcard. Flashcard menampilkan Coming Soon; editor dan impor flashcard tidak tersedia pada antarmuka. Data lama di browser atau database tidak dihapus.
 - Guru dapat menyusun paket soal dengan empat jawaban, kunci, dan pembahasan; menata urutan; memeriksa duplikasi; melihat pratinjau; lalu menyimpan dan membukanya di Host.
-- Intro Developer memakai empat foto asli, bergerak dari tengah menuju pilihan profil, dengan opsi lewati/putar ulang dan dukungan reduced motion.
+- Intro Developer memakai empat foto asli, bergerak dari tengah menuju pilihan profil setiap halaman dibuka, dengan opsi lewati/putar ulang dan dukungan reduced motion.
+- Navigasi memiliki tata letak responsif tanpa scrollbar/tombol scroll yang tampak; judul, teks, dan tautan Developer pada About kini terpusat.
 - Kalkulator menolak hasil tak terhingga dan suhu di bawah nol mutlak; alur masuk/keluar ruang kuis menangani klik ganda, UUID, serta kegagalan koneksi.
 
 ## Akun dan Supabase
@@ -44,6 +45,8 @@ node qa/test-live-entry.cjs
 node qa/test-home-account.cjs
 node qa/test-onboarding.cjs
 node qa/test-developer-intro.cjs
+node qa/test-about-layout.cjs
+node qa/test-navigation-layout.cjs
 node qa/test-learning-ui.cjs
 node qa/test-upload-flow.cjs
 node qa/test-shell-music.cjs

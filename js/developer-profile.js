@@ -596,18 +596,15 @@
      Decorative only: the page stays usable if animation fails.
   ======================================================= */
 
-  const entranceKey = "thermpyx-developer-intro-seen-v1";
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let stopEntrance = null;
 
-  function playTeamEntrance(replay = false) {
+  function playTeamEntrance() {
     stopEntrance?.();
     if (reducedMotion.matches || typeof Element.prototype.animate !== "function") return;
-    if (!replay && storedPreference(entranceKey, "") === "1") return;
 
     const targets = Array.from(elements.selector.querySelectorAll(".dev-chip img"));
     if (targets.length !== developers.length) return;
-    try { localStorage.setItem(entranceKey, "1"); } catch (_) {}
 
     const entrance = document.createElement("div");
     entrance.className = "dev-entrance";
@@ -1086,7 +1083,7 @@
     () => resetPhotoRotation()
   );
 
-  elements.replayIntro?.addEventListener("click", () => playTeamEntrance(true));
+  elements.replayIntro?.addEventListener("click", playTeamEntrance);
 
 
   document
@@ -1147,5 +1144,11 @@
     Promise.all(localPortraits.map(image => image.decode?.().catch(() => {}) || Promise.resolve())),
     new Promise(resolve => window.setTimeout(resolve, 450))
   ]).then(() => window.requestAnimationFrame(() => playTeamEntrance()));
+
+  // A browser history restore can reuse this document without rerunning scripts.
+  // Open with the same entrance on every visit, including a restored page.
+  window.addEventListener("pageshow", event => {
+    if (event.persisted) window.requestAnimationFrame(() => playTeamEntrance());
+  });
 
 })();

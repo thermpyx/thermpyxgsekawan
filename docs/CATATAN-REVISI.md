@@ -24,7 +24,7 @@ Paket pada room adalah salinan saat ruang dibuat; perubahan pustaka berikutnya t
 
 ## Developer dan perbaikan tambahan
 
-Empat foto asli tampil sebagai kelompok di tengah sebelum bergerak ke posisi pilihan profil. Intro singkat hanya otomatis pada kunjungan pertama dalam sesi, dengan lewati/putar ulang. Intro dibatalkan dengan aman saat layar berubah, pengguna menggulir, atau preferensi reduced motion aktif. Detail keempat profil tetap tersedia.
+Empat foto asli tampil sebagai kelompok di tengah sebelum bergerak ke posisi pilihan profil. Intro singkat otomatis setiap halaman Developer dibuka, termasuk muat ulang dan kunjungan kembali, dengan lewati/putar ulang. Intro dibatalkan dengan aman saat layar berubah, pengguna menggulir, atau preferensi reduced motion aktif. Detail keempat profil tetap tersedia.
 
 Kalkulator menangani overflow dan pencampuran massa besar tanpa hasil NaN, serta menolak suhu pencampuran di bawah nol mutlak. Join kuis memiliki pesan inline, guard klik ganda/Enter, dan retry koneksi. Keluar ruang mendukung ID UUID, mengonfirmasi operasi database sebelum membersihkan sesi, serta mengirim peserta ke leaderboard ketika ruang sudah selesai.
 
@@ -36,10 +36,18 @@ Pengujian tersebut tidak mengirim email nyata, membuat akun nyata, atau mengubah
 
 ## Hasil pengujian terakhir
 
-- Login/menu: 15 pemeriksaan browser; tutorial: 34; Developer: 16; Latihan: 10; soal guru: 13.
+- Login/menu: 15 pemeriksaan browser; tutorial: 34; Developer: 18; Latihan: 10; soal guru: 13.
 - SQL guru: 10 pemeriksaan PostgreSQL lokal, meliputi idempotensi, RLS pemilik/lintas akun/anonim, constraints, data/policy lama, serta rollback tipe kolom yang tidak sesuai.
 - REV08: 20; konverter: 7; riwayat: 12; i18n: 6; validasi kalkulator baru: 4; join/ruang tunggu baru: 9; suite quiz dan parser dokumen juga lulus.
 - Riwayat simulator: 3 alur browser; musik MP3 nyata tetap berjalan melalui enam halaman; token recovery tetap pada fragmen URL.
 - 46 berkas JavaScript lolos pemeriksaan sintaks; 119 permintaan halaman/aset lokal berhasil; empat foto dan keenam lagu asli tidak berubah.
 
 Angka tersebut adalah validasi lokal versi ini. Perilaku database produksi, pengiriman email, dan multiplayer lintas perangkat belum dibuktikan oleh tes lokal.
+
+## Perbaikan navigasi dan perataan About
+
+Scrollbar bawaan halaman disembunyikan agar rel serta tombol panah scroll tidak mengganggu tampilan. Gulir dengan roda mouse, trackpad, sentuhan, dan keyboard tetap tersedia. Navigasi diperiksa pada sidebar terbuka/tertutup dan layar ponsel pendek; pilihan bahasa serta tema tetap dapat digunakan.
+
+Judul, paragraf, dan tombol Temui pengembang pada About kini terpusat di area konten. Intro empat foto tidak memakai penanda kunjungan tersimpan lagi: ia diputar pada setiap pembukaan halaman Developer untuk pengguna yang mengizinkan animasi. Preferensi reduced motion tetap dihormati.
+
+Validasi perbaikan ini: 60 pemeriksaan navigasi, 15 perataan About/gulir halaman, dan 18 intro Developer lulus di browser. Login (15), tutorial (34), terjemahan (6), dan kontinuitas MP3 juga diperiksa ulang. Area kosong pemutar musik tidak lagi menghalangi klik pilihan bahasa pada ponsel.
