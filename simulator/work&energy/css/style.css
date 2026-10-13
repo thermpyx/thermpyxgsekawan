@@ -3101,8 +3101,7 @@ body.dark-mode .concept-item {
 
     #backHome::before {
 
-        content:
-            "←";
+        content: none;
 
         font-size:
             20px;
@@ -3239,3 +3238,5 @@ body.dark-mode .concept-item {
         1.5px;
 
 }
+/* The mobile return action remains readable after removing arrow glyphs. */
+@media(max-width:520px){#backHome{width:auto;min-width:76px;padding:0 12px;font-size:12px}}

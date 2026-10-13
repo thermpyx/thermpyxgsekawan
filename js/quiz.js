@@ -8,6 +8,7 @@
 const quizTopics = {
     heat: {
         name: "Heat & Temperature",
+        nameId: "Kalor & Temperatur",
         questions: [
             {
                 question: "What is the SI unit of heat energy?",
@@ -54,6 +55,7 @@ const quizTopics = {
 
     work: {
         name: "Work & Energy",
+        nameId: "Usaha & Energi",
         questions: [
             {
                 question: "For a constant-pressure expansion, which expression represents boundary work?",
@@ -90,6 +92,7 @@ const quizTopics = {
 
     "first-law": {
         name: "First Law of Thermodynamics",
+        nameId: "Hukum I Termodinamika",
         questions: [
             {
                 question: "Which equation represents the First Law using the convention that W is work done by the system?",
@@ -131,6 +134,7 @@ const quizTopics = {
 
     processes: {
         name: "Thermodynamic Processes",
+        nameId: "Proses Termodinamika",
         questions: [
             {
                 question: "Which thermodynamic process occurs at constant temperature?",
@@ -365,8 +369,14 @@ function selectAnswer(selectedButton) {
    8. RESULT
 ========================================================= */
 function showResult() {
+    const topic = selectedTopic === "all" ? { name: "All Materials", nameId: "Semua Materi" } : quizTopics[selectedTopic];
+    const historyLabels = {
+        detailEn: `Score: ${score} / ${shuffledQuestions.length}`,
+        detailId: `Skor: ${score} / ${shuffledQuestions.length}`
+    };
+    if (topic?.nameId) { historyLabels.titleEn = topic.name; historyLabels.titleId = topic.nameId; }
     window.TPXHistory?.log("quiz", selectedTopicName || "Practice Quiz",
-      `${score} / ${shuffledQuestions.length}`, location.href);
+      `${score} / ${shuffledQuestions.length}`, location.href, historyLabels);
     quizContainer.style.display = "none";
     quizContainer.hidden = true;
     quizResult.classList.add("show");

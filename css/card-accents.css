@@ -1,0 +1,85 @@
+/* Deliberate accents on a few feature cards; page surfaces and form fields stay plain. */
+.tool-preview-card[data-tool="converter"],
+.tool-preview-card[data-tool="calculator"],
+.simulator-preview-card,
+.laws-grid > .law-choice-card:nth-child(odd),
+.cl-grid > .cl-card:nth-child(3n + 1),
+.quiz-mode-card.quiz-mode-card-live,
+.uc-card:nth-child(3n + 1) {
+    --tpx-card-accent-rgb: 45, 194, 208;
+    --tpx-card-glow: 0.16;
+    --tpx-card-wash: 0.045;
+    background-color: var(--bg-card, #0d141c);
+    background-image:
+        radial-gradient(
+            ellipse at 100% 0%,
+            rgba(var(--tpx-card-accent-rgb), var(--tpx-card-glow)),
+            transparent 58%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(var(--tpx-card-accent-rgb), var(--tpx-card-wash)),
+            transparent 64%
+        );
+    border-color: rgba(var(--tpx-card-accent-rgb), 0.3);
+}
+
+/* A warmer accent distinguishes calculation and the second selected law. */
+.tool-preview-card[data-tool="calculator"],
+.laws-grid > .law-choice-card:nth-child(3),
+.cl-grid > .cl-card:nth-child(4) {
+    --tpx-card-accent-rgb: 255, 153, 77;
+    --tpx-card-glow: 0.13;
+    --tpx-card-wash: 0.035;
+}
+
+.simulator-preview-card,
+.cl-grid > .cl-card:nth-child(7),
+.quiz-mode-card.quiz-mode-card-live {
+    --tpx-card-accent-rgb: 56, 189, 248;
+}
+
+.tool-preview-card[data-tool]:hover,
+.simulator-preview-card:hover,
+.laws-grid > .law-choice-card:nth-child(odd):hover,
+.quiz-mode-card.quiz-mode-card-live:hover {
+    border-color: rgba(var(--tpx-card-accent-rgb, 45, 194, 208), 0.55);
+}
+
+.laws-grid > .law-choice-card:nth-child(odd):focus-visible,
+.quiz-mode-card.quiz-mode-card-live:focus-visible {
+    outline: 2px solid var(--blue-light, #38bdf8);
+    outline-offset: 4px;
+}
+
+body.light-mode .tool-preview-card[data-tool="converter"],
+body.light-mode .tool-preview-card[data-tool="calculator"],
+body.light-mode .simulator-preview-card,
+body.light-mode .simulator-preview-card:hover,
+body.light-mode .laws-grid > .law-choice-card:nth-child(odd),
+body.light-mode .cl-grid > .cl-card:nth-child(3n + 1),
+body.light-mode .quiz-mode-card.quiz-mode-card-live,
+body.light-mode .uc-card:nth-child(3n + 1) {
+    --tpx-card-glow: 0.12;
+    --tpx-card-wash: 0.035;
+    background-color: var(--bg-card, #fff);
+    background-image:
+        radial-gradient(
+            ellipse at 100% 0%,
+            rgba(var(--tpx-card-accent-rgb), var(--tpx-card-glow)),
+            transparent 58%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(var(--tpx-card-accent-rgb), var(--tpx-card-wash)),
+            transparent 64%
+        );
+    border-color: rgba(var(--tpx-card-accent-rgb), 0.28);
+}
+
+body.light-mode .tool-preview-card[data-tool="calculator"],
+body.light-mode .laws-grid > .law-choice-card:nth-child(3),
+body.light-mode .cl-grid > .cl-card:nth-child(4) {
+    --tpx-card-glow: 0.1;
+    --tpx-card-wash: 0.025;
+}

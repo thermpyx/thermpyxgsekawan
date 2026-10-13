@@ -627,7 +627,7 @@ body.light-mode .quiz-topbar {
 }
 
 .quiz-topic-card::after {
-    content: "→";
+    content: none;
     position: absolute;
     right: 18px;
     top: 18px;

@@ -2,6 +2,7 @@
 
 <html lang="en">
 <head>
+<script src="../js/persistent-navigation.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>First Law of Thermodynamics | THERMPYX</title>
@@ -16,7 +17,12 @@
 <link href="../css/first-law.css" rel="stylesheet"/>
 <link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/video-learning.css"/>
 <script defer src="../js/video-learning.js"></script>
-<link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script><link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script><link rel="stylesheet" href="../css/card-accents.css">
+<link rel="stylesheet" href="../css/ui-consistency.css">
+<link rel="stylesheet" href="../css/brand-identity.css">
+<script defer src="../js/brand-identity.js"></script>
+<link rel="stylesheet" href="../css/onboarding.css"><script defer src="../js/onboarding.js"></script>
+</head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <!-- ==============================
          TOP BAR
@@ -53,7 +59,7 @@
                 Understand the conservation of energy through
                 heat transfer, work, and changes in internal energy.
             </p>
-</section><div class="tpx-calculator-entry"><span>APPLY THE THEORY / CALCULATOR</span><a href="../calculators.html#first" class="lesson-inline-link">Open related calculator ↗</a></div>
+</section><div class="tpx-calculator-entry"><span>APPLY THE THEORY / CALCULATOR</span><a href="../calculators.html#first" class="lesson-inline-link">Open related calculator </a></div>
 <!-- ==============================
              01. ENERGY CONSERVATION
         =============================== -->
@@ -111,7 +117,7 @@
       <p class="tpx-vl-description">Explore conservation of energy and the relationship between energy entering, leaving, and changing inside a system.</p>
       <div class="tpx-vl-credit"><span>Source:</span> <a href="https://www.youtube.com/watch?v=1OFlW8OXN64" target="_blank" rel="noopener noreferrer">The Royal Institution</a></div>
       <div class="tpx-vl-actions">
-        <a class="tpx-vl-open" href="https://www.youtube.com/watch?v=1OFlW8OXN64" target="_blank" rel="noopener noreferrer">Open on YouTube <span aria-hidden="true">↗</span></a>
+        <a class="tpx-vl-open" href="https://www.youtube.com/watch?v=1OFlW8OXN64" target="_blank" rel="noopener noreferrer">Open on YouTube <span aria-hidden="true"></span></a>
         <span class="tpx-vl-embed-note">If playback is unavailable here, use the YouTube link.</span>
       </div>
     </div>
@@ -458,7 +464,7 @@
 </div>
 <!-- CALCULATOR CONTROLS -->
 <div class="first-law-calc-actions">
-<select class="first-law-select" id="firstLawUnknown">
+<select class="first-law-select" id="firstLawUnknown" aria-label="Unknown quantity">
 <option value="deltaU">
                     Find ΔU
                 </option>

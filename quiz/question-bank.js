@@ -1,3 +1,12 @@
+/* Frozen custom questions are shared by player and host. */
+function getQuestionsForRoom(room) {
+    if (room.questions == null) return getQuestionsForTopic(room.topic);
+    if (!Array.isArray(room.questions) || room.questions.length < 1 || room.questions.length > 100) throw new Error("Invalid custom question snapshot.");
+    return room.questions.map(item => {
+        if (typeof item.question !== "string" || !item.question.trim() || item.question.length > 2000 || !Array.isArray(item.options) || item.options.length !== 4 || item.options.some(value => typeof value !== "string" || !value.trim() || value.length > 500) || !Number.isInteger(item.correctAnswer) || item.correctAnswer < 0 || item.correctAnswer > 3) throw new Error("Invalid custom question snapshot.");
+        return { question: item.question, options: item.options.slice(), correctAnswer: item.correctAnswer, explanation: String(item.explanation || "") };
+    });
+}
 /* THERMPYX: shared fixed question bank for live player and host. */
 function getQuestionsForTopic(topic){
 

@@ -1,0 +1,29 @@
+/* Keep the equilibrium controls readable on narrow phones. */
+@media (max-width: 430px) {
+  body.sim-zeroth .simulation-panel,
+  body.tpx-legacy-zeroth .simulation-panel {padding: 22px 18px;}
+  body.sim-zeroth .section-title,
+  body.tpx-legacy-zeroth .section-title {flex-wrap: wrap; align-items: flex-start; gap: 10px;}
+  body.sim-zeroth .section-title h2,
+  body.tpx-legacy-zeroth .section-title h2 {min-width: 0; flex: 1 1 180px;}
+  body.sim-zeroth #statusBadge,
+  body.tpx-legacy-zeroth #statusBadge {box-sizing: border-box; max-width: 100%; white-space: normal; overflow-wrap: anywhere;}
+  body.sim-zeroth .simulation-buttons,
+  body.tpx-legacy-zeroth .simulation-buttons {flex-wrap: wrap; gap: 9px;}
+  body.sim-zeroth .simulation-buttons button,
+  body.tpx-legacy-zeroth .simulation-buttons button {flex: 1 1 85px; min-width: 0; max-width: 100%; padding-inline: 16px;}
+  body.tpx-legacy-heat .hero .badge,
+  body.sim-heat .hero .badge {
+    box-sizing: border-box;
+    max-width: 100%;
+    width: fit-content;
+    white-space: normal;
+    line-height: 1.5;
+  }
+  body.tpx-legacy-work .top-header {height: auto; min-height: 88px; flex-wrap: wrap; gap: 10px; padding: 14px;}
+  body.tpx-legacy-work .header-left {flex: 1 1 100%; justify-content: center;}
+  body.tpx-legacy-work .header-actions {min-width: 0; flex: 1 1 auto; flex-wrap: wrap; gap: 8px;}
+  body.tpx-legacy-work .top-header > .tpx-language-control {flex-shrink: 0;}
+  body.tpx-legacy-work .simulation-buttons {flex-wrap: wrap; gap: 9px;}
+  body.tpx-legacy-work .simulation-buttons button {flex: 1 1 85px; min-width: 0; max-width: 100%; padding-inline: 16px;}
+}

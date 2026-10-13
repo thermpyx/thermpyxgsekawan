@@ -1,0 +1,34 @@
+/* A quiet account entry in the hero and a complete sign-in workspace below it. */
+.home-account-header{margin-left:auto;display:inline-flex;align-items:center;min-height:38px;padding:0 15px;border:1px solid var(--border,#28424f);border-radius:10px;color:var(--text-primary,#e9f6fb);text-decoration:none;font:600 12px Oxanium,sans-serif;background:var(--bg-card,#101c27)}
+.home-account-header:hover,.home-account-header:focus-visible{border-color:var(--blue,#40cdd1)}
+.home-account-entry{margin:22px auto 0;position:relative;max-width:560px;font-family:"IBM Plex Sans",sans-serif}
+.home-account-entry p{margin:0 0 10px;color:var(--text-secondary,#a9c2cd);font-size:13px;line-height:1.6}
+.home-account-entry-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.home-account-entry-actions a,.home-account-connected{display:inline-flex;justify-content:center;align-items:center;padding:9px 15px;border:1px solid var(--border,#28424f);border-radius:10px;color:var(--text-primary,#e7f8ff);text-decoration:none;font:600 13px Oxanium,sans-serif;background:rgba(70,207,214,.045)}
+.home-account-entry-actions a:first-child{border-color:rgba(65,204,209,.6);color:var(--blue-light,#4cd8e0)}
+.home-account-entry-actions a:hover,.home-account-connected:hover{border-color:var(--blue,#4cd8e0)}
+.home-account-section{scroll-margin-top:86px}
+.home-account-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;padding:34px;border:1px solid var(--border,#28424f);border-radius:18px;background:radial-gradient(ellipse at 0 0,rgba(49,189,199,.075),transparent 60%),var(--bg-card,#101c27)}
+.home-account-copy h2{font-family:Oxanium,sans-serif;font-size:clamp(23px,2.1vw,31px);line-height:1.35;color:var(--text-primary,#e7f8ff);margin:10px 0 15px}
+.home-account-copy>p{font-family:"IBM Plex Sans",sans-serif;font-size:14px;line-height:1.75;color:var(--text-secondary,#a9c2cd);margin:0 0 14px}
+.home-account-copy .section-label{font-family:Oxanium,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--blue-light,#4cd8e0)}
+.home-account-benefits{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0}
+.home-account-benefits span{padding:7px 10px;border:1px solid var(--border,#28424f);border-radius:8px;font:12px "IBM Plex Sans",sans-serif;color:var(--text-primary,#e7f8ff);background:var(--bg-primary,#0b1620)}
+.home-account-copy .home-account-free{font-size:12px;color:var(--text-muted,var(--text-secondary,#a9c2cd))}
+.home-account-panel{min-width:0}.home-account-panel .tpx-content-auth{margin:0;border-color:rgba(64,205,209,.22);padding:22px;border-radius:13px;background:var(--bg-primary,#0b1620)}
+.home-account-panel .tpx-auth-form{grid-template-columns:1fr}
+.home-account-panel .tpx-auth-summary{align-items:flex-start}
+.home-account-panel .tpx-auth-state{font-size:13px;line-height:1.6;flex:1 1 180px}
+.home-account-panel .tpx-auth-note{margin-top:18px}
+.home-account-panel .tpx-auth-guide{font-size:11px}
+.home-account-library{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.home-account-library a{display:inline-flex;padding:10px 13px;align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--border,#28424f);font:600 12px Oxanium,sans-serif;color:var(--blue-light,#4cd8e0);text-decoration:none}
+.home-account-section [hidden],.home-account-entry [hidden]{display:none!important}
+.home-account-section a:focus-visible,.home-account-entry a:focus-visible{outline:2px solid #40cdd1;outline-offset:3px}
+@media(max-width:1100px){.home-account-layout{grid-template-columns:1fr;gap:22px;padding:27px}.home-account-panel{width:100%}.home-account-panel .tpx-auth-form{grid-template-columns:1fr 1fr}.home-account-panel .tpx-auth-state{flex:1 1 auto}}
+@media(max-width:768px){.home-account-header{display:none}.home-account-section{scroll-margin-top:78px}.home-account-layout{padding:20px;gap:20px}.home-account-panel .tpx-content-auth{padding:16px}.home-account-copy h2{font-size:24px}.home-account-panel .tpx-auth-form{grid-template-columns:1fr}}
+@media(max-width:380px){.home-account-layout{padding:15px}.home-account-panel .tpx-content-auth{padding:13px}.home-account-copy h2{font-size:22px}}
+.home-auth-mount>.tpx-content-auth{margin:0;padding:0;border:0}
+.home-auth-mount .tpx-auth-summary{display:none}
+button.home-account-header{cursor:pointer;flex-shrink:0}
+@media(max-width:768px){.home-account-header{display:inline-flex;min-height:36px;padding:0 10px;font-size:11px}.mobile-logo{font-size:14px;letter-spacing:.6px}.topbar{gap:9px}.mobile-theme-toggle{margin-left:auto;flex-shrink:0}}

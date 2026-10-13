@@ -2,6 +2,7 @@
 
 <html lang="en">
 <head>
+<script src="../js/persistent-navigation.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Host Quiz | THERMPYX</title>
@@ -11,10 +12,16 @@
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
 <link href="live.css" rel="stylesheet"/>
-<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<link href="host.css" rel="stylesheet"/>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script><link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script><link rel="stylesheet" href="../css/card-accents.css">
+<link rel="stylesheet" href="../css/ui-consistency.css">
+<link rel="stylesheet" href="../css/brand-identity.css">
+<script defer src="../js/brand-identity.js"></script>
+<link rel="stylesheet" href="../css/onboarding.css"><script defer src="../js/onboarding.js"></script>
+</head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
-<a class="quiz-back" href="live.html">Back to Live Quiz</a>
+<a class="quiz-back" href="live.html" data-en="Back to Live Quiz" data-id="Kembali ke Kuis Langsung">Back to Live Quiz</a>
 <div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
 <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
 <span class="theme-icon" id="themeIcon">☾</span>
@@ -24,19 +31,23 @@
 <main class="quiz-page live-page-shell">
 <section class="quiz-hero live-hero-compact">
 <p class="section-label">LIVE QUIZ · HOST</p>
-<h1>Create a Quiz Room</h1>
-<p>Select the thermodynamics material for this session. A unique room code will be generated automatically.</p>
+<h1 data-en="Your classroom. Your questions." data-id="Kelas Anda. Soal Anda.">Your classroom. Your questions.</h1>
+<p data-en="Use a ready-made topic or teach with your own questions. Create a room, share the code, and guide the session together." data-id="Gunakan topik bawaan atau ajar dengan soal buatan Anda. Buat ruang, bagikan kode, lalu pandu sesi bersama siswa.">Use a ready-made topic or teach with your own questions. Create a room, share the code, and guide the session together.</p>
 </section>
 <section class="live-area">
 <div class="live-panel">
 <div class="live-panel-heading">
-<span class="quiz-question-label">ROOM SETUP</span>
-<h2>Choose quiz material</h2>
-<p>Players who join your room will receive questions from the selected material.</p>
+<span class="quiz-question-label" data-en="ROOM SETUP" data-id="PENGATURAN RUANG">ROOM SETUP</span>
+<h2 data-en="Prepare your session" data-id="Siapkan sesi Anda">Prepare your session</h2>
+<p data-en="Choose the questions your class will answer. You can review them before opening the room." data-id="Pilih soal yang akan dijawab kelas Anda. Anda bisa memeriksanya sebelum membuka ruang.">Choose the questions your class will answer. You can review them before opening the room.</p>
 </div>
+<a class="host-create-set" href="question-editor.html"><span class="host-create-icon" aria-hidden="true">+</span><span><strong data-en="Create my own questions" data-id="Susun soal saya sendiri">Create my own questions</strong><small data-en="Write questions, four answers, and an optional explanation. Local drafts need no account." data-id="Tulis pertanyaan, empat pilihan jawaban, dan pembahasan opsional. Draf lokal tidak memerlukan akun.">Write questions, four answers, and an optional explanation. Local drafts need no account.</small></span></a>
 <div class="live-form">
+<div class="live-field"><label for="questionSource" data-en="Question source" data-id="Sumber soal">Question source</label><select id="questionSource"><option value="builtin" data-en="THERMPYX topics" data-id="Topik bawaan THERMPYX">THERMPYX topics</option><option value="custom" data-en="My saved questions" data-id="Paket soal saya">My saved questions</option></select></div>
+<div id="customQuestions" hidden><div class="live-field"><label for="questionSet" data-en="My question set" data-id="Paket soal saya">My question set</label><select id="questionSet"><option value="" data-en="Select a saved set" data-id="Pilih paket tersimpan">Select a saved set</option></select><button type="button" class="live-secondary-button" id="refreshQuestionSets" data-en="Refresh sets" data-id="Muat ulang paket">Refresh sets</button><span class="live-field-hint" data-en="Teachers sign in to save and use personal questions. Students only need the room code and a nickname." data-id="Guru masuk untuk menyimpan dan memakai soal pribadi. Siswa cukup memakai kode ruang dan nama panggilan.">Teachers sign in to save and use personal questions. Students only need the room code and a nickname.</span></div><div id="hostSetSummary" class="host-set-summary" hidden><p class="host-set-label" data-en="READY FOR YOUR CLASS" data-id="SIAP UNTUK KELAS ANDA">READY FOR YOUR CLASS</p><h3 id="hostSetTitle" data-tpx-no-translate data-tpx-user-content></h3><p id="hostSetDetails"></p><details><summary data-en="Review the questions" data-id="Periksa daftar soal">Review the questions</summary><ol id="hostSetQuestions"></ol></details><a id="editSelectedSet" href="question-editor.html" data-en="Edit this set" data-id="Edit paket ini">Edit this set</a></div></div>
+<div id="builtinQuestions">
 <div class="live-field">
-<label for="topic">Quiz Topic</label>
+<label for="topic" data-en="Quiz topic" data-id="Topik kuis">Quiz topic</label>
 <select id="topic">
 <option value="heat">Heat &amp; Temperature</option>
 <option value="work">Work &amp; Energy</option>
@@ -44,13 +55,15 @@
 <option value="process">Thermodynamic Processes</option>
 <option value="all">All Materials</option>
 </select>
-<span class="live-field-hint">You can create another room later to use a different topic.</span>
+<span class="live-field-hint" data-en="Ready-made topics are available without an account." data-id="Topik bawaan dapat digunakan tanpa akun.">Ready-made topics are available without an account.</span>
 </div>
-<button class="live-primary-button" id="createRoomBtn" type="button">CREATE ROOM</button>
 </div>
+<button class="live-primary-button" id="createRoomBtn" type="button" data-en="CREATE ROOM" data-id="BUAT RUANG">CREATE ROOM</button>
+</div>
+<p id="hostStatus" role="status" aria-live="polite" class="live-field-hint"></p><div data-content-auth></div>
 <div class="live-info-strip">
 <span class="live-info-dot"></span>
-<span>After the room is created, you will move to the waiting room and see players join in realtime.</span>
+<span data-en="Share the six-digit code with your students. Start when everyone has joined. Each room keeps a copy of its questions." data-id="Bagikan kode enam digit kepada siswa. Mulai setelah semua bergabung. Setiap ruang menyimpan salinan soalnya sendiri.">Share the six-digit code with your students. Start when everyone has joined. Each room keeps a copy of its questions.</span>
 </div>
 </div>
 </section>
@@ -58,6 +71,7 @@
 <script src="../js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="../js/content-store.js"></script>
 <script src="host.js"></script>
 </body>
 </html>

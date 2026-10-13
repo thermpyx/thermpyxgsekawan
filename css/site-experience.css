@@ -15,27 +15,60 @@
 .tpx-activity>p{font-size:12px;color:var(--text-secondary,#96abbb);overflow-wrap:anywhere}
 .tpx-activity-link{display:inline-block;margin-top:10px;font:700 11px Oxanium,sans-serif;color:var(--blue-light,#3bcaff);text-decoration:none}
 .tpx-activity-link:hover{text-decoration:underline}
-.tpx-audio-dock{position:fixed;right:18px;bottom:19px;z-index:1205;font-family:"IBM Plex Sans",sans-serif;pointer-events:none}
+/* Persistent music dock: the settings panel and video are independent. */
+.tpx-audio-dock{position:fixed;right:18px;bottom:19px;z-index:1205;width:min(340px,calc(100vw - 32px));font-family:"IBM Plex Sans",sans-serif;pointer-events:none;color:var(--text-primary,#e5f5fc)}
 .tpx-audio-dock>*{pointer-events:auto}
-.tpx-audio-pill{display:block;margin-left:auto;min-height:38px;border:1px solid rgba(56,189,248,.37);background:#132432;color:#cdebf5;box-shadow:0 9px 26px rgba(0,0,0,.24);border-radius:999px;padding:0 16px;font:700 11px Oxanium,sans-serif;letter-spacing:1px;cursor:pointer}
-.tpx-audio-pill:hover,.tpx-audio-pill:focus-visible{border-color:#ff7628;color:#ffb17b}
-.tpx-audio-panel{width:min(315px,calc(100vw - 35px));margin-bottom:10px;background:#10202e;color:#e5f5fc;border:1px solid rgba(56,189,248,.36);border-radius:13px;padding:19px;box-shadow:0 20px 60px rgba(0,0,0,.31)}
-.tpx-audio-panel[hidden]{display:none}
-.tpx-audio-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;color:#f3f9ff;font:700 13px Oxanium,sans-serif}
-.tpx-audio-close{background:transparent;border:0;color:#95aebc;cursor:pointer;font-size:21px;line-height:1}
-.tpx-audio-intro{font-size:12px;color:#a0bfce;line-height:1.5;margin:12px 0}
-.tpx-audio-caption{display:block;font:700 10px Oxanium,sans-serif;color:#ff995c;margin-bottom:7px;letter-spacing:1px}
-.tpx-audio-panel select{width:100%;padding:11px;background:#1b3444;color:#ecf7fb;border:1px solid #345467;border-radius:7px;font:700 12px Oxanium,sans-serif}
-.tpx-audio-controls{display:flex;align-items:center;gap:14px;margin:12px 0}
-.tpx-audio-play{padding:10px 22px;background:#ff7628;color:#111e27;border:0;border-radius:6px;font:700 12px Oxanium,sans-serif;cursor:pointer}
-.tpx-audio-controls label{display:flex;align-items:center;gap:7px;font:700 10px Oxanium,sans-serif}
-.tpx-audio-controls input{width:95px;accent-color:#ff7628}
-.tpx-audio-status{font-size:11px;color:#c9dce6;line-height:1.5;margin:8px 0}
-.tpx-audio-panel small{font-size:10px;color:#91aab9;line-height:1.5;display:block}
-body.light-mode .tpx-audio-panel{background:#f5fafc;color:#152e40;border-color:#a6cbde}
+.tpx-audio-dock [hidden]{display:none!important}
+.tpx-audio-panel{width:100%;margin-bottom:10px;box-sizing:border-box;background:var(--bg-card,#10202e);border:1px solid var(--border,rgba(56,189,248,.36));border-radius:18px;padding:19px;box-shadow:0 20px 60px rgba(0,0,0,.31);max-height:min(590px,calc(100dvh - 100px));overflow:auto;overscroll-behavior:contain}
+.tpx-audio-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;color:var(--text-primary,#f3f9ff);font:700 13px Oxanium,sans-serif}
+.tpx-audio-close{width:30px;height:30px;display:grid;place-items:center;background:transparent;border:1px solid var(--border,rgba(56,189,248,.25));border-radius:9px;color:var(--text-secondary,#a4becd);cursor:pointer;font-size:24px;line-height:1}
+.tpx-audio-close:hover{color:#ff995c;border-color:#ff995c}
+.tpx-audio-intro{font-size:12px;color:var(--text-secondary,#a0bfce);line-height:1.6;margin:11px 0 16px}
+.tpx-audio-caption{display:block;font:700 10px Oxanium,sans-serif;color:var(--orange,#ff995c);margin-bottom:8px;letter-spacing:1px}
+.tpx-audio-sources{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--bg-main,#0b1822);padding:5px;border:1px solid var(--border,rgba(56,189,248,.25));border-radius:12px;margin-bottom:16px}
+.tpx-audio-sources button{padding:9px 4px;background:transparent;color:var(--text-secondary,#a0bfce);border:1px solid transparent;border-radius:8px;font:600 11px "IBM Plex Sans",sans-serif;cursor:pointer}
+.tpx-audio-sources button.is-active{color:var(--text-primary,#effaff);background:var(--bg-card,#1b3444);border-color:var(--blue-light,#38bdf8);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.tpx-audio-sources button:hover{color:var(--text-primary,#fff)}
+.tpx-audio-panel select,.tpx-audio-panel input[type="url"]{width:100%;box-sizing:border-box;padding:11px 12px;background:var(--bg-main,#101f2b);color:var(--text-primary,#ecf7fb);border:1px solid var(--border,rgba(56,189,248,.3));border-radius:10px;font:600 12px "IBM Plex Sans",sans-serif}
+.tpx-audio-panel input[type="url"]::placeholder{color:var(--text-muted,#88a2b1);opacity:.8}
+.tpx-audio-panel input[aria-invalid="true"]{border-color:#ef8e7e}
+.tpx-audio-dock button:focus-visible,.tpx-audio-dock input:focus-visible,.tpx-audio-dock select:focus-visible{outline:2px solid var(--blue-light,#38bdf8);outline-offset:3px}
+.tpx-audio-file-button,.tpx-youtube-load{width:100%;box-sizing:border-box;background:var(--bg-main,#0e2332);color:var(--blue-light,#6fd3ff);border:1px solid var(--border,rgba(56,189,248,.3));border-radius:10px;padding:11px;font:700 12px Oxanium,sans-serif;cursor:pointer}
+.tpx-audio-file-button:hover,.tpx-youtube-load:hover{border-color:var(--blue-light,#38bdf8)}
+.tpx-youtube-load{margin:8px 0 9px}
+.tpx-youtube-load:disabled{opacity:.6;cursor:wait}
+.tpx-audio-track-nav{display:flex;align-items:center;justify-content:center;gap:24px;margin:10px 0 8px}
+.tpx-audio-track-nav button{min-width:80px;height:34px;padding:0 10px;border:1px solid var(--border,rgba(56,189,248,.3));background:var(--bg-main,#0b1822);color:var(--text-primary,#ecf7fb);border-radius:10px;font:600 12px "IBM Plex Sans",sans-serif;line-height:1;cursor:pointer}
+.tpx-audio-track-nav button:hover{border-color:var(--blue-light,#38bdf8);color:var(--blue-light,#38bdf8)}
+.tpx-audio-sequence{font:700 12px Oxanium,sans-serif;letter-spacing:2px;min-width:24px;text-align:center;color:var(--text-primary,#ecf7fb)}
+.tpx-audio-file-name{font-size:12px;margin:10px 0 5px;font-weight:600;overflow-wrap:anywhere;color:var(--text-primary,#effaff)}
+.tpx-audio-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0 12px;padding-top:15px;border-top:1px solid var(--border,rgba(56,189,248,.2))}
+.tpx-audio-play{min-height:39px;padding:10px 19px;background:var(--orange,#ff7628);color:#111e27;border:0;border-radius:10px;font:700 12px Oxanium,sans-serif;cursor:pointer}
+.tpx-audio-controls label{display:flex;align-items:center;gap:7px;font:700 10px Oxanium,sans-serif;color:var(--text-secondary,#a0bfce)}
+.tpx-audio-controls input{width:82px;accent-color:var(--orange,#ff7628);cursor:pointer}
+.tpx-volume-value{font-size:9px;min-width:27px;text-align:right}
+.tpx-audio-status{font-size:11px;color:var(--text-primary,#c9dce6);line-height:1.6;margin:8px 0}
+.tpx-audio-status.is-error{color:#f99d8d}
+.tpx-audio-panel small{font-size:10px;color:var(--text-muted,#91aab9);line-height:1.6;display:block}
+.tpx-audio-video{width:100%;height:200px;background:#000;border:1px solid var(--border,rgba(56,189,248,.3));box-sizing:border-box;border-radius:14px;overflow:hidden;margin-bottom:9px;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.tpx-audio-video-mount,.tpx-audio-video iframe{display:block;width:100%;height:200px;border:0}
+.tpx-audio-dock:has(.tpx-audio-video:not([hidden])) .tpx-audio-panel{max-height:calc(100dvh - 285px)}
+.tpx-audio-compact{display:flex;gap:7px;align-items:center;justify-content:flex-end}
+.tpx-audio-now-playing{max-width:132px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 10px Oxanium,sans-serif;color:var(--text-muted,#99b1c1);background:var(--bg-card,#10202e);border:1px solid var(--border,rgba(56,189,248,.18));border-radius:8px;padding:7px 8px;box-sizing:border-box;letter-spacing:.25px}
+.tpx-audio-pill,.tpx-audio-mini-play{min-height:39px;border:1px solid var(--border,rgba(56,189,248,.37));background:var(--bg-card,#132432);color:var(--text-primary,#cdebf5);box-shadow:0 9px 26px rgba(0,0,0,.2);border-radius:999px;font:700 11px Oxanium,sans-serif;letter-spacing:1px;cursor:pointer}
+.tpx-audio-pill{padding:0 16px}
+.tpx-audio-mini-play{width:39px;flex-shrink:0;padding:0;font-size:12px}
+.tpx-audio-pill[aria-expanded="true"],.tpx-audio-mini-play[aria-pressed="true"]{border-color:var(--blue-light,#38bdf8);color:var(--blue-light,#6fd3ff)}
+.tpx-audio-pill:hover,.tpx-audio-mini-play:hover{border-color:var(--orange,#ff7628);color:var(--orange,#ffb17b)}
+body.light-mode .tpx-audio-panel{background:#f5fafc;color:#152e40;border-color:#b7d3df}
 body.light-mode .tpx-audio-heading{color:#172f40}
 body.light-mode .tpx-audio-intro,body.light-mode .tpx-audio-status{color:#536d7b}
-body.light-mode .tpx-audio-panel select{color:#172f40;background:#fff;border-color:#c6dae4}
+body.light-mode .tpx-audio-status.is-error{color:#a52e1c}
+body.light-mode .tpx-audio-panel select,body.light-mode .tpx-audio-panel input[type="url"]{color:#172f40;background:#fff;border-color:#c6dae4}
 body.light-mode .tpx-audio-panel small{color:#687e8c}
-body.light-mode .tpx-audio-pill{background:#e9f5fc;color:#12364c;box-shadow:0 8px 20px rgba(14,49,72,.13);border-color:#9ccde1}
-@media(max-width:580px){.tpx-audio-dock{bottom:12px;right:10px}.tpx-audio-pill{min-height:34px;font-size:10px}.tpx-calculator-entry{padding:13px}.tpx-history-tools{margin-top:9px}.tpx-activity h3{font-size:15px}}
+body.light-mode .tpx-audio-pill,body.light-mode .tpx-audio-mini-play,body.light-mode .tpx-audio-now-playing{background:#e9f5fc;color:#12364c;border-color:#b7d3df;box-shadow:0 8px 20px rgba(14,49,72,.1)}
+body.light-mode .tpx-audio-sources{background:#e7f1f6;border-color:#b7d3df}
+body.light-mode .tpx-audio-sources button{color:#536d7b}
+body.light-mode .tpx-audio-sources button.is-active{background:#fff;color:#13394c}
+body.light-mode .tpx-audio-file-button,body.light-mode .tpx-youtube-load{background:#e8f4fb;color:#176786;border-color:#b7d3df}
+@media(max-width:580px){.tpx-audio-dock{bottom:12px;right:10px;width:min(340px,calc(100vw - 20px))}.tpx-audio-pill{font-size:10px}.tpx-audio-panel{padding:16px}.tpx-audio-now-playing{max-width:120px}.tpx-calculator-entry{padding:13px}.tpx-history-tools{margin-top:9px}.tpx-activity h3{font-size:15px}}

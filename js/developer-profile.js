@@ -14,7 +14,7 @@
       image: "assets/developers/dev-1.jpg",
 
       motto: {
-        en: "Stay curious, stay growing.",
+        en: "I leave for an assignment and come home when someone calls.",
         id: "pergi karena tugas, pulang karena di telfon"
       },
 
@@ -62,7 +62,7 @@
       image: "assets/developers/dev-2.jpg",
 
       motto: {
-        en: "Build with logic, improve with purpose.",
+        en: "Insult my lab report, and our hookup is off.",
         id: "laprakku kau hina, kita batal berzina."
       },
 
@@ -110,7 +110,7 @@
       image: "assets/developers/dev-3.jpg",
 
       motto: {
-        en: "Spicy. ",
+        en: "Delicious. ",
         id: "enak. "
       },
 
@@ -158,7 +158,7 @@
       image: "assets/developers/dev-4.jpg",
 
       motto: {
-        en: "Design with feeling, create with intention.",
+        en: "Create with love, code with a little anger and emotion.",
         id: "Mencipta dengan rasa kasih, mencoding dengan sedikit amarah dan emosi."
       },
 
@@ -206,8 +206,12 @@
 
   let currentIndex = 0;
 
-  let currentLanguage =
-    localStorage.getItem("thermpyx-language") || "en";
+  function storedPreference(key, fallback) {
+    try { return localStorage.getItem(key) || fallback; }
+    catch (_) { return fallback; }
+  }
+
+  let currentLanguage = storedPreference("thermpyx-language", "en");
 
   let rotationX = 0;
   let rotationY = 0;
@@ -316,6 +320,9 @@
     resetRotation:
       document.getElementById("resetRotation"),
 
+    replayIntro:
+      document.getElementById("devReplayIntro"),
+
     themeToggle:
       document.getElementById("themeToggle"),
 
@@ -325,6 +332,17 @@
     themeText:
       document.getElementById("themeText")
   };
+
+  // Personal names and quotes are rendered from their own bilingual data.
+  // Keep global translation and brand decoration away from these values.
+  function protectPersonalText(element) {
+    if (!element) return;
+    element.setAttribute("data-tpx-no-translate", "");
+    element.setAttribute("data-tpx-user-content", "");
+  }
+  [elements.nickname, elements.fullName, elements.motto, elements.cardNickname,
+    elements.cardName, elements.photoNickname, elements.backNickname,
+    elements.backName, elements.image].forEach(protectPersonalText);
 
 
   /* =======================================================
@@ -345,7 +363,7 @@
       member.fullName;
 
     elements.role.textContent =
-      member.role;
+      window.TPX?.translateText ? window.TPX.translateText(member.role, currentLanguage) : member.role;
 
     elements.motto.textContent =
       member.motto[currentLanguage];
@@ -362,7 +380,7 @@
 
 
     elements.miniRole.textContent =
-      member.role;
+      elements.role.textContent;
 
     elements.cardNickname.textContent =
       member.nickname;
@@ -384,7 +402,7 @@
       member.fullName;
 
     elements.backRole.textContent =
-      member.role;
+      elements.role.textContent;
 
 
     renderHistory(member);
@@ -458,7 +476,7 @@
 
       value.textContent =
         hasLink
-          ? social.value
+          ? currentLanguage === "id" ? "Ditambahkan" : "Added"
           : currentLanguage === "id"
             ? "Belum ditambahkan"
             : "Not added";
@@ -489,6 +507,8 @@
 
       button.className =
         "dev-chip";
+      button.setAttribute("aria-pressed", String(index === currentIndex));
+      button.setAttribute("aria-controls", "devLayout");
 
 
       if (index === currentIndex) {
@@ -503,7 +523,8 @@
         member.image;
 
       image.alt =
-        member.fullName;
+        "";
+      protectPersonalText(image);
 
 
       const text =
@@ -517,7 +538,8 @@
         document.createElement("strong");
 
       nickname.textContent =
-        member.nickname;
+        member.nickname.length > 16 ? member.fullName.split(" ")[0] : member.nickname;
+      protectPersonalText(nickname);
 
 
       const fullName =
@@ -525,6 +547,7 @@
 
       fullName.textContent =
         member.fullName;
+      protectPersonalText(fullName);
 
 
       text.append(
@@ -562,7 +585,156 @@
         "is-active",
         index === currentIndex
       );
+      button.setAttribute("aria-pressed", String(index === currentIndex));
     });
+  }
+
+
+  /* =======================================================
+     TEAM ENTRANCE
+     Four real portraits gather, then land on their selector cards.
+     Decorative only: the page stays usable if animation fails.
+  ======================================================= */
+
+  const entranceKey = "thermpyx-developer-intro-seen-v1";
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let stopEntrance = null;
+
+  function playTeamEntrance(replay = false) {
+    stopEntrance?.();
+    if (reducedMotion.matches || typeof Element.prototype.animate !== "function") return;
+    if (!replay && storedPreference(entranceKey, "") === "1") return;
+
+    const targets = Array.from(elements.selector.querySelectorAll(".dev-chip img"));
+    if (targets.length !== developers.length) return;
+    try { localStorage.setItem(entranceKey, "1"); } catch (_) {}
+
+    const entrance = document.createElement("div");
+    entrance.className = "dev-entrance";
+    entrance.setAttribute("data-tpx-no-translate", "");
+
+    const ambience = document.createElement("div");
+    ambience.className = "dev-entrance-ambience";
+    ambience.setAttribute("aria-hidden", "true");
+
+    const copy = document.createElement("div");
+    copy.className = "dev-entrance-copy";
+    copy.setAttribute("role", "status");
+    copy.setAttribute("aria-live", "polite");
+
+    const eyebrow = document.createElement("span");
+    eyebrow.textContent = "THERMPYX / TEAM 04";
+    const heading = document.createElement("strong");
+    const description = document.createElement("p");
+    copy.append(eyebrow, heading, description);
+
+    const skip = document.createElement("button");
+    skip.type = "button";
+    skip.className = "dev-entrance-skip";
+    function updateEntranceLanguage() {
+      heading.textContent = currentLanguage === "id" ? "Empat pemikiran. Satu visi." : "Four minds. One vision.";
+      description.textContent = currentLanguage === "id" ? "Berkenalan dengan tim di balik THERMPYX." : "Meet the people behind THERMPYX.";
+      skip.textContent = currentLanguage === "id" ? "Lewati intro" : "Skip intro";
+    }
+    updateEntranceLanguage();
+    entrance.append(ambience, copy, skip);
+
+    const width = Math.min(124, Math.max(66, window.innerWidth * .19));
+    const height = width * 1.25;
+    const gap = width * .71;
+    const top = window.innerHeight * .43 - height / 2;
+    const animations = [];
+    const portraits = developers.map((member, index) => {
+      const frame = document.createElement("div");
+      frame.className = "dev-entrance-photo";
+      frame.setAttribute("aria-hidden", "true");
+      const image = document.createElement("img");
+      image.src = member.image;
+      image.alt = "";
+      image.draggable = false;
+      const name = document.createElement("span");
+      name.textContent = member.nickname;
+      frame.append(image, name);
+      const angle = (index - 1.5) * 7;
+      const left = window.innerWidth / 2 - width / 2 + (index - 1.5) * gap;
+      Object.assign(frame.style, {
+        left: `${left}px`, top: `${top + Math.abs(index - 1.5) * 9}px`,
+        width: `${width}px`, height: `${height}px`, transform: `rotate(${angle}deg)`,
+        zIndex: String(5 - Math.abs(index - 1.5)),
+        "--dev-portrait-accent": ["#42d6bb", "#6fcef4", "#ffae68", "#6dcbbd"][index]
+      });
+      entrance.append(frame);
+      return {frame, angle};
+    });
+
+    let finished = false;
+    let travelTimer, failsafe;
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(travelTimer);
+      clearTimeout(failsafe);
+      animations.forEach(animation => animation.cancel());
+      elements.selector.classList.remove("is-gathering");
+      document.body.classList.remove("dev-entrance-playing");
+      const restoreFocus = entrance.contains(document.activeElement);
+      entrance.remove();
+      window.removeEventListener("resize", finish);
+      window.removeEventListener("pagehide", finish);
+      window.removeEventListener("scroll", finish);
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("thermpyx:languagechange", updateEntranceLanguage);
+      reducedMotion.removeEventListener?.("change", finish);
+      stopEntrance = null;
+      if (restoreFocus) elements.replayIntro?.focus({preventScroll: true});
+    }
+    function onKey(event) {
+      if (event.key === "Escape" || event.key === "Tab") finish();
+    }
+    function onPointer(event) {
+      if (event.target !== skip) finish();
+    }
+    stopEntrance = finish;
+    skip.addEventListener("click", finish);
+    window.addEventListener("resize", finish);
+    window.addEventListener("pagehide", finish);
+    window.addEventListener("scroll", finish, {passive: true});
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    window.addEventListener("thermpyx:languagechange", updateEntranceLanguage);
+    reducedMotion.addEventListener?.("change", finish);
+    document.body.append(entrance);
+    elements.selector.classList.add("is-gathering");
+    document.body.classList.add("dev-entrance-playing");
+
+    portraits.forEach(({frame, angle}, index) => {
+      animations.push(frame.animate([
+        {opacity: 0, transform: `translateY(24px) rotate(${angle * 1.6}deg) scale(.9)`},
+        {opacity: 1, transform: `translateY(0) rotate(${angle}deg) scale(1)`}
+      ], {duration: 440, delay: index * 60, fill: "both", easing: "cubic-bezier(.16,1,.3,1)"}));
+    });
+
+    travelTimer = window.setTimeout(() => {
+      if (finished) return;
+      entrance.classList.add("is-departing");
+      const journeys = portraits.map(({frame}, index) => {
+        const destination = targets[index].getBoundingClientRect();
+        if (!destination.width || !destination.height) return Promise.resolve();
+        animations[index].cancel();
+        // Animate the frame's dimensions so object-fit keeps portraits undistorted.
+        const animation = frame.animate([
+          {left: frame.style.left, top: frame.style.top, width: frame.style.width,
+            height: frame.style.height, transform: frame.style.transform, opacity: 1, borderRadius: "18px"},
+          {left: `${destination.left}px`, top: `${destination.top}px`, width: `${destination.width}px`,
+            height: `${destination.height}px`, transform: "rotate(0deg)", opacity: 1, borderRadius: "14px"}
+        ], {duration: 850, delay: index * 55, easing: "cubic-bezier(.65,0,.2,1)", fill: "forwards"});
+        animations.push(animation);
+        return animation.finished.catch(() => {});
+      });
+      Promise.all(journeys).then(finish);
+    }, 780);
+    failsafe = window.setTimeout(finish, 2600);
   }
 
 
@@ -731,13 +903,12 @@
      LANGUAGE
   ======================================================= */
 
-  function setLanguage(language) {
+  function setLanguage(language, save = true) {
+    language = language === "id" ? "id" : "en";
     currentLanguage = language;
-
-    localStorage.setItem(
-      "thermpyx-language",
-      language
-    );
+    if (save) {
+      try { localStorage.setItem("thermpyx-language", language); } catch (_) {}
+    }
 
 
     document.documentElement.lang =
@@ -751,6 +922,7 @@
           "is-active",
           button.dataset.language === language
         );
+        button.setAttribute("aria-pressed", String(button.dataset.language === language));
       });
 
 
@@ -832,10 +1004,7 @@
       mode;
 
 
-    localStorage.setItem(
-      "thermpyx-theme",
-      mode
-    );
+    try { localStorage.setItem("thermpyx-theme", mode); } catch (_) {}
 
 
     elements.themeIcon.textContent =
@@ -917,6 +1086,8 @@
     () => resetPhotoRotation()
   );
 
+  elements.replayIntro?.addEventListener("click", () => playTeamEntrance(true));
+
 
   document
     .querySelectorAll(".dev-language")
@@ -924,12 +1095,16 @@
       button.addEventListener(
         "click",
         () => {
-          setLanguage(
-            button.dataset.language
-          );
+          const language = button.dataset.language;
+          if (window.TPX?.setLanguage) window.TPX.setLanguage(language);
+          else setLanguage(language);
         }
       );
     });
+
+  window.addEventListener("thermpyx:languagechange", event => {
+    setLanguage(event.detail?.language || window.TPX?.getLanguage() || "en", false);
+  });
 
 
   elements.themeToggle.addEventListener(
@@ -956,16 +1131,21 @@
      INITIALIZE
   ======================================================= */
 
-  const initialTheme =
-    localStorage.getItem(
-      "thermpyx-theme"
-    ) || "dark";
+  const initialTheme = storedPreference("thermpyx-theme", "dark");
 
 
   setTheme(initialTheme);
 
   renderSelector();
 
-  setLanguage(currentLanguage);
+  setLanguage(window.TPX?.getLanguage() || currentLanguage, false);
+
+  // Wait only for local portraits, with a short bound for slower connections.
+  // Fonts and external requests never delay the developer page.
+  const localPortraits = Array.from(elements.selector.querySelectorAll("img"));
+  Promise.race([
+    Promise.all(localPortraits.map(image => image.decode?.().catch(() => {}) || Promise.resolve())),
+    new Promise(resolve => window.setTimeout(resolve, 450))
+  ]).then(() => window.requestAnimationFrame(() => playTeamEntrance()));
 
 })();

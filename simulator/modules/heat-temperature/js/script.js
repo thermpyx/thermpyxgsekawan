@@ -1849,6 +1849,8 @@ qSlider.addEventListener(
     "input",
     () => {
 
+        historyHeatingAdvanced = false;
+
         state.q =
             Number(qSlider.value);
 
@@ -1882,6 +1884,8 @@ mSlider.addEventListener(
     "input",
     () => {
 
+        historyHeatingAdvanced = false;
+
         state.m =
             Number(mSlider.value);
 
@@ -1914,6 +1918,8 @@ mSlider.addEventListener(
 materialSelect.addEventListener(
     "change",
     () => {
+
+        historyHeatingAdvanced = false;
 
         state.material =
             materialSelect.value;
@@ -2015,6 +2021,23 @@ let heatingTimer =
     null;
 
 
+// Record an outcome only after automatic heating actually advances.
+let historyHeatingAdvanced = false;
+
+function recordCompletedHeating() {
+    if (!historyHeatingAdvanced) return;
+    historyHeatingAdvanced = false;
+    if (![state.q, state.m, state.c, state.temperature].every(Number.isFinite) || state.m <= 0 || state.c <= 0) return;
+    const summary = locale => {
+        const format = value => new Intl.NumberFormat(locale, { maximumFractionDigits: 3 }).format(value);
+        return `Q = ${format(state.q)} J; m = ${format(state.m)} kg; c = ${format(state.c)} J/(kg·K); T = ${format(state.temperature)} °C`;
+    };
+    const detailEn = "Completed: " + summary("en-US"), detailId = "Selesai: " + summary("id-ID");
+    window.TPXHistory?.log("simulator", "Heat & Temperature", detailEn, location.href, {
+        titleEn: "Heat & Temperature", titleId: "Kalor & Temperatur", detailEn, detailId
+    });
+}
+
 function startHeating() {
 
     if (
@@ -2111,6 +2134,7 @@ function startHeating() {
 
                     drawGraph();
 
+                    recordCompletedHeating();
 
                     return;
 
@@ -2126,6 +2150,8 @@ function startHeating() {
                    Lebih lambat dari versi awal,
                    tetapi masih cukup terlihat.
                 ----------------------------------------- */
+
+                historyHeatingAdvanced = true;
 
                 state.q +=
                     100;
@@ -2179,6 +2205,8 @@ function startHeating() {
 resetButton.addEventListener(
     "click",
     () => {
+
+        historyHeatingAdvanced = false;
 
         state.running =
             false;

@@ -34,7 +34,29 @@ const themeText =
    2. SIDEBAR
 ========================================================= */
 
+const sidebarBackdrop = document.createElement("button");
+sidebarBackdrop.className = "sidebar-backdrop";
+sidebarBackdrop.type = "button";
+sidebarBackdrop.hidden = !sidebar;
+sidebarBackdrop.setAttribute("aria-label", "Close navigation");
+sidebarBackdrop.tabIndex = -1;
+document.body.append(sidebarBackdrop);
+function syncSidebar() {
+    const mobile = window.innerWidth <= 768;
+    const open = mobile ? body.classList.contains("sidebar-mobile-open") : !body.classList.contains("sidebar-collapsed");
+    sidebarToggle?.setAttribute("aria-expanded", String(open));
+    sidebarToggle?.setAttribute("aria-controls", "sidebar");
+    if (sidebar) sidebar.inert = mobile && !open;
+    sidebarBackdrop.setAttribute("aria-hidden", String(!mobile || !open));
+}
+sidebarBackdrop.addEventListener("click", () => {body.classList.remove("sidebar-mobile-open");syncSidebar();sidebarToggle?.focus();});
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && body.classList.contains("sidebar-mobile-open")) {
+        body.classList.remove("sidebar-mobile-open");syncSidebar();sidebarToggle?.focus();
+    }
+});
 if (sidebarToggle) {
+    sidebarToggle.innerHTML = '<span class="menu-line"></span><span class="menu-line"></span><span class="menu-line"></span>';
 
     sidebarToggle.addEventListener(
         "click",
@@ -47,7 +69,6 @@ if (sidebarToggle) {
                 );
 
             }
-
             else {
 
                 body.classList.toggle(
@@ -55,6 +76,7 @@ if (sidebarToggle) {
                 );
 
             }
+            syncSidebar();
 
         }
     );
@@ -81,6 +103,7 @@ navItems.forEach(function (item) {
                 body.classList.remove(
                     "sidebar-mobile-open"
                 );
+                syncSidebar();
 
             }
 
@@ -471,6 +494,7 @@ document.addEventListener(
             body.classList.remove(
                 "sidebar-mobile-open"
             );
+            syncSidebar();
 
         }
 
@@ -493,9 +517,12 @@ window.addEventListener(
             );
 
         }
+        syncSidebar();
 
     }
 );
+
+syncSidebar();
 
 
 /* =========================================================
@@ -689,6 +716,7 @@ if (calculateHeatButton) {
             saveCalculationHistory({
 
                 type: "Heat",
+                historyLabels: { titleEn: "Heat", titleId: "Kalor" },
 
                 formula:
                     "Q = m × c × ΔT",
@@ -841,6 +869,7 @@ if (calculateWorkButton) {
             saveCalculationHistory({
 
                 type: "Work",
+                historyLabels: { titleEn: "Work", titleId: "Usaha" },
 
                 formula:
                     "W = P × ΔV",
@@ -859,237 +888,7 @@ if (calculateWorkButton) {
 }
 
 
-/* =========================================================
-   15. TEMPERATURE CONVERTER
-   Celsius ↔ Kelvin
-========================================================= */
-
-const temperatureFromDisplay =
-    document.getElementById(
-        "temperatureFromDisplay"
-    );
-
-const temperatureToDisplay =
-    document.getElementById(
-        "temperatureToDisplay"
-    );
-
-const temperatureDirection =
-    document.getElementById(
-        "temperatureDirection"
-    );
-
-const temperatureValue =
-    document.getElementById(
-        "temperatureValue"
-    );
-
-const temperatureSwapButton =
-    document.getElementById(
-        "temperatureSwapButton"
-    );
-
-const convertTemperatureButton =
-    document.getElementById(
-        "convertTemperatureButton"
-    );
-
-const temperatureConversionValue =
-    document.getElementById(
-        "temperatureConversionValue"
-    );
-
-
-/* Current direction */
-
-let temperatureFromUnit = "C";
-
-let temperatureToUnit = "K";
-
-
-/* =========================================================
-   UPDATE TEMPERATURE DISPLAY
-========================================================= */
-
-function updateTemperatureDirection() {
-
-    if (
-        !temperatureFromDisplay ||
-        !temperatureToDisplay ||
-        !temperatureDirection
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        temperatureFromUnit === "C" &&
-        temperatureToUnit === "K"
-    ) {
-
-        temperatureFromDisplay.textContent =
-            "Celsius (°C)";
-
-        temperatureToDisplay.textContent =
-            "Kelvin (K)";
-
-        temperatureDirection.textContent =
-            "°C → K";
-
-    }
-
-    else {
-
-        temperatureFromDisplay.textContent =
-            "Kelvin (K)";
-
-        temperatureToDisplay.textContent =
-            "Celsius (°C)";
-
-        temperatureDirection.textContent =
-            "K → °C";
-
-    }
-
-}
-
-
-/* =========================================================
-   REVERSE TEMPERATURE
-========================================================= */
-
-if (temperatureSwapButton) {
-
-    temperatureSwapButton.addEventListener(
-        "click",
-        function () {
-
-            const oldFrom =
-                temperatureFromUnit;
-
-
-            temperatureFromUnit =
-                temperatureToUnit;
-
-
-            temperatureToUnit =
-                oldFrom;
-
-
-            updateTemperatureDirection();
-
-
-            /* Clear old result */
-
-            if (temperatureConversionValue) {
-
-                temperatureConversionValue.textContent =
-                    "...";
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   CONVERT TEMPERATURE
-========================================================= */
-
-if (convertTemperatureButton) {
-
-    convertTemperatureButton.addEventListener(
-        "click",
-        function () {
-
-            const value =
-                Number(
-                    temperatureValue.value
-                );
-
-
-            if (!Number.isFinite(value)) {
-
-                alert(
-                    "Please enter a temperature value."
-                );
-
-                temperatureValue.focus();
-
-                return;
-
-            }
-
-
-            let result;
-
-
-            /* Celsius → Kelvin */
-
-            if (
-                temperatureFromUnit === "C" &&
-                temperatureToUnit === "K"
-            ) {
-
-                result =
-                    value + 273.15;
-
-            }
-
-
-            /* Kelvin → Celsius */
-
-            else {
-
-                if (value < 0) {
-
-                    alert(
-                        "Kelvin temperature cannot be below 0 K."
-                    );
-
-                    temperatureValue.focus();
-
-                    return;
-
-                }
-
-
-                result =
-                    value - 273.15;
-
-            }
-
-
-            const formattedResult =
-                formatNumber(result);
-
-
-            const unit =
-                temperatureToUnit === "K"
-                    ? "K"
-                    : "°C";
-
-
-            if (temperatureConversionValue) {
-
-                temperatureConversionValue.textContent =
-                    `${formattedResult} ${unit}`;
-
-            }
-
-        }
-    );
-
-}
-
-
-updateTemperatureDirection();
-
-
+/* Temperature selection and conversion: temperature-converter.js. */
 
 /* =========================================================
    16. PRESSURE CONVERTER
@@ -1186,13 +985,13 @@ function saveCalculationHistory(calculation) {
   const caption = calculation?.type || "Calculation";
   const detail = [calculation?.formula, calculation?.result].filter(Boolean).join(" | ");
   if (window.TPXHistory) {
-    window.TPXHistory.log("calculation", caption, detail, location.pathname+"#calculation");
+    window.TPXHistory.log("calculation", caption, detail, location.pathname+"#calculation", calculation?.historyLabels);
   } else {
     // Fallback if unified logger was blocked: do not lose a calculation.
     try {
       const list=JSON.parse(localStorage.getItem("thermpyx-history")||"[]");
       list.unshift({...calculation,time:new Date().toLocaleString()});
-      localStorage.setItem("thermpyx-history",JSON.stringify(list.slice(0,60)));
+      localStorage.setItem("thermpyx-history",JSON.stringify(list.slice(0,50)));
     } catch (_) {}
   }
 }
