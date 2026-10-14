@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="../css/brand-identity.css">
 <script defer src="../js/brand-identity.js"></script>
 <link rel="stylesheet" href="../css/onboarding.css"><script defer src="../js/onboarding.js"></script>
+<link rel="stylesheet" href="../css/theory-expanded.css">
 </head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="theory-topbar">
@@ -32,7 +33,7 @@
 <p class="section-label">LAW 02 / ENTROPY</p>
 <h1>Second Law of Thermodynamics</h1>
 <p>Explore the natural direction of heat transfer, entropy, and the limits of heat engines.</p>
-</section><div class="tpx-calculator-entry"><span>APPLY THE THEORY / CALCULATOR</span><a href="../calculators.html#second" class="lesson-inline-link">Open related calculator </a></div>
+</section><div class="theory-content tpx-study-entry" lang="id" data-tpx-no-translate><div class="theory-card"><b>Materi diperluas</b><p>Teori mendalam, penjelasan rumus, serta 5 contoh soal lengkap tersedia pada halaman ini.</p><a href="#materi-lengkap">Baca pembahasan lengkap dalam Bahasa Indonesia →</a></div></div><div class="tpx-calculator-entry"><span>APPLY THE THEORY / CALCULATOR</span><a href="../calculators.html#second" class="lesson-inline-link">Open related calculator </a></div>
 <section class="theory-content lesson-section" id="part-1">
 <div class="theory-section-header"><span>01</span><h2>Why Processes Have a Direction</h2></div>
 <div class="theory-card lesson-card"><p>The First Law accounts for conservation of energy, but does not tell us which thermodynamic processes can occur spontaneously. The Second Law sets the direction and limits of those processes.</p>
@@ -106,6 +107,62 @@
 <ul class="lesson-list"><li>Vehicle engines</li><li>Steam power plants</li><li>Refrigerators and air conditioners</li><li>Heat engines and cooling systems</li></ul></div></section><section class="theory-content lesson-section" id="part-7">
 <div class="theory-section-header"><span>07</span><h2>Key Takeaway</h2></div>
 <div class="theory-card lesson-card"><p><strong>Second Law → process direction → entropy → not all heat can be turned into work.</strong></p></div></section>
+<section class="theory-content tpx-study" id="materi-lengkap" lang="id" data-tpx-no-translate aria-labelledby="materi-lengkap-title">
+<div class="theory-section-header"><span>ID</span><h2 id="materi-lengkap-title">Pembahasan Lengkap: Hukum Kedua Termodinamika</h2></div>
+<div class="theory-card"><p><b>Tujuan pembelajaran:</b> Menjelaskan arah proses, menghitung perubahan entropi, serta mengevaluasi efisiensi mesin kalor dan koefisien kinerja pendingin.</p><p>Materi pengayaan berbahasa Indonesia. Baca konsep dan syarat rumus terlebih dahulu, lalu ikuti lima contoh soal dengan penyelesaiannya. Tanda yang dipakai: Q positif untuk kalor masuk dan W positif untuk usaha oleh sistem.</p><nav aria-label="Daftar isi materi lengkap"><ul class="tpx-study-toc">
+<li><a href="#pendalaman-1">1. Mengapa hukum pertama belum cukup?</a></li>
+<li><a href="#pendalaman-2">2. Entropi sebagai sifat keadaan</a></li>
+<li><a href="#pendalaman-3">3. Neraca entropi dan irreversibilitas</a></li>
+<li><a href="#pendalaman-4">4. Mesin kalor dan batas Carnot</a></li>
+<li><a href="#pendalaman-5">5. Kulkas dan pompa kalor</a></li>
+<li><a href="#contoh-lengkap">Contoh soal dan penyelesaian</a></li></ul></nav></div>
+<article class="theory-card" id="pendalaman-1"><h3>1. Mengapa hukum pertama belum cukup?</h3>
+<p>Hukum pertama menuntut energi tetap seimbang, tetapi belum menentukan arah proses yang mungkin terjadi. Sebuah cangkir panas mendingin di ruangan karena energi mengalir ke lingkungan. Proses sebaliknya, yaitu cangkir mengambil kalor dari udara yang lebih dingin lalu menjadi semakin panas tanpa perubahan lain, tidak terjadi spontan walaupun kita dapat menulis neraca energinya.</p>
+<p>Hukum kedua memberikan batas arah dan mutu perubahan energi. Rumusan Clausius menyatakan bahwa tidak mungkin membuat alat siklik yang satu-satunya akibatnya memindahkan kalor dari reservoir dingin ke reservoir panas. Kulkas dapat memindahkan kalor seperti itu karena memerlukan masukan usaha listrik.</p>
+<p>Rumusan Kelvin–Planck menyatakan bahwa tidak mungkin membuat mesin siklik yang satu-satunya akibatnya menyerap kalor dari satu reservoir dan mengubah seluruhnya menjadi usaha. Mesin kalor siklik harus membuang sebagian kalor atau menimbulkan perubahan lain. Batas ini tidak melarang kalor seluruhnya menjadi usaha pada suatu tahap non-siklik seperti ekspansi isotermal gas ideal.</p>
+</article>
+<article class="theory-card" id="pendalaman-2"><h3>2. Entropi sebagai sifat keadaan</h3>
+<div class="tpx-study-formula"><strong>dS = δQrev/T;  ΔS = ∫δQrev/T</strong></div><p><b>Arti variabel:</b> S = entropi (J/K); δQrev = kalor pada lintasan reversibel; T = suhu mutlak pada lintasan tersebut (K).</p><p><b>Makna dan batas penggunaan:</b> Entropi merupakan fungsi keadaan. Untuk proses aktual yang irreversibel, cari perubahan entropi melalui lintasan reversibel penghubung keadaan yang sama; jangan sembarang memakai Qaktual/T.</p>
+<p>Entropi berkaitan dengan banyaknya cara mikroskopik yang sesuai dengan keadaan makroskopik serta penyebaran energi. Istilah “ketidakteraturan” dapat menjadi pengantar, tetapi tidak cukup presisi untuk semua persoalan. Dua keadaan dapat dibandingkan melalui rumus termodinamika tanpa menilai tampilan benda sebagai rapi atau berantakan.</p>
+<p>Pada pemanasan benda dengan kapasitas kalor konstan C tanpa perubahan fase, ΔS = C ln(T₂/T₁). Untuk perpindahan kalor reversibel isotermal atau perubahan fase reversibel pada suhu tetap, ΔS = Qrev/T. Perbedaan dua bentuk ini muncul karena pada pemanasan biasa suhu berubah sepanjang proses.</p>
+</article>
+<article class="theory-card" id="pendalaman-3"><h3>3. Neraca entropi dan irreversibilitas</h3>
+<div class="tpx-study-formula"><strong>ΔSsistem = ∫δQ/Tb + Sgen;  Sgen ≥ 0;  ΔStotal = ΔSsistem + ΔSlingkungan ≥ 0</strong></div><p><b>Arti variabel:</b> Tb = suhu mutlak batas tempat kalor menyeberang; Sgen = entropi yang dihasilkan oleh irreversibilitas.</p><p><b>Makna dan batas penggunaan:</b> Neraca pertama berlaku bagi sistem tertutup. ΔStotal menggunakan gabungan sistem dan lingkungan yang terisolasi secara keseluruhan. Kesetaraan nol menunjukkan proses reversibel ideal.</p>
+<p>Entropi suatu sistem dapat berkurang ketika sistem melepas kalor, seperti air yang membeku. Hal itu tidak melanggar hukum kedua apabila kenaikan entropi lingkungan mencukupi sehingga perubahan total tidak negatif. Pernyataan “entropi selalu bertambah” harus ditujukan pada sistem terisolasi atau gabungan lengkap, bukan setiap benda secara terpisah.</p>
+<p>Gesekan, pencampuran, ekspansi bebas, dan perpindahan kalor melintasi beda suhu berhingga menghasilkan entropi. Energi tetap kekal, tetapi kemampuan menghasilkan usaha berguna berkurang. Adiabatik reversibel bersifat isentropik; adiabatik irreversibel dapat menghasilkan kenaikan entropi walaupun tidak ada kalor masuk.</p>
+</article>
+<article class="theory-card" id="pendalaman-4"><h3>4. Mesin kalor dan batas Carnot</h3>
+<div class="tpx-study-formula"><strong>Wnet = Qh − Qc;  η = Wnet/Qh = 1 − Qc/Qh;  ηCarnot = 1 − Tc/Th</strong></div><p><b>Arti variabel:</b> Qh = besar kalor masuk dari reservoir panas; Qc = besar kalor dibuang ke reservoir dingin; Th dan Tc = suhu reservoir dalam K.</p><p><b>Makna dan batas penggunaan:</b> Qh dan Qc di sini adalah besar positif, berbeda dari kalor bertanda dalam neraca sistem. Batas Carnot berlaku untuk mesin siklik yang bekerja hanya antara dua reservoir suhu tetap.</p>
+<p>Mesin reversibel memberikan efisiensi maksimum untuk pasangan reservoir yang sama. Mesin nyata memiliki efisiensi lebih rendah karena irreversibilitas. Menaikkan Th atau menurunkan Tc dapat menaikkan batas efisiensi, tetapi batas bahan dan proses teknik tetap perlu dipertimbangkan. Jangan memasukkan Celsius ke rasio suhu Carnot.</p>
+</article>
+<article class="theory-card" id="pendalaman-5"><h3>5. Kulkas dan pompa kalor</h3>
+<div class="tpx-study-formula"><strong>COPR = Qc/Win;  COPHP = Qh/Win = COPR + 1;  COPR,Carnot = Tc/(Th − Tc)</strong></div><p><b>Arti variabel:</b> COPR = koefisien kinerja kulkas; COPHP = koefisien kinerja pompa kalor; Win = besar usaha masuk.</p><p><b>Makna dan batas penggunaan:</b> Batas Carnot memakai suhu mutlak dan proses reversibel antara dua reservoir. COP tidak sama dengan efisiensi mesin kalor.</p>
+<p>Kulkas dinilai dari banyaknya kalor yang dapat dikeluarkan dari ruang dingin untuk setiap joule usaha masuk. COP dapat lebih dari satu karena alat memindahkan energi, bukan menghasilkan seluruh kalor tersebut dari listrik. Pompa kalor memanfaatkan sisi panas sehingga yang dinilai adalah Qh; pada perangkat dan kondisi sama, COP pemanasan lebih besar satu daripada COP pendinginan.</p>
+</article>
+<div id="contoh-lengkap"><h3>Contoh Soal dan Penyelesaian Lengkap</h3>
+<article class="theory-card tpx-worked-example" id="soal-lengkap-1"><h4>Contoh 1 — Efisiensi mesin nyata</h4><p><b>Soal:</b> Mesin menyerap 1.000 J dan membuang 650 J tiap siklus. Tentukan Wnet dan efisiensi.</p><p><b>Diketahui dan asumsi:</b> Qh = 1.000 J; Qc = 650 J, keduanya besar positif.</p><p><b>Langkah penyelesaian:</b></p><ol>
+<li>Wnet = 1.000 − 650 = 350 J.</li>
+<li>η = 350/1.000 = 0,35.</li>
+</ol><p class="tpx-study-answer"><b>Jawaban:</b> Wnet = 350 J; η = 35%.</p><p><b>Makna hasil:</b> Sebesar 65% kalor masuk dibuang ke reservoir dingin.</p></article>
+<article class="theory-card tpx-worked-example" id="soal-lengkap-2"><h4>Contoh 2 — Memeriksa klaim mesin</h4><p><b>Soal:</b> Mesin bekerja antara 600 K dan 300 K. Produsen mengklaim efisiensi 60%. Apakah mungkin untuk mesin siklik dua reservoir?</p><p><b>Diketahui dan asumsi:</b> Th = 600 K; Tc = 300 K.</p><p><b>Langkah penyelesaian:</b></p><ol>
+<li>ηmaks = 1 − 300/600 = 0,50 = 50%.</li>
+<li>Bandingkan 60% dengan batas 50%.</li>
+</ol><p class="tpx-study-answer"><b>Jawaban:</b> Klaim 60% melampaui batas Carnot dan tidak mungkin pada asumsi tersebut.</p><p><b>Makna hasil:</b> Neraca energi saja belum cukup; batas hukum kedua harus dipenuhi.</p></article>
+<article class="theory-card tpx-worked-example" id="soal-lengkap-3"><h4>Contoh 3 — Entropi perpindahan kalor</h4><p><b>Soal:</b> Sebesar 1.000 J berpindah dari reservoir 400 K ke reservoir 300 K. Hitung perubahan entropi total.</p><p><b>Diketahui dan asumsi:</b> Kedua reservoir tetap pada suhunya.</p><p><b>Langkah penyelesaian:</b></p><ol>
+<li>Reservoir panas: ΔSh = −1.000/400 = −2,50 J/K.</li>
+<li>Reservoir dingin: ΔSc = +1.000/300 ≈ +3,333 J/K.</li>
+<li>Jumlahkan: ΔStotal ≈ 0,833 J/K.</li>
+</ol><p class="tpx-study-answer"><b>Jawaban:</b> ΔStotal ≈ +0,833 J/K.</p><p><b>Makna hasil:</b> Nilai positif menunjukkan proses irreversibel dan arah perpindahan yang sesuai hukum kedua.</p></article>
+<article class="theory-card tpx-worked-example" id="soal-lengkap-4"><h4>Contoh 4 — Entropi air yang dipanaskan</h4><p><b>Soal:</b> Sebanyak 0,20 kg air dipanaskan dari 300 K ke 350 K tanpa perubahan fase. Hitung perubahan entropi air.</p><p><b>Diketahui dan asumsi:</b> c = 4.200 J/(kg·K), dianggap konstan.</p><p><b>Langkah penyelesaian:</b></p><ol>
+<li>Gunakan ΔS = mc ln(T₂/T₁).</li>
+<li>mc = 0,20 × 4.200 = 840 J/K.</li>
+<li>ΔS = 840 ln(350/300) ≈ 129,49 J/K.</li>
+</ol><p class="tpx-study-answer"><b>Jawaban:</b> ΔSair ≈ +129,5 J/K.</p><p><b>Makna hasil:</b> Ini perubahan entropi air saja; perubahan entropi total memerlukan informasi sumber pemanas.</p></article>
+<article class="theory-card tpx-worked-example" id="soal-lengkap-5"><h4>Contoh 5 — Kinerja kulkas</h4><p><b>Soal:</b> Kulkas mengeluarkan 600 J dari ruang dingin dengan usaha listrik 200 J per siklus. Tentukan COP dan kalor ke ruangan.</p><p><b>Diketahui dan asumsi:</b> Qc = 600 J; Win = 200 J.</p><p><b>Langkah penyelesaian:</b></p><ol>
+<li>COPR = Qc/Win = 600/200 = 3.</li>
+<li>Dari neraca energi, Qh = Qc + Win = 800 J.</li>
+</ol><p class="tpx-study-answer"><b>Jawaban:</b> COPR = 3; Qh = 800 J.</p><p><b>Makna hasil:</b> Kalor ke ruangan melebihi kalor yang diambil dari isi kulkas karena ada tambahan energi listrik.</p></article>
+</div><div class="theory-card"><h3>Cek Pemahaman</h3><p>Sebelum melanjutkan, jelaskan kembali alasan pemilihan rumus pada setiap contoh. Sebutkan asumsi yang digunakan, periksa satuannya, dan prediksi perubahan jawaban bila salah satu data diubah. Jawaban numerik yang benar perlu disertai penjelasan fisik yang sesuai.</p><p><a href="#materi-lengkap">Kembali ke daftar isi materi</a> · <a href="laws.html">Peta materi termodinamika</a></p></div></section>
 <section class="theory-navigation">
 <a class="theory-navigation-button" href="../simulator/hkm2.html">Open Second Law Simulator</a>
 <a class="theory-navigation-button" href="laws.html"> All Laws</a>
