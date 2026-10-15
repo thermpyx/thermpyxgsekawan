@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<script src="js/persistent-navigation.js"></script>
   <meta charset="UTF-8">
 
   <meta
@@ -46,6 +47,10 @@
 
   <!-- Developer Page -->
   <script defer src="js/developer-profile.js"></script>
+<link rel="stylesheet" href="css/custom-select.css"><link rel="stylesheet" href="css/content-library.css"><script defer src="js/custom-select.js"></script><link rel="stylesheet" href="css/card-accents.css">
+<link rel="stylesheet" href="css/ui-consistency.css">
+<link rel="stylesheet" href="css/brand-identity.css">
+<script defer src="js/brand-identity.js"></script>
 </head>
 
 
@@ -56,9 +61,10 @@
   ====================================================== -->
 
   <div
-    class="tpx-page-transition tpx-show"
+    class="tpx-page-transition tpx-hide"
     role="status"
     aria-label="THERMPYX loading"
+    aria-hidden="true"
   >
     <div class="tpx-loader-panel">
 
@@ -107,22 +113,6 @@
     </a>
 
     <div class="dev-top-actions">
-
-      <button
-        class="dev-language is-active"
-        type="button"
-        data-language="en"
-      >
-        EN
-      </button>
-
-      <button
-        class="dev-language"
-        type="button"
-        data-language="id"
-      >
-        ID
-      </button>
 
       <button
         class="page-theme-toggle"
@@ -193,6 +183,17 @@
 
     </section>
 
+
+    <section class="dev-team" aria-labelledby="devTeamTitle">
+      <div class="dev-team-heading">
+        <div>
+          <h2 id="devTeamTitle" data-en="One team. Four perspectives." data-id="Satu tim. Empat perspektif.">One team. Four perspectives.</h2>
+          <p data-en="Choose a portrait to meet the person behind it." data-id="Pilih foto untuk mengenal orang di baliknya.">Choose a portrait to meet the person behind it.</p>
+        </div>
+        <button class="dev-replay" id="devReplayIntro" type="button" data-en="Play team intro" data-id="Putar intro tim">Play team intro</button>
+      </div>
+      <div class="dev-selector" id="devSelector" role="group" aria-label="Development team" data-aria-label-en="Development team" data-aria-label-id="Tim pengembang"></div>
+    </section>
 
     <!-- ===================================================
          MAIN LAYOUT
@@ -457,13 +458,6 @@
         </div>
 
 
-        <!-- Developer Selector -->
-
-        <div
-          class="dev-selector"
-          id="devSelector"
-        ></div>
-
       </section>
 
 
@@ -533,7 +527,7 @@
       </p>
 
       <a href="index.html#home">
-        RETURN TO THE LAB ↗
+        RETURN TO THE LAB
       </a>
 
     </section>

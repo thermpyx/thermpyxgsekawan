@@ -1,0 +1,33 @@
+/* Expanded Indonesian theory, scoped to preserve the existing interface. */
+.tpx-study{scroll-margin-top:90px;overflow-wrap:anywhere}
+.tpx-study .theory-card{margin-bottom:20px;transform:none}
+.tpx-study p,.tpx-study li{line-height:1.9;font-size:16px;color:var(--text-secondary)}
+.tpx-study h3{font-size:clamp(20px,3vw,25px);line-height:1.4;margin:0 0 18px;color:var(--text-primary)}
+.tpx-study h4{margin:22px 0 10px;font-size:18px;color:var(--text-primary)}
+.tpx-study ol,.tpx-study ul{padding-left:24px;margin:12px 0 20px}
+.tpx-study li{margin-bottom:10px}
+.tpx-study a,.tpx-study-entry a{color:var(--blue);text-decoration:underline;text-underline-offset:4px}
+.tpx-study-formula{padding:18px;margin:18px 0;border-left:4px solid var(--blue);background:rgba(0,168,255,.07);font-size:18px;line-height:1.8;overflow-wrap:anywhere;color:var(--text-primary)}
+.tpx-study-answer{border-left:4px solid #219e79;padding:12px 16px;background:rgba(33,158,121,.08)}
+.tpx-study-entry{padding-top:8px;padding-bottom:8px}
+.tpx-study .tpx-study-toc{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));list-style:none;padding:0}
+.tpx-study .tpx-study-toc a{display:block;padding:10px;border:1px solid var(--border);border-radius:8px;height:100%}
+/* Quick access uses the site's existing colors, typography and card surfaces. */
+.tpx-study-actions{display:flex;flex-wrap:wrap;gap:12px 24px}
+.tpx-study-actions a{display:inline-flex;align-items:center;min-height:44px;line-height:1.6}
+.tpx-study [id]{scroll-margin-top:100px}
+.tpx-study .tpx-study-topic-list{list-style:none;padding:0;margin:20px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.tpx-study .tpx-study-topic-list li{margin:0;padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--bg-card)}
+.tpx-study-topic-title{display:block;font-weight:600;color:var(--text-primary)!important}
+.tpx-study-topic-examples{display:inline-flex;align-items:center;min-height:44px;font-size:14px}
+.tpx-study-overview{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:28px;padding:28px;background:linear-gradient(145deg,var(--bg-card),var(--bg-secondary));border:1px solid var(--border);border-radius:14px}
+.tpx-study-overview>div{min-width:0}
+.tpx-study-overview h3{font-family:"Oxanium",sans-serif;font-size:clamp(20px,3vw,25px);line-height:1.4;margin:8px 0 12px;color:var(--text-primary)}
+.tpx-study-overview p{color:var(--text-secondary);font-size:14px;line-height:1.8}
+.tpx-study-overview .primary-button{flex-shrink:0;text-align:center;white-space:normal}
+.tpx-study-actions a:focus-visible,.tpx-study a:focus-visible,.tpx-study-overview a:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+@media(max-width:900px){.tpx-study-overview{align-items:flex-start;flex-direction:column}.tpx-study-overview .primary-button{align-self:flex-start}}
+@media(max-width:600px){.tpx-study-overview{padding:20px}.tpx-study .tpx-study-examples{grid-template-columns:1fr}.tpx-study-actions{gap:8px}}
+@media(max-width:650px){.tpx-study,.tpx-study [id]{scroll-margin-top:130px}}
+@media(max-width:600px){.tpx-study.theory-content{padding-left:5%;padding-right:5%}.tpx-study .theory-card{padding:20px}.tpx-study p,.tpx-study li{font-size:15px}}
+@media print{.tpx-study{display:block!important}.tpx-study .theory-card{box-shadow:none;background:white;color:black;break-inside:auto}.tpx-study p,.tpx-study li,.tpx-study h3,.tpx-study h4{color:black}.tpx-study-formula,.tpx-study-answer{break-inside:avoid}.tpx-study h3,.tpx-study h4{break-after:avoid}}

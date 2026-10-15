@@ -2,6 +2,7 @@
 
 <html lang="en">
 <head>
+<script src="../js/persistent-navigation.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>First Law of Thermodynamics Simulator | THERMPYX</title>
@@ -10,7 +11,13 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="css hkm 1/style.css" rel="stylesheet"/>
-<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script><link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script><link rel="stylesheet" href="../css/card-accents.css">
+<link rel="stylesheet" href="../css/ui-consistency.css">
+<link rel="stylesheet" href="../css/brand-identity.css">
+<script defer src="../js/brand-identity.js"></script>
+<link rel="stylesheet" href="../css/onboarding.css"><script defer src="../js/onboarding.js"></script>
+<link rel="stylesheet" href="shared/simulator-polish.css">
+</head>
 <body class="simulator-standalone"><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="simulator-header">
 <a aria-label="THERMPYX Home" class="simulator-brand" href="../index.html#home">
@@ -21,6 +28,7 @@
 </span>
 </a>
 <div class="simulator-header-actions">
+<a class="simulator-back sim-learning-link" href="../learning.html#first-law" data-en="Learning Path" data-id="Alur Belajar">Learning Path</a>
 <a class="simulator-back" href="../index.html#home">Back to Home</a>
 <a class="simulator-back" href="index.html">All Simulations</a>
 <button aria-label="Toggle theme" class="simulator-theme-toggle" id="themeToggle" type="button">
@@ -102,19 +110,24 @@
 </select>
 </div>
 <div class="control-group">
-<label>Heat Q <span id="heatValue">0 J</span></label>
+<label for="heatInput">Heat Q <span id="heatValue">0 J</span></label>
 <input id="heatInput" max="1000" min="0" step="10" type="range" value="0"/>
 </div>
 <div class="control-group">
-<label>Initial Pressure <span id="pressureValue">100 kPa</span></label>
+<label for="pressureInput">Initial Pressure <span id="pressureValue">100 kPa</span></label>
 <input id="pressureInput" max="200" min="50" step="5" type="range" value="100"/>
 </div>
 <div class="control-group">
-<label>Initial Volume <span id="volumeValue">2.00 L</span></label>
+<label for="volumeInput"><span class="control-name" data-en="Initial Volume V₀" data-id="Volume Awal V₀">Initial Volume V₀</span><span id="volumeValue">2.00 L</span></label>
 <input id="volumeInput" max="5" min="1" step="0.1" type="range" value="2"/>
 </div>
+<div class="control-group" id="finalVolumeControl" hidden>
+<label for="finalVolumeInput"><span class="control-name" data-en="Final Volume V₁" data-id="Volume Akhir V₁">Final Volume V₁</span><span id="finalVolumeValue">3.00 L</span></label>
+<input aria-describedby="finalVolumeHint" id="finalVolumeInput" max="5" min="1" step="0.1" type="range" value="3" disabled/>
+<small class="control-hint" id="finalVolumeHint" data-en="Choose a final volume above or below the initial volume to expand or compress the gas." data-id="Pilih volume akhir yang lebih besar atau lebih kecil dari volume awal untuk mengekspansi atau mengompresi gas.">Choose a final volume above or below the initial volume to expand or compress the gas.</small>
+</div>
 <div class="control-group">
-<label>Initial Temperature <span id="temperatureValue">300 K</span></label>
+<label for="temperatureInput">Initial Temperature <span id="temperatureValue">300 K</span></label>
 <input id="temperatureInput" max="500" min="250" step="10" type="range" value="300"/>
 </div>
 <div class="info-box" id="processInfo">

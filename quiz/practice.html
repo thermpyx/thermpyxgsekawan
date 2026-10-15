@@ -2,6 +2,7 @@
 
 <html lang="en">
 <head>
+<script src="../js/persistent-navigation.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Thermodynamics Quiz | THERMPYX</title>
@@ -10,10 +11,15 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../css/style.css" rel="stylesheet"/>
 <link href="../css/quiz.css" rel="stylesheet"/>
-<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script></head>
+<link href="../css/neo-lab.css" rel="stylesheet"/><link href="../css/global-ui.css" rel="stylesheet"/><script defer="" src="../js/i18n-dictionary.js"></script><script defer="" src="../js/i18n.js"></script><link rel="stylesheet" href="../css/site-experience.css"><script defer src="../js/site-experience.js"></script><link rel="stylesheet" href="../css/custom-select.css"><link rel="stylesheet" href="../css/content-library.css"><script defer src="../js/custom-select.js"></script><link rel="stylesheet" href="../css/card-accents.css">
+<link rel="stylesheet" href="../css/ui-consistency.css">
+<link rel="stylesheet" href="../css/brand-identity.css">
+<script defer src="../js/brand-identity.js"></script>
+<link rel="stylesheet" href="../css/onboarding.css"><script defer src="../js/onboarding.js"></script>
+</head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <header class="quiz-topbar">
-<a class="quiz-back" href="../index.html#quiz">Back to Home</a>
+<a class="quiz-back" href="quiz.html" data-en="Back to Practice" data-id="Kembali ke Latihan">Back to Practice</a>
 <div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
 <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button">
 <span class="theme-icon" id="themeIcon">☾</span>
@@ -30,6 +36,8 @@
             </p>
 </section>
 <section class="quiz-area">
+<p class="quiz-learning-note" data-en="Learning path: complete a topic quiz with at least 80% to record mastery on this browser. Review the explanations and retry whenever you need." data-id="Alur belajar: selesaikan kuis topik dengan nilai minimal 80% untuk mencatat penguasaan di browser ini. Pelajari pembahasan dan ulangi kapan saja.">Learning path: complete a topic quiz with at least 80% to record mastery on this browser. Review the explanations and retry whenever you need.</p>
+<a class="quiz-change-topic" id="quizLearningReturn" href="../learning.html" data-en="Back to learning path" data-id="Kembali ke alur belajar">Back to learning path</a>
 <!-- Topic selection shown before the quiz starts -->
 <div class="quiz-topic-selector" id="quizTopicSelector">
 <div class="quiz-selector-heading">
@@ -46,6 +54,7 @@
 </span>
 <span class="quiz-topic-count">5 Questions</span>
 </button>
+<button class="quiz-topic-card" data-topic="zeroth-law" type="button"><span class="quiz-topic-icon">T</span><span class="quiz-topic-copy"><strong data-en="Zeroth Law of Thermodynamics" data-id="Hukum ke Nol Termodinamika">Zeroth Law of Thermodynamics</strong><small data-en="Check the corresponding learning outcomes with five questions." data-id="Uji capaian pembelajaran topik ini melalui lima soal.">Check the corresponding learning outcomes with five questions.</small></span><span class="quiz-topic-count" data-en="5 Questions" data-id="5 Soal">5 Questions</span></button>
 <button class="quiz-topic-card" data-topic="work" type="button">
 <span class="quiz-topic-icon">W</span>
 <span class="quiz-topic-copy">
@@ -70,13 +79,15 @@
 </span>
 <span class="quiz-topic-count">5 Questions</span>
 </button>
+<button class="quiz-topic-card" data-topic="second-law" type="button"><span class="quiz-topic-icon">ΔS</span><span class="quiz-topic-copy"><strong data-en="Second Law of Thermodynamics" data-id="Hukum Kedua Termodinamika">Second Law of Thermodynamics</strong><small data-en="Check the corresponding learning outcomes with five questions." data-id="Uji capaian pembelajaran topik ini melalui lima soal.">Check the corresponding learning outcomes with five questions.</small></span><span class="quiz-topic-count" data-en="5 Questions" data-id="5 Soal">5 Questions</span></button>
+<button class="quiz-topic-card" data-topic="third-law" type="button"><span class="quiz-topic-icon">0 K</span><span class="quiz-topic-copy"><strong data-en="Third Law of Thermodynamics" data-id="Hukum Ketiga Termodinamika">Third Law of Thermodynamics</strong><small data-en="Check the corresponding learning outcomes with five questions." data-id="Uji capaian pembelajaran topik ini melalui lima soal.">Check the corresponding learning outcomes with five questions.</small></span><span class="quiz-topic-count" data-en="5 Questions" data-id="5 Soal">5 Questions</span></button>
 <button class="quiz-topic-card quiz-topic-card-all" data-topic="all" type="button">
 <span class="quiz-topic-icon">∞</span>
 <span class="quiz-topic-copy">
 <strong>All Materials</strong>
 <small>A balanced mixed quiz covering every material above.</small>
 </span>
-<span class="quiz-topic-count">12 Questions</span>
+<span class="quiz-topic-count" data-en="21 Questions" data-id="21 Soal">21 Questions</span>
 </button>
 </div>
 </div>
@@ -121,6 +132,7 @@
 <button class="quiz-home-button quiz-topic-again-button" id="quizChooseTopicButton" type="button">
                         CHOOSE ANOTHER TOPIC
                     </button>
+<a class="quiz-home-button" href="../learning.html" data-en="CONTINUE LEARNING" data-id="LANJUTKAN BELAJAR">CONTINUE LEARNING</a>
 <a class="quiz-home-button" href="../index.html#quiz">BACK TO HOME</a>
 </div>
 </div>
@@ -134,6 +146,8 @@
 <p>Learn. Calculate. Explore.</p>
 </footer>
 <script src="../js/script.js"></script>
+<script src="../js/learning-curriculum.js"></script>
+<script src="../js/quiz-learning-topics.js"></script>
 <script src="../js/quiz.js"></script>
 </body>
 </html>

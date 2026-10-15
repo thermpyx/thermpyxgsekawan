@@ -12,6 +12,12 @@ const element=(tag,cls,value)=>{
  const e=document.createElement(tag);if(cls)e.className=cls;
  if(value!==undefined)e.textContent=value;return e;
 };
+const participantName=(tag,cls,nickname)=>{
+ const name=element(tag,cls,nickname||T("Player","Peserta"));
+ name.setAttribute?.("data-tpx-no-translate", "");
+ name.setAttribute?.("data-tpx-user-content", "");
+ return name;
+};
 function render(){
  const {room,players,answers}=snapshot;
  if(!room)return;
@@ -26,7 +32,7 @@ function render(){
  $("hostAnswers").textContent=saved;
  $("hostPercent").textContent=percent+"%";
  $("hostState").textContent=room.status==="finished"?T("FINISHED","SELESAI"):T("LIVE SESSION","SESI LANGSUNG");
- $("hostLiveStatus").textContent=room.status==="finished"?T("COMPLETE","SELESAI"):T("LIVE / 3s FALLBACK","LANGSUNG / 3d CADANGAN");
+ $("hostLiveStatus").textContent=room.status==="finished"?T("COMPLETE","SELESAI"):T("LIVE","LANGSUNG");
  $("hostFinishBtn").disabled=room.status!=="playing"||closing;
  $("hostFinishHint").textContent=room.status==="finished"?
    T("Results are ready. Open the leaderboard to see the final standings.","Hasil siap. Buka papan peringkat untuk melihat hasil akhir."):
@@ -38,7 +44,7 @@ function render(){
    const count=Math.min(questionCount,p.answeredCount);
    const box=element("article","host-player");
    const title=element("div","host-player-header");
-   title.append(element("strong","",p.nickname||"Player"),element("small","",
+   title.append(participantName("strong","",p.nickname),element("small","",
      left?T("LEFT","KELUAR"):p.completed?T("COMPLETED","SELESAI"):
      `${T("QUESTION","SOAL")} ${Math.min(questionCount,count+1)} / ${questionCount}`));
    const track=element("div","host-track"),fill=element("span");
@@ -53,7 +59,7 @@ function render(){
  if(!ordered.length)ranks.append(element("p","",T("Waiting for answers...","Menunggu jawaban...")));
  ordered.forEach((p,i)=>{
    const row=element("div","host-standing");
-   row.append(element("div","number",String(i+1)),element("div","name",p.nickname||"Player"));
+   row.append(element("div","number",String(i+1)),participantName("div","name",p.nickname));
    const points=element("div","points",String(p.score)+" pts");
    points.append(element("small","",S.formatTime(p.totalMs)));
    row.append(points);ranks.append(row);
@@ -79,12 +85,12 @@ async function refresh(){
  busy=true;
  try {
    const [r,p,a]=await Promise.all([
-    supabaseClient.from("quiz_rooms").select("id,topic,status").eq("id",roomId).single(),
+    supabaseClient.from("quiz_rooms").select("*").eq("id",roomId).single(),
     supabaseClient.from("quiz_players").select("id,nickname,joined_at,current_question").eq("room_id",roomId),
     supabaseClient.from("quiz_answers").select("*").eq("room_id",roomId)
    ]);
    if(r.error||p.error||a.error)throw(r.error||p.error||a.error);
-   questionCount=getQuestionsForTopic(r.data.topic).length;
+   questionCount=getQuestionsForRoom(r.data).length;
    snapshot={room:r.data,players:p.data||[],answers:a.data||[]};
    render();
    const ranked=S.calculateRankings(snapshot.players,snapshot.answers,questionCount);

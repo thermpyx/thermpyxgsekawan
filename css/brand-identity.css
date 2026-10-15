@@ -1,0 +1,140 @@
+/* One scalable wordmark, matching the original large home-page title. */
+.tpx-wordmark {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: -.08em;
+  gap: .04em;
+  max-width: 100%;
+  white-space: nowrap;
+  font-family: "Syncopate", "Oxanium", sans-serif;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -.09em;
+  color: var(--text-primary, inherit);
+}
+.tpx-wordmark > .tpx-wordmark-letters {
+  display: inline-block;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.tpx-wordmark > .tpx-wordmark-x {
+  display: block;
+  width: .92em;
+  height: .96em;
+  flex: 0 0 .92em;
+  margin-left: .012em;
+  color: var(--brand-orange, #ff7628);
+  pointer-events: none;
+}
+.tpx-brand-phrase {font: inherit; color: inherit; letter-spacing: inherit;}
+.tpx-brand-phrase .tpx-wordmark {font-size: .91em;}
+.tpx-brand-container {white-space: nowrap;}
+.tpx-brand-container > .tpx-wordmark, .tpx-brand-phrase > .tpx-wordmark {
+  font-family: "Syncopate", "Oxanium", sans-serif;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -.09em;
+  color: var(--text-primary, inherit);
+}
+.tpx-brand-container > .tpx-wordmark {font-size: inherit;}
+.logo-text > .tpx-brand-container > .tpx-wordmark,
+.mobile-logo > .tpx-brand-container > .tpx-wordmark {font-size: 14px;}
+.footer .tpx-wordmark {display: inline-flex; font-size: inherit;}
+.dev-back-logo .tpx-wordmark {color: #ecf8fd;}
+.tpx-loader-wordmark > .tpx-wordmark {font-size: inherit;}
+[data-tpx-brand-icon] {display: inline-grid; place-items: center;}
+.tpx-emblem-x {display: block; width: 65%; height: 65%; color: var(--brand-orange, #ff7628); pointer-events: none;}
+.tpx-instrument-icon {
+  display: block;
+  width: 70%;
+  height: 70%;
+  overflow: visible;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.tpx-instrument-icon .tpx-icon-chamber {fill: currentColor; fill-opacity: .07;}
+.tpx-instrument-icon .tpx-icon-warm {stroke: var(--brand-orange, #ff873f);}
+.tpx-instrument-icon .tpx-icon-particle {fill: currentColor; stroke: none;}
+.nav-icon[data-tpx-brand-icon] {width: 22px; height: 22px; flex: 0 0 22px;}
+.nav-icon .tpx-instrument-icon {width: 100%; height: 100%; stroke-width: 3;}
+.simulator-preview-icon[data-tpx-brand-icon] {
+  border-radius: 25px;
+  background: linear-gradient(145deg, rgba(26, 189, 203, .10), rgba(255, 118, 40, .045));
+  border-color: var(--border, rgba(63, 202, 215, .35));
+}
+@media (max-width: 650px) {
+  .theory-topbar, .quiz-topbar {
+    height: auto;
+    min-height: 70px;
+    padding: 12px 14px;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  .theory-topbar > .theory-logo, .quiz-topbar > .quiz-logo {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .theory-topbar > .page-theme-toggle, .quiz-topbar > .page-theme-toggle {margin-left: auto;}
+  .theory-logo > .tpx-wordmark, .quiz-logo > .tpx-wordmark {font-size: 12px;}
+  .tpx-brand-copy strong > .tpx-wordmark,
+  .simulator-brand-copy strong > .tpx-wordmark,
+  .brand-text h1 > .tpx-wordmark {font-size: 13px;}
+  .simulator-preview-icon[data-tpx-brand-icon] {border-radius: 21px;}
+}
+@media (max-width: 480px) {
+  body.simulator-standalone .simulator-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 9px;
+    height: auto;
+    min-height: 110px;
+    padding: 10px 14px;
+  }
+  body.simulator-standalone .simulator-brand {
+    display: inline-flex;
+    flex: 1 1 100%;
+    justify-content: center;
+    gap: 9px;
+  }
+  body.simulator-standalone .simulator-brand-copy {display: flex;}
+  body.simulator-standalone .simulator-brand-symbol {width: 30px; height: 30px;}
+  body.simulator-standalone .simulator-header-actions {width: 100%; gap: 6px;}
+  body.simulator-standalone .simulator-back {min-width: 0; padding-inline: 6px; font-size: 10px;}
+  body.simulator-standalone .simulator-header-actions > .tpx-language-control {flex-shrink: 0;}
+  body.simulator-standalone .simulator-page {padding-top: 142px;}
+}
+@media (max-width: 430px) {
+  .theory-topbar, .quiz-topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+  }
+  .theory-topbar > .theory-logo, .quiz-topbar > .quiz-logo {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+  .theory-topbar > .theory-back, .quiz-topbar > .quiz-back {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: start;
+  }
+  .theory-topbar > .page-theme-toggle, .quiz-topbar > .page-theme-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 0;
+  }
+  .theory-topbar > .tpx-language-control, .quiz-topbar > .tpx-language-control {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .theory-topbar > .dev-top-actions {grid-column: 2 / -1; grid-row: 1;}
+}

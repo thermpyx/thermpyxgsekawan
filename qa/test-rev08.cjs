@@ -96,10 +96,13 @@ check("Old calculation history is migrated without deletion",()=>{
  assert.equal(historyContext.window.TPXHistory.list().length,1);assert.equal(historyContext.window.TPXHistory.list()[0].kind,"calculation");
  assert.ok(store.getItem("thermpyx-history"));
 });
-check("Unified history stores simulator, video and quiz activities",()=>{
+check("History stores completed results and excludes navigation, videos and control changes",()=>{
  const h=historyContext.window.TPXHistory;
- h.log("simulator","Third Law","control changed");h.log("video","Zeroth Law video","YouTube");h.log("quiz","Live Quiz","completed");
- assert.equal(h.list().length,4);assert.deepEqual(Array.from(h.list().slice(0,3),x=>x.kind),["quiz","video","simulator"]);
+ h.log("simulator","Third Law","control changed");h.log("video","Zeroth Law video","YouTube");
+ h.log("navigation","Home","Opened from navigation");h.log("calculation","Unit Converter","Page opened");
+ assert.equal(h.list().length,1,"Reading and adjusting controls are not completed learning results");
+ h.log("calculation","First Law","ΔU = 300 J");h.log("simulator","Heat","Completed: Q = 200 J, T = 25 °C");h.log("quiz","Live Quiz","completed");
+ assert.equal(h.list().length,4);assert.deepEqual(Array.from(h.list().slice(0,3),x=>x.kind),["quiz","simulator","calculation"]);
 });
 check("Repeated immediate event is deduplicated",()=>{
  const h=historyContext.window.TPXHistory;const old=h.list().length;

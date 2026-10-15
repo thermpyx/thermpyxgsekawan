@@ -848,6 +848,18 @@ function animateParticles() {
    SIMULATION LOOP
 ===================================================== */
 
+function recordCompletedWork() {
+    if (![state.force, state.displacement, state.energyInput, state.work, state.internalEnergy].every(Number.isFinite)) return;
+    const summary = locale => {
+        const format = value => new Intl.NumberFormat(locale, { maximumFractionDigits: 3 }).format(value);
+        return `F = ${format(state.force)} N; Δx = ${format(state.displacement)} m; W = ${format(state.work)} J; U = ${format(state.internalEnergy)} J`;
+    };
+    const detailEn = "Completed: " + summary("en-US"), detailId = "Selesai: " + summary("id-ID");
+    window.TPXHistory?.log("simulator", "Work & Energy", detailEn, location.href, {
+        titleEn: "Work & Energy", titleId: "Usaha & Energi", detailEn, detailId
+    });
+}
+
 function simulationLoop(
     timestamp
 ) {
@@ -910,10 +922,9 @@ function simulationLoop(
             Stop at target or energy limit.
         */
 
-        if (
-            state.displacement >=
-            allowedDisplacement
-        ) {
+        const completed = state.displacement >= allowedDisplacement;
+
+        if (completed) {
 
             state.displacement =
                 allowedDisplacement;
@@ -928,6 +939,8 @@ function simulationLoop(
         updateValues();
 
         updateStatus();
+
+        if (completed) recordCompletedWork();
 
     }
 
@@ -1274,43 +1287,31 @@ if (
    DARK / LIGHT MODE
 ===================================================== */
 
-if (
-    themeButton
-) {
-
-    themeButton.addEventListener(
-        "click",
-        () => {
-
-            document.body.classList.toggle(
-                "dark-mode"
-            );
-
-
-            const darkActive =
-                document.body.classList.contains(
-                    "dark-mode"
-                );
-
-
-            themeButton.textContent =
-                darkActive
-                    ? "☀ Light Mode"
-                    : "☾ Dark Mode";
-
-
-            /*
-                Redraw canvas with
-                the new theme.
-            */
-
-            resizeGraph();
-
-        }
-    );
-
+function setWorkTheme(next, save = true) {
+    const dark = next !== "light";
+    if (save) {
+        try { localStorage.setItem("thermpyx-theme", dark ? "dark" : "light"); } catch (_) {}
+    }
+    document.body.classList.toggle("dark-mode", dark);
+    document.body.classList.toggle("light-mode", !dark);
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    if (themeButton) {
+        const id = (window.TPX?.getLanguage?.() || document.documentElement.lang) === "id";
+        themeButton.textContent = dark ? (id ? "☀ Mode Terang" : "☀ Light Mode") : (id ? "☾ Mode Gelap" : "☾ Dark Mode");
+    }
+    resizeGraph();
 }
-
+window.setTheme = setWorkTheme;
+let workTheme = "dark";
+try { workTheme = localStorage.getItem("thermpyx-theme") || "dark"; } catch (_) {}
+setWorkTheme(workTheme, false);
+if (themeButton) {
+    themeButton.addEventListener("click", () => setWorkTheme(document.body.classList.contains("dark-mode") ? "light" : "dark"));
+}
+window.addEventListener("thermpyx:languagechange", () => setWorkTheme(document.body.classList.contains("dark-mode") ? "dark" : "light", false));
+window.addEventListener("storage", event => {
+    if (event.key === "thermpyx-theme") setWorkTheme(event.newValue === "light" ? "light" : "dark", false);
+});
 
 /* =====================================================
    SIMULATION TOOLTIP

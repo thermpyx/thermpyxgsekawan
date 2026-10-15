@@ -627,7 +627,7 @@ body.light-mode .quiz-topbar {
 }
 
 .quiz-topic-card::after {
-    content: "→";
+    content: none;
     position: absolute;
     right: 18px;
     top: 18px;
@@ -1059,3 +1059,6 @@ body.light-mode .quiz-topbar {
         min-height: 210px;
     }
 }
+
+.quiz-learning-note {color:var(--text-secondary);font-size:14px;line-height:1.7;margin:0 0 16px}
+#quizLearningReturn {display:inline-flex;margin-bottom:24px}

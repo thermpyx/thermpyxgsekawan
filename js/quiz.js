@@ -8,6 +8,7 @@
 const quizTopics = {
     heat: {
         name: "Heat & Temperature",
+        nameId: "Kalor & Temperatur",
         questions: [
             {
                 question: "What is the SI unit of heat energy?",
@@ -54,6 +55,7 @@ const quizTopics = {
 
     work: {
         name: "Work & Energy",
+        nameId: "Usaha & Energi",
         questions: [
             {
                 question: "For a constant-pressure expansion, which expression represents boundary work?",
@@ -90,6 +92,7 @@ const quizTopics = {
 
     "first-law": {
         name: "First Law of Thermodynamics",
+        nameId: "Hukum I Termodinamika",
         questions: [
             {
                 question: "Which equation represents the First Law using the convention that W is work done by the system?",
@@ -131,6 +134,7 @@ const quizTopics = {
 
     processes: {
         name: "Thermodynamic Processes",
+        nameId: "Proses Termodinamika",
         questions: [
             {
                 question: "Which thermodynamic process occurs at constant temperature?",
@@ -166,7 +170,16 @@ const quizTopics = {
     }
 };
 
-const allMaterialQuestionCount = 12;
+Object.assign(quizTopics, window.TPXSupplementalQuizTopics || {});
+const allMaterialQuestionCount = Object.keys(quizTopics).length * 3;
+
+// Explicit pairs keep new scientific questions bilingual without changing answer identity.
+function quizLabel(node, en, id) {
+    if (id != null) { node.dataset.en = en; node.dataset.id = id; }
+    else { delete node.dataset.en; delete node.dataset.id; }
+    node.textContent = window.TPX?.t(en, id) ?? en;
+}
+
 
 /* =========================================================
    2. HELPERS
@@ -246,6 +259,9 @@ function showTopicSelection() {
 }
 
 function startQuiz(topicKey) {
+    if (topicKey !== "all" && !Object.hasOwn(quizTopics, topicKey)) return;
+    const learningLink = document.getElementById("quizLearningReturn");
+    if (learningLink) learningLink.href = "../learning.html" + (topicKey === "all" ? "" : "#" + topicKey);
     selectedTopic = topicKey;
     currentQuestion = 0;
     score = 0;
@@ -261,8 +277,8 @@ function startQuiz(topicKey) {
         return;
     }
 
-    quizTopicName.textContent = selectedTopicName;
-    quizResultTopic.textContent = selectedTopicName;
+    quizLabel(quizTopicName, selectedTopicName, quizTopics[topicKey]?.nameId);
+    quizLabel(quizResultTopic, selectedTopicName, quizTopics[topicKey]?.nameId);
 
     quizTopicSelector.hidden = true;
     quizResult.classList.remove("show");
@@ -287,14 +303,14 @@ function loadQuestion() {
     quizQuestionNumber.textContent =
         `Question ${currentQuestion + 1} of ${shuffledQuestions.length}`;
     quizScore.textContent = `Score: ${score}`;
-    questionText.textContent = current.question;
+    quizLabel(questionText, current.question, current.questionId);
 
     const progressPercentage =
         ((currentQuestion + 1) / shuffledQuestions.length) * 100;
     quizProgressBar.style.width = `${progressPercentage}%`;
 
     quizOptions.innerHTML = "";
-    quizFeedback.textContent = "";
+    quizLabel(quizFeedback, "");
     quizFeedback.className = "quiz-feedback";
     quizNextButton.disabled = true;
     quizNextButton.textContent = "NEXT";
@@ -306,7 +322,7 @@ function loadQuestion() {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "quiz-option";
-        button.textContent = option;
+        quizLabel(button, option, current.optionsId?.[current.options.indexOf(option)]);
         button.dataset.answer = option;
         button.addEventListener("click", function () {
             selectAnswer(button);
@@ -338,7 +354,7 @@ function selectAnswer(selectedButton) {
     if (selectedAnswer === correctAnswer) {
         score++;
         selectedButton.classList.add("correct");
-        quizFeedback.textContent = `Correct! ${explanation}`;
+        quizLabel(quizFeedback, `Correct! ${explanation}`, current.explanationId ? `Benar! ${current.explanationId}` : undefined);
         quizFeedback.classList.add("correct");
     } else {
         selectedButton.classList.add("incorrect");
@@ -349,7 +365,7 @@ function selectAnswer(selectedButton) {
             }
         });
 
-        quizFeedback.textContent = `Incorrect. ${explanation}`;
+        quizLabel(quizFeedback, `Incorrect. ${explanation}`, current.explanationId ? `Salah. ${current.explanationId}` : undefined);
         quizFeedback.classList.add("incorrect");
     }
 
@@ -365,12 +381,19 @@ function selectAnswer(selectedButton) {
    8. RESULT
 ========================================================= */
 function showResult() {
+    const topic = selectedTopic === "all" ? { name: "All Materials", nameId: "Semua Materi" } : quizTopics[selectedTopic];
+    const historyLabels = {
+        detailEn: `Score: ${score} / ${shuffledQuestions.length}`,
+        detailId: `Skor: ${score} / ${shuffledQuestions.length}`
+    };
+    if (topic?.nameId) { historyLabels.titleEn = topic.name; historyLabels.titleId = topic.nameId; }
     window.TPXHistory?.log("quiz", selectedTopicName || "Practice Quiz",
-      `${score} / ${shuffledQuestions.length}`, location.href);
+      `${score} / ${shuffledQuestions.length}`, location.href, historyLabels);
     quizContainer.style.display = "none";
     quizContainer.hidden = true;
     quizResult.classList.add("show");
-    quizResultTopic.textContent = selectedTopicName;
+    quizLabel(quizResultTopic, selectedTopicName, topic?.nameId);
+    window.TPXLearning?.recordQuiz(selectedTopic, score, shuffledQuestions.length);
     quizFinalScore.textContent = `${score} / ${shuffledQuestions.length}`;
 
     const percentage = shuffledQuestions.length
@@ -441,4 +464,14 @@ if (quizTopicSelector && quizContainer && quizResult) {
     quizResult.classList.remove("show");
 }
 
+// Deep links from the learning path open the matching assessment immediately.
+const requestedPracticeTopic = new URLSearchParams(location.search).get("topic");
+if (requestedPracticeTopic && (requestedPracticeTopic === "all" || Object.hasOwn(quizTopics, requestedPracticeTopic))) {
+    startQuiz(requestedPracticeTopic);
+}
+const learningReturn = document.getElementById("quizLearningReturn");
+if (learningReturn) {
+    const id = Object.hasOwn(quizTopics, requestedPracticeTopic || "") ? requestedPracticeTopic : null;
+    learningReturn.href = "../learning.html" + (id ? "#" + id : "");
+}
 console.log("THERMPYX Quiz: topic selection ready.");

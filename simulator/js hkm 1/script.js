@@ -23,11 +23,14 @@ const processSelect = document.getElementById("processSelect");
 const heatInput = document.getElementById("heatInput");
 const pressureInput = document.getElementById("pressureInput");
 const volumeInput = document.getElementById("volumeInput");
+const finalVolumeInput = document.getElementById("finalVolumeInput");
+const finalVolumeControl = document.getElementById("finalVolumeControl");
 const temperatureInput = document.getElementById("temperatureInput");
 
 const heatValue = document.getElementById("heatValue");
 const pressureValue = document.getElementById("pressureValue");
 const volumeValue = document.getElementById("volumeValue");
+const finalVolumeValue = document.getElementById("finalVolumeValue");
 const temperatureValue = document.getElementById("temperatureValue");
 
 const pressureDisplay = document.getElementById("pressureDisplay");
@@ -270,7 +273,7 @@ function calculateTarget() {
             oleh slider Volume.
         */
 
-        V = Number(volumeInput.value);
+        V = Number(finalVolumeInput.value);
 
         /*
             PV = konstan
@@ -324,7 +327,7 @@ function calculateTarget() {
             Volume akhir dari slider.
         */
 
-        V = Number(volumeInput.value);
+        V = Number(finalVolumeInput.value);
 
         /*
             PV^γ = konstan
@@ -385,48 +388,33 @@ function calculateTarget() {
 ========================================================= */
 
 function updateProcessInfo() {
-
-    if (process === "isobaric") {
-
-        processBadge.textContent = "Isobaric";
-
-        processInfo.textContent =
-            "Pressure remains constant throughout the process. " +
-            "Adding heat increases the temperature " +
-            "and changes the gas volume.";
-
-    }
-
-    else if (process === "isochoric") {
-
-        processBadge.textContent = "Isochoric";
-
-        processInfo.textContent =
-            "Volume remains constant throughout the process. " +
-            "Adding heat increases both the temperature " +
-            "and the gas pressure.";
-
-    }
-
-    else if (process === "isothermal") {
-
-        processBadge.textContent = "Isothermal";
-
-        processInfo.textContent =
-            "Temperature remains constant throughout the process. " +
-            "Changing the volume changes the pressure. " +
-            "The heat absorbed equals the work done by the gas.";
-
-    }
-
-    else {
-
-        processBadge.textContent = "Adiabatic";
-
-        processInfo.textContent =
-            "There is no heat exchange with the surroundings. " +
-            "Q = 0, so changes in internal energy come from work.";
-    }
+    const descriptions = {
+        isobaric: {
+            name: "Isobaric",
+            en: "Pressure remains constant throughout the process. Adding heat increases the temperature and changes the gas volume.",
+            id: "Tekanan tetap selama proses. Penambahan kalor meningkatkan temperatur dan mengubah volume gas."
+        },
+        isochoric: {
+            name: "Isochoric",
+            en: "Volume remains constant throughout the process. Adding heat increases both the temperature and the gas pressure.",
+            id: "Volume tetap selama proses. Penambahan kalor meningkatkan temperatur dan tekanan gas."
+        },
+        isothermal: {
+            name: "Isothermal",
+            en: "Temperature remains constant. Set the final volume above or below the initial volume to expand or compress the gas. Heat absorbed equals work done by the gas.",
+            id: "Temperatur tetap. Atur volume akhir lebih besar atau lebih kecil dari volume awal untuk mengekspansi atau mengompresi gas. Kalor yang diserap sama dengan usaha oleh gas."
+        },
+        adiabatic: {
+            name: "Adiabatic",
+            en: "There is no heat exchange (Q = 0). Set the final volume above or below the initial volume: expansion cools the gas, while compression warms it.",
+            id: "Tidak ada pertukaran kalor (Q = 0). Atur volume akhir lebih besar atau lebih kecil dari volume awal: ekspansi mendinginkan gas, sedangkan kompresi memanaskannya."
+        }
+    };
+    const description = descriptions[process];
+    processBadge.textContent = description.name;
+    processInfo.dataset.en = description.en;
+    processInfo.dataset.id = description.id;
+    processInfo.textContent = window.TPX?.t(description.en, description.id) ?? description.en;
 }
 
 
@@ -448,17 +436,19 @@ function updateControls() {
         Q = 0.
     */
 
-    if (
-        process === "isothermal" ||
-        process === "adiabatic"
-    ) {
+    const volumeDriven = process === "isothermal" || process === "adiabatic";
 
-        heatInput.disabled = true;
-
-    } else {
-
-        heatInput.disabled = false;
+    heatInput.disabled = running || volumeDriven;
+    finalVolumeControl.hidden = !volumeDriven;
+    finalVolumeInput.disabled = running || !volumeDriven;
+    for (const input of [pressureInput, volumeInput, temperatureInput]) {
+        input.disabled = running;
     }
+    processSelect.disabled = running;
+    document.getElementById("processSelectTrigger").disabled = running;
+    document.querySelectorAll(".process-option").forEach(option => {
+        option.disabled = running;
+    });
 }
 
 
@@ -493,6 +483,9 @@ function updateControlValues() {
 
     volumeValue.textContent =
         `${Number(volumeInput.value).toFixed(2)} L`;
+
+    finalVolumeValue.textContent =
+        `${Number(finalVolumeInput.value).toFixed(2)} L`;
 
 
     temperatureValue.textContent =
@@ -814,6 +807,7 @@ function startSimulation() {
 
     running = true;
     document.body.classList.remove("simulation-paused");
+    updateControls();
 
     startBtn.disabled = true;
     startBtn.textContent = "▶ Running";
@@ -876,11 +870,21 @@ function startSimulation() {
         if (process === "isochoric") state.V = initial.V;
 
         if (process === "isothermal") {
+            // Use the same path as the P–V graph at every animation frame.
+            state.P = initial.P * initial.V / state.V;
             state.T = initial.T;
+            state.W = initial.n * R * initial.T * Math.log(state.V / initial.V);
+            state.Q = state.W;
             state.U = 0;
         }
 
-        if (process === "adiabatic") state.Q = 0;
+        if (process === "adiabatic") {
+            state.P = initial.P * Math.pow(initial.V / state.V, GAMMA);
+            state.T = initial.T * Math.pow(initial.V / state.V, GAMMA - 1);
+            state.Q = 0;
+            state.U = initial.n * Cv * (state.T - initial.T);
+            state.W = -state.U;
+        }
 
         updateDisplay();
         updateCylinder();
@@ -905,6 +909,7 @@ function pauseSimulation() {
     cancelAnimationFrame(animationFrame);
 
     document.body.classList.add("simulation-paused");
+    updateControls();
 
     startBtn.disabled = false;
     startBtn.textContent = "▶ Resume";
@@ -925,6 +930,7 @@ function resetSimulation() {
     animationDirection = 1;
 
     document.body.classList.remove("simulation-paused");
+    updateControls();
 
     startBtn.disabled = false;
     startBtn.textContent = "▶ Start";
@@ -997,6 +1003,9 @@ function previewControl() {
         state.W = 0;
         state.U = 0;
 
+        // A new control setting starts a new experiment, so discard the old path.
+        target = { ...state };
+
 
         updateDisplay();
 
@@ -1055,6 +1064,11 @@ pressureInput.addEventListener(
 
 
 volumeInput.addEventListener(
+    "input",
+    previewControl
+);
+
+finalVolumeInput.addEventListener(
     "input",
     previewControl
 );

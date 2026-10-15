@@ -2,10 +2,16 @@
 (() => {
  "use strict";
  const tr=(en,id)=>window.TPX?.getLanguage()==="id"?id:en;
- const fmt=(n)=>Number(n).toLocaleString(window.TPX?.getLanguage()==="id"?"id-ID":"en-US",{maximumFractionDigits:5});
+ const fmt=(n)=>{
+   if(!Number.isFinite(n))throw Error(tr("The result exceeds the supported numeric range. Use smaller values.","Hasil melampaui rentang angka yang didukung. Gunakan nilai lebih kecil."));
+   return n.toLocaleString(window.TPX?.getLanguage()==="id"?"id-ID":"en-US",{maximumFractionDigits:5});
+ };
  const results={
  zeroth(v){if(v.m1<=0||v.m2<=0)throw Error(tr("Masses must be positive.","Massa harus positif."));
-   const t=(v.m1*v.t1+v.m2*v.t2)/(v.m1+v.m2);
+   if(v.t1 < -273.15 || v.t2 < -273.15)throw Error(tr("Below absolute zero (−273.15 °C) is invalid.","Suhu di bawah nol mutlak (−273,15 °C) tidak valid."));
+   // Normalize the masses before mixing: finite masses can overflow when summed.
+   const scale=Math.max(v.m1,v.m2),a=v.m1/scale,b=v.m2/scale;
+   const t=(a/(a+b))*v.t1+(b/(a+b))*v.t2;
    return [`T_eq = ${fmt(t)} °C`,tr("Equal specific heat, no losses or phase changes; an idealized mixing example.","Kalor jenis sama, tanpa kalor hilang atau perubahan fase; contoh pencampuran ideal.")];},
  first(v){return [`ΔU = ${fmt(v.q-v.w)} J`,tr("Positive Q enters the system; positive W is work done by the system.","Q positif masuk sistem; W positif berarti usaha oleh sistem.")];},
  second(v){if(v.t<=0)throw Error(tr("Absolute temperature must exceed 0 K.","Temperatur mutlak harus lebih dari 0 K."));
@@ -37,7 +43,9 @@
        result.hidden=false;result.classList.remove("cl-error");
        result.querySelector(".cl-result").textContent=answer;
        result.querySelector(".cl-explanation").textContent=note;
-       window.TPXHistory?.log("calculation",card.querySelector("h2").dataset.en,answer,location.pathname+"#"+card.id);
+       const heading=card.querySelector("h2");
+       window.TPXHistory?.log("calculation",heading.dataset.en,answer,location.pathname+"#"+card.id,
+         {titleEn:heading.dataset.en,titleId:heading.dataset.id});
      }catch(err){
        result.hidden=false;result.classList.add("cl-error");
        result.querySelector(".cl-result").textContent=tr("Check inputs","Periksa input");

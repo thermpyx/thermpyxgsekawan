@@ -1,0 +1,237 @@
+/* Simulator presentation only. Keep physics, events, canvas sizes and animation
+   keyframes in the original simulator modules. Load this after site styles. */
+body,
+body.dark-mode {
+  --bg-primary: #05070a;
+  --bg-secondary: #080d13;
+  --bg-card: #0d141c;
+  --bg-card-hover: #111c27;
+  --surface-soft: #101b26;
+  --text-primary: #e6edf3;
+  --text-secondary: #9bafbf;
+  --text-muted: #8396a7;
+  --blue: #00a8ff;
+  --blue-light: #38bdf8;
+  --blue-dark: #028cd7;
+  --border: rgba(0,168,255,.25);
+  --border-light: rgba(255,255,255,.09);
+  --shadow: 0 16px 36px rgba(0,0,0,.14);
+  --graph-bg: #0d141c;
+  --graph-grid: rgba(160,182,204,.17);
+  --bg: var(--bg-primary);
+  --hero: var(--bg-primary);
+  --card: var(--bg-card);
+  --panel: var(--surface-soft);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --accent: var(--blue-light);
+  --bg-main: var(--bg-primary);
+  --bg-panel: var(--bg-card);
+  --bg-scene: var(--surface-soft);
+  --bg-soft: var(--surface-soft);
+  --text-main: var(--text-primary);
+  --border-medium: var(--border);
+  font-family: "IBM Plex Sans", sans-serif;
+  line-height: 1.65;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.light-mode {
+  --bg-primary: #edf4f8;
+  --bg-secondary: #f6fbfe;
+  --bg-card: #fff;
+  --bg-card-hover: #eef8fb;
+  --surface-soft: #e8f4f9;
+  --text-primary: #102a3c;
+  --text-secondary: #405b6e;
+  --text-muted: #567183;
+  --blue: #08759c;
+  --blue-light: #087c9f;
+  --blue-dark: #125b79;
+  --border: #cbdee9;
+  --border-light: #d8e8ef;
+  --shadow: 0 12px 30px rgba(23,65,90,.055);
+  --graph-bg: #fff;
+  --graph-grid: #d9e9f1;
+}
+
+body :is(h1,h2,h3,h4,.formula,.formula-box,.formula-box strong,.formula-card,.example-calculation,.equation,.data-card strong,.engine-data-card strong,
+  .eyebrow,.section-number,.thermal-object strong,.body-title,.body-temp strong,
+  .control-top strong,.entropy-main strong,.entropy-equation,.process-value strong,
+  .engine-reservoir strong,.engine-flow,.engine-label,.engine-work strong,
+  .engine-formulas div,.core-points strong,.mini-formula,.formula-explanation strong) {
+  font-family: "Oxanium", sans-serif;
+}
+body :is(button,input,select,textarea,.header-button,.header-btn,.accordion-button) {
+  font-family: "IBM Plex Sans", sans-serif;
+}
+body :is(.brand-main,.brand-text > strong) {
+  font-family: "Syncopate", "Oxanium", sans-serif;
+}
+body :is(button,a,input,select,textarea):focus-visible {
+  outline: 2px solid var(--blue-light);
+  outline-offset: 3px;
+}
+body input[type="range"] {accent-color: var(--blue);}
+body button:disabled {cursor: not-allowed;}
+body.simulator-standalone #finalVolumeControl[hidden] {display: none;}
+body.simulator-standalone .control-group label .control-name {color: var(--text-secondary);}
+body.simulator-standalone .control-hint {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+body .sim-learning-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: rgba(0,168,255,.06);
+  color: var(--blue-light);
+  font: 600 12px/1.4 "IBM Plex Sans",sans-serif;
+  text-decoration: none;
+}
+body .sim-learning-link:hover {border-color: var(--blue);background: rgba(0,168,255,.12);}
+body .hero-content > .sim-learning-link,
+body.tpx-legacy-zeroth > header > .sim-learning-link {margin-bottom: 20px;}
+body .sim-learning-return {margin-top: -14px;margin-bottom: 24px;}
+
+/* Every simulator uses the same page width and readable heading hierarchy. */
+body .container {
+  width: min(1280px,calc(100% - 44px));
+  max-width: none;
+}
+body.simulator-standalone .simulator-page {
+  max-width: 1324px;
+  margin-inline: auto;
+  padding-inline: 22px;
+}
+body.simulator-standalone .simulator-container {max-width: none;}
+body :is(.hero h1,.simulator-hero h1,.intro-section h1) {
+  font-size: clamp(32px,4.5vw,52px);
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  color: var(--text-primary);
+}
+body :is(.section-heading h2,.section-title h2,.control-panel > h2,.data-panel > h2,.graph-panel > h2,.explanation-panel > h2,.law-panel > h2) {
+  font-size: clamp(19px,2.2vw,23px);
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+body :is(.section-subtitle,.intro-subtitle,.hero > p,.hero-content > p,.hero-desc) {
+  color: var(--text-secondary);
+}
+
+/* The heat hero has direct badge/title/description children. The shared flex
+   hero is intended for the other simulations, which wrap these in a div. */
+body.sim-heat .container {padding-top: 0;}
+body.sim-heat .hero {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 45px 0 30px;
+}
+body.sim-heat .hero .badge {margin-bottom: 12px;}
+body.sim-heat .hero h1 {margin: 0 0 12px;}
+
+/* Match older accessible simulator URLs as well as the collection pages. */
+body.tpx-legacy-zeroth > header {
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  width: min(1280px,calc(100% - 44px));
+  margin: auto;
+  padding: 45px 0 20px;
+}
+body.tpx-legacy-zeroth > header h1 {
+  font-size: clamp(32px,4.5vw,52px);
+  line-height: 1.15;
+  letter-spacing: -.035em;
+}
+body.tpx-legacy-zeroth > header p {color: var(--text-secondary);}
+body.tpx-legacy-zeroth main > section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+body.tpx-legacy-zeroth :is(.formula,.data-card,.container-box,.law-result) {
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+body.tpx-legacy-heat :is(.site-header,.hero),
+body.tpx-legacy-work .top-header {
+  background: var(--bg-primary);
+  border-color: var(--border-light);
+}
+body.tpx-legacy-heat :is(.header-btn,.brand-text,.brand-text strong),
+body.tpx-legacy-work :is(.header-button,.brand-main) {color: var(--text-primary);}
+body.tpx-legacy-heat :is(.panel,.card),
+body.tpx-legacy-work :is(.simulation-panel,.intro-card,.graph-section,.formula-card,.theory-card,.example-card,.learn-section) {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+body.tpx-legacy-heat :is(.control-card,.data-card,.formula-grid > div,.example-box),
+body.tpx-legacy-work :is(.controls-panel,.accordion-item,.accordion-button,.formula-box,.concept-item) {
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+body.tpx-legacy-work :is(.accordion-content,.learn-heading h2) {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+body.tpx-legacy-work .accordion-content p {color: var(--text-secondary);}
+body.tpx-legacy-heat :is(input,select),
+body.tpx-legacy-zeroth :is(input,select) {
+  color: var(--text-primary);
+  background: var(--surface-soft);
+  border-color: var(--border);
+}
+
+/* Keep headers in normal flow when controls wrap after translation. */
+body.simulator-standalone .simulator-header {
+  position: sticky;
+  height: auto;
+  min-height: 72px;
+  padding-block: 12px;
+}
+body.simulator-standalone .simulator-page {padding-top: 45px;}
+body :is(.simulator-header-actions,.header-actions,.topbar-actions,.tpx-header-actions) {flex-wrap: wrap;}
+body :is(.section-title,.section-heading) {min-width: 0;}
+body :is(.section-title h2,.section-heading > div) {min-width: 0;}
+
+@media (max-width: 760px) {
+  body .container,
+  body.tpx-legacy-zeroth > header {width: calc(100% - 32px);}
+  body.simulator-standalone .simulator-page {padding: 32px 16px 50px;}
+  body.simulator-standalone .simulator-header {flex-wrap: wrap;gap: 12px;}
+  body.simulator-standalone .simulator-header-actions {width: 100%;justify-content: flex-start;gap: 7px;}
+  body.simulator-standalone .simulator-brand {display: inline-flex;}
+  body.simulator-standalone .simulator-brand-copy {display: flex;}
+  body.sim-heat .hero {padding: 32px 0 20px;}
+  body :is(.section-title,.section-heading) {flex-wrap: wrap;gap: 12px;}
+}
+
+@media (max-width: 430px) {
+  body.simulator-standalone .simulator-header {padding-inline: 16px;}
+  body.simulator-standalone .simulator-brand {justify-content: flex-start;}
+  body.simulator-standalone :is(.simulator-back,.simulator-theme-toggle) {
+    flex: 0 1 auto;
+    min-height: 38px;
+    padding-inline: 10px;
+    font-size: 11px;
+  }
+  body :is(.simulation-buttons,.simulation-controls) {flex-wrap: wrap;}
+  body :is(.simulation-buttons button,.simulation-controls button) {min-width: 0;}
+}

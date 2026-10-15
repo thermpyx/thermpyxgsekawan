@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="js/persistent-navigation.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A guided thermodynamics learning path with clear outcomes, experiments, quizzes, and saved progress.">
+<title data-en="Learning Path | THERMPYX" data-id="Alur Belajar | THERMPYX">Learning Path | THERMPYX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/theory.css">
+<link rel="stylesheet" href="css/neo-lab.css">
+<link rel="stylesheet" href="css/global-ui.css">
+<link rel="stylesheet" href="css/site-experience.css">
+<link rel="stylesheet" href="css/ui-consistency.css">
+<link rel="stylesheet" href="css/brand-identity.css">
+<link rel="stylesheet" href="css/learning-path.css">
+<script defer src="js/i18n-dictionary.js"></script>
+<script defer src="js/i18n.js"></script>
+<script defer src="js/site-experience.js"></script>
+<script defer src="js/brand-identity.js"></script>
+<script defer src="js/learning-curriculum.js"></script>
+<script defer src="js/learning-path.js"></script>
+</head>
+<body class="learning-body">
+<a class="lp-skip" href="#learningWorkspace" data-en="Skip to learning modules" data-id="Langsung ke modul belajar">Skip to learning modules</a>
+<header class="theory-topbar lp-topbar">
+  <a class="theory-back" href="index.html#home" data-en="Home" data-id="Beranda">Home</a>
+  <a class="theory-logo" href="index.html#home" aria-label="THERMPYX">THERMPY<span class="wordmark-accent">X</span></a>
+  <button class="page-theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme"><span class="theme-icon" id="themeIcon">☾</span><span class="theme-text" id="themeText">Dark Mode</span></button>
+</header>
+<main class="lp-page">
+  <section class="lp-hero" aria-labelledby="learningTitle">
+    <div class="lp-hero-copy">
+      <p class="lp-eyebrow"><span aria-hidden="true"></span><span data-en="YOUR THERMODYNAMICS JOURNEY" data-id="PERJALANAN BELAJAR TERMODINAMIKA">YOUR THERMODYNAMICS JOURNEY</span></p>
+      <h1 id="learningTitle"><span data-en="Learn with" data-id="Belajar dengan">Learn with</span><br><em data-en="a clear direction." data-id="arah yang jelas.">a clear direction.</em></h1>
+      <p class="lp-hero-description" data-en="Start with a question. Understand the concept, test your prediction, then show what you know. One connected path, at your own pace." data-id="Mulai dari pertanyaan. Pahami konsep, uji prediksi, lalu buktikan pemahamanmu. Satu alur yang terhubung, sesuai ritmemu.">Start with a question. Understand the concept, test your prediction, then show what you know. One connected path, at your own pace.</p>
+      <div class="lp-hero-actions"><button id="learningContinue" class="lp-button lp-button-primary" type="button" data-en="Start learning" data-id="Mulai belajar">Start learning</button><a class="lp-text-link" href="#learningOutcomes" data-en="See learning outcomes" data-id="Lihat capaian pembelajaran">See learning outcomes</a></div>
+      <div class="lp-hero-meta"><span data-en="7 connected modules" data-id="7 modul terhubung">7 connected modules</span><span aria-hidden="true">/</span><span data-en="About 3 hours, at your pace" data-id="Sekitar 3 jam, sesuai ritmemu">About 3 hours, at your pace</span></div>
+    </div>
+    <aside class="lp-progress-card" aria-labelledby="progressTitle">
+      <p class="lp-eyebrow" id="progressTitle" data-en="YOUR LEARNING PROGRESS" data-id="PROGRES BELAJARMU">YOUR LEARNING PROGRESS</p>
+      <div class="lp-progress-orbit" aria-hidden="true"><div><strong id="learningPercent">0%</strong><span data-en="of the journey" data-id="perjalanan">of the journey</span></div></div>
+      <p id="learningProgressSummary" class="lp-progress-summary" aria-live="polite"></p>
+      <div id="learningProgressBar" class="lp-progress-bar" role="progressbar" aria-label="Learning progress" data-aria-label-en="Learning progress" data-aria-label-id="Progres belajar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+      <p class="lp-progress-note" data-en="Check off your reading and experiment. Pass each topic quiz with at least 80% to complete its module." data-id="Tandai bacaan dan eksperimenmu. Lulus kuis tiap topik dengan nilai minimal 80% untuk menuntaskan modulnya.">Check off your reading and experiment. Pass each topic quiz with at least 80% to complete its module.</p>
+      <p class="lp-local-note" id="learningStorageNote" data-en="Saved in this browser · no account needed" data-id="Tersimpan di browser ini · tanpa akun">Saved in this browser · no account needed</p>
+    </aside>
+  </section>
+
+  <section class="lp-outcomes" id="learningOutcomes" aria-labelledby="outcomesTitle">
+    <div class="lp-section-heading"><div><p class="lp-eyebrow" data-en="THE DESTINATION" data-id="TUJUAN AKHIR">THE DESTINATION</p><h2 id="outcomesTitle" data-en="What will you be able to do?" data-id="Apa yang akan kamu kuasai?">What will you be able to do?</h2></div><p data-en="By the end of this introductory path, you should be able to:" data-id="Setelah menyelesaikan alur pengantar ini, kamu diharapkan mampu:">By the end of this introductory path, you should be able to:</p></div>
+    <div class="lp-outcome-grid">
+      <article><span aria-hidden="true">01 /</span><h3 data-en="Explain the physics" data-id="Menjelaskan konsep fisika">Explain the physics</h3><p data-en="Distinguish heat, temperature, work, and internal energy; explain the four laws through physical examples." data-id="Membedakan kalor, suhu, usaha, dan energi dalam; menjelaskan empat hukum melalui contoh fisik.">Distinguish heat, temperature, work, and internal energy; explain the four laws through physical examples.</p></article>
+      <article><span aria-hidden="true">02 /</span><h3 data-en="Solve with a reason" data-id="Menghitung dengan alasan">Solve with a reason</h3><p data-en="Choose equations from the system and process assumptions, use consistent units, and interpret the result." data-id="Memilih persamaan berdasarkan sistem dan asumsi proses, menggunakan satuan konsisten, serta memaknai hasilnya.">Choose equations from the system and process assumptions, use consistent units, and interpret the result.</p></article>
+      <article><span aria-hidden="true">03 /</span><h3 data-en="Test and evaluate" data-id="Menguji dan mengevaluasi">Test and evaluate</h3><p data-en="Predict a change, compare it with a simulator, and assess energy balances and heat-engine limits." data-id="Memprediksi perubahan, membandingkannya dengan simulator, serta menilai neraca energi dan batas mesin kalor.">Predict a change, compare it with a simulator, and assess energy balances and heat-engine limits.</p></article>
+    </div>
+  </section>
+
+  <details class="lp-readiness">
+    <summary><span data-en="Before you begin: a quick readiness check" data-id="Sebelum mulai: cek kesiapan singkat">Before you begin: a quick readiness check</span><span class="lp-optional" data-en="OPTIONAL" data-id="OPSIONAL">OPTIONAL</span></summary>
+    <div class="lp-readiness-body"><p data-en="You only need basic algebra, the ability to read a graph, and familiarity with SI units. If a unit feels unfamiliar, use the converter as you learn. No module is locked." data-id="Cukup kuasai aljabar dasar, cara membaca grafik, dan satuan SI. Jika belum akrab dengan satuan tertentu, gunakan konverter sambil belajar. Tidak ada modul yang dikunci.">You only need basic algebra, the ability to read a graph, and familiarity with SI units. If a unit feels unfamiliar, use the converter as you learn. No module is locked.</p><a href="unit-converter.html" class="lp-text-link" data-en="Open unit converter" data-id="Buka konverter satuan">Open unit converter</a></div>
+  </details>
+
+  <section class="lp-workspace" id="learningWorkspace" aria-labelledby="modulesTitle">
+    <div class="lp-section-heading"><div><p class="lp-eyebrow" data-en="YOUR NEXT STEP" data-id="LANGKAH BERIKUTNYA">YOUR NEXT STEP</p><h2 id="modulesTitle" data-en="A path that builds understanding." data-id="Alur yang membangun pemahaman.">A path that builds understanding.</h2></div><p data-en="Follow the suggested order or revisit any topic." data-id="Ikuti urutan yang disarankan atau ulangi topik mana pun.">Follow the suggested order or revisit any topic.</p></div>
+    <div class="lp-workspace-grid"><nav class="lp-module-nav" aria-label="Learning modules" data-aria-label-en="Learning modules" data-aria-label-id="Modul pembelajaran"><ol id="learningModuleList"></ol><button type="button" class="lp-reset" id="learningReset" data-en="Reset learning progress" data-id="Atur ulang progres belajar">Reset learning progress</button></nav><div id="learningModuleDetail" class="lp-module-detail"></div></div>
+  </section>
+  <p id="learningAnnouncement" class="lp-sr-only" role="status" aria-live="polite"></p>
+  <noscript><p class="lp-noscript">Aktifkan JavaScript untuk melihat alur interaktif. / Enable JavaScript for the interactive learning path. <a href="theory/laws.html#materi-lengkap">Materi / Material</a> · <a href="quiz/practice.html">Kuis / Quiz</a></p></noscript>
+</main>
+<footer class="lp-footer"><strong>THERMPYX</strong><span data-en="Understand. Experiment. Grow." data-id="Pahami. Eksplorasi. Berkembang.">Understand. Experiment. Grow.</span><a href="index.html#theory" data-en="Explore the theory library" data-id="Jelajahi pustaka teori">Explore the theory library</a></footer>
+<script src="js/script.js"></script>
+</body>
+</html>

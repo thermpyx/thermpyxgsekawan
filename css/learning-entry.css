@@ -1,0 +1,11 @@
+/* Home entrance to the guided curriculum. All colors inherit the site theme. */
+.tpx-learning-entry {display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,5vw,70px);align-items:center;border-block:1px solid var(--border);background:linear-gradient(125deg,rgba(40,188,202,.06),transparent 70%)}
+.tpx-learning-entry-copy h2 {font:600 clamp(26px,3.2vw,40px)/1.2 "Oxanium",sans-serif;letter-spacing:-.025em;color:var(--text-primary);margin:14px 0 18px;max-width:640px}
+.tpx-learning-entry-copy>p:not(.section-label) {color:var(--text-secondary);font-size:15px;line-height:1.8;max-width:620px;margin-bottom:24px}
+.tpx-learning-entry-copy .primary-button {white-space:normal;text-align:center;min-height:48px}
+.tpx-learning-entry-steps {list-style:none;margin:0;padding:0;display:grid;gap:12px;min-width:0}
+.tpx-learning-entry-steps li {display:flex;gap:18px;padding:20px;border:1px solid var(--border);border-radius:14px;background:var(--bg-card)}
+.tpx-learning-entry-steps li>span {color:var(--blue);font:600 13px "Oxanium",sans-serif;padding-top:3px}
+.tpx-learning-entry-steps strong {color:var(--text-primary);font-size:15px;font-weight:600}
+.tpx-learning-entry-steps p {font-size:13px;color:var(--text-secondary);line-height:1.6;margin:6px 0 0}
+@media(max-width:1000px){.tpx-learning-entry{grid-template-columns:1fr}.tpx-learning-entry-copy h2{max-width:700px}}

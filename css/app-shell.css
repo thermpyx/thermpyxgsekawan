@@ -1,0 +1,9 @@
+/* Only the document viewer lives in the iframe. Music belongs to this shell. */
+:root{color-scheme:dark;--bg-primary:#05070a;--bg-main:#05070a;--bg-card:#0d141c;--text-primary:#e6edf3;--text-secondary:#9cafbd;--text-muted:#657c8d;--blue-light:#00c2ff;--orange:#ff7628;--border:rgba(0,168,255,.22)}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:var(--bg-primary)}
+body.light-mode{color-scheme:light;--bg-primary:#edf4f8;--bg-main:#edf4f8;--bg-card:#fff;--text-primary:#102a3c;--text-secondary:#405b6e;--text-muted:#687f8f;--blue-light:#078bb5;--border:#cbdce6}
+.tpx-app-viewport{position:fixed;inset:0;width:100%;height:100%;margin:0}
+#tpx-content-frame{display:block;width:100%;height:100%;border:0;background:var(--bg-primary)}
+.tpx-app-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+noscript{position:fixed;inset:0;padding:30px;color:var(--text-primary);background:var(--bg-primary)}

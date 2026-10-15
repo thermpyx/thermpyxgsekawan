@@ -1,0 +1,117 @@
+/* A stable icon rail, with a scrollable menu only when the viewport is short. */
+.sidebar {
+ height:100dvh;
+ padding:20px 14px;
+ overflow:hidden;
+ transition:width .32s cubic-bezier(.22,1,.36,1),transform .32s cubic-bezier(.22,1,.36,1);
+}
+.sidebar-logo {
+ flex-shrink:0;
+ padding:4px 4px 22px;
+ justify-content:flex-start!important;
+ gap:12px;
+ min-width:0;
+}
+.sidebar-logo .logo-symbol {width:40px;height:40px;flex:0 0 40px;border-radius:12px}
+.sidebar-logo .logo-symbol svg {width:26px;height:26px;flex:none}
+.sidebar .logo-text,.sidebar .nav-text,.sidebar .navigation-title {
+ white-space:nowrap;
+ transition:opacity .18s ease,transform .25s ease;
+ opacity:1;
+ transform:translateX(0);
+}
+.sidebar .logo-text,.sidebar .nav-text,.sidebar .navigation-title {min-width:0;overflow:hidden}
+.sidebar-navigation {
+ flex:1;
+ min-height:0;
+ overflow-x:hidden;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ scrollbar-width:none;
+}
+.sidebar,.sidebar-navigation {-ms-overflow-style:none;scrollbar-width:none}
+.sidebar::-webkit-scrollbar,.sidebar-navigation::-webkit-scrollbar {display:none;width:0;height:0}
+.sidebar::-webkit-scrollbar-button,.sidebar-navigation::-webkit-scrollbar-button {display:none}
+.sidebar .nav-item,.sidebar .theme-toggle {
+ justify-content:flex-start!important;
+ flex-wrap:nowrap;
+ gap:14px;
+ min-width:48px;
+ min-height:44px;
+ padding:10px 12px;
+ transition:background .2s,border-color .2s,color .2s,box-shadow .2s;
+}
+.sidebar .nav-item:hover,.sidebar .theme-toggle:hover {transform:none}
+.sidebar .nav-item:focus-visible,.sidebar .theme-toggle:focus-visible {outline:2px solid var(--blue);outline-offset:-2px}
+.sidebar .nav-text {flex:1;line-height:22px;text-align:left}
+.sidebar .nav-icon,.sidebar .theme-icon {
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ width:22px;
+ height:22px;
+ flex:0 0 22px;
+ font-size:18px;
+ line-height:1;
+}
+.sidebar-bottom {flex-shrink:0;padding-top:12px}
+.sidebar-bottom>.tpx-language-control {margin-left:4px;margin-right:0}
+.main-content {transition:margin-left .32s cubic-bezier(.22,1,.36,1)}
+.topbar {transition:left .32s cubic-bezier(.22,1,.36,1)}
+.sidebar-toggle {
+ position:relative;
+ flex:0 0 40px;
+ display:grid;
+ place-items:center;
+ transition:background .2s,border-color .2s,color .2s;
+}
+.sidebar-toggle .menu-line {
+ position:absolute;
+ top:50%;
+ left:50%;
+ margin:-1px 0 0 -9px;
+ width:18px;
+ height:2px;
+ border-radius:2px;
+ background:currentColor;
+ transform-origin:center;
+ transition:transform .25s cubic-bezier(.22,1,.36,1),opacity .15s;
+}
+.sidebar-toggle .menu-line:nth-child(1) {transform:translateY(-6px)}
+.sidebar-toggle .menu-line:nth-child(2) {transform:translateY(0)}
+.sidebar-toggle .menu-line:nth-child(3) {transform:translateY(6px)}
+.sidebar-backdrop {display:none}
+@media(min-width:769px) {
+ body.sidebar-collapsed .sidebar .logo-text {display:flex;max-width:0;opacity:0;transform:translateX(-6px);pointer-events:none}
+ body.sidebar-collapsed .sidebar .nav-text {display:block;max-width:0;opacity:0;transform:translateX(-6px);pointer-events:none}
+ body.sidebar-collapsed .sidebar .navigation-title {display:block;opacity:0;pointer-events:none}
+ body.sidebar-collapsed .sidebar .nav-item,body.sidebar-collapsed .sidebar .theme-toggle {gap:0}
+ body.sidebar-collapsed .sidebar-bottom>.tpx-language-control {display:none}
+}
+@media(max-width:768px) {
+ .sidebar-toggle[aria-expanded=true] .menu-line:nth-child(1) {transform:rotate(45deg)}
+ .sidebar-toggle[aria-expanded=true] .menu-line:nth-child(2) {opacity:0;transform:scaleX(.4)}
+ .sidebar-toggle[aria-expanded=true] .menu-line:nth-child(3) {transform:rotate(-45deg)}
+ .sidebar {z-index:1050;max-width:calc(100vw - 64px);top:65px;height:calc(100dvh - 65px);width:270px}
+ .topbar {z-index:1100}
+ .sidebar-backdrop {display:block;position:fixed;inset:65px 0 0;z-index:1000;border:0;background:#020b1399;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;cursor:pointer}
+ body.sidebar-mobile-open .sidebar-backdrop {opacity:1;visibility:visible}
+ body.sidebar-collapsed .sidebar .logo-text {display:flex}
+ body.sidebar-collapsed .sidebar .nav-text,body.sidebar-collapsed .sidebar .navigation-title {display:block}
+}
+@media(max-height:650px) {
+ .sidebar {padding-top:12px;padding-bottom:12px}
+ .sidebar-logo {padding-top:0;padding-bottom:14px}
+ .sidebar .nav-item,.sidebar .theme-toggle {margin-bottom:3px}
+ .sidebar-bottom {padding-top:8px}
+ .sidebar-bottom>.tpx-language-control {margin-top:6px}
+}
+/* Landscape phones still reach every item by touch, wheel, or keyboard. */
+@media(max-height:420px) {
+ .sidebar {overflow-y:auto;overscroll-behavior:contain}
+ .sidebar-navigation {flex:none;overflow:visible}
+}
+@media(max-width:480px) {.topbar>.tpx-language-control{display:none}.topbar .mobile-logo{flex:1;min-width:0;font-size:15px}}
+@media(prefers-reduced-motion:reduce) {
+ .sidebar,.main-content,.topbar,.sidebar-toggle .menu-line,.sidebar .logo-text,.sidebar .nav-text,.sidebar .navigation-title,.sidebar-backdrop {transition:none}
+}
