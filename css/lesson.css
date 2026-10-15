@@ -22,8 +22,9 @@
 .lesson-list li::marker { color: var(--blue); }
 .lesson-card .variable-grid { margin: 18px 0 20px; }
 .lesson-example {
-    margin-top: 8px; border-left: 3px solid var(--blue);
-    padding: 9px 0 9px clamp(16px, 3vw, 28px);
+    margin-top: 8px; border: 0;
+    padding: 18px clamp(16px, 3vw, 28px);
+    border-radius: 10px; background: var(--surface-soft, rgba(0,168,255,.035));
 }
 .lesson-example .lesson-eyebrow {display:block;margin-bottom:14px;color:var(--blue-light);
     font:700 .77rem/1.4 "Oxanium",sans-serif;letter-spacing:.12em;}

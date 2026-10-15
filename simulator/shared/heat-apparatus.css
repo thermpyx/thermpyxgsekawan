@@ -1,0 +1,358 @@
+/* Heat laboratory artwork. Keep the original simulation targets and physics intact.
+   Shared by the current page and the original heat&temp deep link. */
+body:is(.sim-heat,.tpx-legacy-heat) {
+  --heat-glass-edge: #77b8d5;
+  --heat-glass-shine: rgba(214,242,255,.5);
+  --heat-metal-top: #7893a3;
+  --heat-metal-base: #243e51;
+  --heat-grid: rgba(111,175,204,.06);
+}
+body:is(.sim-heat,.tpx-legacy-heat).light-mode {
+  --heat-glass-edge: #5387a2;
+  --heat-glass-shine: rgba(255,255,255,.85);
+  --heat-metal-top: #b4cad6;
+  --heat-metal-base: #607f94;
+  --heat-grid: rgba(55,112,145,.07);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .hero {
+  display: block;
+  text-align: left;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .hero p {margin-inline: 0;}
+body:is(.sim-heat,.tpx-legacy-heat) #scene {
+  --heat-center: 46%;
+  position: relative;
+  height: 512px;
+  min-height: 512px;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 46% 55%,rgba(0,168,255,.09),transparent 53%),
+    linear-gradient(var(--heat-grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--heat-grid) 1px,transparent 1px),
+    var(--surface-soft);
+  background-size: auto,32px 32px,32px 32px,auto;
+}
+body:is(.sim-heat,.tpx-legacy-heat) #scene::before {
+  content: "";
+  position: absolute;
+  inset: auto 24px 28px;
+  height: 2px;
+  background: linear-gradient(90deg,transparent,var(--border),transparent);
+  pointer-events: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) #beaker {
+  position: absolute;
+  left: var(--heat-center);
+  top: 108px;
+  width: 240px;
+  height: 252px;
+  transform: translateX(-50%);
+  overflow: visible;
+  border: 3px solid var(--heat-glass-edge);
+  border-top: 0;
+  border-radius: 7px 7px 32px 32px;
+  background: linear-gradient(100deg,rgba(201,237,255,.13),rgba(80,142,174,.02) 25%,rgba(158,221,246,.04) 75%,rgba(201,237,255,.15));
+  box-shadow: inset 7px 0 13px -8px var(--heat-glass-shine),inset -7px 0 13px -9px var(--heat-glass-shine),0 13px 22px -14px rgba(0,0,0,.6);
+}
+body:is(.sim-heat,.tpx-legacy-heat) #beaker::after {
+  content: "";
+  position: absolute;
+  inset: auto 17px -4px;
+  height: 10px;
+  border: 1px solid var(--heat-glass-edge);
+  border-radius: 0 0 50% 50%;
+  opacity: .65;
+  pointer-events: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .beaker-rim {
+  position: absolute;
+  z-index: 4;
+  left: -5px;
+  right: -5px;
+  top: -7px;
+  height: 15px;
+  border: 2px solid var(--heat-glass-edge);
+  border-radius: 50%;
+  background: linear-gradient(180deg,rgba(206,238,255,.17),rgba(110,166,198,.07));
+  box-shadow: 0 2px 0 rgba(220,246,255,.14);
+  pointer-events: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .beaker-graduations {
+  position: absolute;
+  z-index: 3;
+  top: 41px;
+  right: 19px;
+  display: grid;
+  gap: 24px;
+  width: 24px;
+  pointer-events: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .beaker-graduations i {
+  width: 15px;
+  justify-self: end;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--heat-glass-shine);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .beaker-graduations i:nth-child(odd) {width: 24px;}
+body:is(.sim-heat,.tpx-legacy-heat) .beaker-glint {
+  position: absolute;
+  z-index: 3;
+  left: 13px;
+  top: 23px;
+  bottom: 32px;
+  width: 5px;
+  border-radius: 8px;
+  background: linear-gradient(180deg,transparent,var(--heat-glass-shine),transparent);
+  pointer-events: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) #liquid {
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  bottom: 8px;
+  height: 73%;
+  overflow: hidden;
+  border-top: 2px solid rgba(95,220,255,.7);
+  border-radius: 10% 10% 24px 24px / 6px 6px 24px 24px;
+  box-shadow: inset 0 10px 17px -14px rgba(228,253,255,.9);
+}
+body:is(.sim-heat,.tpx-legacy-heat) #particles {position: absolute;inset: 0;}
+body:is(.sim-heat,.tpx-legacy-heat) #particles .particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #65d9ff;
+  box-shadow: 0 0 6px rgba(0,168,255,.65);
+}
+body:is(.sim-heat,.tpx-legacy-heat).light-mode #particles .particle {
+  background: #087ea6;
+  box-shadow: 0 0 5px rgba(0,133,175,.25);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .heater-assembly {
+  position: absolute;
+  top: 366px;
+  left: var(--heat-center);
+  width: 262px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+body:is(.sim-heat,.tpx-legacy-heat) #flame {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 43px;
+  transform: none;
+  display: block;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .fire {
+  position: absolute;
+  inset: 0;
+  height: 38px;
+  border: 1px solid var(--heat-metal-top);
+  border-radius: 5px 5px 9px 9px;
+  background: linear-gradient(180deg,var(--heat-metal-top),var(--heat-metal-base) 23%,var(--heat-metal-base) 80%,#172c3d);
+  box-shadow: inset 0 1px 1px rgba(226,247,255,.5),0 8px 12px -7px rgba(0,0,0,.5);
+  font-size: 0;
+  filter: none;
+  animation: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .fire::before,
+body:is(.sim-heat,.tpx-legacy-heat) .fire::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  width: 23px;
+  height: 5px;
+  border-radius: 0 0 4px 4px;
+  background: #172c3d;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .fire::before {left: 22px;}
+body:is(.sim-heat,.tpx-legacy-heat) .fire::after {right: 22px;}
+body:is(.sim-heat,.tpx-legacy-heat) .heater-coil {
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  right: 10px;
+  height: 9px;
+  border: 2px solid #e9934a;
+  border-radius: 50%;
+  background: repeating-radial-gradient(ellipse at center,#344251 0 4px,#d57c3f 5px 7px,#344251 8px 12px);
+  box-shadow: 0 -3px 13px rgba(241,141,60,.25);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .heater-dial {
+  position: absolute;
+  top: 11px;
+  right: 16px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #98b9cc;
+  border-radius: 50%;
+  background: linear-gradient(100deg,#1e3548,#577387);
+  box-shadow: inset 1px 0 rgba(255,255,255,.2);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .heater-dial::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  width: 2px;
+  height: 4px;
+  background: #d2f0ff;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .heater-caption {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .heat-source-info {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 12px;
+  margin: 5px auto 0;
+  padding: 8px 12px;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  white-space: normal;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .heat-source-info span {color: var(--text-secondary);font-size: 11px;}
+body:is(.sim-heat,.tpx-legacy-heat) .heat-source-info strong {
+  margin: 0;
+  font: 600 14px/1.5 "Oxanium",sans-serif;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+body:is(.sim-heat,.tpx-legacy-heat) #thermometer {
+  position: absolute;
+  top: 110px;
+  left: calc(var(--heat-center) + 176px);
+  right: auto;
+  width: 120px;
+  height: 292px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: linear-gradient(110deg,rgba(144,185,206,.08),rgba(144,185,206,.02)),var(--bg-card);
+  box-shadow: inset 0 1px rgba(211,238,255,.1),0 10px 18px -15px rgba(0,0,0,.5);
+  transform: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale {
+  top: 23px;
+  left: 17px;
+  height: 198px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale span {position: relative;padding-right: 15px;line-height: 1;}
+body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale span::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 8px;
+  height: 1px;
+  background: var(--heat-glass-edge);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .thermo-tube {
+  top: 21px;
+  left: 72px;
+  width: 14px;
+  height: 202px;
+  border: 2px solid var(--heat-glass-edge);
+  background: rgba(130,185,213,.08);
+}
+body:is(.sim-heat,.tpx-legacy-heat) .mercury {background: linear-gradient(90deg,#e85d54,#ffa18b);}
+body:is(.sim-heat,.tpx-legacy-heat) .thermo-bulb {
+  left: 64px;
+  top: 210px;
+  bottom: auto;
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--heat-glass-edge);
+  background: radial-gradient(circle at 35% 30%,#ffb29c,#eb6654 55%,#ba3f36);
+  box-shadow: none;
+}
+body:is(.sim-heat,.tpx-legacy-heat) #thermoRead {
+  top: 251px;
+  left: 10px;
+  width: calc(100% - 20px);
+  font: 600 14px/1.5 "Oxanium",sans-serif;
+  color: var(--text-primary);
+}
+body:is(.sim-heat,.tpx-legacy-heat) #materialLabel {
+  left: 24px;
+  top: 24px;
+  max-width: calc(100% - 48px);
+  padding: 11px 15px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+body:is(.sim-heat,.tpx-legacy-heat) #materialLabel strong {font: 600 14px/1.5 "Oxanium",sans-serif;}
+body:is(.sim-heat,.tpx-legacy-heat) #materialLabel span {color: var(--text-secondary);font-size: 11px;line-height: 1.6;}
+body:is(.sim-heat,.tpx-legacy-heat) .control-card {min-width: 0;}
+body:is(.sim-heat,.tpx-legacy-heat) .control-top {gap: 10px;flex-wrap: wrap;}
+
+@media (max-width: 760px) {
+  body:is(.sim-heat,.tpx-legacy-heat) #scene {--heat-center: 40%;}
+  body:is(.sim-heat,.tpx-legacy-heat) #thermometer {left: calc(var(--heat-center) + 148px);}
+}
+@media (max-width: 600px) {
+  body:is(.sim-heat,.tpx-legacy-heat) :is(.simulation-panel,.graph-panel,.theory-panel,.example-panel) {padding: 18px;}
+  /* The original cursor tooltip can calculate a negative x on narrow scenes.
+     Dock its existing content within the scene; keep hover handlers unchanged. */
+  body:is(.sim-heat,.tpx-legacy-heat) #simulationTooltip {
+    inset: auto 12px 12px 12px !important;
+    min-width: 0;
+    width: auto;
+    max-width: calc(100% - 24px);
+    padding: 11px 13px;
+    background: var(--bg-card);
+  }
+  body:is(.sim-heat,.tpx-legacy-heat) #scene {
+    --heat-center: 36%;
+    min-height: 480px;
+    height: 480px;
+  }
+  body:is(.sim-heat,.tpx-legacy-heat) #beaker {top: 130px;width: 162px;height: 208px;border-radius: 6px 6px 25px 25px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .beaker-graduations {top: 36px;right: 14px;gap: 21px;width: 19px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .beaker-graduations i {width: 11px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .beaker-graduations i:nth-child(odd) {width: 19px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .beaker-glint {left: 9px;}
+  body:is(.sim-heat,.tpx-legacy-heat) #liquid {left: 6px;right: 6px;border-radius: 10% 10% 18px 18px / 5px 5px 18px 18px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .heater-assembly {top: 346px;width: 184px;}
+  body:is(.sim-heat,.tpx-legacy-heat) #thermometer {top: 132px;left: calc(var(--heat-center) + 107px);width: 92px;height: 257px;padding: 12px;border-radius: 12px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale {left: 10px;top: 21px;height: 166px;font-size: 9px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale span {padding-right: 10px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale span::after {width: 5px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-tube {top: 18px;left: 56px;width: 13px;height: 171px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-bulb {left: 49px;top: 177px;width: 27px;height: 27px;}
+  body:is(.sim-heat,.tpx-legacy-heat) #thermoRead {top: 222px;left: 6px;width: calc(100% - 12px);font-size: 12px;}
+  body:is(.sim-heat,.tpx-legacy-heat) #materialLabel {top: 18px;left: 18px;max-width: calc(100% - 36px);padding: 10px 12px;}
+}
+@media (max-width: 390px) {
+  body:is(.sim-heat,.tpx-legacy-heat) :is(.simulation-panel,.graph-panel,.theory-panel,.example-panel) {padding: 14px;}
+  body:is(.sim-heat,.tpx-legacy-heat) #scene {--heat-center: 35%;}
+  body:is(.sim-heat,.tpx-legacy-heat) #beaker {width: 142px;height: 198px;top: 133px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .heater-assembly {top: 339px;width: 158px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .heat-source-info {gap: 7px;padding: 7px 9px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .heat-source-info span {font-size: 10px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .heat-source-info strong {font-size: 12px;}
+  body:is(.sim-heat,.tpx-legacy-heat) #thermometer {left: calc(var(--heat-center) + 86px);width: 70px;height: 251px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale {left: 8px;font-size: 8px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-scale span {padding-right: 8px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-tube {left: 43px;width: 11px;}
+  body:is(.sim-heat,.tpx-legacy-heat) .thermo-bulb {left: 37px;width: 23px;height: 23px;top: 178px;}
+  body:is(.sim-heat,.tpx-legacy-heat) #thermoRead {font-size: 11px;top: 216px;left: 4px;width: calc(100% - 8px);}
+}

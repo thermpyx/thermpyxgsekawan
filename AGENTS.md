@@ -12,6 +12,13 @@ The user-facing application is a static bilingual learning site. Use the existin
 - Do not replace account, music, teacher content, or Supabase setup with mock production behavior. Browser tests may mock/abort remote services; report this limit. Do not create or modify live backend data just to run QA.
 - Preserve the user's existing files, photos, music, vendor assets, and account settings. Do not put secret/service-role keys in frontend code.
 
+## Visual preferences from the user
+
+- Use the First Law piston as the visual reference for simulator equipment: coherent lab surfaces, recognizable apparatus, and readable labels. A font check alone does not prove a simulation scene renders; inspect real screenshots and verify all major graphic parts are visible and contained at 320px and desktop in both themes.
+- Keep words, symbols, readouts, and buttons comfortably inside their containers. Check translated labels, scene annotations, and controls near panel edges.
+- Avoid decorative long-dash separators and accent rules in theory headings/examples. Preserve mathematical minus signs, scientific plots and number ranges.
+- Calculator increment/decrement controls must look integrated, support small precise steps, preserve manual input and validation, and remain accessible in ID/EN.
+
 ## Verification
 
 Use the existing suites in `qa/`; Playwright browser tests require Chromium. New learning/translation/simulator changes should run:
@@ -23,6 +30,9 @@ node qa/test-theory-material.cjs
 node qa/test-i18n.cjs
 node qa/test-simulator-design.cjs
 node qa/test-first-law-volume.cjs
+node qa/test-heat-visual.cjs
+node qa/test-simulator-apparatus.cjs
+node qa/test-calculator-stepper.cjs
 node qa/test-quiz.cjs
 node qa/test-rev08.cjs
 node qa/test-learning-ui.cjs

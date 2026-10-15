@@ -109,7 +109,7 @@ test("expanded theory and worked explanations have authored translations in both
   const samples = [
     ["Pembahasan Lengkap: Kalor dan Suhu", "Complete Discussion: Heat and Temperature"],
     ["Tujuan pembelajaran:", "Learning objectives:"],
-    ["Contoh 3 — Es menjadi air hangat", "Example 3 — Turning ice into warm water"],
+    ["Contoh 3: Es menjadi air hangat", "Example 3: Turning ice into warm water"],
     ["ΔV = 0 sehingga W = 0.", "ΔV = 0, so W = 0."],
     ["Kalor nol tidak berarti suhu tetap.", "Zero heat does not mean constant temperature."],
     ["Daftar contoh soal", "Worked example contents"]

@@ -72,6 +72,8 @@ const topicTitles = {
           assert.deepEqual(await frame().evaluate(() => TPX.auditTranslations(document.getElementById('materi-lengkap')).uncovered), [], `${slug}: every authored lesson fragment needs a translation`); checks++;
           assert.deepEqual(await numbers(), originalNumbers, `${slug}: scientific values must survive language changes`); checks++;
           assert.equal(await frame().evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${slug}: ${lang} content must fit the viewport`); checks++;
+          assert.deepEqual(await frame().evaluate(() => [...document.querySelectorAll('h1,h2,h3,h4,.tpx-study-toc a,.tpx-study-examples a')].filter(node => node.textContent.includes('—')).map(node => node.textContent)), [], `${slug}: ${lang} lesson headings omit decorative long dashes`); checks++;
+          assert.equal(await frame().evaluate(() => [...document.querySelectorAll('.theory-section-header > span')].every(node => node.scrollWidth <= node.clientWidth + 1)), true, `${slug}: numbered labels fit their padded containers`); checks++;
           const snapshot = await view.locator('#materi-lengkap').innerText();
           if (translatedSnapshots[lang]) assert.equal(snapshot, translatedSnapshots[lang], `${slug}: repeat switching must restore the full lesson exactly`);
           translatedSnapshots[lang] = snapshot;

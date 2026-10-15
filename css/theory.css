@@ -570,14 +570,8 @@ body.light-mode .theory-topbar {
     transition: var(--transition);
 }
 
-.law-choice-card::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,168,255,.55), transparent);
-}
+/* The lesson title and card outline provide the hierarchy without an accent rule. */
+.law-choice-card::before {content: none;}
 
 .law-choice-card.is-available:hover {
     transform: translateY(-4px);
@@ -670,4 +664,17 @@ body.light-mode .theory-topbar {
         max-width: 82%;
         font-size: 19px;
     }
+}
+
+/* Keep numbered titles readable when a translated label needs more room. */
+.theory-section-header {gap: 16px; align-items: flex-start;}
+.theory-section-header > span {
+    width: auto; min-width: 40px; height: auto; min-height: 40px;
+    padding: 9px 11px; line-height: 1.4;
+}
+.theory-section-header h2 {min-width: 0; align-self: center; overflow-wrap: anywhere;}
+@media(max-width:600px) {
+    .theory-section-header {gap: 12px;}
+    .theory-card {padding: 22px;}
+    .theory-section-header > span {padding: 8px 10px;}
 }

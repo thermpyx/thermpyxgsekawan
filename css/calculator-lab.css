@@ -16,11 +16,30 @@
 .cl-card h2{font:700 24px Oxanium,sans-serif;margin:17px 0 10px}
 .cl-card>p{color:var(--text-secondary,#91a8b8);min-height:47px;font-size:13px;line-height:1.65}
 .cl-equation{border-left:3px solid #ff7628;border-radius:3px;background:var(--surface-soft,rgba(80,156,199,.08));margin:20px 0;padding:15px;font:600 17px Oxanium,sans-serif;overflow:auto}
-.cl-input-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.cl-input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:16px 13px}
 .cl-field{display:flex;flex-direction:column;gap:7px;color:var(--text-secondary,#a5b6c3);font-size:12px}
 .cl-input{display:flex;align-items:center;border:1px solid var(--border,rgba(0,168,255,.3));border-radius:8px;background:var(--bg-secondary,#080d13);overflow:hidden}
 .cl-input input{width:100%;min-width:0;border:0!important;padding:13px 11px!important;background:transparent!important;color:var(--text-primary,#fff)!important;font:600 15px Oxanium,sans-serif;outline:none}
 .cl-input em{padding:8px;color:var(--text-muted,#9eaab6);font-style:normal;white-space:nowrap;font-size:10px}
+.cl-field>label{line-height:1.55;cursor:pointer}
+.cl-input.cl-has-stepper{min-height:48px;transition:border-color .18s ease,box-shadow .18s ease}
+.cl-has-stepper input[type="number"]{-moz-appearance:textfield;appearance:textfield;font-variant-numeric:tabular-nums}
+.cl-has-stepper input::-webkit-inner-spin-button,.cl-has-stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.cl-has-stepper input{padding:13px 12px!important;line-height:1.4}
+.cl-has-stepper em{flex:none;padding:10px 10px 10px 0;line-height:1.4}
+.cl-stepper-actions{display:flex;align-self:stretch;flex:none;border-left:1px solid var(--border,rgba(0,168,255,.25));padding:3px;gap:2px;background:var(--surface-soft,rgba(80,156,199,.06))}
+.cl-stepper-button{appearance:none;display:grid;place-items:center;width:34px;min-height:40px;flex:none;padding:0;border:0;border-radius:5px;background:transparent;color:var(--text-secondary,#a5b6c3);cursor:pointer;transition:background .15s ease,color .15s ease}
+.cl-stepper-button svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.cl-stepper-button:hover:not(:disabled){background:rgba(255,118,40,.13);color:#ff944f}
+.cl-stepper-button:active:not(:disabled){background:rgba(255,118,40,.22)}
+.cl-stepper-button:focus-visible{outline:2px solid var(--blue-light,#38bdf8);outline-offset:-2px}
+.cl-stepper-button:disabled{opacity:.3;cursor:default}
+.cl-input.cl-has-stepper:focus-within{border-color:var(--blue-light,#38bdf8);box-shadow:0 0 0 3px rgba(56,189,248,.09)}
+.cl-input.cl-value-adjusted{animation:cl-adjust-feedback .38s ease-out}
+@keyframes cl-adjust-feedback{0%{border-color:#ff944f;box-shadow:0 0 0 3px rgba(255,118,40,.12)}100%{box-shadow:0 0 0 0 transparent}}
+body.light-mode .cl-stepper-button:hover:not(:disabled){color:#a7460c;background:rgba(255,118,40,.12)}
+@media(pointer:coarse){.cl-stepper-button{width:40px;min-height:44px}}
+@media(prefers-reduced-motion:reduce){.cl-input.cl-has-stepper,.cl-stepper-button{transition:none}.cl-input.cl-value-adjusted{animation:none}}
 .cl-process-type{margin-bottom:16px}
 .cl-process-type select{width:100%;padding:12px;color:var(--text-primary,#fff);background:var(--bg-secondary,#080d13);border:1px solid var(--border,rgba(0,168,255,.2));border-radius:8px}
 .cl-submit{margin-top:18px;cursor:pointer;border:0;background:#ff7628;color:#09111b;padding:12px 21px;border-radius:7px;font:700 12px Oxanium,sans-serif;letter-spacing:1px;width:100%}

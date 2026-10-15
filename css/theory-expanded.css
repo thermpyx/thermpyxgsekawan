@@ -1,4 +1,4 @@
-/* Expanded Indonesian theory, scoped to preserve the existing interface. */
+/* Bilingual expanded theory, scoped to preserve the existing interface. */
 .tpx-study{scroll-margin-top:90px;overflow-wrap:anywhere}
 .tpx-study .theory-card{margin-bottom:20px;transform:none}
 .tpx-study p,.tpx-study li{line-height:1.9;font-size:16px;color:var(--text-secondary)}
@@ -7,8 +7,8 @@
 .tpx-study ol,.tpx-study ul{padding-left:24px;margin:12px 0 20px}
 .tpx-study li{margin-bottom:10px}
 .tpx-study a,.tpx-study-entry a{color:var(--blue);text-decoration:underline;text-underline-offset:4px}
-.tpx-study-formula{padding:18px;margin:18px 0;border-left:4px solid var(--blue);background:rgba(0,168,255,.07);font-size:18px;line-height:1.8;overflow-wrap:anywhere;color:var(--text-primary)}
-.tpx-study-answer{border-left:4px solid #219e79;padding:12px 16px;background:rgba(33,158,121,.08)}
+.tpx-study-formula{padding:18px;margin:18px 0;border:0;border-radius:10px;background:rgba(0,168,255,.07);font-size:18px;line-height:1.8;overflow-wrap:anywhere;color:var(--text-primary)}
+.tpx-study-answer{border:0;border-radius:10px;padding:12px 16px;background:rgba(33,158,121,.08)}
 .tpx-study-entry{padding-top:8px;padding-bottom:8px}
 .tpx-study .tpx-study-toc{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));list-style:none;padding:0}
 .tpx-study .tpx-study-toc a{display:block;padding:10px;border:1px solid var(--border);border-radius:8px;height:100%}

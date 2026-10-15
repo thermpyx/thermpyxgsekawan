@@ -1,4 +1,6 @@
-# THERMPYX — alur belajar dan revisi terbaru
+# THERMPYX: revisi visual dan alur belajar
+
+Revisi visual terbaru memperbaiki area kalor/suhu yang terpotong, menyelaraskan gambar alat simulator dengan piston Hukum I, merapikan jarak label, menghapus pemisah dekoratif teori, dan menambahkan kontrol angka kalkulator yang menyatu dengan input. Lihat [rincian revisi visual](docs/REVISI-VISUAL-SIMULATOR.md).
 
 Pembaruan ini menambahkan **Alur Belajar / Learning Path** dengan capaian per topik, aktivitas penerapan, progres lokal, dan kuis tujuh topik. Materi teori lengkap mendukung ID/EN; tampilan simulator diselaraskan, serta bug kontrol volume Hukum I diperbaiki dengan izin pengguna tanpa mengganti rumus proses. Lihat [rincian revisi](docs/REVISI-ALUR-BELAJAR.md) dan [pedoman pengembangan](AGENTS.md).
 
@@ -41,6 +43,9 @@ node qa/test-learning-path.cjs
 node qa/test-learning-assessment.cjs
 node qa/test-simulator-design.cjs
 node qa/test-first-law-volume.cjs
+node qa/test-heat-visual.cjs
+node qa/test-simulator-apparatus.cjs
+node qa/test-calculator-stepper.cjs
 node qa/test-theory-material.cjs
 node qa/test-rev08.cjs
 node qa/test-quiz.cjs

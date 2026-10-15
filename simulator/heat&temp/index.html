@@ -25,6 +25,7 @@
 <script defer src="../../js/brand-identity.js"></script>
 <link rel="stylesheet" href="../../css/onboarding.css"><script defer src="../../js/onboarding.js"></script>
 <link rel="stylesheet" href="../shared/simulator-polish.css">
+<link rel="stylesheet" href="../shared/heat-apparatus.css">
 </head>
 
 <body class="tpx-legacy-heat">
@@ -132,6 +133,9 @@
                 class="beaker"
                 id="beaker"
             >
+<span class="beaker-rim" aria-hidden="true"></span>
+<span class="beaker-graduations" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+<span class="beaker-glint" aria-hidden="true"></span>
 
                 <div
                     class="liquid"
@@ -149,25 +153,16 @@
 
             <!-- HEAT SOURCE -->
 
-            <div
-                class="flame"
-                id="flame"
-            >
-
-                <div class="fire">
-                    🔥
-                </div>
-
-                <span>
-                    Heat source
-                </span>
-
-                <div class="heat-source-info">
-                    <span>Heat supplied</span>
-                    <strong id="heatSourceValue">0 J</strong>
-                </div>
-
-            </div>
+            <div class="heater-assembly">
+<div class="flame" id="flame">
+<div class="fire" aria-hidden="true"><span class="heater-coil"></span><span class="heater-dial"></span></div>
+</div>
+<span class="heater-caption" data-en="Heat source" data-id="Sumber kalor">Heat source</span>
+<div class="heat-source-info">
+<span data-en="Heat supplied" data-id="Kalor diberikan">Heat supplied</span>
+<strong id="heatSourceValue">0 J</strong>
+</div>
+</div>
 
 
             <!-- THERMOMETER -->
@@ -319,19 +314,19 @@
                 <select id="material">
 
                     <option value="water">
-                        Water — 4200 J/kg·K
+                        Water ,  4200 J/kg·K
                     </option>
 
                     <option value="aluminum">
-                        Aluminum — 900 J/kg·K
+                        Aluminum ,  900 J/kg·K
                     </option>
 
                     <option value="iron">
-                        Iron — 450 J/kg·K
+                        Iron ,  450 J/kg·K
                     </option>
 
                     <option value="copper">
-                        Copper — 385 J/kg·K
+                        Copper ,  385 J/kg·K
                     </option>
 
                 </select>
@@ -459,7 +454,7 @@
             <div>
 
                 <h2>
-                    Heat–Temperature Diagram
+                    Heat-Temperature Diagram
                 </h2>
 
                 <p>
