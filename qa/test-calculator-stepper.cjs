@@ -2,7 +2,7 @@
 "use strict";
 const assert = require("node:assert/strict");
 const {chromium} = require("playwright");
-const base = process.env.TPX_TEST_URL || "http://127.0.0.1:8003";
+const base = (process.env.TPX_TEST_URL || "http://127.0.0.1:8003").replace(/\/+$/, "");
 (async () => {
   const browser = await chromium.launch({executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", args: ["--no-sandbox"]});
   let checks = 0;

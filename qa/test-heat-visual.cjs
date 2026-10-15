@@ -8,6 +8,7 @@ const fs = require("node:fs");
 const crypto = require("node:crypto");
 const {chromium} = require("playwright");
 const root = path.resolve(__dirname,"..");
+const base = (process.env.TPX_TEST_URL || "http://localhost:8003/").replace(/\/+$/, "") + "/";
 const baseline = require("./simulator-source-integrity.json");
 const routes = ["simulator/heat-temperature.html","simulator/heat&temp/index.html"];
 const digest = text => crypto.createHash("sha256").update(text).digest("hex");
@@ -25,12 +26,12 @@ for (const route of routes) {
  await context.route(/https:\/\/(fonts\.|www\.youtube|www\.youtube-nocookie|cdn\.jsdelivr)/,route=>route.abort());
  const page=await context.newPage(),errors=[],failedCss=[];
  page.on("pageerror",error=>errors.push(error.message));
- page.on("response",response=>{if(response.url().startsWith(process.env.TPX_TEST_URL||"http://localhost:8003/")&&/\.css(?:\?|$)/.test(response.url())&&response.status()>=400)failedCss.push(response.url());});
+ page.on("response",response=>{if(response.url().startsWith(base)&&/\.css(?:\?|$)/.test(response.url())&&response.status()>=400)failedCss.push(response.url());});
  let checks=0;
  try {
   for (const route of routes) for (const width of [320,390,768,1440]) {
    await page.setViewportSize({width,height:1400});
-   await page.goto((process.env.TPX_TEST_URL||"http://localhost:8003/")+"app.html?page="+encodeURIComponent(route),{waitUntil:"domcontentloaded"});
+   await page.goto(base+"app.html?page="+encodeURIComponent(route),{waitUntil:"domcontentloaded"});
    await page.waitForFunction(()=>typeof document.querySelector("iframe")?.contentWindow?.calculateTemperature==="function"&&document.querySelector("iframe")?.contentWindow?.TPX);
    const frame=page.frames().find(frame=>frame!==page.mainFrame());
    for (const theme of ["dark","light"]) for (const language of ["id","en"]) {
