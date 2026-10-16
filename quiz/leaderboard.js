@@ -6,7 +6,9 @@ const playerId=sessionStorage.getItem("playerId");
 const userRole=sessionStorage.getItem("userRole");
 const $=id=>document.getElementById(id);
 const S=window.TPXQuizScores;
-let channel=null,poll=null,busy=false,lastPlayers=[],lastAnswers=[];
+const live=window.TPXLive;
+let unsubs=[],unsubscribeConnection=null,lastPlayers=[],lastAnswers=[],lastRoom=null;
+let connected=true,syncError=false,ready={room:false,players:false,answers:false};
 const t=(en,id)=>window.TPX?.t ? window.TPX.t(en,id) : en;
 const elt=(tag,cls,text)=>{
   const el=document.createElement(tag);if(cls)el.className=cls;
@@ -20,7 +22,7 @@ const participantName=(tag,cls,nickname)=>{
 };
 function rankings(players,answers){
   // The quiz can be observed before everyone finishes; questionCount only bounds valid indexes.
-  return S.calculateRankings(players,answers,1000);
+  return S.calculateRankings(players,answers,lastRoom?.questions?.length||1000);
 }
 function resultCard(p,rank){
  const card=elt("article",`podium-card rank-${rank}`);
@@ -54,36 +56,47 @@ function render(){
   row.append(elt("div","rank-number","#"+(i+1)),detail,score);list.append(row);
  });
 }
-async function refresh(){
- if(!roomId||busy)return;
- busy=true;
- try {
-   const [p,a,room]=await Promise.all([
-     supabaseClient.from("quiz_players").select("id,nickname,joined_at,current_question").eq("room_id",roomId),
-     supabaseClient.from("quiz_answers").select("*").eq("room_id",roomId),
-     supabaseClient.from("quiz_rooms").select("status").eq("id",roomId).single()
-   ]);
-   if(p.error||a.error||room.error)throw(p.error||a.error||room.error);
-   lastPlayers=p.data||[];lastAnswers=a.data||[];render();
-   const ended=room.data?.status==="finished";
-   $("liveStatus").textContent=ended?t("Final Results","Hasil Akhir"):t("Live / provisional","Langsung / sementara");
-   $("liveStatus").classList.toggle("connected",true);
- } catch(e) {
-   console.error("LEADERBOARD FETCH:",e);
-   $("liveStatus").textContent=t("Reconnecting...","Menghubungkan ulang...");
-   if(!lastPlayers.length)$("leaderboardList").textContent=t("Unable to load standings. Retrying...","Peringkat gagal dimuat. Mencoba ulang...");
- } finally{busy=false;}
+function renderStatus(){
+ const complete=Object.values(ready).every(Boolean);
+ $("liveStatus").classList.toggle("connected",connected&&!syncError&&complete);
+ if(!connected||syncError){
+   $("liveStatus").textContent=t("Reconnecting…","Menghubungkan ulang…");
+   if(syncError){
+     const retry=elt("button","play-retry",t("RETRY","COBA LAGI"));retry.type="button";
+     retry.addEventListener("click",()=>startWatching());$("liveStatus").append(" ",retry);
+   }
+ }else $("liveStatus").textContent=!complete?t("Loading results…","Memuat hasil…"):
+   lastRoom?.status==="finished"?t("Final Results","Hasil Akhir"):t("Live / provisional","Langsung / sementara");
+}
+function stopWatching(){unsubs.forEach(unsubscribe=>unsubscribe?.());unsubs=[];}
+function accept(key,result){
+ if(result.error||(key==="room"&&!result.data)){
+   syncError=true;renderStatus();
+   if(!lastPlayers.length)$("leaderboardList").textContent=t("Unable to load standings. Retry the connection.","Peringkat gagal dimuat. Coba sambungkan kembali.");
+   return;
+ }
+ ready[key]=true;
+ if(key==="room")lastRoom=result.data;
+ else if(key==="players")lastPlayers=result.data||[];
+ else lastAnswers=result.data||[];
+ render();renderStatus();
+}
+function startWatching(){
+ stopWatching();syncError=false;ready={room:false,players:false,answers:false};renderStatus();
+ unsubs.push(live.watchRoom(roomId,result=>accept("room",result)));
+ unsubs.push(live.watchPlayers(roomId,result=>accept("players",result)));
+ unsubs.push(live.watchAnswers(roomId,result=>accept("answers",result)));
 }
 if(!roomId){$("leaderboardList").textContent=t("No active room. Return to Quiz Menu.","Tidak ada ruang aktif. Kembali ke menu kuis.");}
+else if(!live){$("liveStatus").textContent=t("Connection unavailable. Reload to try again.","Koneksi belum tersedia. Muat ulang untuk mencoba lagi.");}
 else {
  $("leaderboardRoomCode").textContent=roomCode||"------";
- refresh();
- channel=supabaseClient.channel("tpx-board-"+roomId+"-"+(playerId||"host"))
-   .on("postgres_changes",{event:"*",schema:"public",table:"quiz_answers",filter:`room_id=eq.${roomId}`},refresh)
-   .on("postgres_changes",{event:"*",schema:"public",table:"quiz_players",filter:`room_id=eq.${roomId}`},refresh)
-   .on("postgres_changes",{event:"UPDATE",schema:"public",table:"quiz_rooms",filter:`id=eq.${roomId}`},refresh)
-   .subscribe();
- poll=setInterval(refresh,3000);
- window.addEventListener("thermpyx:languagechange",render);
+ startWatching();
+ unsubscribeConnection=live.watchConnection?.(value=>{
+   const previous=connected;connected=value;
+   if(!previous&&connected&&syncError)startWatching();
+   renderStatus();
+ });
+ window.addEventListener("thermpyx:languagechange",()=>{render();renderStatus();});
 }
-window.addEventListener("beforeunload",()=>{if(poll)clearInterval(poll);if(channel)supabaseClient.removeChannel(channel);});
+window.addEventListener("beforeunload",()=>{stopWatching();unsubscribeConnection?.();});

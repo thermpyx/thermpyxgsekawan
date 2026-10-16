@@ -1,36 +1,55 @@
 # THERMPYX project guidance
 
-The user-facing application is a static bilingual learning site. Use the existing checkout; no build step or npm install is required for runtime. Serve it over HTTP with `python3 -m http.server 8003 --bind 127.0.0.1`. `index.html` and deep links open through `app.html` to preserve the music player.
+THERMPYX is a static bilingual learning site. Use the existing checkout: each cloud task is already isolated, so do not create a Git worktree unless the user asks. Runtime needs no build or npm installation. Serve the checkout with `python3 -m http.server 8003 --bind 127.0.0.1`. `index.html` and deep links open through `app.html` so the music player survives navigation.
 
-## Requirements to preserve in future changes
+## Current account and quiz architecture
 
-- Keep the guided learning path in `learning.html` aligned with all seven theory topics, simulator/application activities, measurable learning outcomes, and topic quizzes. Learning progress is local to the browser; reading/experiment checkboxes are self-reports, whereas quiz mastery requires at least 80%.
-- Every authored UI or theory addition must support Indonesian and English. Use explicit `data-en`/`data-id` pairs for complete leaf labels, or authored normalized dictionary entries for text with inline scientific markup. Do not mark authored theory with `data-tpx-no-translate`; reserve exemptions for user content, formulas, or proper names. Never use automatic guesses to translate imported teacher content.
-- Preserve equations, units, sign conventions, assumptions, superscripts/subscripts, and numerical examples when translating. Test ID → EN → ID and recheck inline markup and anchors.
-- Simulator visual changes must leave physics calculations, state, controls, animations, graphs, and event handling unchanged. Compare simulator JavaScript and inline executable scripts with the incoming version when doing a visual-only revision. The current version also contains an explicitly authorized First Law initial/final volume-control fix; preserve it and its nontrivial expansion/compression regressions.
-- Keep responsive layouts usable at 320px as well as desktop, in both themes and both languages. Sticky headers must not cover focused controls or anchor targets. Preserve reduced-motion and keyboard operation.
-- Do not replace account, music, teacher content, or Supabase setup with mock production behavior. Browser tests may mock/abort remote services; report this limit. Do not create or modify live backend data just to run QA.
-- Preserve the user's existing files, photos, music, vendor assets, and account settings. Do not put secret/service-role keys in frontend code.
-- Capture authentication callback intent before the Supabase SDK consumes its URL, subscribe before views mount, and wait for SDK initialization before cleaning callback parameters. Only a validated recovery event/session may enable password updates; an `account=recovery` query alone must never do so. Keep access/refresh tokens out of shell query strings and release temporary callback credentials after validation.
-- Supabase can reannounce `SIGNED_IN` for the same session when a browser tab becomes visible. Preserve already validated recovery for that identical session, including valid token refreshes; revoke it for explicit sign-in/sign-out, a different user/session, or completed password changes. Test real SDK hidden/visible events, not only manually triggered Auth callbacks.
-- Auth redirect destinations must not contain a fragment/anchor: GoTrue appends `#` and its session parameters. Build SDK tests from the actual requested `redirect_to` plus the server's appended fragment, including legacy `#account#access_token` callbacks normalized before SDK initialization. Keep new callback URLs in the email guide and Dashboard instructions aligned. Read the SDK's cached public `initialize()` result to classify initial callback errors safely; `getSession()` alone can hide them. Never display raw Auth errors, callback URLs, or tokens as diagnostics.
-- For question-set writes, preserve local drafts on failure and account changes, confirm the returned cloud record before claiming success, and never apply a stale request to a different account or draft. Preserve owner RLS and the custom-room question snapshot.
-- A successful signup/resend request does not prove email delivery. Confirmation email templates and SMTP must be configured in the existing Supabase project separately from publishing frontend code; use password recovery for an already confirmed account.
+- The active backend is native Firebase, through `js/firebase-client.js` and public Web configuration in `js/firebase-config.js`. Firebase 13 browser modules load from the pinned official CDN. Do not import Analytics or add a runtime build. A `measurementId` in configuration does not enable Analytics.
+- Teachers sign in with Google. Students join with a room code and nickname; the app uses Firebase Anonymous Authentication for their identity. Anonymous users must never appear as signed-in teachers or gain private question-set/host access. Preserve the distinction in both the backend wrapper and `TPXContent`.
+- `TPXFirebase` is published synchronously while SDK readiness is asynchronous. Await its supported methods internally. Call the ready Google popup method directly within user activation; do not await a session read first. Fail clearly when Firebase is unavailable; never simulate a production sign-in or successful save.
+- Preserve the Google-only modal, ID/EN labels and errors, keyboard focus, Escape, busy/double-click protection and local drafts. An in-flight old session read must not override a newer sign-in, sign-out or account change.
+- Realtime Database access is governed by `firebase/database.rules.json`. Preserve Google-owner restrictions, exact room-code lookup, membership checks, nickname uniqueness and answer/room-state validation. Do not use public read/write rules, disable validation or rely on UI checks alone.
+- For question-set writes, keep four distinct answers, one correct index and a maximum of 100 questions. Preserve drafts on failure or account changes, confirm the returned cloud record before claiming success, and never apply an old request to another owner/draft. Keep the room's question snapshot independent of later bank edits.
+- Supabase SQL, email templates, old configuration and their QA files remain historical migration material. Do not reconnect active pages to them or delete remote/legacy data as part of routine setup. Old email callback credentials are sanitized before the page enters the shell; they may open the Google account dialog but cannot authenticate a Firebase user. Never log/store callback tokens or put them in shell query strings/history metadata.
+- Google and Anonymous were confirmed enabled during setup, and `thermpyx.github.io` was added to authorized domains. The actual `databaseURL` and deployed rules still require Console setup/verification. Do not infer production readiness from local fixtures/emulators or a public Firebase config alone. Follow [the Firebase guide](docs/PANDUAN-FIREBASE.md).
 
-## Visual preferences from the user
+## Learning, physics and content requirements
 
-- Use the First Law piston as the visual reference for simulator equipment: coherent lab surfaces, recognizable apparatus, and readable labels. A font check alone does not prove a simulation scene renders; inspect real screenshots and verify all major graphic parts are visible and contained at 320px and desktop in both themes.
-- Keep words, symbols, readouts, and buttons comfortably inside their containers. Check translated labels, scene annotations, and controls near panel edges.
-- Avoid decorative long-dash separators and accent rules in theory headings/examples. Preserve mathematical minus signs, scientific plots and number ranges.
-- Calculator increment/decrement controls must look integrated, support small precise steps, preserve manual input and validation, and remain accessible in ID/EN.
+- Keep the seven guided modules in `learning.html` aligned with theory, simulator/application activities, measurable outcomes and topic quizzes. Progress is browser-local: reading/experiment checkboxes are self-reports; quiz mastery requires at least 80%.
+- Every authored UI/theory addition must support Indonesian and English. Use explicit `data-en`/`data-id` leaf pairs or authored normalized dictionary entries for inline scientific markup. Do not mark authored theory `data-tpx-no-translate`; reserve exemptions for user content, formulas, proper names and components that explicitly render their authored bilingual labels. Never guess translations of imported teacher content.
+- Preserve equations, units, sign conventions, assumptions, superscripts/subscripts and examples. Test ID → EN → ID, scientific markup and anchors.
+- Visual-only simulator changes must leave calculations, state, controls, animations, graphs and handlers unchanged. Compare executable scripts with the incoming version. Preserve the separately authorized First Law initial/final volume fix and its expansion/compression regressions.
+- Preserve photos, music, vendor assets, account settings and user changes. Do not place private/service-account keys, admin credentials or passwords in browser code or saved setup instructions.
+- Do not create/modify live backend records merely to run QA. Use isolated `demo-*` emulator projects, intercepted endpoints or explicit fixtures and report which. Never use mock behavior in production code.
+
+## Visual preferences
+
+- Use the First Law piston as the simulator equipment reference: coherent lab surfaces, recognizable apparatus and readable labels. Inspect real screenshots; a font check alone does not prove a scene renders.
+- Keep text, symbols, readouts and buttons comfortably inside containers. Verify 320px and desktop, ID/EN and both themes. Sticky headers must not cover focus/anchors. Preserve keyboard and reduced-motion support.
+- Avoid decorative long-dash separators and heading/example accent rules. Preserve mathematical minus signs, plots and number ranges.
+- Calculator −/+ controls must remain integrated with inputs, precise for small decimal steps, keyboard accessible, and compatible with manual input/validation.
 
 ## Verification
 
-Use the existing suites in `qa/`; Playwright browser tests require Chromium. New learning/translation/simulator changes should run:
+Use current Firebase suites for backend/account/live-quiz changes:
+
+```sh
+node qa/test-firebase-client.cjs
+node qa/test-firebase-account.cjs
+node qa/test-firebase-live.cjs
+node qa/test-firebase-navigation.cjs
+```
+
+Browser suites require Playwright/Chromium; account/navigation suites also use the local HTTP server. `qa/test-firebase-sdk.cjs` requires the actual Firebase 13 browser bundle via `TPX_FIREBASE_SDK_BUNDLE` and an Auth emulator at `127.0.0.1:9099`, using project `demo-thermpyx-qa`. Its Google credentials and RTDB network are local fixtures; it does not prove production OAuth or deployed database rules. See the preparation notes in that file.
+
+Run `qa/test-firebase-rules.cjs` separately with the official RTDB emulator, `FIREBASE_DATABASE_EMULATOR_HOST`, and an isolated `demo-*` project. It must fail rather than fall back to production or mocks when the emulator is missing. QA-only pinned dependencies are in `qa/firebase/`; they are not runtime requirements. The checked-in `firebase.json` supports emulator execution. See [Firebase revision notes](docs/REVISI-FIREBASE.md) for commands and the recorded rules test evidence. Do not claim a new rules version passed based on an older hash/report.
+
+For learning, translation, simulation or shared navigation changes, run the relevant existing suites:
 
 ```sh
 node qa/test-learning-path.cjs
 node qa/test-learning-assessment.cjs
+node qa/test-learning-ui.cjs
 node qa/test-theory-material.cjs
 node qa/test-i18n.cjs
 node qa/test-simulator-design.cjs
@@ -38,13 +57,12 @@ node qa/test-first-law-volume.cjs
 node qa/test-heat-visual.cjs
 node qa/test-simulator-apparatus.cjs
 node qa/test-calculator-stepper.cjs
-node qa/test-quiz.cjs
+node qa/test-calculator-validation.cjs
+node qa/test-unit-converter.cjs
 node qa/test-rev08.cjs
-node qa/test-learning-ui.cjs
 node qa/test-navigation-layout.cjs
-node qa/test-upload-flow.cjs
+node qa/test-history.cjs
+node qa/test-shell-music.cjs
 ```
 
-Check the actual test filenames in `qa/` if they have changed. Run relevant existing auth, history, music, calculator, or converter suites for changes affecting those features. No tests should write to the production Supabase database. Summarize passed checks and untested external behavior accurately.
-
-For authentication and teacher question-set changes, also run `test-auth-recovery`, `test-email-template`, `test-question-set-flow`, and `test-host-auth-race` from `qa/`. The local PostgreSQL suites require `@electric-sql/pglite` outside the runtime checkout. `qa/test-auth-sdk.cjs` uses the real Supabase browser SDK with intercepted Auth endpoints; provide its UMD path through `TPX_SUPABASE_SDK_PATH`. These tests must not send email or write to the remote database.
+Also use current onboarding/developer/about/simulator-history suites when affected. Supabase-specific `test-auth-*`, `test-home-account`, `test-email-template`, `test-host-auth-race`, `test-question-set-flow`, `test-teacher-sql`, `test-upload-flow`, `test-live-entry` and `test-quiz` retain older fixtures and are historical for the Firebase migration; their passing/failing results do not establish the active Firebase workflow. Review their assumptions before adapting them. Report local checks and untested external behavior precisely.

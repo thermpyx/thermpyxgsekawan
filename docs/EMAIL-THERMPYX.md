@@ -1,3 +1,5 @@
+> **Arsip email Supabase.** Versi aktif menggunakan Google melalui Firebase dan tidak memakai kode/reset email ini. Ikuti [panduan Firebase](PANDUAN-FIREBASE.md); panduan lama berikut dipertahankan untuk riwayat.
+
 # Email verifikasi dari THERMPYX
 
 Web menyediakan pendaftaran, formulir kode verifikasi, kirim ulang kode, serta pemulihan kata sandi. Supabase Auth mengelola akun. Nama dan alamat pengirim email diatur di Dashboard; perubahan kode web saja tidak dapat mengganti alamat pengirim atau memastikan email diterima.

@@ -1,4 +1,4 @@
-/* Account entry points on the THERMPYX homepage. Uses the shared Auth session. */
+/* Homepage entry points for the shared Google account dialog. */
 (() => {
   "use strict";
   function start() {
@@ -10,7 +10,7 @@
     headerButton?.setAttribute("aria-controls", container.querySelector("dialog").id);
     let active = null;
     function localize() {
-      const id = window.TPX?.getLanguage() === "id";
+      const id = (window.TPX?.getLanguage?.() || document.documentElement.lang) === "id";
       document.querySelectorAll("[data-account-en]").forEach(node => {
         node.textContent = id ? node.dataset.accountId : node.dataset.accountEn;
       });
@@ -33,7 +33,7 @@
     window.addEventListener("thermpyx:languagechange", localize);
     api.onAuthChange(render); api.session().then(render);
     localize();
-    if (location.hash === "#account" && !location.search.includes("account=recovery")) auth.open();
+    if (location.hash === "#account") auth.open();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, {once: true});
   else start();

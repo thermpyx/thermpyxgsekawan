@@ -470,7 +470,7 @@
 
   function errorMessage(error) {
     if (content?.errorMessage) return content.errorMessage(error);
-    return error && typeof error.message === 'string' ? error.message : 'Permintaan tidak berhasil. Coba lagi setelah memeriksa koneksi dan konfigurasi Supabase.';
+    return error && typeof error.message === 'string' ? error.message : tr('The request failed. Check your connection and Firebase setup, then try again.', 'Permintaan tidak berhasil. Periksa koneksi dan pengaturan Firebase, lalu coba lagi.');
   }
 
   async function loadCloudSets() {

@@ -1,46 +1,32 @@
 /* Load FIRST in each content document, before the existing navigation scripts. */
 (() => {
   "use strict";
-  // Older email redirects included #account. GoTrue appends its own fragment,
-  // producing #account#access_token=...; repair that known legacy anchor before
-  // metadata capture or SDK parsing. Other anchors and oversized URLs stay put.
-  if (location.hash.startsWith("#account#") && location.hash.length <= 32768) {
-    const candidate = location.hash.slice("#account".length), parameters = new URLSearchParams(candidate.slice(1));
-    if (["access_token", "refresh_token", "error", "error_code", "error_description"].some(key => parameters.has(key))) history.replaceState(history.state, "", location.pathname + location.search + candidate);
-  }
-  // Capture callback intent before the Auth SDK consumes and removes its URL.
-  // Keep credentials in this closure only; expose a comparison, never the token.
-  const authHash = new URLSearchParams(location.hash.slice(1)), authQuery = new URLSearchParams(location.search);
-  let callbackAccess = authHash.get("access_token");
-  const callbackRecovery = authHash.get("type") === "recovery";
-  window.TPXAuthCallback = Object.freeze({
-    present: Boolean(callbackAccess || authHash.has("refresh_token") || authHash.has("error") || authHash.has("error_code") || authHash.has("error_description") || authQuery.has("code") || authQuery.has("error") || authQuery.has("error_code")),
-    recoveryRequested: callbackRecovery || authQuery.get("account") === "recovery",
-    hasRecoveryTokens: callbackRecovery && Boolean(callbackAccess && authHash.get("refresh_token")),
-    error: authHash.get("error_code") || authQuery.get("error_code") || (authHash.has("error") || authQuery.has("error") ? "invalid_callback" : ""),
-    matchesSession: session => Boolean(callbackAccess && session?.access_token === callbackAccess),
-    release: () => { callbackAccess = null; }
-  });
-  authHash.delete("access_token"); authHash.delete("refresh_token"); authQuery.delete("code");
   const base=new URL("../",document.currentScript.src),app=new URL("app.html",base);
+  // Old email links belong to the retired account provider. Remove their
+  // credentials before routing; Google sign-in must never consume these links.
+  // The temporary URLSearchParams objects are discarded immediately afterwards.
+  (() => {
+    const query=new URLSearchParams(location.search);
+    const fragment=new URLSearchParams(location.hash.replace(/^#account#/,"#").slice(1));
+    const callbackKeys=["access_token","refresh_token","provider_token","provider_refresh_token","token_hash","error","error_code","error_description","tpx_auth_code"];
+    const recovery=query.get("account")==="recovery";
+    const home=location.pathname===base.pathname||location.pathname===new URL("index.html",base).pathname;
+    const legacyCode=query.has("code")&&(home||recovery||location.hash==="#account");
+    const callback=recovery||legacyCode||callbackKeys.some(key=>fragment.has(key)||query.has(key));
+    if(!callback)return;
+    for(const key of [...callbackKeys,"token_type","expires_in","expires_at","type","code","tpx_auth_anchor"])query.delete(key);
+    if(recovery)query.delete("account");
+    const search=query.toString();
+    // Callback state may itself contain a legacy route. Keep none of that state.
+    history.replaceState(null,"",location.pathname+(search?"?"+search:"")+"#account");
+  })();
   let shell;try{if(window.parent!==window&&window.parent.TPXPersistentShell?.owns(window))shell=window.parent.TPXPersistentShell;}catch(_){}
   if(!shell){
     if(window.top!==window)return;
     let route=location.pathname.startsWith(base.pathname)?location.pathname.slice(base.pathname.length):"index.html";
     if(!route||route.endsWith("/"))route+="index.html";
     if(location.pathname===app.pathname)return;
-    // Recovery credentials stay in a fragment, which the browser does not send
-    // to the HTTP server. Ordinary anchors remain part of the content route.
-    const authFragment = /(?:^#|&)(?:access_token|refresh_token|error|error_code|error_description)=/.test(location.hash);
-    const contentQuery = new URLSearchParams(location.search), callbackCode = contentQuery.get("code");
-    if (callbackCode) contentQuery.delete("code");
-    const search = contentQuery.toString();
-    app.searchParams.set("page",route+(search?"?"+search:"")+(authFragment||callbackCode?"":location.hash));
-    if(callbackCode) {
-      const transport = new URLSearchParams({tpx_auth_code: callbackCode});
-      if(location.hash) transport.set("tpx_auth_anchor", location.hash);
-      app.hash = transport.toString();
-    } else if(authFragment)app.hash=location.hash;
+    app.searchParams.set("page",route+location.search+location.hash);
     location.replace(app.href);
     return;
   }

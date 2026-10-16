@@ -35,38 +35,38 @@ async function joinRoom() {
     nicknameInput.focus();
     return;
   }
-  const db = typeof supabaseClient !== "undefined" ? supabaseClient : null;
-  if (!db) {
+  const live = window.TPXLive;
+  if (!live) {
     reportJoin("Quiz connection is unavailable. Check your connection and try again.", "Koneksi kuis belum tersedia. Periksa koneksi lalu coba lagi.");
     return;
   }
   joining = true;
   reportJoin("Checking your room…", "Memeriksa ruang kuis…");
   try {
-    const {data: room, error: roomError} = await db.from("quiz_rooms")
-      .select("id,room_code,status").eq("room_code", roomCode).single();
-    if (roomError || !room) {
-      if (!roomError || roomError.code === "PGRST116") {
+    const result = await live.joinRoom(roomCode, nickname);
+    if (result.error) {
+      const code = result.error.code;
+      if (["quiz/room-not-found", "room-not-found", "ROOM_NOT_FOUND", "not-found"].includes(code)) {
         reportJoin("Room not found. Check the code with your host.", "Ruang tidak ditemukan. Periksa kembali kode dengan host.");
         return;
       }
-      throw roomError;
-    }
-    if (room.status !== "waiting") {
-      reportJoin("This quiz has already started or finished. Ask your host for a new room.", "Kuis sudah dimulai atau selesai. Minta ruang baru kepada host.");
-      return;
-    }
-    const {data: player, error: playerError} = await db.from("quiz_players")
-      .insert({room_id: room.id, nickname, score: 0, current_question: 0, question_started_at: null})
-      .select().single();
-    if (playerError || !player) {
-      if (playerError?.code === "23505") {
+      if (["quiz/room-not-waiting", "room-closed", "ROOM_CLOSED", "room-started"].includes(code)) {
+        reportJoin("This quiz has already started or finished. Ask your host for a new room.", "Kuis sudah dimulai atau selesai. Minta ruang baru kepada host.");
+        return;
+      }
+      if (["quiz/nickname-taken", "nickname-taken", "NICKNAME_TAKEN"].includes(code)) {
         reportJoin("This nickname is already used in the room. Choose another name.", "Nama panggilan sudah dipakai di ruang ini. Gunakan nama lain.");
         nicknameInput.focus();
         return;
       }
-      throw playerError || new Error("Join was not confirmed");
+      if (result.error.messageEn && result.error.messageId) {
+        reportJoin(result.error.messageEn, result.error.messageId);
+        return;
+      }
+      throw result.error;
     }
+    const { room, player } = result.data || {};
+    if (!room?.id || !player?.id || !room.room_code) throw new Error("Join was not confirmed");
     sessionStorage.setItem("roomId", room.id);
     sessionStorage.setItem("roomCode", room.room_code);
     sessionStorage.setItem("playerId", player.id);
@@ -76,7 +76,7 @@ async function joinRoom() {
     reportJoin("You have joined. Opening the waiting room…", "Anda berhasil bergabung. Membuka ruang tunggu…");
     window.location.href = "waiting-room.html";
   } catch (error) {
-    console.error("JOIN FAILED:", error);
+    // Show a safe translated message; never expose authentication diagnostics.
     reportJoin("Unable to join. Check your connection and try again.", "Belum berhasil bergabung. Periksa koneksi lalu coba lagi.");
   } finally {
     joining = false;

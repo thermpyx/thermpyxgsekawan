@@ -69,7 +69,7 @@
     byId("builtinQuestions").hidden = custom;
     byId("customQuestions").hidden = !custom;
     if (custom) loadQuestionSets();
-    else status("Ready-made topics need no account. Create a room when you are ready.", "Topik bawaan tidak memerlukan akun. Buat ruang saat Anda siap.");
+    else status("Sign in with Google to host a live quiz. Students only need the room code and a nickname.", "Masuk dengan Google untuk menjadi host kuis langsung. Siswa cukup memakai kode ruang dan nama panggilan.");
     updateControls();
   }
   async function loadQuestionSets({ preserveStatus = false } = {}) {
@@ -120,42 +120,39 @@
       status("Your account changed while creating the room. Check the question source and create the room again.", "Akun Anda berubah saat ruang dibuat. Periksa sumber soal lalu buat ruang kembali.");
       return true;
     };
-    const db = typeof supabaseClient !== "undefined" ? supabaseClient : null;
-    if (!db) {
+    const live = window.TPXLive;
+    if (!live) {
       status("The quiz connection is unavailable. Your questions stay saved; try again after checking the connection.", "Koneksi kuis belum tersedia. Soal Anda tetap tersimpan; coba lagi setelah memeriksa koneksi.");
       return;
     }
     let topic = topicSelect.value, questions;
     try {
+      // Firebase anonymous participants are never teacher sessions. Hosting every
+      // question source requires the current Google teacher identity.
+      const active = await content?.session();
+      if (accountChanged()) return;
+      if (!active) {
+        status("Sign in with Google to host a live quiz.", "Masuk dengan Google untuk menjadi host kuis langsung.");
+        auth?.showSignIn?.();
+        return;
+      }
       if (sourceSelect.value === "custom") {
-        const active = await content?.session();
-        if (accountChanged()) return;
-        if (!active) {
-          status("Sign in to host your saved question set.", "Masuk untuk menjadi host paket soal Anda.");
-          auth?.showSignIn?.();
-          return;
-        }
         const selected = ownedSets.get(setSelect.value);
         if (!selected) { status("Choose a saved question set first, or create a new one.", "Pilih paket soal tersimpan dahulu, atau susun paket baru."); setSelect.focus(); return; }
         if (selected.owner_id !== active.user.id) { status("Reload the sets for your current account.", "Muat ulang paket untuk akun aktif Anda."); return; }
         try { questions = content.normalizeQuestions(selected.questions); topic = selected.topic; }
         catch (error) { reportError(error); return; }
       }
-      status("Creating a room…", "Membuat ruang…");
-      let room = null;
-      for (let attempt = 0; attempt < 3; attempt++) {
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
-        const payload = { room_code: code, topic, status: "waiting" };
-        if (questions) payload.questions = questions;
-        const result = await db.from("quiz_rooms").insert(payload).select().single();
-        // An accepted insert may finish after sign-out or an account switch.
-        // Leave that room untouched, but never bind it to the new local account.
-        if (accountChanged()) return;
-        if (!result.error) { room = result.data; break; }
-        if (result.error.code === "23505" && attempt < 2) continue;
-        if (questions && ["42703", "PGRST204"].includes(result.error.code)) throw new Error(tr("Custom rooms need the question-library setup. See the Supabase guide.", "Ruang kustom membutuhkan setup bank soal. Lihat panduan Supabase."));
-        throw new Error(tr("Room creation failed. Check Supabase access and try again.", "Ruang gagal dibuat. Periksa akses Supabase dan coba lagi."));
+      if (!questions) {
+        const builtin = getQuestionsForTopic(topic);
+        questions = content.normalizeQuestions(builtin);
       }
+      status("Creating a room…", "Membuat ruang…");
+      const result = await live.createRoom({ topic, questions, is_custom: sourceSelect.value === "custom" });
+      // Never attach a completed write to a different local Google account.
+      if (accountChanged()) return;
+      if (result.error) throw result.error;
+      const room = result.data;
       if (!room?.id) throw new Error(tr("Room creation was not confirmed.", "Pembuatan ruang belum terkonfirmasi."));
       if (accountChanged()) return;
       sessionStorage.setItem("roomId", room.id); sessionStorage.setItem("roomCode", room.room_code);
@@ -179,7 +176,7 @@
     renderSelectedSet();
     if (sourceSelect.value === "custom") loadQuestionSets({ preserveStatus: creating });
   });
-  // Establish the owner even when built-in questions need no signed-in account.
+  // Establish the owner before either built-in or custom room creation.
   content?.session().then(active => { if (authOwnerId === undefined) authOwnerId = active?.user?.id || null; }).catch(() => {});
   createRoomBtn.addEventListener("click", async () => {
     if (creating) return;

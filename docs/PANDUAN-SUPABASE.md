@@ -1,3 +1,5 @@
+> **Arsip Supabase.** Dokumen ini menjelaskan versi sebelumnya. Akun dan kuis versi aktif memakai Firebase; ikuti [panduan Firebase](PANDUAN-FIREBASE.md). Isi lama dipertahankan sebagai riwayat, bukan langkah setup versi sekarang.
+
 # Mengaktifkan soal buatan guru di THERMPYX
 
 Anda bisa menyusun dan melihat pratinjau soal sekarang, tanpa akun. Supabase diperlukan untuk menyimpan bank soal lintas perangkat dan membagikannya dalam kuis langsung. Paket web tidak menjalankan SQL atau mengubah database secara otomatis.

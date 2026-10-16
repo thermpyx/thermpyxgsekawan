@@ -1,247 +1,216 @@
-/* THERMPYX Live Quiz. Each player advances only after their answer is saved. */
+/* THERMPYX Live Quiz. Advance only after Firebase confirms a persisted answer. */
 "use strict";
-const roomId = sessionStorage.getItem("roomId");
-const roomCode = sessionStorage.getItem("roomCode");
-const playerId = sessionStorage.getItem("playerId");
-const userRole = sessionStorage.getItem("userRole");
-const nickname = sessionStorage.getItem("nickname");
+const roomId = sessionStorage.getItem("roomId"), roomCode = sessionStorage.getItem("roomCode");
+const playerId = sessionStorage.getItem("playerId"), userRole = sessionStorage.getItem("userRole");
+const nickname = sessionStorage.getItem("nickname"), live = window.TPXLive;
 const $ = id => document.getElementById(id);
-const roleEl=$("playRole"), roomEl=$("playRoomCode"), timerEl=$("quizTimer"),
-  timerProgress=$("timerProgress"), timerBox=$("timerBox"), numberEl=$("questionNumber"),
-  questionEl=$("questionText"), optionsEl=$("answerOptions"), messageEl=$("playMessage");
-const QUESTION_MS=20000;
-const dbId=value => /^\d+$/.test(String(value))?Number(value):value;
-let questions=[], index=0, startedMs=0, tick=null, statusPoll=null, channel=null;
-let customQuestions=false;
-let locked=false, saving=false, advancing=false, finished=false, pending=null;
-let progressQueue=Promise.resolve();
-// quiz_answers is authoritative for score and completed questions. Player progress
-// is useful for monitoring but must never block an already-saved answer or first render.
+const roleEl = $("playRole"), roomEl = $("playRoomCode"), timerEl = $("quizTimer"),
+  timerProgress = $("timerProgress"), timerBox = $("timerBox"), numberEl = $("questionNumber"),
+  questionEl = $("questionText"), optionsEl = $("answerOptions"), messageEl = $("playMessage");
+const QUESTION_MS = 20000;
+let questions = [], index = 0, startedMs = 0, tick = null, unsubscribeRoom = null, unsubscribeConnection = null;
+let customQuestions = false, locked = false, saving = false, advancing = false, finished = false, leaving = false, pending = null;
+let progressQueue = Promise.resolve();
+const txt = (en, id) => window.TPX?.t ? window.TPX.t(en, id) : en;
+// Saved answers determine completed questions. Monitoring progress never blocks
+// the first question or an answer that Firebase has already confirmed.
 function saveProgressBestEffort(target, stamp) {
-  progressQueue=progressQueue.catch(()=>{}).then(async()=>{
-    try {
-      const {error}=await supabaseClient.from("quiz_players")
-        .update({current_question:target,question_started_at:stamp})
-        .eq("id",playerId).eq("room_id",roomId);
-      if(error)console.warn("PROGRESS SYNC (non-blocking):",error);
-    } catch(err) {
-      console.warn("PROGRESS SYNC (non-blocking):",err);
-    }
+  progressQueue = progressQueue.catch(() => {}).then(async () => {
+    try { await live.updateProgress(roomId, playerId, { current_question: target, question_started_at: stamp }); }
+    catch (error) { /* Firebase reconnects; saved answers remain authoritative. */ }
   });
   return progressQueue;
 }
-const txt=(en,id)=>window.TPX?.t ? window.TPX.t(en,id) : en;
 function protectUserText(element) {
-  element.setAttribute?.("data-tpx-no-translate", "");
-  element.setAttribute?.("data-tpx-user-content", "");
+  element.setAttribute("data-tpx-no-translate", ""); element.setAttribute("data-tpx-user-content", "");
   return element;
 }
 function renderPlayerName() {
-  const label=document.createElement("span");
-  label.setAttribute?.("data-en", "Player: ");label.setAttribute?.("data-id", "Pemain: ");
-  label.textContent=txt("Player: ","Pemain: ");
-  const name=protectUserText(document.createElement("span"));
-  name.textContent=nickname||txt("Guest","Tamu");
-  roleEl.replaceChildren(label,name);
+  const label = document.createElement("span");
+  label.setAttribute("data-en", "Player: "); label.setAttribute("data-id", "Pemain: ");
+  label.textContent = txt("Player: ", "Pemain: ");
+  const name = protectUserText(document.createElement("span")); name.textContent = nickname || txt("Guest", "Tamu");
+  roleEl.replaceChildren(label, name);
 }
 window.addEventListener("thermpyx:languagechange", () => {
   if (roomId && playerId && userRole === "player") renderPlayerName();
+  if (!finished && questions.length) numberEl.textContent = `${txt("Question", "Soal")} ${index + 1} ${txt("of", "dari")} ${questions.length}`;
 });
 function showQuestionText(value) {
-  questionEl.toggleAttribute?.("data-tpx-no-translate", customQuestions);
-  questionEl.toggleAttribute?.("data-tpx-user-content", customQuestions);
-  questionEl.textContent=value;
+  questionEl.toggleAttribute("data-tpx-no-translate", customQuestions);
+  questionEl.toggleAttribute("data-tpx-user-content", customQuestions); questionEl.textContent = value;
 }
-function message(en,id) {messageEl.textContent=txt(en,id);}
-function clearClock(){ if(tick)clearInterval(tick);tick=null; }
-function delay(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
-function showRetry(callback,en="Connection interrupted. Retry to continue.",id="Koneksi terputus. Coba lagi untuk melanjutkan.") {
-  message(en,id);
-  const button=document.createElement("button");
-  button.type="button";button.className="play-retry";
-  button.textContent=txt("RETRY","COBA LAGI");
-  button.addEventListener("click",()=>{button.disabled=true;Promise.resolve(callback()).catch(err=>{console.error(err);showRetry(callback);});},{once:true});
-  messageEl.append(" ",button);
+function message(en, id) { messageEl.textContent = txt(en, id); }
+function clearClock() { if (tick) clearInterval(tick); tick = null; }
+function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+function showRetry(callback, en = "Connection interrupted. Retry to continue.", id = "Koneksi terputus. Coba lagi untuk melanjutkan.") {
+  if (finished || leaving) return;
+  message(en, id);
+  const button = document.createElement("button"); button.type = "button"; button.className = "play-retry";
+  button.textContent = txt("RETRY", "COBA LAGI");
+  button.addEventListener("click", () => { button.disabled = true; Promise.resolve(callback()).catch(() => showRetry(callback)); }, { once: true });
+  messageEl.append(" ", button);
 }
 function render() {
-  clearClock(); locked=false; advancing=false; pending=null;
-  if(index>=questions.length){complete();return;}
-  const item=questions[index];
-  numberEl.textContent=`Question ${index+1} of ${questions.length}`;
-  showQuestionText(item.question);
-  optionsEl.replaceChildren();
-  item.options.forEach((name,choice)=>{
-    const btn=document.createElement("button");btn.type="button";btn.className="answer-option";
-    if(customQuestions)protectUserText(btn);
-    btn.textContent=name;btn.addEventListener("click",()=>submit(choice));
-    optionsEl.append(btn);
+  if (finished || leaving) return;
+  clearClock(); locked = false; advancing = false; pending = null;
+  if (index >= questions.length) { complete(); return; }
+  const item = questions[index];
+  numberEl.textContent = `${txt("Question", "Soal")} ${index + 1} ${txt("of", "dari")} ${questions.length}`;
+  showQuestionText(item.question); optionsEl.replaceChildren();
+  item.options.forEach((name, choice) => {
+    const button = document.createElement("button"); button.type = "button"; button.className = "answer-option";
+    if (customQuestions) protectUserText(button);
+    button.textContent = name; button.addEventListener("click", () => submit(choice)); optionsEl.append(button);
   });
-  message("Choose one answer before time runs out.","Pilih satu jawaban sebelum waktu habis.");
-  refreshClock();
-  if(!locked) tick=setInterval(refreshClock,200);
+  message("Choose one answer before time runs out.", "Pilih satu jawaban sebelum waktu habis.");
+  refreshClock(); if (!locked) tick = setInterval(refreshClock, 200);
 }
 function refreshClock() {
-  if(locked||finished)return;
-  const remain=Math.max(0,QUESTION_MS-(Date.now()-startedMs));
-  timerEl.textContent=String(Math.ceil(remain/1000));
-  timerProgress.style.width=(100*remain/QUESTION_MS)+"%";
-  timerBox.classList.toggle("danger",remain<=5000);
-  if(remain<=0)submit(-1);
+  if (locked || finished || leaving) return;
+  const remain = Math.max(0, QUESTION_MS - (Date.now() - startedMs));
+  timerEl.textContent = String(Math.ceil(remain / 1000)); timerProgress.style.width = (100 * remain / QUESTION_MS) + "%";
+  timerBox.classList.toggle("danger", remain <= 5000); if (remain <= 0) submit(-1);
 }
-function lockOptions(){optionsEl.querySelectorAll("button").forEach(b=>b.disabled=true);}
-function showChoice(choice){
-  const correct=questions[index].correctAnswer;
-  optionsEl.querySelectorAll("button").forEach((b,i)=>{
-    if(i===correct)b.classList.add("correct-answer");
-    if(i===choice&&choice!==correct)b.classList.add("wrong-answer");
+function lockOptions() { optionsEl.querySelectorAll("button").forEach(button => { button.disabled = true; }); }
+function showChoice(choice) {
+  const correct = questions[index].correctAnswer;
+  optionsEl.querySelectorAll("button").forEach((button, option) => {
+    if (option === correct) button.classList.add("correct-answer");
+    if (option === choice && choice !== correct) button.classList.add("wrong-answer");
   });
-  if(choice<0)message("Time is up.","Waktu habis.");
-  else message(choice===correct?"Correct +100":"Incorrect",choice===correct?"Benar +100":"Salah");
+  if (choice < 0) message("Time is up.", "Waktu habis.");
+  else message(choice === correct ? "Correct +100" : "Incorrect", choice === correct ? "Benar +100" : "Salah");
 }
-async function submit(choice){
-  if(locked||finished)return;
-  // One question, one submission. Use the original question timestamp to measure response time.
-  if(Date.now()-startedMs>=QUESTION_MS)choice=-1;
-  locked=true;clearClock();lockOptions();
-  const at=index, item=questions[at];
-  pending={room_id:dbId(roomId),player_id:dbId(playerId),question_index:at,
-    selected_answer:choice,is_correct:choice===item.correctAnswer,
-    score:choice===item.correctAnswer?100:0,
-    response_time_ms:choice<0?QUESTION_MS:Math.max(0,Math.min(QUESTION_MS,Date.now()-startedMs))};
+async function submit(choice) {
+  if (locked || finished || leaving) return;
+  if (Date.now() - startedMs >= QUESTION_MS) choice = -1;
+  locked = true; clearClock(); lockOptions();
+  pending = { room_id: roomId, player_id: playerId, question_index: index, selected_answer: choice,
+    response_time_ms: choice < 0 ? QUESTION_MS : Math.max(0, Math.min(QUESTION_MS, Date.now() - startedMs)) };
   await persistAnswer();
 }
-async function persistAnswer(){
-  if(saving||!pending||finished)return;
-  saving=true;
-  const savedIndex=pending.question_index, chosen=pending.selected_answer;
-  message("Saving answer...","Menyimpan jawaban...");
+function results() {
+  if (finished) return;
+  finished = true; locked = true; clearClock(); unsubscribeRoom?.(); unsubscribeConnection?.();
+  location.replace("leaderboard.html");
+}
+async function roomHasEnded() {
+  if (finished) return true;
   try {
-    const {error}=await supabaseClient.from("quiz_answers").insert(pending);
-    if(error) {
-      if(error.code!=="23505")throw error;
-      // A duplicate is only considered success if this player's answer already exists.
-      const res=await supabaseClient.from("quiz_answers").select("player_id")
-        .eq("room_id",roomId).eq("player_id",playerId).eq("question_index",savedIndex).limit(1);
-      if(res.error||!res.data?.length)throw (res.error||error);
-    }
-    if(savedIndex!==index||finished)return;
-    pending=null;
-    showChoice(chosen);
-    await delay(1250);
-    await advance();
-  } catch(err){
-    console.error("ANSWER SAVE FAILED:",err);
-    showRetry(persistAnswer);
-  } finally {saving=false;}
+    const result = await live.getRoom(roomId);
+    if (!result.error && result.data?.status === "finished") { results(); return true; }
+  } catch (error) { /* A failed check must not discard a pending answer. */ }
+  return finished;
 }
-async function advance(){
-  if(advancing||finished)return;
-  advancing=true;clearClock();
-  // Reaching this function means quiz_answers was saved successfully.
-  // Rendering the next question must NOT depend on an UPDATE ... SELECT
-  // acknowledgement from quiz_players (some existing RLS policies return no rows).
-  const target=index+1;
-  const stamp=target<questions.length?new Date().toISOString():null;
-  index=target;startedMs=stamp?Date.parse(stamp):0;
-  saveProgressBestEffort(target,stamp);
-  if(index>=questions.length)complete();
-  else render();
-  advancing=false;
-}
-async function restorePlayer(){
+async function persistAnswer() {
+  if (saving || !pending || finished || leaving) return;
+  saving = true; const savedIndex = pending.question_index;
+  message("Saving answer…", "Menyimpan jawaban…");
   try {
-    const [p,a]=await Promise.all([
-      supabaseClient.from("quiz_players").select("current_question,question_started_at")
-        .eq("room_id",roomId).eq("id",playerId).single(),
-      supabaseClient.from("quiz_answers").select("*")
-        .eq("room_id",roomId).eq("player_id",playerId)
-    ]);
-    if(p.error||a.error||!p.data)throw(p.error||a.error||new Error("Player not found"));
-    if(Number(p.data.current_question)===-1)throw new Error("Player left this quiz");
-    const completed=new Set(TPXQuizScores.uniqueAnswers(a.data||[]).map(v=>Number(v.question_index)));
-    let next=0;
-    while(completed.has(next)&&next<questions.length)next++;
-    // If an earlier progress UPDATE did not work, saved answers still determine
-    // which question this player should see on reload.
-    if(next>=questions.length){index=next;complete();return;}
-    const prev=Number(p.data.current_question)||0;
-    const existing=(next===prev)?p.data.question_started_at:null;
-    const valid=existing&&Number.isFinite(Date.parse(existing));
-    const stamp=valid?existing:new Date().toISOString();
-    index=next;startedMs=Date.parse(stamp);
-    render(); // Show the question now; never wait on a progress update.
-    if(!valid||next!==prev)saveProgressBestEffort(next,stamp);
-  } catch(err){
-    console.error("RESTORE FAILED:",err);
-    numberEl.textContent=txt("SESSION ERROR","KESALAHAN SESI");
-    questionEl.removeAttribute?.("data-tpx-no-translate");
-    questionEl.removeAttribute?.("data-tpx-user-content");
-    questionEl.textContent=txt("Your question could not be loaded.","Soal belum berhasil dimuat.");
-    showRetry(restorePlayer,"Unable to restore your session. Please retry.",
-      "Sesi belum dapat dipulihkan. Silakan coba lagi.");
+    const { data, error } = await live.submitAnswer(roomId, playerId, savedIndex, pending);
+    if (error || !data || Number(data.question_index) !== savedIndex || String(data.player_id) !== String(playerId) ||
+      !Number.isInteger(Number(data.selected_answer)) || Number(data.selected_answer) < -1 || Number(data.selected_answer) > 3)
+      throw error || new Error("Answer save was not confirmed");
+    if (savedIndex !== index || finished || leaving) return;
+    pending = null;
+    // A retry can return an earlier immutable write after an interrupted reply.
+    // Display that persisted choice, never the possibly different local choice.
+    showChoice(Number(data.selected_answer));
+    await delay(1250); await advance();
+  } catch (error) {
+    if (!(await roomHasEnded())) showRetry(persistAnswer);
+  } finally { saving = false; }
+}
+async function advance() {
+  if (advancing || finished || leaving) return;
+  advancing = true; clearClock(); const target = index + 1;
+  const stamp = target < questions.length ? new Date().toISOString() : null;
+  index = target; startedMs = stamp ? Date.parse(stamp) : 0; saveProgressBestEffort(target, stamp);
+  if (index >= questions.length) complete(); else render(); advancing = false;
+}
+async function restorePlayer() {
+  if (finished || leaving) return;
+  try {
+    const [player, answers] = await Promise.all([live.getPlayer(roomId, playerId), live.listAnswers(roomId, playerId)]);
+    if (finished || leaving) return;
+    if (player.error || answers.error || !player.data) throw player.error || answers.error || new Error("Player not found");
+    if (Number(player.data.current_question) === -1) throw new Error("Player left this quiz");
+    const completed = new Set(TPXQuizScores.uniqueAnswers(answers.data || []).map(answer => Number(answer.question_index)));
+    let next = 0; while (completed.has(next) && next < questions.length) next++;
+    if (next >= questions.length) { index = next; complete(); return; }
+    const previous = Number(player.data.current_question) || 0;
+    const existing = next === previous ? player.data.question_started_at : null;
+    const valid = existing && Number.isFinite(Date.parse(existing));
+    const stamp = valid ? existing : new Date().toISOString(); index = next; startedMs = Date.parse(stamp);
+    render(); if (!valid || next !== previous) saveProgressBestEffort(next, stamp);
+  } catch (error) {
+    if (await roomHasEnded()) return;
+    numberEl.textContent = txt("SESSION ERROR", "KESALAHAN SESI");
+    questionEl.removeAttribute("data-tpx-no-translate"); questionEl.removeAttribute("data-tpx-user-content");
+    questionEl.textContent = txt("Your question could not be loaded.", "Soal belum berhasil dimuat.");
+    showRetry(restorePlayer, "Unable to restore your session. Please retry.", "Sesi belum dapat dipulihkan. Silakan coba lagi.");
   }
 }
-function complete(){
-  if(finished)return;
-  finished=true;clearClock();locked=true;
-  window.TPXHistory?.log("quiz","Live Quiz", "All questions submitted", location.href,
-    {titleEn:"Live Quiz",titleId:"Kuis Langsung",detailEn:"All questions submitted",detailId:"Semua soal terkirim"});
-  numberEl.textContent="Quiz Completed";
-  questionEl.removeAttribute?.("data-tpx-no-translate");
-  questionEl.removeAttribute?.("data-tpx-user-content");
-  questionEl.textContent="Great work! Your answers have been submitted.";
-  optionsEl.replaceChildren();
-  message("Opening leaderboard...","Membuka papan peringkat...");
-  setTimeout(()=>location.replace("leaderboard.html"),950);
+function complete() {
+  if (finished || leaving) return;
+  finished = true; clearClock(); locked = true;
+  window.TPXHistory?.log("quiz", "Live Quiz", "All questions submitted", location.href,
+    { titleEn: "Live Quiz", titleId: "Kuis Langsung", detailEn: "All questions submitted", detailId: "Semua soal terkirim" });
+  numberEl.textContent = txt("Quiz Completed", "Kuis Selesai");
+  questionEl.removeAttribute("data-tpx-no-translate"); questionEl.removeAttribute("data-tpx-user-content");
+  questionEl.textContent = txt("Great work! Your answers have been submitted.", "Kerja bagus! Semua jawaban Anda sudah terkirim.");
+  optionsEl.replaceChildren(); message("Opening leaderboard…", "Membuka papan peringkat…");
+  setTimeout(() => location.replace("leaderboard.html"), 950);
 }
-async function checkRoom(){
-  if(finished)return;
-  const {data,error}=await supabaseClient.from("quiz_rooms").select("status")
-    .eq("id",roomId).single();
-  if(!error&&data?.status==="finished"){
-    finished=true;clearClock();location.replace("leaderboard.html");
+async function initialize() {
+  if (!roomId || !playerId || userRole !== "player") {
+    if (userRole === "host" && roomId) { location.replace("host-view.html"); return; }
+    showRetry(() => location.assign("join.html"), "Join a room to start.", "Masuk ke ruang kuis dahulu."); return;
   }
-}
-async function initialize(){
-  if(!roomId||!playerId||userRole!=="player"){
-    if(userRole==="host"&&roomId){location.replace("host-view.html");return;}
-    showRetry(()=>location.assign("join.html"),"Join a room to start.","Masuk ke ruang kuis dahulu.");return;
-  }
-  renderPlayerName();
-  roomEl.textContent=roomCode||"------";
-  const {data:room,error}=await supabaseClient.from("quiz_rooms").select("*")
-    .eq("id",roomId).single();
-  if(error||!room){showRetry(initialize,"Unable to load room.","Ruang kuis gagal dimuat.");return;}
-  if(room.status==="finished"){location.replace("leaderboard.html");return;}
-  if(room.status!=="playing"){location.replace("waiting-room.html");return;}
-  customQuestions=room.questions!=null;
-  questions=getQuestionsForRoom(room);
-  if(!questions.length){message("No questions for this topic.","Tidak ada soal pada topik ini.");return;}
+  if (!live) { showRetry(() => location.reload(), "Quiz connection is unavailable. Reload to try again.", "Koneksi kuis belum tersedia. Muat ulang untuk mencoba lagi."); return; }
+  renderPlayerName(); roomEl.textContent = roomCode || "------";
+  const { data: room, error } = await live.getRoom(roomId);
+  if (finished || leaving) return;
+  if (error || !room) { showRetry(initialize, "Unable to load room.", "Ruang kuis gagal dimuat."); return; }
+  if (room.status === "finished") { results(); return; }
+  if (room.status !== "playing") { location.replace("waiting-room.html"); return; }
+  customQuestions = Boolean(room.is_custom); questions = getQuestionsForRoom(room);
+  if (!questions.length) { message("No questions for this topic.", "Tidak ada soal pada topik ini."); return; }
+  unsubscribeRoom?.(); unsubscribeConnection?.();
+  unsubscribeRoom = live.watchRoom(roomId, result => {
+    if (finished || leaving) return;
+    if (result.error) { if (!pending) showRetry(initialize); return; }
+    if (result.data?.status === "finished") results();
+  });
+  unsubscribeConnection = live.watchConnection?.(connected => {
+    if (finished || leaving) return;
+    if (!connected) message("Connection interrupted. Keep this page open; answers advance after saving.", "Koneksi terputus. Biarkan halaman terbuka; soal berlanjut setelah jawaban tersimpan.");
+    else if (!locked) message("Choose one answer before time runs out.", "Pilih satu jawaban sebelum waktu habis.");
+  });
   await restorePlayer();
-  channel=supabaseClient.channel("tpx-player-status-"+roomId+"-"+playerId)
-    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"quiz_rooms",filter:`id=eq.${roomId}`},
-      payload=>{if(payload.new.status==="finished"&&!finished){finished=true;clearClock();location.replace("leaderboard.html");}})
-    .subscribe();
-  statusPoll=setInterval(checkRoom,4000); // missed websocket events must not strand a participant
 }
-initialize().catch(e=>{console.error(e);showRetry(initialize);});
-window.addEventListener("beforeunload",()=>{
-  clearClock();if(statusPoll)clearInterval(statusPoll);
-  if(channel)supabaseClient.removeChannel(channel);
-});
-const leave=$("leavePlayBtn");
-if(leave)leave.addEventListener("click",async e=>{
-  e.preventDefault();clearClock();locked=true;
-  // Complete any queued progress sync first, so it cannot overwrite the exit marker.
-  await progressQueue.catch(()=>{});
-  // Preserve answers for rankings; mark a voluntary exit for host completion.
-  const res=await supabaseClient.from("quiz_players").update({current_question:-1,question_started_at:null})
-    .eq("id",playerId).eq("room_id",roomId);
-  if(res.error){
-    console.error(res.error);message("Failed to leave. Please retry.","Gagal keluar. Silakan coba lagi.");
-    if(!pending){locked=false;refreshClock();if(!locked)tick=setInterval(refreshClock,200);}
-    return;
-  }
-  ["playerId","nickname","roomId","roomCode","userRole"].forEach(k=>sessionStorage.removeItem(k));
-  location.href="../index.html#quiz";
+initialize().catch(() => showRetry(initialize));
+window.addEventListener("beforeunload", () => { clearClock(); unsubscribeRoom?.(); unsubscribeConnection?.(); });
+const leave = $("leavePlayBtn");
+if (leave) leave.addEventListener("click", async event => {
+  event.preventDefault(); if (leaving || finished) return;
+  leaving = true; clearClock(); locked = true; leave.setAttribute("aria-disabled", "true");
+  try {
+    await progressQueue.catch(() => {});
+    const result = await live.markLeft(roomId, playerId);
+    if (result.error || !result.data) throw result.error || new Error("Exit was not confirmed");
+    finished = true;
+    ["playerId", "nickname", "roomId", "roomCode", "roomTopic", "userRole"].forEach(key => sessionStorage.removeItem(key));
+    location.href = "../index.html#quiz";
+  } catch (error) {
+    leaving = false;
+    if (await roomHasEnded()) return;
+    if (pending && saving) message("Unable to leave. Your answer is still saving; keep this page open or try leaving again.", "Belum berhasil keluar. Jawaban masih disimpan; biarkan halaman terbuka atau coba keluar kembali.");
+    else if (pending) showRetry(persistAnswer, "Failed to leave. Your answer is kept; retry saving or leaving.", "Gagal keluar. Jawaban tetap tersimpan sementara; coba simpan atau keluar kembali.");
+    else {
+      message("Failed to leave. Please retry.", "Gagal keluar. Silakan coba lagi.");
+      locked = false; refreshClock(); if (!locked) tick = setInterval(refreshClock, 200);
+    }
+  } finally { leaving = false; leave.setAttribute("aria-disabled", "false"); }
 });

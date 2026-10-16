@@ -1,3 +1,5 @@
+> **Catatan historis Supabase.** Perbaikan dan hasil tes di bawah berlaku untuk versi sebelum migrasi. Untuk kode aktif lihat [panduan Firebase](PANDUAN-FIREBASE.md) dan [catatan revisi Firebase](REVISI-FIREBASE.md).
+
 # Perbaikan akun dan bank soal
 
 ## Pemulihan kata sandi
