@@ -1,0 +1,8 @@
+{
+  "sourceCommit": "d9bbfec77995011c6ef0e2ef11f4798aa47c1cac",
+  "runId": "38868506338",
+  "passed": false,
+  "rulesSha256": "e97fa1021014d447b60c91f70f5ae3c3550e0208bb39728cf00789f2f972d2a8",
+  "testSha256": "e9f854e916544247f96a86184e5f5e4a0b59af0c9244a68d876510487fa2fdae",
+  "output": "\u001b[36m\u001b[1mi  emulators:\u001b[22m\u001b[39m Starting emulators: database\n\u001b[36m\u001b[1mi  emulators:\u001b[22m\u001b[39m Detected demo project ID \"demo-thermpyx-qa\", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.\n\u001b[33m\u001b[1m⚠ \u001b[22m\u001b[39m It appears you are running in a CI environment. You can avoid downloading the Database Emulator repeatedly by caching the /home/runner/.cache/firebase/emulators directory.\n\u001b[36m\u001b[1mi  database:\u001b[22m\u001b[39m downloading firebase-database-emulator-v4.11.2.jar...\n\n\u001b[36m\u001b[1mi  database:\u001b[22m\u001b[39m Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m\n\u001b[33m\u001b[1m⚠  database:\u001b[22m\u001b[39m \u001b[36mfirebase/database.rules.json\u001b[39m:196:385: condition of ? must be boolean.\n\u001b[33m\u001b[1m⚠  database:\u001b[22m\u001b[39m Failed to update rules\n\u001b[36m\u001b[1mi  emulators:\u001b[22m\u001b[39m Shutting down emulators.\n\u001b[36m\u001b[1mi  database:\u001b[22m\u001b[39m Stopping Database Emulator\n\u001b[36m\u001b[1mi  hub:\u001b[22m\u001b[39m Stopping emulator hub\n\u001b[36m\u001b[1mi  logging:\u001b[22m\u001b[39m Stopping Logging Emulator\n\n\u001b[1m\u001b[31mError:\u001b[39m\u001b[22m Failed to load initial Database Emulator rules:\n\u001b[36mfirebase/database.rules.json\u001b[39m:196:385: condition of ? must be boolean.\n"
+}
