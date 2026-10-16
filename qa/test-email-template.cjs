@@ -42,10 +42,12 @@ checks++;
 
 // Detect stale dashboard callback instructions when the app changes its URL.
 const site = "https://thermpyx.github.io/thermpyxgsekawan/";
-for (const callback of ["index.html#account", "index.html?account=recovery#account"]) {
+for (const callback of ["index.html", "index.html?account=recovery"]) {
   assert(auth.includes(`new URL("${callback}", siteBase)`), `Review email guide after changing ${callback}`);
   assert(guide.includes(new URL(callback, site).href), `Missing allowed callback: ${callback}`);
+  assert.equal(new URL(callback, site).hash, "", "Auth callback destinations must leave the fragment for GoTrue's session parameters");
 }
+assert(!/new URL\("index\.html[^"\n]*#/.test(auth), "Signup, resend and recovery must not send a hash in redirect_to");
 assert(guide.includes(`| Site URL | \`${site}\` |`));
 checks++;
 

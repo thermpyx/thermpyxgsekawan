@@ -92,7 +92,7 @@ function fakeAuth() {
     await auth.locator('.tpx-auth-reset button[type=submit]').click();
     await content().waitForFunction(()=>__AUTH_CALLS__.some(c=>c.method==='resetPassword'));
     const reset=await content().evaluate(()=>__AUTH_CALLS__.find(c=>c.method==='resetPassword'));
-    assert.match(reset.redirect,/index\.html\?account=recovery#account$/);
+    assert.match(reset.redirect,/index\.html\?account=recovery$/);
     await auth.locator('.tpx-auth-close').click();
     await content().evaluate(()=>__TPX_TEST_CLIENT__.auth.triggerRecovery());
     await auth.locator('.tpx-auth-recovery').waitFor();

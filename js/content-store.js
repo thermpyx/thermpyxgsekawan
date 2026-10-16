@@ -6,7 +6,7 @@
   const siteBase = new URL("../", document.currentScript?.src || new URL("js/content-store.js", location.href));
   let currentSession = null, initialized = false, subscription = null, lastAuthEvent = "", authSequence = 0, sessionRead = null;
   const callback = window.TPXAuthCallback || {};
-  let callbackSettled = false, recoveryReady = false, recoveryUserId = null, callbackProblem = false;
+  let callbackSettled = false, recoveryReady = false, recoveryUserId = null, recoveryAccessToken = null, callbackProblem = false;
   function language() {
     if (window.TPX?.getLanguage) return window.TPX.getLanguage();
     try { const stored = localStorage.getItem("thermpyx-language"); if (stored === "id" || stored === "en") return stored; } catch (_) { /* Storage can be unavailable. */ }
@@ -24,11 +24,29 @@
     history.replaceState(history.state, "", url.pathname + url.search + url.hash);
     try { window.parent.TPXPersistentShell?.reportLocation(window); } catch (_) { /* Standalone page. */ }
   }
+  function clearRecovery() {
+    recoveryReady = false;
+    recoveryUserId = null;
+    recoveryAccessToken = null;
+  }
+  function acceptRecovery(active) {
+    recoveryReady = true;
+    recoveryUserId = active.user.id;
+    recoveryAccessToken = active.access_token || null;
+  }
   function emit(session, event = "") {
     currentSession = session || null;
     lastAuthEvent = event;
-    if (event === "PASSWORD_RECOVERY" && session) {recoveryReady = true; recoveryUserId = session.user.id; callbackProblem = false;}
-    if (event === "SIGNED_OUT" || !session || (recoveryReady && session.user.id !== recoveryUserId) || (event === "SIGNED_IN" && callbackSettled)) recoveryReady = false;
+    if (event === "PASSWORD_RECOVERY" && session) {acceptRecovery(session); callbackProblem = false;}
+    else if (event === "SIGNED_OUT" || !session || (recoveryReady && session.user.id !== recoveryUserId)) clearRecovery();
+    else if (recoveryReady && event === "TOKEN_REFRESHED") {
+      if (session.access_token) recoveryAccessToken = session.access_token;
+      else clearRecovery();
+    }
+    // Supabase reannounces SIGNED_IN on tab visibility changes. Keep an
+    // already-validated recovery for that identical session, but never grant
+    // recovery to an ordinary login or a different session of the same user.
+    else if (recoveryReady && event === "SIGNED_IN" && callbackSettled && (!recoveryAccessToken || session.access_token !== recoveryAccessToken)) clearRecovery();
     // getSession settles SDK initialization. Never erase a callback while the
     // SDK may still be exchanging its tokens/code or validating its user.
     if (callbackSettled && session && ["SIGNED_IN", "PASSWORD_RECOVERY", "INITIAL_SESSION"].includes(event)) clearAuthFragment();
@@ -61,9 +79,19 @@
     return { message: String(error.message || tr("Connection failed. Your local draft is safe.", "Koneksi gagal. Draf lokal Anda tetap tersimpan.")) };
   }
   const unavailable = () => ({ data: null, error: pairedError("Cloud connection is unavailable. You can keep editing locally.", "Koneksi cloud belum tersedia. Anda tetap bisa mengedit secara lokal.") });
+  function callbackErrorKind(error) {
+    if (!error) return "";
+    const expiredCodes = ["otp_expired", "flow_state_expired"];
+    if (expiredCodes.includes(error.code) || expiredCodes.includes(error.details?.code)) return "expired";
+    // Redirect-validation errors also default to status 500 in the SDK; that
+    // status alone does not establish a connection/service failure.
+    if (error.name === "AuthRetryableFetchError" || (error.name === "AuthApiError" && Number.isInteger(error.status) && error.status >= 500 && error.status <= 599)) return "network";
+    return "rejected";
+  }
   function session() {
     const db = client();
     if (!db?.auth) {
+      clearRecovery();
       callbackSettled = true;
       callbackProblem = callback.recoveryRequested || callback.present ? "unavailable" : false;
       if (callbackProblem) {callback.release?.(); clearAuthFragment();}
@@ -76,23 +104,35 @@
     }
     sessionRead = (async () => {
       try {
+        // getSession awaits SDK startup but does not return startup errors.
+        // initialize() returns that cached result without retrying the link.
+        // Retain a fixed diagnostic category only, never raw error text/URLs.
+        const initialIssue = !callbackSettled && typeof db.auth.initialize === "function" ? callbackErrorKind((await db.auth.initialize())?.error) : "";
         const { data, error } = await db.auth.getSession();
         currentSession = error ? null : data?.session || null;
         if (!callbackSettled) {
           // An early SDK PASSWORD_RECOVERY may precede this script's listener.
           // A matching SDK-accepted fragment session can recover that intent;
           // an ordinary login or a forged account=recovery query cannot.
-          if (!error && !callback.error && callback.hasRecoveryTokens && callback.matchesSession?.(currentSession)) {recoveryReady = true; recoveryUserId = currentSession.user.id;}
-          callbackProblem = Boolean(callback.error || ((callback.recoveryRequested || callback.present) && !currentSession) || (callback.recoveryRequested && !recoveryReady));
+          if (!initialIssue && !error && !callback.error && callback.hasRecoveryTokens && callback.matchesSession?.(currentSession)) acceptRecovery(currentSession);
+          if (initialIssue) clearRecovery();
+          if (callback.recoveryRequested || callback.present) {
+            if (initialIssue === "expired" || ["otp_expired", "flow_state_expired"].includes(callback.error)) callbackProblem = "expired";
+            else if (initialIssue === "network") callbackProblem = "network";
+            else if (callback.error) callbackProblem = "rejected";
+            else if (callback.recoveryRequested && !callback.hasRecoveryTokens && !recoveryReady) callbackProblem = "missing";
+            else if (initialIssue || error || !currentSession || (callback.recoveryRequested && !recoveryReady)) callbackProblem = initialIssue || callbackErrorKind(error) || "rejected";
+          }
           callbackSettled = true;
           callback.release?.();
           clearAuthFragment();
         }
-        if (!currentSession || (recoveryReady && currentSession.user.id !== recoveryUserId)) recoveryReady = false;
+        if (!currentSession || (recoveryReady && (currentSession.user.id !== recoveryUserId || (recoveryAccessToken && currentSession.access_token !== recoveryAccessToken)))) clearRecovery();
         return currentSession;
-      } catch (_) {
+      } catch (error) {
         currentSession = null;
-        if (!callbackSettled) {callbackSettled = true; callbackProblem = Boolean(callback.recoveryRequested || callback.present); callback.release?.(); clearAuthFragment();}
+        clearRecovery();
+        if (!callbackSettled) {callbackSettled = true; callbackProblem = callback.recoveryRequested || callback.present ? callbackErrorKind(error) : false; callback.release?.(); clearAuthFragment();}
         return null;
       } finally {sessionRead = null;}
     })();
@@ -103,11 +143,12 @@
     return () => listeners.delete(callback);
   }
   async function signIn(email, password) {
+    clearRecovery();
     const db = client();
     if (!db?.auth) return unavailable();
     try {
       const result = await db.auth.signInWithPassword({ email: email.trim(), password });
-      if (!result.error) {recoveryReady = false; emit(result.data.session);}
+      if (!result.error) emit(result.data.session);
       return { data: result.data, error: friendly(result.error) };
     } catch (error) { return { data: null, error: friendly(error) }; }
   }
@@ -115,12 +156,13 @@
     const db = client();
     if (!db?.auth) return unavailable();
     try {
-      const result = await db.auth.signUp({ email: email.trim(), password, options: {emailRedirectTo: new URL("index.html#account", siteBase).href} });
+      const result = await db.auth.signUp({ email: email.trim(), password, options: {emailRedirectTo: new URL("index.html", siteBase).href} });
       if (!result.error && result.data.session) emit(result.data.session);
       return { data: result.data, error: friendly(result.error) };
     } catch (error) { return { data: null, error: friendly(error) }; }
   }
   async function signOut() {
+    clearRecovery();
     const db = client();
     if (!db?.auth) return unavailable();
     try {
@@ -144,7 +186,7 @@
     const db = client();
     if (!db?.auth?.resend) return unavailable();
     try {
-      const result = await db.auth.resend({type: "signup", email: String(email).trim(), options: {emailRedirectTo: new URL("index.html#account", siteBase).href}});
+      const result = await db.auth.resend({type: "signup", email: String(email).trim(), options: {emailRedirectTo: new URL("index.html", siteBase).href}});
       return {data: result.data, error: friendly(result.error)};
     } catch (error) {return {data: null, error: friendly(error)};}
   }
@@ -152,7 +194,7 @@
     const db = client();
     if (!db?.auth?.resetPasswordForEmail) return unavailable();
     try {
-      const result = await db.auth.resetPasswordForEmail(String(email).trim(), {redirectTo: new URL("index.html?account=recovery#account", siteBase).href});
+      const result = await db.auth.resetPasswordForEmail(String(email).trim(), {redirectTo: new URL("index.html?account=recovery", siteBase).href});
       return {data: result.data, error: friendly(result.error)};
     } catch (error) {return {data: null, error: friendly(error)};}
   }
@@ -162,7 +204,7 @@
     if (!recoveryReady || !currentSession) return {data: null, error: pairedError("Open a valid password reset link before choosing a new password. Request a new link below.", "Buka tautan pemulihan yang valid sebelum membuat kata sandi baru. Minta tautan baru di bawah.", "recovery_required")};
     try {
       const result = await db.auth.updateUser({password});
-      if (!result.error) {lastAuthEvent = "USER_UPDATED"; recoveryReady = false;}
+      if (!result.error) {lastAuthEvent = "USER_UPDATED"; clearRecovery();}
       return {data: result.data, error: friendly(result.error)};
     } catch (error) {return {data: null, error: friendly(error)};}
   }
@@ -333,6 +375,8 @@
     }
     function render(active, event = "") {
       activeSession = active;
+      if (callbackSettled && callbackProblem) container.dataset.authCallbackIssue = callbackProblem;
+      else delete container.dataset.authCallbackIssue;
       if (!active && event === "SIGNED_OUT") mode = "signin";
       if (mode === "recovery" && (!recoveryReady || !active)) {
         mode = "reset";
@@ -343,7 +387,10 @@
       else if (callbackSettled && callbackProblem && !callbackApplied) {
         mode = "reset"; callbackApplied = true; openCallback = true;
         if (callbackProblem === "unavailable") message("The account service could not load. Check your connection and reload this page, then request a new reset link. Your password has not changed.", "Layanan akun belum dapat dimuat. Periksa koneksi dan muat ulang halaman ini, lalu minta tautan pemulihan baru. Kata sandi Anda belum berubah.");
-        else message("This account link is missing, invalid, expired, or already used. Request a new reset link below and open the newest email in this browser. A normal sign-in does not start password recovery.", "Tautan akun tidak lengkap, tidak valid, sudah kedaluwarsa, atau sudah digunakan. Minta tautan pemulihan baru di bawah dan buka email terbaru di browser ini. Login biasa tidak memulai pemulihan kata sandi.");
+        else if (callbackProblem === "expired") message("This reset link has expired or was already used. Open the newest unused email. If you need a new reset link, request it once below and use that email; repeated requests can invalidate earlier links.", "Tautan pemulihan sudah kedaluwarsa atau sudah digunakan. Buka email terbaru yang belum dipakai. Jika perlu tautan pemulihan baru, minta satu kali di bawah dan gunakan email itu; permintaan berulang dapat membatalkan tautan sebelumnya.");
+        else if (callbackProblem === "missing") message("This reset link is incomplete or does not contain a recovery session. Open the original button in the newest email. Request a new reset link once if needed. If that email always returns here, ask the site administrator to check the reset email template.", "Tautan pemulihan tidak lengkap atau tidak membawa sesi pemulihan. Buka tombol asli di email terbaru. Minta tautan pemulihan baru satu kali jika diperlukan. Jika email itu selalu kembali ke sini, minta pengelola memeriksa template email pemulihan.");
+        else if (callbackProblem === "network") message("The connection or account service could not verify this link. Check your connection and reopen this email after the service recovers. Wait before requesting another email; your password has not changed.", "Koneksi atau layanan akun belum dapat memverifikasi tautan ini. Periksa koneksi dan buka kembali email ini setelah layanan pulih. Tunggu sebelum meminta email lain; kata sandi Anda belum berubah.");
+        else message("The account service rejected this recovery session. The link is invalid for password recovery. Request a new reset link once below and use the original button in the newest email.", "Layanan akun menolak sesi pemulihan ini. Tautan tidak valid untuk mengganti kata sandi. Minta tautan pemulihan baru satu kali di bawah dan gunakan tombol asli di email terbaru.");
       } else if (!callbackSettled && (callback.present || callback.recoveryRequested)) {mode = "callback"; openCallback = true;}
       else if (mode === "callback") {mode = "signin"; openCallback = true;}
       if (active && !["recovery", "reset", "callback"].includes(mode)) mode = "signin";

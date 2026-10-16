@@ -1,6 +1,13 @@
 /* Load FIRST in each content document, before the existing navigation scripts. */
 (() => {
   "use strict";
+  // Older email redirects included #account. GoTrue appends its own fragment,
+  // producing #account#access_token=...; repair that known legacy anchor before
+  // metadata capture or SDK parsing. Other anchors and oversized URLs stay put.
+  if (location.hash.startsWith("#account#") && location.hash.length <= 32768) {
+    const candidate = location.hash.slice("#account".length), parameters = new URLSearchParams(candidate.slice(1));
+    if (["access_token", "refresh_token", "error", "error_code", "error_description"].some(key => parameters.has(key))) history.replaceState(history.state, "", location.pathname + location.search + candidate);
+  }
   // Capture callback intent before the Auth SDK consumes and removes its URL.
   // Keep credentials in this closure only; expose a comparison, never the token.
   const authHash = new URLSearchParams(location.hash.slice(1)), authQuery = new URLSearchParams(location.search);

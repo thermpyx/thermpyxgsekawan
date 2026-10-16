@@ -55,7 +55,7 @@ Untuk uji terbatas, gunakan alamat anggota tim yang sudah ada. Untuk mengizinkan
 Pada **Authentication → URL Configuration**:
 
 - Isi **Site URL** dengan alamat hosting HTTPS web Anda.
-- Tambahkan callback yang persis digunakan web pada **Redirect URLs**: `https://alamat-web-anda/index.html#account` dan `https://alamat-web-anda/index.html?account=recovery#account`. Jika web berada dalam subfolder, sertakan subfolder tersebut pada kedua URL. Site URL tetap menggunakan alamat utama web tanpa parameter pemulihan.
+- Tambahkan callback yang persis digunakan web pada **Redirect URLs**: `https://alamat-web-anda/index.html` dan `https://alamat-web-anda/index.html?account=recovery`. Jangan menambahkan `#account` atau tanda `#` pada kedua alamat ini. Jika web berada dalam subfolder, sertakan subfolder tersebut pada kedua URL. Site URL tetap menggunakan alamat utama web tanpa parameter pemulihan.
 - Pendaftaran dengan kode tidak memerlukan pengguna berpindah lewat tautan email. Pemulihan kata sandi menggunakan alamat web tersebut dan alur akun di beranda.
 
 Sesuaikan daftar redirect dengan URL yang benar-benar dipakai; jangan menambahkan wildcard luas untuk mengatasi error.
@@ -65,10 +65,12 @@ Untuk situs THERMPYX yang sekarang, nilainya adalah:
 | Pengaturan | Nilai |
 | --- | --- |
 | Site URL | `https://thermpyx.github.io/thermpyxgsekawan/` |
-| Redirect URL konfirmasi | `https://thermpyx.github.io/thermpyxgsekawan/index.html#account` |
-| Redirect URL pemulihan | `https://thermpyx.github.io/thermpyxgsekawan/index.html?account=recovery#account` |
+| Redirect URL konfirmasi | `https://thermpyx.github.io/thermpyxgsekawan/index.html` |
+| Redirect URL pemulihan | `https://thermpyx.github.io/thermpyxgsekawan/index.html?account=recovery` |
 
-Jika nilai tersebut sudah disimpan, pertahankan. Setelah menerbitkan perbaikan web, minta **satu tautan pemulihan baru** melalui **Lupa kata sandi** dan buka email terbaru. Tautan lama dapat sudah digunakan atau kedaluwarsa. Halaman harus membuka formulir **Buat kata sandi baru** dan **Ulangi kata sandi baru**. URL pemulihan saja bukan izin mengganti sandi: Supabase tetap harus memvalidasi sesi dari tautan email.
+Jika sebelumnya sudah menyimpan alamat yang diakhiri `#account`, tambahkan dua alamat baru tanpa fragment pada tabel di atas. Alamat lama boleh tetap ada untuk kompatibilitas; Site URL tidak perlu diubah. Supabase menambahkan fragment sesi pada alamat tujuan, sehingga anchor tambahan dapat membuat token tidak terbaca. Web juga menangani bentuk tautan lama tersebut sebelum SDK dijalankan.
+
+Setelah pembaruan web terbit dan batas pengiriman email sudah pulih, minta **satu tautan pemulihan baru** melalui **Lupa kata sandi** dan buka email terbaru. Tautan lama dapat sudah digunakan atau kedaluwarsa. Halaman harus membuka formulir **Buat kata sandi baru** dan **Ulangi kata sandi baru**. URL pemulihan saja bukan izin mengganti sandi: Supabase tetap harus memvalidasi sesi dari tautan email. Pesan **Please wait before requesting another email** menunjukkan batas pengiriman; perubahan kode atau URL tidak menghapus batas tersebut. Jangan menekan kirim ulang berulang kali.
 
 ## 5. Uji alur nyata
 
@@ -88,6 +90,6 @@ Jika email tidak terkirim, jangan langsung menghapus atau membuat ulang akun. Ik
 
 Keberhasilan uji dengan backend tiruan tidak membuktikan SMTP proyek Anda sudah aktif atau email nyata sudah terkirim. Tidak diperlukan pengiriman email otomatis untuk pengujian kode lokal.
 
-Untuk Live Server, gunakan alamat lokal yang benar-benar tampil di browser. Contoh jika proyek disajikan langsung di port 5500: Site URL `http://127.0.0.1:5500`, Redirect URLs `http://127.0.0.1:5500/index.html#account` dan `http://127.0.0.1:5500/index.html?account=recovery#account`. `localhost` dan `127.0.0.1` adalah alamat berbeda; gunakan host yang sama dengan browser.
+Untuk Live Server, gunakan alamat lokal yang benar-benar tampil di browser. Contoh jika proyek disajikan langsung di port 5500: Site URL `http://127.0.0.1:5500`, Redirect URLs `http://127.0.0.1:5500/index.html` dan `http://127.0.0.1:5500/index.html?account=recovery`. `localhost` dan `127.0.0.1` adalah alamat berbeda; gunakan host yang sama dengan browser.
 
 Rujukan pengaturan resmi: [SMTP Supabase](https://supabase.com/docs/guides/auth/auth-smtp), [batas Auth](https://supabase.com/docs/guides/auth/rate-limits), dan [template email](https://supabase.com/docs/guides/auth/auth-email-templates). Dashboard proyek dan log aktual menentukan status pengiriman yang sedang berlaku.

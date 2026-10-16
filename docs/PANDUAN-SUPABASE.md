@@ -61,7 +61,7 @@ Jika proyek yang digunakan berbeda, buka **Connect** atau **Project Settings →
 
 Aktifkan provider Email di **Authentication → Sign In / Providers → Email**. Untuk akun uji yang dibuat sendiri dari Dashboard, gunakan **Authentication → Users → Add user → Create new user**; simpan password Anda sendiri dan gunakan Auto Confirm User bila tersedia.
 
-Gunakan HTTP/HTTPS saat menjalankan web, misalnya Live Server. Jangan membuka `index.html` dengan `file://`. Di **Authentication → URL Configuration**, atur Site URL sesuai alamat hosting dan tambahkan Redirect URLs yang benar-benar digunakan, termasuk `index.html#account` dan `index.html?account=recovery#account`. Sertakan subfolder bila web berada dalam subfolder.
+Gunakan HTTP/HTTPS saat menjalankan web, misalnya Live Server. Jangan membuka `index.html` dengan `file://`. Di **Authentication → URL Configuration**, atur Site URL sesuai alamat hosting dan tambahkan Redirect URLs yang benar-benar digunakan, termasuk `index.html` dan `index.html?account=recovery`, tanpa `#account`. Sertakan subfolder bila web berada dalam subfolder. Untuk situs sekarang, lihat dua alamat lengkap pada [panduan email](EMAIL-THERMPYX.md#4-atur-tautan-pemulihan). Jika alamat lama dengan `#account` sudah disimpan, cukup tambahkan dua alamat baru; Site URL tetap sama.
 
 ## Batas yang perlu diketahui
 

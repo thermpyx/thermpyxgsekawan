@@ -42,7 +42,7 @@ const supabaseClient = {auth: {
   }
   try {
     // Old reset templates may use Site URL (root) without ?account=recovery.
-    for (const entry of ["/#access_token=fixture-access&refresh_token=fixture-refresh&type=recovery", "/index.html?account=recovery#access_token=fixture-access&refresh_token=fixture-refresh&type=recovery", "/index.html?account=recovery#access_token=fixture-access&refresh_token=" + "r".repeat(6000) + "&type=recovery"]) {
+    for (const entry of ["/#access_token=fixture-access&refresh_token=fixture-refresh&type=recovery", "/index.html?account=recovery#access_token=fixture-access&refresh_token=fixture-refresh&type=recovery", "/index.html?account=recovery#account#access_token=fixture-access&refresh_token=fixture-refresh&type=recovery", "/index.html?account=recovery#access_token=fixture-access&refresh_token=" + "r".repeat(6000) + "&type=recovery"]) {
       const test = await visit("valid", entry);
       await test.auth.locator(".tpx-auth-recovery").waitFor();
       assert.equal(await test.auth.locator("dialog").isVisible(), true);
