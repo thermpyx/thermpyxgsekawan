@@ -16,6 +16,8 @@ Perbaikan lanjutan menangani pergantian tab, misalnya saat membaca email lalu ke
 
 Template bawaan **Confirm signup** hanya menampilkan tautan. Untuk menyediakan kode angka dan tombol konfirmasi, salin isi [template konfirmasi](../supabase/confirm-signup-email.html) ke **Authentication → Email / Email Templates → Confirm signup**, lalu simpan. Pertahankan `{{ .Token }}` dan `{{ .ConfirmationURL }}`. Template **Reset password** tetap memakai tautan pemulihannya sendiri.
 
+Jika Source/Body terkunci dan Dashboard meminta Custom SMTP, gunakan tombol konfirmasi dari email bawaan sampai pengirim SMTP siap. Tidak perlu mengedit template untuk memperbaiki reset sandi. Penjelasan pembatasan template ada pada [panduan email](EMAIL-THERMPYX.md#2-pakai-template-kode-thermpyx).
+
 Pesan web membedakan permintaan yang diterima dari email yang benar-benar diterima pengguna. Akun yang sudah terkonfirmasi perlu **Masuk** atau **Lupa kata sandi**, bukan pendaftaran ulang. Jika email tidak tiba, periksa log Auth, Spam, batas pengiriman, dan SMTP proyek. Petunjuk lengkap ada pada [panduan email](EMAIL-THERMPYX.md). Mengubah template atau kode web tidak mengaktifkan SMTP.
 
 ## Paket soal guru

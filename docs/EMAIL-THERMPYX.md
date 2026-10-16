@@ -31,6 +31,8 @@ Jika Confirm email dimatikan, Supabase langsung memberi sesi saat mendaftar dan 
 
 Mengubah berkas HTML di GitHub tidak otomatis mengubah template email proyek Supabase. Salin template ke Dashboard dan simpan. Jika template **Confirm signup** bawaan Anda hanya mempunyai tautan, pengguna dapat mengkliknya; email tersebut memang tidak menampilkan angka untuk disalin ke kolom kode.
 
+Jika tab **Source**, subjek, atau Body tidak dapat diedit dan terlihat **Set up custom SMTP to edit templates**, proyek sedang memakai pembatasan template bawaan. [Studio Supabase menerapkan pembatasan ini](https://github.com/supabase/supabase/blob/master/apps/studio/components/interfaces/Auth/EmailTemplates/CustomEmailTemplateRestrictionAdmonition.tsx) pada proyek yang belum memenuhi syarat pengeditan. Siapkan pengirim Custom SMTP bila ingin memakai template kode sendiri. Sementara itu, konfirmasi melalui tombol pada email bawaan tetap didukung. **Perbaikan reset sandi tidak memerlukan pengubahan template**; gunakan template Reset password bawaan dan alamat tujuan tanpa fragment pada bagian 4.
+
 **Jangan menyalin template Confirm signup ke Reset password.** Email pemulihan kata sandi harus tetap menggunakan tautan `{{ .ConfirmationURL }}` dari template **Reset password**. Token pendaftaran tidak dapat digunakan untuk mengganti kata sandi.
 
 ## 3. Atur nama dan alamat pengirim
