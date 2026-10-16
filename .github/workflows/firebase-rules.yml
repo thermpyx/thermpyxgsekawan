@@ -1,0 +1,93 @@
+name: Firebase access rules
+
+on:
+  push:
+    branches: [codex/firebase-google-quiz]
+    paths:
+      - firebase/**
+      - firebase.json
+      - qa/test-firebase-rules.cjs
+      - qa/firebase/**
+      - .github/workflows/firebase-rules.yml
+  workflow_dispatch:
+
+concurrency:
+  group: firebase-rules-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: qa/firebase/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --prefix qa/firebase --ignore-scripts --no-audit --no-fund
+      - name: Test actual Realtime Database rules in an isolated emulator
+        env:
+          NODE_PATH: ${{ github.workspace }}/qa/firebase/node_modules
+          TPX_FIREBASE_TEST_PROJECT: demo-thermpyx-qa
+        run: |
+          set +e
+          qa/firebase/node_modules/.bin/firebase emulators:exec --only database --project demo-thermpyx-qa "node qa/test-firebase-rules.cjs" > /tmp/firebase-rules.log 2>&1
+          result=$?
+          cat /tmp/firebase-rules.log
+          RESULT_CODE="$result" node - <<'JS'
+          const fs = require('node:fs'), crypto = require('node:crypto');
+          const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          fs.writeFileSync('firebase-qa-report.json', JSON.stringify({
+            sourceCommit: process.env.GITHUB_SHA,
+            runId: process.env.GITHUB_RUN_ID,
+            passed: Number(process.env.RESULT_CODE) === 0,
+            rulesSha256: digest('firebase/database.rules.json'),
+            testSha256: digest('qa/test-firebase-rules.cjs'),
+            output: fs.readFileSync('/tmp/firebase-rules.log', 'utf8').slice(-18000)
+          }, null, 2));
+          JS
+          exit "$result"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: firebase-rules-report
+          path: firebase-qa-report.json
+
+  report:
+    needs: rules
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: firebase-rules-report
+          path: /tmp/thermpyx-firebase-report
+      - name: Save the emulator result on a separate review branch
+        run: |
+          set -e
+          if git ls-remote --exit-code --heads origin codex/firebase-qa-results >/dev/null; then
+            git fetch origin codex/firebase-qa-results
+            git switch -c firebase-report FETCH_HEAD
+          else
+            git switch -c firebase-report
+          fi
+          mkdir -p qa
+          cp /tmp/thermpyx-firebase-report/firebase-qa-report.json qa/firebase-ci-result.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/firebase-ci-result.json
+          git commit -m "Record Firebase emulator checks for ${{ github.sha }}"
+          git push origin HEAD:refs/heads/codex/firebase-qa-results
