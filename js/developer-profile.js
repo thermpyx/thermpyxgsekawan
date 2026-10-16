@@ -10,7 +10,7 @@
     {
       nickname: "Nathan",
       fullName: "Reinhart Van Diaz",
-      role: "Project Contributor / Blacksmith",
+      role: {en: "Project Leader", id: "Ketua Proyek"},
       image: "assets/developers/dev-1.jpg",
 
       motto: {
@@ -20,10 +20,10 @@
 
       bio: {
         en:
-          "A collaborative contributor in THERMPYX who helps turn the team's ideas into an interactive learning experience. THERMPYX became one of his first opportunities to explore digital learning media.",
+          "The project leader of THERMPYX, working with the team to turn their ideas into an interactive learning experience. THERMPYX became one of his first opportunities to explore digital learning media.",
 
         id:
-          "Seorang anggota kolaboratif dalam THERMPYX yang membantu mewujudkan ide tim menjadi pengalaman belajar interaktif. THERMPYX menjadi salah satu kesempatan pertamanya untuk mengeksplorasi media pembelajaran digital."
+          "Ketua proyek THERMPYX yang bekerja bersama tim untuk mewujudkan ide mereka menjadi pengalaman belajar interaktif. THERMPYX menjadi salah satu kesempatan pertamanya untuk mengeksplorasi media pembelajaran digital."
       },
 
       journey: {
@@ -58,7 +58,7 @@
     {
       nickname: "John",
       fullName: "Zikri Luthfi",
-      role: "API & System Development",
+      role: {en: "API & System Development", id: "Pengembangan API & Sistem"},
       image: "assets/developers/dev-2.jpg",
 
       motto: {
@@ -106,7 +106,7 @@
     {
       nickname: "Van",
       fullName: "edwart Van djovi",
-      role: "Research & Development",
+      role: {en: "Research & Development", id: "Riset & Pengembangan"},
       image: "assets/developers/dev-3.jpg",
 
       motto: {
@@ -154,7 +154,7 @@
     {
       nickname: "MISEL CINTA NASPAD",
       fullName: "Misel Natalis Sawato Gulo",
-      role: "UI / UX Designer, Frontend Developer",
+      role: {en: "UI / UX Designer, Frontend Developer", id: "Desainer UI / UX, Pengembang Frontend"},
       image: "assets/developers/dev-4.jpg",
 
       motto: {
@@ -362,8 +362,13 @@
     elements.fullName.textContent =
       member.fullName;
 
-    elements.role.textContent =
-      window.TPX?.translateText ? window.TPX.translateText(member.role, currentLanguage) : member.role;
+    // Refresh authored pairs on every profile change so global translation
+    // cannot restore another member's role from an earlier render.
+    [elements.role, elements.miniRole, elements.backRole].forEach(element => {
+      element.dataset.en = member.role.en;
+      element.dataset.id = member.role.id;
+      element.textContent = member.role[currentLanguage];
+    });
 
     elements.motto.textContent =
       member.motto[currentLanguage];
@@ -378,9 +383,6 @@
     elements.image.alt =
       member.fullName;
 
-
-    elements.miniRole.textContent =
-      elements.role.textContent;
 
     elements.cardNickname.textContent =
       member.nickname;

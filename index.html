@@ -21,6 +21,8 @@
 <link rel="stylesheet" href="css/onboarding.css"><script defer src="js/onboarding.js"></script>
 <link rel="stylesheet" href="css/theory-expanded.css">
 <link rel="stylesheet" href="css/learning-entry.css">
+<link rel="stylesheet" href="css/feedback.css">
+<script defer src="js/feedback.js"></script>
 </head>
 <body><div aria-label="THERMPYX loading" aria-live="polite" class="tpx-page-transition tpx-show" role="status"><div class="tpx-loader-panel"><div aria-hidden="true" class="tpx-loader-orbit"></div><div aria-label="THERMPYX" class="tpx-loader-wordmark">THERMPY<svg aria-hidden="true" class="tpx-loader-x" viewBox="0 0 100 100"><path d="M4 5H29L50 33L71 5H96L63 50L96 95H71L50 67L29 95H4L37 50ZM50 42L43 50L50 58L57 50Z" fill="currentColor" fill-rule="evenodd"></path></svg></div><span class="tpx-loader-caption">PREPARING LABORATORY</span><div aria-hidden="true" class="tpx-loader-rail"></div></div></div>
 <!-- ==============================
@@ -70,6 +72,10 @@
 </nav>
 <!-- Bottom Navigation -->
 <div class="sidebar-bottom">
+<a class="nav-item" href="#feedback">
+<span class="nav-icon" aria-hidden="true">✉</span>
+<span class="nav-text" data-en="Feedback" data-id="Masukan">Feedback</span>
+</a>
 <a class="nav-item" href="#about">
 <span class="nav-icon">ⓘ</span>
 <span class="nav-text">About</span>
@@ -369,6 +375,42 @@
             </p>
 </div>
 </div>
+</div>
+</section>
+<section class="content-section feedback-section" id="feedback" aria-labelledby="feedbackTitle">
+<div class="feedback-layout">
+<div class="feedback-intro">
+<p class="section-label" data-en="SHAPE THE NEXT CHAPTER" data-id="BANTU LANGKAH BERIKUTNYA">SHAPE THE NEXT CHAPTER</p>
+<h2 id="feedbackTitle" data-en="A better lab starts with your ideas." data-id="Laboratorium yang lebih baik dimulai dari ide Anda.">A better lab starts with your ideas.</h2>
+<p data-en="Found something to improve? Share a suggestion, report a problem, or tell us what would make learning here more useful." data-id="Ada yang perlu diperbaiki? Bagikan saran, laporkan masalah, atau ceritakan hal yang bisa membuat belajar di sini lebih bermanfaat.">Found something to improve? Share a suggestion, report a problem, or tell us what would make learning here more useful.</p>
+<a class="feedback-recipient" id="feedbackRecipient" href="mailto:thermpyx@gmail.com" target="_blank" rel="noopener noreferrer" data-tpx-no-translate data-tpx-user-text>thermpyx@gmail.com</a>
+<p class="feedback-note" data-en="Your message opens as an email draft. Review it and press Send in Gmail or your email app." data-id="Pesan Anda dibuka sebagai draf email. Periksa, lalu tekan Kirim di Gmail atau aplikasi email Anda.">Your message opens as an email draft. Review it and press Send in Gmail or your email app.</p>
+</div>
+<form class="feedback-form" id="feedbackForm" novalidate>
+<div class="feedback-field">
+<label for="feedbackName" data-en="Name (optional)" data-id="Nama (opsional)">Name (optional)</label>
+<input id="feedbackName" name="name" type="text" autocomplete="name" maxlength="80">
+</div>
+<div class="feedback-field">
+<label for="feedbackCategory" data-en="What would you like to share?" data-id="Apa yang ingin Anda sampaikan?">What would you like to share?</label>
+<select id="feedbackCategory" name="category">
+<option value="suggestion" data-en="Suggestion or feature idea" data-id="Saran atau ide fitur">Suggestion or feature idea</option>
+<option value="bug" data-en="Report a problem" data-id="Laporkan masalah">Report a problem</option>
+<option value="other" data-en="Other feedback" data-id="Masukan lainnya">Other feedback</option>
+</select>
+</div>
+<div class="feedback-field">
+<label for="feedbackMessage" data-en="Your message" data-id="Pesan Anda">Your message</label>
+<textarea id="feedbackMessage" name="message" rows="6" maxlength="2000" required aria-describedby="feedbackMessageHint"></textarea>
+<small id="feedbackMessageHint" data-en="For a problem report, describe the page and what happened. Up to 2,000 characters." data-id="Untuk laporan masalah, sebutkan halaman dan kejadian yang dialami. Maksimal 2.000 karakter.">For a problem report, describe the page and what happened. Up to 2,000 characters.</small>
+</div>
+<div class="feedback-actions">
+<button id="feedbackEmailButton" type="submit" data-en="Open email draft" data-id="Buka draf email">Open email draft</button>
+<button id="feedbackGmailButton" type="button" data-en="Open Gmail" data-id="Buka Gmail">Open Gmail</button>
+<button id="feedbackCopyButton" type="button" data-en="Copy message" data-id="Salin pesan">Copy message</button>
+</div>
+<p id="feedbackStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+</form>
 </div>
 </section>
 <!-- ==============================

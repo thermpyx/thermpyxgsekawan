@@ -25,10 +25,16 @@ THERMPYX is a static bilingual learning site. Use the existing checkout: each cl
 
 ## Visual preferences
 
+- Nathan's role is Project Leader / Ketua Proyek. Preserve original developer photos and the profile/intro/card interactions; keep the material card and futuristic background styling scoped to the Developer page.
 - Use the First Law piston as the simulator equipment reference: coherent lab surfaces, recognizable apparatus and readable labels. Inspect real screenshots; a font check alone does not prove a scene renders.
 - Keep text, symbols, readouts and buttons comfortably inside containers. Verify 320px and desktop, ID/EN and both themes. Sticky headers must not cover focus/anchors. Preserve keyboard and reduced-motion support.
 - Avoid decorative long-dash separators and heading/example accent rules. Preserve mathematical minus signs, plots and number ranges.
 - Calculator −/+ controls must remain integrated with inputs, precise for small decimal steps, keyboard accessible, and compatible with manual input/validation.
+
+## Email feedback
+
+- Feedback on the homepage prepares drafts addressed to `thermpyx@gmail.com`. Users send through Gmail or their email application. Never claim delivery from opening a draft, add frontend email credentials, or send real messages during QA. Preserve message validation, ID/EN, draft contents on language changes, Gmail/copy/manual fallbacks, and the persistent shell/music. Email context must exclude URL query strings and fragments.
+- Quiz skills in `docs/IDE-SKILL-QUIZ.md` are proposals, not implemented gameplay. Keep current scores, timers, question snapshots and Firebase rules unchanged unless a skill implementation is authorized separately.
 
 ## Verification
 

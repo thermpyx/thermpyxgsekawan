@@ -1,4 +1,6 @@
-# THERMPYX: Firebase, akun Google dan kuis
+# THERMPYX: pembelajaran, kuis dan masukan
+
+Menu **Masukan / Feedback** menyiapkan saran dan laporan pengguna untuk `thermpyx@gmail.com`, dengan pilihan aplikasi email, Gmail, atau salin pesan. Pengguna mengirim draf melalui layanan emailnya. Kartu dan latar Developer diperbarui; Nathan kini **Project Leader / Ketua Proyek**. Lihat [rincian revisi](docs/REVISI-MASUKAN-DEVELOPER.md) dan [usulan skill kuis](docs/IDE-SKILL-QUIZ.md).
 
 Versi ini menggunakan **Firebase Authentication dan Realtime Database**. Guru masuk dengan Google untuk menyimpan bank soal dan menjadi host; siswa bergabung memakai kode ruang dan nama panggilan dengan identitas anonim Firebase. Form sandi, kode email dan pemulihan Supabase sudah tidak dipakai pada antarmuka aktif.
 
