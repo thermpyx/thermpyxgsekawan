@@ -2,7 +2,7 @@
 
 Versi ini menggunakan **Firebase Authentication dan Realtime Database**. Guru masuk dengan Google untuk menyimpan bank soal dan menjadi host; siswa bergabung memakai kode ruang dan nama panggilan dengan identitas anonim Firebase. Form sandi, kode email dan pemulihan Supabase sudah tidak dipakai pada antarmuka aktif.
 
-**Lanjutkan dari [tahap 6 panduan Firebase](docs/PANDUAN-FIREBASE.md#6-pasang-aturan-akses-khusus-thermpyx).** Google dan Anonymous sudah Enabled; `thermpyx.github.io` sudah diizinkan. Realtime Database sudah dibuat di Singapore dan URL aslinya sudah diisi pada konfigurasi kode. Penerapan Rules, penerbitan frontend Firebase serta percobaan guru–siswa masih perlu diselesaikan; penyimpanan cloud dan kuis produksi belum dinyatakan siap.
+**Setelah versi Firebase tampil, lanjutkan ke [tahap 8: masuk Google dan simpan satu paket](docs/PANDUAN-FIREBASE.md#8-coba-satu-paket-soal-guru).** Google dan Anonymous sudah Enabled; `thermpyx.github.io` sudah diizinkan. Realtime Database Singapore dan URL kode sudah siap; pengguna mengonfirmasi Rules berhasil dipublikasikan. Rilis frontend memakai cabang Pages yang sama, `codex/simulator-visual-refinement`, sehingga pengguna tidak perlu mengunggah ulang atau mengganti cabang. Login Google nyata, simpan/muat ulang bank soal dan percobaan guru–siswa masih perlu diuji; konfigurasi saja tidak membuktikan produksi siap.
 
 Teori ID/EN, tujuh modul Alur Belajar, simulator, kalkulator, konverter, musik, kuis mandiri dan draf soal lokal tetap tersedia tanpa akun. Gambar alat simulator, perbaikan volume Hukum I, kontrol angka kalkulator, foto dan aset asli dipertahankan. Flashcard masih Coming Soon; data lama tidak dihapus.
 

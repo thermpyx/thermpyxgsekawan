@@ -4,7 +4,7 @@ Kerjakan **satu tahap sampai hasilnya sesuai**, lalu lanjut ke tahap berikutnya.
 
 Guru memakai **Masuk dengan Google** untuk menyimpan paket soal dan menjadi host. Siswa cukup memasukkan **kode ruang dan nama panggilan**; web menyiapkan identitas anonim di belakang layar. Membaca materi, menjalankan simulator, latihan mandiri dan menyusun draf lokal tetap bisa dilakukan tanpa login.
 
-Provider **Google dan Anonymous sudah Enabled**, dan `thermpyx.github.io` sudah ditambahkan ke Authorized domains. Realtime Database telah dibuat di **Singapore / `asia-southeast1`**, dengan URL asli yang sudah diisi pada kode. Anda dapat **langsung melanjutkan ke tahap 6 untuk memasang Rules**; tahap 1–5 dipertahankan sebagai rujukan. Penerapan Rules, penerbitan frontend Firebase dan percobaan langsung masih perlu diselesaikan sebelum bank soal/kuis produksi dinyatakan siap.
+Provider **Google dan Anonymous sudah Enabled**, dan `thermpyx.github.io` sudah ditambahkan ke Authorized domains. Realtime Database **Singapore / `asia-southeast1`** beserta URL kode sudah disiapkan, dan Anda sudah mengonfirmasi **Rules berhasil dipublikasikan**. Rilis Firebase memakai cabang Pages yang sama, `codex/simulator-visual-refinement`; Anda tidak perlu mengunggah ulang atau mengganti cabang. **Setelah versi Firebase tampil, lanjutkan ke tahap 8 untuk masuk Google dan menyimpan satu paket soal.** Tahap 1–7 dipertahankan sebagai rujukan. Login serta percobaan simpan/host/siswa pada proyek sebenarnya belum dinyatakan lulus.
 
 ## 1. Buka proyek yang benar
 
@@ -79,6 +79,8 @@ Berkas ini hanya untuk **Firebase Web config**. Jangan memasukkan berkas service
 
 ## 6. Pasang aturan akses khusus THERMPYX
 
+Tahap ini sudah dikonfirmasi selesai oleh pengguna: **Publish Rules berhasil**. Langkah berikut menjadi rujukan saat menerapkan ulang aturan yang sesuai versi kode.
+
 1. Buka [firebase/database.rules.json](../firebase/database.rules.json) dari proyek.
 2. Salin seluruh isi berkas, mulai dari `{` pertama sampai `}` terakhir. Ini JSON; ikutkan seluruh isi tanpa menambah tanda Markdown.
 3. Kembali ke Firebase → **Realtime Database → Rules**.
@@ -90,6 +92,8 @@ Berkas ini hanya untuk **Firebase Web config**. Jangan memasukkan berkas service
 Aturan membatasi bank soal kepada guru pemilik, membedakan guru Google dan peserta anonim, serta memeriksa akses ruang, nama panggilan dan jawaban. Versi aturan yang dicatat pada [catatan pengujian](REVISI-FIREBASE.md#pengujian-dan-batasnya) telah lulus emulator resmi. Penerapan ke Console tetap dilakukan terpisah; mengunggah GitHub saja tidak menerapkan aturan database.
 
 ## 7. Terbitkan berkas web terbaru
+
+Untuk rilis Firebase ini, perubahan diterbitkan melalui cabang GitHub Pages yang sudah digunakan, **`codex/simulator-visual-refinement`**. Pengguna tidak perlu mengunggah berkas lagi atau mengganti pilihan cabang. Tunggu sampai versi Firebase tampil, kemudian lanjutkan ke tahap 8. Langkah berikut menjadi rujukan jika menerbitkan sendiri pada pembaruan berikutnya:
 
 1. Pastikan berkas `js/firebase-config.js` yang diunggah sudah berisi URL database asli.
 2. Unggah/push seluruh perubahan proyek ke cabang yang dipakai **GitHub Pages**. Pertahankan struktur folder.

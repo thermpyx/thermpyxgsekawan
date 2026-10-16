@@ -15,9 +15,9 @@ Shell dan pemutar musik, Alur Belajar tujuh topik, progres lokal, materi ID/EN, 
 
 ## Status pengaturan proyek
 
-Google dan Anonymous telah dikonfirmasi **Enabled** pada proyek `thermpyx`, serta domain `thermpyx.github.io` sudah ditambahkan. Realtime Database sudah dibuat di **Singapore / `asia-southeast1`**; URL `https://thermpyx-default-rtdb.asia-southeast1.firebasedatabase.app` telah dikonfirmasi dari Console dan diisi pada `js/firebase-config.js`. Penerapan Rules, penerbitan frontend Firebase serta percobaan guru–siswa masih perlu diselesaikan. Kode dan hasil emulator tidak membuktikan layanan produksi sudah siap.
+Google dan Anonymous telah dikonfirmasi **Enabled** pada proyek `thermpyx`, serta domain `thermpyx.github.io` sudah ditambahkan. Realtime Database sudah dibuat di **Singapore / `asia-southeast1`**; URL `https://thermpyx-default-rtdb.asia-southeast1.firebasedatabase.app` telah dikonfirmasi dari Console dan diisi pada `js/firebase-config.js`. Pengguna telah mengonfirmasi **Publish Rules berhasil**. Rilis frontend memakai cabang Pages lama, `codex/simulator-visual-refinement`, tanpa meminta pengguna mengunggah ulang atau mengganti cabang.
 
-Lanjutkan dari [tahap 6 panduan Firebase](PANDUAN-FIREBASE.md#6-pasang-aturan-akses-khusus-thermpyx) untuk menerbitkan aturan, lalu terbitkan frontend dan jalankan percobaan. Tahap pembuatan database/penyalinan URL tetap disertakan sebagai rujukan. Menayangkan berkas GitHub tidak mengubah provider atau aturan Firebase secara otomatis.
+Setelah versi Firebase tampil, lanjutkan dari [tahap 8 panduan Firebase](PANDUAN-FIREBASE.md#8-coba-satu-paket-soal-guru): masuk Google, simpan/muat ulang satu paket, lalu uji host dan siswa. Publikasi Rules yang dikonfirmasi pengguna tidak berarti login Google atau penulisan data produksi sudah diuji. Verifikasi halaman rilis dan percobaan layanan sebenarnya masih dibedakan dari hasil emulator. Tahap setup/penerbitan tetap disertakan sebagai rujukan; menayangkan GitHub tidak mengubah Console otomatis.
 
 ## Pengujian dan batasnya
 
