@@ -4,7 +4,7 @@ Kerjakan **satu tahap sampai hasilnya sesuai**, lalu lanjut ke tahap berikutnya.
 
 Guru memakai **Masuk dengan Google** untuk menyimpan paket soal dan menjadi host. Siswa cukup memasukkan **kode ruang dan nama panggilan**; web menyiapkan identitas anonim di belakang layar. Membaca materi, menjalankan simulator, latihan mandiri dan menyusun draf lokal tetap bisa dilakukan tanpa login.
 
-Provider **Google dan Anonymous sudah Enabled**, dan `thermpyx.github.io` sudah ditambahkan ke Authorized domains. Realtime Database **Singapore / `asia-southeast1`** beserta URL kode sudah disiapkan, dan Anda sudah mengonfirmasi **Rules berhasil dipublikasikan**. Rilis Firebase memakai cabang Pages yang sama, `codex/simulator-visual-refinement`; Anda tidak perlu mengunggah ulang atau mengganti cabang. **Setelah versi Firebase tampil, lanjutkan ke tahap 8 untuk masuk Google dan menyimpan satu paket soal.** Tahap 1–7 dipertahankan sebagai rujukan. Login serta percobaan simpan/host/siswa pada proyek sebenarnya belum dinyatakan lulus.
+Provider **Google dan Anonymous**, domain situs, Realtime Database **Singapore / `asia-southeast1`**, URL kode dan Rules sudah disiapkan. Pengguna telah mengonfirmasi versi Google tampil pada Pages, login Google berhasil, soal dapat dibuat/digunakan, serta teman berhasil bergabung dan menjawab kuis pada web aktif. Ini laporan percobaan normal pengguna; agen tidak menulis data produksi untuk QA. Rilis tetap memakai `codex/simulator-visual-refinement`, tanpa unggah ulang atau pergantian cabang. Langkah 1–9 berikut dipertahankan untuk rujukan dan pengujian ulang; rincian batas konfirmasi ada pada [catatan revisi](REVISI-FIREBASE.md#status-pengaturan-proyek).
 
 ## 1. Buka proyek yang benar
 
@@ -93,7 +93,7 @@ Aturan membatasi bank soal kepada guru pemilik, membedakan guru Google dan peser
 
 ## 7. Terbitkan berkas web terbaru
 
-Untuk rilis Firebase ini, perubahan diterbitkan melalui cabang GitHub Pages yang sudah digunakan, **`codex/simulator-visual-refinement`**. Pengguna tidak perlu mengunggah berkas lagi atau mengganti pilihan cabang. Tunggu sampai versi Firebase tampil, kemudian lanjutkan ke tahap 8. Langkah berikut menjadi rujukan jika menerbitkan sendiri pada pembaruan berikutnya:
+Rilis Firebase menggunakan cabang GitHub Pages yang sudah digunakan, **`codex/simulator-visual-refinement`**, dan pengguna sudah mengonfirmasi tombol Google tampil pada situs aktif. Pengguna tidak perlu mengunggah berkas lagi atau mengganti pilihan cabang. Langkah berikut menjadi rujukan jika menerbitkan sendiri pada pembaruan berikutnya:
 
 1. Pastikan berkas `js/firebase-config.js` yang diunggah sudah berisi URL database asli.
 2. Unggah/push seluruh perubahan proyek ke cabang yang dipakai **GitHub Pages**. Pertahankan struktur folder.
@@ -104,6 +104,8 @@ Untuk rilis Firebase ini, perubahan diterbitkan melalui cabang GitHub Pages yang
 
 ## 8. Coba satu paket soal guru
 
+Login Google serta pembuatan/penggunaan soal sudah dilaporkan berhasil. Langkah berikut dapat dipakai untuk mengulang pemeriksaan lengkap, termasuk pemuatan ulang paket yang belum dikonfirmasi secara terpisah.
+
 1. Klik **Masuk → Lanjutkan dengan Google**.
 2. Pilih akun Google Anda pada popup. Jika browser memblokir popup, izinkan popup untuk situs ini lalu coba lagi.
 3. Pastikan popup akun menampilkan identitas Google Anda dan tombol **Keluar**.
@@ -112,11 +114,13 @@ Untuk rilis Firebase ini, perubahan diterbitkan melalui cabang GitHub Pages yang
 6. Klik tombol untuk **menyimpan ke akun/cloud**. Penyimpanan draf lokal saja belum membuktikan database terhubung.
 7. Setelah berhasil, muat ulang halaman lalu buka kembali paket dari daftar akun.
 
-**Hasil tahap ini:** paket tersimpan pada akun Google yang sama dan dapat dibuka kembali setelah muat ulang. Jika penyimpanan gagal, draf lokal harus tetap tersedia.
+**Hasil yang diharapkan saat mengulang tes:** paket tersimpan pada akun Google yang sama dan dapat dibuka kembali setelah muat ulang. Jika penyimpanan gagal, draf lokal harus tetap tersedia.
 
 Bank soal dan akun Supabase lama tidak berpindah otomatis ke Firebase. Simpan data lama; daftar Firebase yang masih kosong tidak berarti database lama terhapus.
 
 ## 9. Coba host dan siswa
+
+Pengguna sudah melaporkan temannya berhasil bergabung dan menjawab kuis pada web aktif. Pemeriksaan berikut tetap menjadi rujukan untuk mengulang seluruh alur; hasil/leaderboard belum dilaporkan secara khusus.
 
 1. Dari akun guru, pilih paket yang baru disimpan lalu buka sebagai host. Topik bawaan juga dapat dipakai.
 2. Catat kode ruang yang ditampilkan.
@@ -125,7 +129,7 @@ Bank soal dan akun Supabase lama tidak berpindah otomatis ke Firebase. Simpan da
 5. Pastikan siswa muncul pada daftar host. Mulai kuis dari host.
 6. Jawab satu soal pada siswa dan periksa kemajuan, hasil serta leaderboard.
 
-**Hasil tahap ini:** guru dan siswa melihat ruang yang sama, siswa dapat menjawab, serta hasil tampil. Beberapa tab dalam profil browser yang sama dapat berbagi identitas Firebase; gunakan identitas/browser terpisah untuk menguji beberapa siswa.
+**Hasil yang diharapkan saat mengulang tes:** guru dan siswa melihat ruang yang sama, siswa dapat menjawab, serta hasil tampil. Beberapa tab dalam profil browser yang sama dapat berbagi identitas Firebase; gunakan identitas/browser terpisah untuk menguji beberapa siswa.
 
 ## Jika muncul pesan kendala
 

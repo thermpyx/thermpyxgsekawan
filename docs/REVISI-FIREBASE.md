@@ -17,7 +17,9 @@ Shell dan pemutar musik, Alur Belajar tujuh topik, progres lokal, materi ID/EN, 
 
 Google dan Anonymous telah dikonfirmasi **Enabled** pada proyek `thermpyx`, serta domain `thermpyx.github.io` sudah ditambahkan. Realtime Database sudah dibuat di **Singapore / `asia-southeast1`**; URL `https://thermpyx-default-rtdb.asia-southeast1.firebasedatabase.app` telah dikonfirmasi dari Console dan diisi pada `js/firebase-config.js`. Pengguna telah mengonfirmasi **Publish Rules berhasil**. Rilis frontend memakai cabang Pages lama, `codex/simulator-visual-refinement`, tanpa meminta pengguna mengunggah ulang atau mengganti cabang.
 
-Setelah versi Firebase tampil, lanjutkan dari [tahap 8 panduan Firebase](PANDUAN-FIREBASE.md#8-coba-satu-paket-soal-guru): masuk Google, simpan/muat ulang satu paket, lalu uji host dan siswa. Publikasi Rules yang dikonfirmasi pengguna tidak berarti login Google atau penulisan data produksi sudah diuji. Verifikasi halaman rilis dan percobaan layanan sebenarnya masih dibedakan dari hasil emulator. Tahap setup/penerbitan tetap disertakan sebagai rujukan; menayangkan GitHub tidak mengubah Console otomatis.
+Pengguna telah melaporkan **tombol Google terlihat pada Pages, login Google nyata berhasil, soal dapat dibuat/digunakan, serta teman berhasil bergabung dan menjawab kuis pada web aktif**. Konfirmasi ini berasal dari percobaan normal pengguna, bukan penulisan data produksi oleh agen QA.
+
+Pemuatan kembali paket setelah reload, penghapusan cloud, hasil/leaderboard dan isolasi antar-akun pada produksi belum dilaporkan secara khusus; hasil lokal/emulator untuk cakupan tersebut tetap dibedakan dari konfirmasi pengguna. [Tahap 8–9 panduan Firebase](PANDUAN-FIREBASE.md#8-coba-satu-paket-soal-guru) dipertahankan untuk pengujian ulang. Menayangkan GitHub tidak mengubah Console otomatis.
 
 ## Pengujian dan batasnya
 
@@ -33,7 +35,7 @@ Pengujian akun browser memakai mock Firebase untuk popup/error, aktivasi klik, k
 
 Pemeriksaan inti lulus: **30** pemeriksaan client, **20** akun, **10** alur live, **86** navigasi dan **43** integrasi SDK asli. Regresi bersama juga lulus: Alur Belajar **357**, asesmen **189**, terjemahan **7**, tata letak navigasi **60**, kontrol kalkulator **40**, riwayat **12** beserta browser, riwayat simulator **3**, dan musik melewati **6** halaman. Pemeriksaan HTTP melayani **7** halaman serta **47** aset dengan respons 200.
 
-Percobaan Google nyata, konfigurasi domain/provider, URL database dan penyimpanan guru–siswa pada proyek `thermpyx` tetap perlu dilakukan pemilik setelah Console siap. Tidak ada login produksi, email atau penulisan data Firebase pengguna yang dilakukan untuk QA ini.
+Konfirmasi pengguna pada web aktif melengkapi hasil pengembangan tersebut untuk alur utama yang dilaporkan. QA pengembangan tetap tidak melakukan login produksi, mengirim email atau menulis data Firebase pengguna; cakupannya adalah fixture dan emulator sebagaimana dijelaskan di atas.
 
 Sebagai aplikasi latihan, peserta yang diizinkan menerima data soal ruang dan pembahasannya. Hasil pemeriksaan akses tidak menjadikan aplikasi sistem ujian dengan kerahasiaan kunci di server.
 

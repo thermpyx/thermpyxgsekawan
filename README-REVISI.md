@@ -2,11 +2,11 @@
 
 Versi ini menggunakan **Firebase Authentication dan Realtime Database**. Guru masuk dengan Google untuk menyimpan bank soal dan menjadi host; siswa bergabung memakai kode ruang dan nama panggilan dengan identitas anonim Firebase. Form sandi, kode email dan pemulihan Supabase sudah tidak dipakai pada antarmuka aktif.
 
-**Setelah versi Firebase tampil, lanjutkan ke [tahap 8: masuk Google dan simpan satu paket](docs/PANDUAN-FIREBASE.md#8-coba-satu-paket-soal-guru).** Google dan Anonymous sudah Enabled; `thermpyx.github.io` sudah diizinkan. Realtime Database Singapore dan URL kode sudah siap; pengguna mengonfirmasi Rules berhasil dipublikasikan. Rilis frontend memakai cabang Pages yang sama, `codex/simulator-visual-refinement`, sehingga pengguna tidak perlu mengunggah ulang atau mengganti cabang. Login Google nyata, simpan/muat ulang bank soal dan percobaan guru–siswa masih perlu diuji; konfigurasi saja tidak membuktikan produksi siap.
+**Pengguna sudah mengonfirmasi alur utama berjalan pada web aktif:** tombol Google tampil, login Google berhasil, soal dapat dibuat/digunakan, dan teman berhasil bergabung serta menjawab kuis. Ini laporan percobaan normal pengguna, terpisah dari QA lokal. Google, Anonymous, domain situs, Realtime Database Singapore dan Rules sudah disiapkan. Rilis tetap memakai `codex/simulator-visual-refinement`; tidak perlu unggah ulang atau mengganti cabang. [Panduan Firebase](docs/PANDUAN-FIREBASE.md) tetap tersedia untuk setup dan pengujian ulang.
 
 Teori ID/EN, tujuh modul Alur Belajar, simulator, kalkulator, konverter, musik, kuis mandiri dan draf soal lokal tetap tersedia tanpa akun. Gambar alat simulator, perbaikan volume Hukum I, kontrol angka kalkulator, foto dan aset asli dipertahankan. Flashcard masih Coming Soon; data lama tidak dihapus.
 
-Situs tetap statis: **tidak perlu build atau npm untuk menjalankan web**, dan Analytics tidak diaktifkan. Unggah seluruh isi proyek beserta `index.html`, `app.html`, `js/`, `css/`, `quiz/`, `simulator/`, `theory/`, `assets/` dan `vendor/`. Untuk mencoba lokal:
+Situs tetap statis: **tidak perlu build atau npm untuk menjalankan web**, dan Analytics tidak diaktifkan. Untuk penayangan di tempat lain, pertahankan seluruh isi proyek beserta `index.html`, `app.html`, `js/`, `css/`, `quiz/`, `simulator/`, `theory/`, `assets/` dan `vendor/`. Untuk mencoba lokal:
 
 ```sh
 python3 -m http.server 8003 --bind 127.0.0.1
