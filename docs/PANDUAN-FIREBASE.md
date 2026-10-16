@@ -4,7 +4,7 @@ Kerjakan **satu tahap sampai hasilnya sesuai**, lalu lanjut ke tahap berikutnya.
 
 Guru memakai **Masuk dengan Google** untuk menyimpan paket soal dan menjadi host. Siswa cukup memasukkan **kode ruang dan nama panggilan**; web menyiapkan identitas anonim di belakang layar. Membaca materi, menjalankan simulator, latihan mandiri dan menyusun draf lokal tetap bisa dilakukan tanpa login.
 
-Provider **Google dan Anonymous sudah dikonfirmasi Enabled**, dan `thermpyx.github.io` sudah ditambahkan ke Authorized domains. `databaseURL` dalam kode masih kosong, sehingga bank soal online dan kuis langsung belum dinyatakan siap di proyek pengguna. Jika tiga pengaturan yang sudah selesai itu masih sesuai, Anda dapat melanjutkan ke tahap 4 untuk Realtime Database.
+Provider **Google dan Anonymous sudah Enabled**, dan `thermpyx.github.io` sudah ditambahkan ke Authorized domains. Realtime Database telah dibuat di **Singapore / `asia-southeast1`**, dengan URL asli yang sudah diisi pada kode. Anda dapat **langsung melanjutkan ke tahap 6 untuk memasang Rules**; tahap 1–5 dipertahankan sebagai rujukan. Penerapan Rules, penerbitan frontend Firebase dan percobaan langsung masih perlu diselesaikan sebelum bank soal/kuis produksi dinyatakan siap.
 
 ## 1. Buka proyek yang benar
 
@@ -47,6 +47,8 @@ Untuk mencoba melalui server lokal, tambahkan juga **host yang benar-benar dibuk
 
 ## 4. Buat Realtime Database
 
+Tahap ini sudah selesai untuk proyek `thermpyx`: database dibuat di Singapore. Langkah berikut berlaku sebagai rujukan jika menyiapkan ulang proyek.
+
 1. Pada menu **Build**, pilih **Realtime Database**. Pilih produk ini, karena kode kuis menggunakan Realtime Database.
 2. Klik **Create Database**. Jika database sudah tersedia, langsung buka database tersebut dan lanjut ke tahap 5.
 3. Pilih lokasi **Singapore / `asia-southeast1`** jika tersedia. Periksa pilihan lokasi sebelum melanjutkan; lokasi database ditentukan saat pembuatan.
@@ -57,22 +59,19 @@ Untuk mencoba melalui server lokal, tambahkan juga **host yang benar-benar dibuk
 
 ## 5. Salin URL database ke kode web
 
+URL proyek `thermpyx` telah dikonfirmasi dari Console dan diisi pada konfigurasi versi terbaru:
+
+```js
+databaseURL: "https://thermpyx-default-rtdb.asia-southeast1.firebasedatabase.app",
+```
+
+Jika nilai tersebut sudah sesuai, lanjutkan ke tahap 6. Untuk memeriksa atau menyiapkan ulang:
+
 1. Buka tab **Data** pada Realtime Database.
 2. Salin URL database yang ditampilkan di bagian atas. URL diawali `https://` dan menggunakan domain `firebasedatabase.app` atau `firebaseio.com`.
 3. Pada folder proyek THERMPYX, buka [js/firebase-config.js](../js/firebase-config.js).
-4. Cari baris:
-
-   ```js
-   databaseURL: "",
-   ```
-
-5. Tempel URL yang baru disalin **di antara tanda kutip** tersebut. Bentuk pengisiannya:
-
-   ```js
-   databaseURL: "TEMPEL_URL_REALTIME_DATABASE_DARI_CONSOLE_DI_SINI",
-   ```
-
-6. Ganti seluruh teks contoh di dalam kutip dengan URL asli dari Console, lalu simpan berkas. Pertahankan koma dan isian konfigurasi lainnya.
+4. Cari properti **`databaseURL`**, lalu pastikan nilai di antara tanda kutip sama dengan URL asli dari Console, seperti contoh proyek di atas.
+5. Jika nilainya berbeda atau kosong, tempel URL yang disalin, lalu simpan. Pertahankan tanda kutip, koma dan isian konfigurasi lainnya.
 
 **Hasil tahap ini:** `databaseURL` berisi URL asli database Anda, bukan kosong atau teks contoh. Jangan menebak alamat database dari nama proyek.
 

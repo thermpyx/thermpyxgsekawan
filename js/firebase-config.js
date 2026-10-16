@@ -3,7 +3,7 @@ window.TPX_FIREBASE_CONFIG = Object.freeze({
   apiKey: "AIzaSyCGEUzuhHLvyuJanJW_fOaZHWWaAZLnPfk",
   authDomain: "thermpyx.firebaseapp.com",
   projectId: "thermpyx",
-  databaseURL: "",
+  databaseURL: "https://thermpyx-default-rtdb.asia-southeast1.firebasedatabase.app",
   storageBucket: "thermpyx.firebasestorage.app",
   messagingSenderId: "510159243756",
   appId: "1:510159243756:web:b9def71c6cf97ad76818c9",
