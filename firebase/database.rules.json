@@ -193,7 +193,7 @@
         "$uid": {
           "$index": {
             ".write": "auth != null && auth.uid === $uid && root.child('players').child($roomId).child(auth.uid).exists() && root.child('players').child($roomId).child(auth.uid).child('current_question').val() !== -1 && root.child('rooms').child($roomId).child('status').val() === 'playing' && !data.exists() && newData.exists() && $index.matches(/^(0|[1-9][0-9]?)$/) && root.child('rooms').child($roomId).child('questions').child($index).exists()",
-            ".validate": "newData.hasChildren(['id','room_id','player_id','question_index','selected_answer','is_correct','score','response_time_ms','created_at']) && newData.child('is_correct').val() === (newData.child('selected_answer').val() === root.child('rooms').child($roomId).child('questions').child($index).child('correctAnswer').val()) && newData.child('score').val() === (newData.child('is_correct').val() ? 100 : 0) && (newData.child('selected_answer').val() !== -1 || newData.child('response_time_ms').val() === 20000)",
+            ".validate": "newData.hasChildren(['id','room_id','player_id','question_index','selected_answer','is_correct','score','response_time_ms','created_at']) && newData.child('is_correct').val() === (newData.child('selected_answer').val() === root.child('rooms').child($roomId).child('questions').child($index).child('correctAnswer').val()) && newData.child('score').val() === (newData.child('is_correct').val() === true ? 100 : 0) && (newData.child('selected_answer').val() !== -1 || newData.child('response_time_ms').val() === 20000)",
             "id": {
               ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 256"
             },
