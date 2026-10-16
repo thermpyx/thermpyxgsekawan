@@ -11,6 +11,9 @@ The user-facing application is a static bilingual learning site. Use the existin
 - Keep responsive layouts usable at 320px as well as desktop, in both themes and both languages. Sticky headers must not cover focused controls or anchor targets. Preserve reduced-motion and keyboard operation.
 - Do not replace account, music, teacher content, or Supabase setup with mock production behavior. Browser tests may mock/abort remote services; report this limit. Do not create or modify live backend data just to run QA.
 - Preserve the user's existing files, photos, music, vendor assets, and account settings. Do not put secret/service-role keys in frontend code.
+- Capture authentication callback intent before the Supabase SDK consumes its URL, subscribe before views mount, and wait for SDK initialization before cleaning callback parameters. Only a validated recovery event/session may enable password updates; an `account=recovery` query alone must never do so. Keep access/refresh tokens out of shell query strings and release temporary callback credentials after validation.
+- For question-set writes, preserve local drafts on failure and account changes, confirm the returned cloud record before claiming success, and never apply a stale request to a different account or draft. Preserve owner RLS and the custom-room question snapshot.
+- A successful signup/resend request does not prove email delivery. Confirmation email templates and SMTP must be configured in the existing Supabase project separately from publishing frontend code; use password recovery for an already confirmed account.
 
 ## Visual preferences from the user
 
@@ -41,3 +44,5 @@ node qa/test-upload-flow.cjs
 ```
 
 Check the actual test filenames in `qa/` if they have changed. Run relevant existing auth, history, music, calculator, or converter suites for changes affecting those features. No tests should write to the production Supabase database. Summarize passed checks and untested external behavior accurately.
+
+For authentication and teacher question-set changes, also run `test-auth-recovery`, `test-email-template`, `test-question-set-flow`, and `test-host-auth-race` from `qa/`. The local PostgreSQL suites require `@electric-sql/pglite` outside the runtime checkout. `qa/test-auth-sdk.cjs` uses the real Supabase browser SDK with intercepted Auth endpoints; provide its UMD path through `TPX_SUPABASE_SDK_PATH`. These tests must not send email or write to the remote database.

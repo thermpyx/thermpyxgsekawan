@@ -18,7 +18,14 @@ const assert = require("node:assert/strict"), {chromium} = require("playwright")
     }
     assert.equal(new URL(page.url()).search.includes("access_token"), false);
     assert.equal(new URL(page.url()).search.includes("refresh_token"), false);
+    requests.length = 0;
+    await page.goto(base.replace(/\/$/, "") + "/index.html?account=recovery&code=fixture-pkce-code#account", {waitUntil: "domcontentloaded"});
+    await page.waitForFunction(() => document.querySelector("#tpx-content-frame")?.contentWindow.document.getElementById("home"));
+    const outerRequests = requests.filter(value => new URL(value).pathname.endsWith("/app.html"));
+    assert.ok(outerRequests.length);
+    for (const value of outerRequests) assert.equal(new URL(value).search.includes("fixture-pkce-code"), false);
+    assert.ok(requests.some(value => new URL(value).pathname.endsWith("/index.html") && new URL(value).searchParams.get("code") === "fixture-pkce-code"));
     await context.close();
-    console.log("PASS Direct recovery navigation keeps credentials out of HTTP query strings and shell page parameters");
+    console.log("PASS Recovery tokens stay out of HTTP query strings; PKCE codes reach the SDK child without being embedded in shell page parameters");
   } finally {await browser.close();}
 })().catch(error => {console.error(error); process.exitCode = 1;});

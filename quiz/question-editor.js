@@ -138,18 +138,25 @@
 
   function updateDraftStatus() {
     const draft = active();
-    const synced = !!draft.cloudId && draft.savedFingerprint === fingerprint(draft);
-    ui.badge.textContent = synced ? 'Tersimpan di cloud' : 'Draf lokal';
+    const userId = currentSession?.user?.id;
+    const otherAccount = !!draft.cloudId && draft.cloudOwner !== userId;
+    const synced = !!draft.cloudId && !otherAccount && draft.savedFingerprint === fingerprint(draft);
+    setBilingual(ui.badge, synced ? 'Saved to cloud' : 'Local draft', synced ? 'Tersimpan di cloud' : 'Draf lokal');
     ui.badge.classList.toggle('is-cloud', synced);
-    ui.draftStatus.textContent = localWriteFailed
-      ? 'Browser tidak dapat menyimpan draf. Jangan tutup halaman; simpan ke cloud setelah login.'
+    const status = localWriteFailed
+      ? ['The browser cannot save this draft. Keep this page open and save to cloud after signing in.', 'Browser tidak dapat menyimpan draf. Jangan tutup halaman; simpan ke cloud setelah login.']
       : startupStorageProblem
-        ? 'Draf sebelumnya tidak bisa dibaca. Perubahan baru tersimpan otomatis di browser ini.'
+        ? ['The previous draft could not be read. New changes are saved automatically in this browser.', 'Draf sebelumnya tidak bisa dibaca. Perubahan baru tersimpan otomatis di browser ini.']
+        : otherAccount
+          ? currentSession
+            ? ['This local draft is linked to another account. Saving now creates a separate copy in the current account.', 'Draf lokal ini tertaut ke akun lain. Menyimpan sekarang membuat salinan terpisah di akun aktif.']
+            : ['The cloud copy belongs to its original account. Sign in to that account to update it; this device draft remains available.', 'Salinan cloud ada di akun pemiliknya. Masuk ke akun tersebut untuk memperbaruinya; draf perangkat ini tetap tersedia.']
         : synced
-          ? 'Versi ini tersimpan di cloud dan di perangkat ini.'
+          ? ['This version is saved to the cloud and on this device.', 'Versi ini tersimpan di cloud dan di perangkat ini.']
           : draft.cloudId
-            ? 'Perubahan tersimpan di perangkat ini. Simpan ke cloud untuk memperbarui versi yang di-host.'
-            : 'Perubahan tersimpan otomatis di browser ini; belum tersimpan di cloud.';
+            ? ['Changes are saved on this device. Save to cloud to update the version available for hosting.', 'Perubahan tersimpan di perangkat ini. Simpan ke cloud untuk memperbarui versi yang di-host.']
+            : ['Changes are saved automatically in this browser, but have not been saved to the cloud.', 'Perubahan tersimpan otomatis di browser ini; belum tersimpan di cloud.'];
+    setBilingual(ui.draftStatus, status[0], status[1]);
     protectUserText(ui.heading, !!draft.title.trim());
     ui.heading.textContent = draft.title.trim() || 'Set soal baru';
     ui.questionCount.textContent = draft.questions.length + ' / ' + MAX_QUESTIONS;
@@ -168,8 +175,9 @@
     ui.saveHost.formNoValidate = !currentSession;
     ui.check.disabled = busy;
     ui.add.disabled = busy || active().questions.length >= MAX_QUESTIONS;
-    ui.publish.textContent = busy ? 'Sedang memproses…' : currentSession ? 'Simpan ke cloud' : tr('Sign in to save', 'Masuk untuk menyimpan');
-    setBilingual(ui.saveHost, busy ? 'Saving…' : currentSession ? 'Save and host quiz' : 'Sign in to save and host', busy ? 'Menyimpan…' : currentSession ? 'Simpan dan host kuis' : 'Masuk untuk simpan dan host');
+    const copyToAccount = currentSession && active().cloudId && active().cloudOwner !== currentSession.user.id;
+    setBilingual(ui.publish, busy ? 'Saving…' : copyToAccount ? 'Save copy to this account' : currentSession ? 'Save to cloud' : 'Sign in to save', busy ? 'Menyimpan…' : copyToAccount ? 'Simpan salinan ke akun ini' : currentSession ? 'Simpan ke cloud' : 'Masuk untuk menyimpan');
+    setBilingual(ui.saveHost, busy ? 'Saving…' : copyToAccount ? 'Save copy and host quiz' : currentSession ? 'Save and host quiz' : 'Sign in to save and host', busy ? 'Menyimpan…' : copyToAccount ? 'Simpan salinan dan host kuis' : currentSession ? 'Simpan dan host kuis' : 'Masuk untuk simpan dan host');
     document.querySelectorAll('.qe-set-open, .qe-set-delete').forEach(button => { button.disabled = busy; });
   }
 
@@ -482,7 +490,9 @@
       const result = await content.listQuestionSets();
       if (request !== cloudRequest || currentSession?.user?.id !== userId) return;
       if (result.error) throw result.error;
-      cloudSets = Array.isArray(result.data) ? result.data : [];
+      cloudSets = Array.isArray(result.data)
+        ? result.data.filter(set => set && set.owner_id === userId && typeof set.id === 'string' && Array.isArray(set.questions))
+        : [];
       ui.cloudStatus.textContent = cloudSets.length ? cloudSets.length + ' set soal tersimpan di akunmu.' : 'Belum ada set soal. Simpan draf pertamamu ke cloud.';
       renderCloudList();
       if (requestedCloudSet) {
@@ -500,11 +510,21 @@
   }
 
   function openCloudSet(set) {
-    if (busy || !currentSession) return;
+    if (busy || !currentSession || set.owner_id !== currentSession.user.id) return;
     const existing = state.drafts.find(draft => draft.cloudId === set.id && draft.cloudOwner === currentSession.user.id);
     if (existing) {
+      const unchanged = existing.savedFingerprint === fingerprint(existing);
+      if (unchanged) {
+        const refreshed = newDraft({...set, cloudId: set.id, cloudOwner: currentSession.user.id});
+        Object.assign(existing, refreshed, {localId: existing.localId});
+        existing.savedFingerprint = fingerprint(existing);
+      }
       selectDraft(existing.localId);
-      publishStatus('Draf lokal set ini dibuka. Perubahanmu tetap tersimpan; koleksi cloud tidak menimpa draf.');
+      if (unchanged) {
+        const en = 'The latest cloud version is open. You can edit its local copy.';
+        const id = 'Versi cloud terbaru dibuka. Anda dapat mengedit salinan lokalnya.';
+        publishStatus(tr(en, id), '', {en, id});
+      } else publishStatus('Draf lokal set ini dibuka. Perubahanmu tetap tersimpan; koleksi cloud tidak menimpa draf.');
       return;
     }
     const draft = createDraft({ ...set, cloudId: set.id, cloudOwner: currentSession.user.id });
@@ -533,12 +553,22 @@
     updateControls();
     publishStatus('Menyimpan set soal ke cloud…');
     try {
-      const result = await content.saveQuestionSet(data);
+      const result = await content.saveQuestionSet(data, userId);
+      if (currentSession?.user?.id !== userId) {
+        const en = 'The account changed while saving. Sign in to the original account and refresh its cloud collection to check the result. Your local draft is unchanged.';
+        const id = 'Akun berubah saat menyimpan. Masuk ke akun semula dan muat ulang koleksi cloud untuk memeriksa hasilnya. Draf lokal Anda tidak berubah.';
+        publishStatus(tr(en, id), 'error', {en, id});
+        return;
+      }
       if (result.error) throw result.error;
       const saved = Array.isArray(result.data) ? result.data[0] : result.data;
       if (!saved || !saved.id) throw new Error('Server tidak mengembalikan identitas set soal. Muat ulang koleksi cloud sebelum mencoba lagi.');
+      if (saved.owner_id !== userId) throw {
+        messageEn: 'The server did not confirm this account as the owner. Refresh your cloud collection before trying again.',
+        messageId: 'Server belum mengonfirmasi akun ini sebagai pemilik. Muat ulang koleksi cloud sebelum mencoba lagi.'
+      };
       draft.cloudId = saved.id;
-      draft.cloudOwner = typeof saved.owner_id === 'string' ? saved.owner_id : userId;
+      draft.cloudOwner = userId;
       draft.savedFingerprint = fingerprint(draft);
       persist();
       const savedCopy = localWriteFailed ? {
@@ -599,7 +629,7 @@
       renderCloudList();
     }
     resetPublishStatus();
-    updateControls();
+    updateDraftStatus();
     await loadCloudSets();
   }
 

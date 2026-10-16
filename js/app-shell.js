@@ -7,7 +7,12 @@
   let frame=null,currentRoute="",pending=null,language=preference("thermpyx-language","en")==="id"?"id":"en";
   const t=(en,id)=>language==="id"?id:en;
   function validRoute(raw){
-    if(typeof raw!=="string"||!raw||raw.length>3000||/[\x00-\x1f]/.test(raw))return null;
+    if(typeof raw!=="string"||!raw||raw.length>36000||/[\x00-\x1f]/.test(raw))return null;
+    const marker=raw.indexOf("#"),fragment=marker<0?"":raw.slice(marker);
+    // JWTs may include provider/user metadata. Keep the ordinary route limit,
+    // while allowing a bounded Auth fragment to reach the SDK intact.
+    const authFragment=/(?:^#|&)(?:access_token|refresh_token|error|error_code|error_description)=/.test(fragment);
+    if(raw.length>3000&&!(authFragment&&marker<=3000&&fragment.length<=32768))return null;
     const path=raw.split(/[?#]/)[0];
     if(!path||/^[\/\\]|^[a-z][a-z\d+.-]*:/i.test(path)||path.includes("\\"))return null;
     let decoded;try{decoded=decodeURIComponent(path);}catch(_){return null;}
@@ -25,12 +30,28 @@
   function requestedRoute(){
     const params=new URL(location.href).searchParams;
     let route=params.get("page")||"index.html";
+    const transport=new URLSearchParams(location.hash.slice(1));
+    if(transport.has("tpx_auth_code")) {
+      const target=new URL(validRoute(route)||"index.html",base);
+      target.searchParams.set("code",transport.get("tpx_auth_code"));
+      target.hash=transport.get("tpx_auth_anchor")||"";
+      return validRoute(target.pathname.slice(base.pathname.length)+target.search+target.hash)||"index.html?account=recovery#account";
+    }
     if(location.hash&&!route.includes("#"))route+=location.hash;
-    return validRoute(route)||"index.html";
+    return validRoute(route)||(/(?:^#|&)(?:access_token|refresh_token|error|error_code|error_description)=/.test(location.hash)?"index.html?account=recovery#account":"index.html");
   }
   function address(route){
     const url=new URL(appURL),marker=route.indexOf("#"),hash=marker<0?"":route.slice(marker);
-    const authFragment=/(?:^#|&)(?:access_token|refresh_token|error_description)=/.test(hash);
+    const target=new URL(route,base),callbackCode=target.searchParams.get("code");
+    if(callbackCode) {
+      target.searchParams.delete("code");
+      url.searchParams.set("page",target.pathname.slice(base.pathname.length)+target.search);
+      const transport=new URLSearchParams({tpx_auth_code:callbackCode});
+      if(hash)transport.set("tpx_auth_anchor",hash);
+      url.hash=transport.toString();
+      return url.href;
+    }
+    const authFragment=/(?:^#|&)(?:access_token|refresh_token|error|error_code|error_description)=/.test(hash);
     url.searchParams.set("page",authFragment?route.slice(0,marker):route);
     if(authFragment)url.hash=hash;
     return url.href;

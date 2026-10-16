@@ -1,6 +1,20 @@
 /* Load FIRST in each content document, before the existing navigation scripts. */
 (() => {
   "use strict";
+  // Capture callback intent before the Auth SDK consumes and removes its URL.
+  // Keep credentials in this closure only; expose a comparison, never the token.
+  const authHash = new URLSearchParams(location.hash.slice(1)), authQuery = new URLSearchParams(location.search);
+  let callbackAccess = authHash.get("access_token");
+  const callbackRecovery = authHash.get("type") === "recovery";
+  window.TPXAuthCallback = Object.freeze({
+    present: Boolean(callbackAccess || authHash.has("refresh_token") || authHash.has("error") || authHash.has("error_code") || authHash.has("error_description") || authQuery.has("code") || authQuery.has("error") || authQuery.has("error_code")),
+    recoveryRequested: callbackRecovery || authQuery.get("account") === "recovery",
+    hasRecoveryTokens: callbackRecovery && Boolean(callbackAccess && authHash.get("refresh_token")),
+    error: authHash.get("error_code") || authQuery.get("error_code") || (authHash.has("error") || authQuery.has("error") ? "invalid_callback" : ""),
+    matchesSession: session => Boolean(callbackAccess && session?.access_token === callbackAccess),
+    release: () => { callbackAccess = null; }
+  });
+  authHash.delete("access_token"); authHash.delete("refresh_token"); authQuery.delete("code");
   const base=new URL("../",document.currentScript.src),app=new URL("app.html",base);
   let shell;try{if(window.parent!==window&&window.parent.TPXPersistentShell?.owns(window))shell=window.parent.TPXPersistentShell;}catch(_){}
   if(!shell){
@@ -10,9 +24,16 @@
     if(location.pathname===app.pathname)return;
     // Recovery credentials stay in a fragment, which the browser does not send
     // to the HTTP server. Ordinary anchors remain part of the content route.
-    const authFragment = /(?:^#|&)(?:access_token|refresh_token|error_description)=/.test(location.hash);
-    app.searchParams.set("page",route+location.search+(authFragment?"":location.hash));
-    if(authFragment)app.hash=location.hash;
+    const authFragment = /(?:^#|&)(?:access_token|refresh_token|error|error_code|error_description)=/.test(location.hash);
+    const contentQuery = new URLSearchParams(location.search), callbackCode = contentQuery.get("code");
+    if (callbackCode) contentQuery.delete("code");
+    const search = contentQuery.toString();
+    app.searchParams.set("page",route+(search?"?"+search:"")+(authFragment||callbackCode?"":location.hash));
+    if(callbackCode) {
+      const transport = new URLSearchParams({tpx_auth_code: callbackCode});
+      if(location.hash) transport.set("tpx_auth_anchor", location.hash);
+      app.hash = transport.toString();
+    } else if(authFragment)app.hash=location.hash;
     location.replace(app.href);
     return;
   }

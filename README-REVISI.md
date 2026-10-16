@@ -1,5 +1,7 @@
 # THERMPYX: revisi visual dan alur belajar
 
+Pembaruan akun memperbaiki pembukaan formulir sandi baru dari tautan pemulihan, memperjelas status permintaan email, dan menambah pilihan tautan pada template konfirmasi. Audit bank soal juga memperbaiki penyimpanan serta pemuatan paket saat akun atau koneksi berubah. Lihat [catatan akun dan bank soal](docs/REVISI-AKUN-QUIZ.md). Template email perlu disimpan terpisah di Dashboard Supabase; pembaruan GitHub tidak mengubahnya otomatis.
+
 Revisi visual terbaru memperbaiki area kalor/suhu yang terpotong, menyelaraskan gambar alat simulator dengan piston Hukum I, merapikan jarak label, menghapus pemisah dekoratif teori, dan menambahkan kontrol angka kalkulator yang menyatu dengan input. Lihat [rincian revisi visual](docs/REVISI-VISUAL-SIMULATOR.md).
 
 Pembaruan ini menambahkan **Alur Belajar / Learning Path** dengan capaian per topik, aktivitas penerapan, progres lokal, dan kuis tujuh topik. Materi teori lengkap mendukung ID/EN; tampilan simulator diselaraskan, serta bug kontrol volume Hukum I diperbaiki dengan izin pengguna tanpa mengganti rumus proses. Lihat [rincian revisi](docs/REVISI-ALUR-BELAJAR.md) dan [pedoman pengembangan](AGENTS.md).
@@ -63,9 +65,14 @@ node qa/test-learning-ui.cjs
 node qa/test-upload-flow.cjs
 node qa/test-shell-music.cjs
 node qa/test-auth-navigation.cjs
+node qa/test-auth-recovery.cjs
+node qa/test-email-template.cjs
+node qa/test-host-auth-race.cjs
 node qa/test-simulator-history.cjs
 ```
 
 Hasil dan batas pengujian ada di [catatan revisi](docs/CATATAN-REVISI.md). Musik bawaan 01–06, berkas foto, seluruh profil, materi, dan tujuh kalkulator serta sembilan kategori konverter dipertahankan.
 
 Migrasi SQL juga memiliki tes PostgreSQL lokal opsional pada `qa/test-teacher-sql.cjs`, menggunakan paket `@electric-sql/pglite` yang dipasang di direktori sementara terpisah. Ini hanya dependensi QA, bukan kebutuhan runtime web.
+
+`qa/test-question-set-flow.cjs` menguji browser dan SQL PostgreSQL lokal bersama-sama dengan dependensi PGlite tersebut. Untuk menguji callback dengan SDK Supabase asli dan endpoint Auth tiruan, jalankan `TPX_SUPABASE_SDK_PATH=/lokasi/di-luar-web/supabase.js node qa/test-auth-sdk.cjs`. Tidak ada email yang dikirim atau data proyek Supabase yang diubah oleh tes tersebut.

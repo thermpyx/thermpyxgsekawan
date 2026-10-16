@@ -8,7 +8,7 @@
   const content = window.TPXContent;
   const auth = content?.mountAuth(document.querySelector("[data-content-auth]"));
   const tr = (en, id) => window.TPX?.getLanguage() === "id" ? id : en;
-  let ownedSets = new Map(), creating = false, loadingSets = false, authRevision = 0, statusCopy = null;
+  let ownedSets = new Map(), creating = false, loadingSets = false, authRevision = 0, authOwnerId, statusCopy = null;
   const parameters = new URLSearchParams(window.location.search);
   let requestedSet = parameters.get("set");
 
@@ -72,7 +72,7 @@
     else status("Ready-made topics need no account. Create a room when you are ready.", "Topik bawaan tidak memerlukan akun. Buat ruang saat Anda siap.");
     updateControls();
   }
-  async function loadQuestionSets() {
+  async function loadQuestionSets({ preserveStatus = false } = {}) {
     if (loadingSets) return;
     loadingSets = true;
     const revision = authRevision, previous = setSelect.value;
@@ -83,14 +83,15 @@
     try {
       const active = await content?.session();
       if (revision !== authRevision) return;
+      if (authOwnerId === undefined) authOwnerId = active?.user?.id || null;
       if (!active) {
-        status("Sign in to choose your cloud questions. You can draft new questions without an account.", "Masuk untuk memilih soal cloud Anda. Anda tetap bisa menyusun draf soal tanpa akun.");
+        if (!preserveStatus) status("Sign in to choose your cloud questions. You can draft new questions without an account.", "Masuk untuk memilih soal cloud Anda. Anda tetap bisa menyusun draf soal tanpa akun.");
         return;
       }
-      status("Loading your question sets…", "Memuat paket soal Anda…");
+      if (!preserveStatus) status("Loading your question sets…", "Memuat paket soal Anda…");
       const result = await content.listQuestionSets();
       if (revision !== authRevision) return;
-      if (result.error) { reportError(result.error); return; }
+      if (result.error) { if (!preserveStatus) reportError(result.error); return; }
       for (const item of result.data || []) {
         // Do not expose a stale owner's collection after an account change.
         if (item.owner_id !== active.user.id || !Array.isArray(item.questions)) continue;
@@ -103,66 +104,83 @@
         setSelect.value = requestedSet;
         requestedSet = null;
       } else if (ownedSets.has(previous)) setSelect.value = previous;
-      status(ownedSets.size ? "Your questions are ready. Select a set and create the room." : "No saved sets yet. Create your questions, then save them to your account.", ownedSets.size ? "Soal Anda siap. Pilih paket lalu buat ruang kuis." : "Belum ada paket tersimpan. Susun soal lalu simpan ke akun Anda.");
-    } catch (error) { if (revision === authRevision) reportError(error); }
+      if (!preserveStatus) status(ownedSets.size ? "Your questions are ready. Select a set and create the room." : "No saved sets yet. Create your questions, then save them to your account.", ownedSets.size ? "Soal Anda siap. Pilih paket lalu buat ruang kuis." : "Belum ada paket tersimpan. Susun soal lalu simpan ke akun Anda.");
+    } catch (error) { if (revision === authRevision && !preserveStatus) reportError(error); }
     finally {
       loadingSets = false;
       localize();
       setSelect.dispatchEvent(new Event("change", { bubbles: true }));
-      if (revision !== authRevision && sourceSelect.value === "custom") loadQuestionSets();
+      if (revision !== authRevision && sourceSelect.value === "custom") loadQuestionSets({ preserveStatus });
     }
   }
   async function createHostRoom() {
+    const revision = authRevision;
+    const accountChanged = () => {
+      if (revision === authRevision) return false;
+      status("Your account changed while creating the room. Check the question source and create the room again.", "Akun Anda berubah saat ruang dibuat. Periksa sumber soal lalu buat ruang kembali.");
+      return true;
+    };
     const db = typeof supabaseClient !== "undefined" ? supabaseClient : null;
     if (!db) {
       status("The quiz connection is unavailable. Your questions stay saved; try again after checking the connection.", "Koneksi kuis belum tersedia. Soal Anda tetap tersimpan; coba lagi setelah memeriksa koneksi.");
       return;
     }
     let topic = topicSelect.value, questions;
-    if (sourceSelect.value === "custom") {
-      const active = await content?.session();
-      if (!active) {
-        status("Sign in to host your saved question set.", "Masuk untuk menjadi host paket soal Anda.");
-        auth?.showSignIn?.();
-        return;
-      }
-      const selected = ownedSets.get(setSelect.value);
-      if (!selected) { status("Choose a saved question set first, or create a new one.", "Pilih paket soal tersimpan dahulu, atau susun paket baru."); setSelect.focus(); return; }
-      if (selected.owner_id !== active.user.id) { status("Reload the sets for your current account.", "Muat ulang paket untuk akun aktif Anda."); return; }
-      try { questions = content.normalizeQuestions(selected.questions); topic = selected.topic; }
-      catch (error) { reportError(error); return; }
-    }
-    status("Creating a room…", "Membuat ruang…");
     try {
+      if (sourceSelect.value === "custom") {
+        const active = await content?.session();
+        if (accountChanged()) return;
+        if (!active) {
+          status("Sign in to host your saved question set.", "Masuk untuk menjadi host paket soal Anda.");
+          auth?.showSignIn?.();
+          return;
+        }
+        const selected = ownedSets.get(setSelect.value);
+        if (!selected) { status("Choose a saved question set first, or create a new one.", "Pilih paket soal tersimpan dahulu, atau susun paket baru."); setSelect.focus(); return; }
+        if (selected.owner_id !== active.user.id) { status("Reload the sets for your current account.", "Muat ulang paket untuk akun aktif Anda."); return; }
+        try { questions = content.normalizeQuestions(selected.questions); topic = selected.topic; }
+        catch (error) { reportError(error); return; }
+      }
+      status("Creating a room…", "Membuat ruang…");
       let room = null;
       for (let attempt = 0; attempt < 3; attempt++) {
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         const payload = { room_code: code, topic, status: "waiting" };
         if (questions) payload.questions = questions;
         const result = await db.from("quiz_rooms").insert(payload).select().single();
+        // An accepted insert may finish after sign-out or an account switch.
+        // Leave that room untouched, but never bind it to the new local account.
+        if (accountChanged()) return;
         if (!result.error) { room = result.data; break; }
         if (result.error.code === "23505" && attempt < 2) continue;
         if (questions && ["42703", "PGRST204"].includes(result.error.code)) throw new Error(tr("Custom rooms need the question-library setup. See the Supabase guide.", "Ruang kustom membutuhkan setup bank soal. Lihat panduan Supabase."));
         throw new Error(tr("Room creation failed. Check Supabase access and try again.", "Ruang gagal dibuat. Periksa akses Supabase dan coba lagi."));
       }
       if (!room?.id) throw new Error(tr("Room creation was not confirmed.", "Pembuatan ruang belum terkonfirmasi."));
+      if (accountChanged()) return;
       sessionStorage.setItem("roomId", room.id); sessionStorage.setItem("roomCode", room.room_code);
       sessionStorage.setItem("roomTopic", room.topic); sessionStorage.setItem("userRole", "host");
       sessionStorage.removeItem("playerId"); sessionStorage.removeItem("nickname");
       window.location.href = "waiting-room.html";
-    } catch (error) { reportError(error); }
+    } catch (error) { if (!accountChanged()) reportError(error); }
   }
   sourceSelect.addEventListener("change", showSource);
   setSelect.addEventListener("change", renderSelectedSet);
   refresh.addEventListener("click", loadQuestionSets);
   window.addEventListener("thermpyx:languagechange", localize);
-  content?.onAuthChange(() => {
+  content?.onAuthChange(active => {
+    const ownerId = active?.user?.id || null;
+    if (authOwnerId === undefined) { authOwnerId = ownerId; return; }
+    if (authOwnerId === ownerId) return;
+    authOwnerId = ownerId;
     authRevision++;
     ownedSets = new Map();
     setSelect.replaceChildren(new Option(tr("Select your saved set", "Pilih paket tersimpan Anda"), ""));
     renderSelectedSet();
-    if (sourceSelect.value === "custom") loadQuestionSets();
+    if (sourceSelect.value === "custom") loadQuestionSets({ preserveStatus: creating });
   });
+  // Establish the owner even when built-in questions need no signed-in account.
+  content?.session().then(active => { if (authOwnerId === undefined) authOwnerId = active?.user?.id || null; }).catch(() => {});
   createRoomBtn.addEventListener("click", async () => {
     if (creating) return;
     creating = true; updateControls();

@@ -4,7 +4,9 @@
   const listeners = new Set();
   const mounted = new WeakMap();
   const siteBase = new URL("../", document.currentScript?.src || new URL("js/content-store.js", location.href));
-  let currentSession = null, initialized = false, subscription = null, lastAuthEvent = "", authSequence = 0;
+  let currentSession = null, initialized = false, subscription = null, lastAuthEvent = "", authSequence = 0, sessionRead = null;
+  const callback = window.TPXAuthCallback || {};
+  let callbackSettled = false, recoveryReady = false, recoveryUserId = null, callbackProblem = false;
   function language() {
     if (window.TPX?.getLanguage) return window.TPX.getLanguage();
     try { const stored = localStorage.getItem("thermpyx-language"); if (stored === "id" || stored === "en") return stored; } catch (_) { /* Storage can be unavailable. */ }
@@ -15,15 +17,21 @@
   const contentErrorMessage = error => error?.messageEn ? tr(error.messageEn, error.messageId) : String(error?.message || "");
   const client = () => typeof supabaseClient !== "undefined" ? supabaseClient : null;
   function clearAuthFragment() {
-    if (/^#(?:(?:[^&]*&)*(?:access_token|refresh_token|token_type|error_description)=)/.test(location.hash)) {
-      history.replaceState(history.state, "", location.pathname + location.search + "#account");
-    }
+    const url = new URL(location.href), fragment = new URLSearchParams(url.hash.slice(1));
+    if (["access_token", "refresh_token", "error", "error_code", "error_description"].some(key => fragment.has(key))) url.hash = "account";
+    ["code", "error", "error_code", "error_description"].forEach(key => url.searchParams.delete(key));
+    if (url.searchParams.get("account") === "recovery") {url.searchParams.delete("account"); url.hash = "account";}
+    history.replaceState(history.state, "", url.pathname + url.search + url.hash);
     try { window.parent.TPXPersistentShell?.reportLocation(window); } catch (_) { /* Standalone page. */ }
   }
   function emit(session, event = "") {
     currentSession = session || null;
     lastAuthEvent = event;
-    if (session && ["SIGNED_IN", "PASSWORD_RECOVERY", "INITIAL_SESSION"].includes(event)) clearAuthFragment();
+    if (event === "PASSWORD_RECOVERY" && session) {recoveryReady = true; recoveryUserId = session.user.id; callbackProblem = false;}
+    if (event === "SIGNED_OUT" || !session || (recoveryReady && session.user.id !== recoveryUserId) || (event === "SIGNED_IN" && callbackSettled)) recoveryReady = false;
+    // getSession settles SDK initialization. Never erase a callback while the
+    // SDK may still be exchanging its tokens/code or validating its user.
+    if (callbackSettled && session && ["SIGNED_IN", "PASSWORD_RECOVERY", "INITIAL_SESSION"].includes(event)) clearAuthFragment();
     for (const callback of listeners) {
       try { callback(currentSession, event); } catch (_) { /* One view must not break other views. */ }
     }
@@ -38,7 +46,12 @@
       over_request_rate_limit: ["Too many attempts. Please wait and try again.", "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi."],
       email_address_invalid: ["Enter a valid email address.", "Masukkan alamat email yang valid."],
       user_already_exists: ["An account with this email already exists. Sign in or reset your password.", "Akun dengan email ini sudah ada. Masuk atau atur ulang kata sandi."],
-      weak_password: ["Use a stronger password that meets the account requirements.", "Gunakan kata sandi yang lebih kuat sesuai ketentuan akun."]
+      weak_password: ["Use a stronger password that meets the account requirements.", "Gunakan kata sandi yang lebih kuat sesuai ketentuan akun."],
+      same_password: ["Choose a password different from your current password.", "Pilih kata sandi yang berbeda dari kata sandi sebelumnya."],
+      session_not_found: ["Your session has expired. Sign in again or request a new reset link.", "Sesi Anda sudah berakhir. Masuk kembali atau minta tautan pemulihan baru."],
+      email_address_not_authorized: ["Email delivery is restricted by the project's email service. Contact the site administrator or use an already confirmed account.", "Pengiriman email dibatasi layanan email proyek. Hubungi pengelola situs atau gunakan akun yang sudah terkonfirmasi."],
+      email_provider_disabled: ["Email sign-in is disabled for this project. Contact the site administrator.", "Login email belum diaktifkan untuk proyek ini. Hubungi pengelola situs."],
+      unexpected_failure: ["The email service could not complete this request. Try later or contact the site administrator.", "Layanan email belum dapat menyelesaikan permintaan ini. Coba nanti atau hubungi pengelola situs."]
     };
     if (authCopy[error.code]) return pairedError(...authCopy[error.code], error.code);
     if (["42P01", "PGRST205", "PGRST204"].includes(error.code))
@@ -48,20 +61,42 @@
     return { message: String(error.message || tr("Connection failed. Your local draft is safe.", "Koneksi gagal. Draf lokal Anda tetap tersimpan.")) };
   }
   const unavailable = () => ({ data: null, error: pairedError("Cloud connection is unavailable. You can keep editing locally.", "Koneksi cloud belum tersedia. Anda tetap bisa mengedit secara lokal.") });
-  async function session() {
+  function session() {
     const db = client();
-    if (!db?.auth) return null;
+    if (!db?.auth) {
+      callbackSettled = true;
+      callbackProblem = callback.recoveryRequested || callback.present ? "unavailable" : false;
+      if (callbackProblem) {callback.release?.(); clearAuthFragment();}
+      return Promise.resolve(null);
+    }
+    if (sessionRead) return sessionRead;
     if (!initialized) {
       initialized = true;
       subscription = db.auth.onAuthStateChange((event, next) => emit(next, event));
     }
-    try {
-      const { data, error } = await db.auth.getSession();
-      if (error) return null;
-      currentSession = data?.session || null;
-      clearAuthFragment();
-      return currentSession;
-    } catch (_) { return null; }
+    sessionRead = (async () => {
+      try {
+        const { data, error } = await db.auth.getSession();
+        currentSession = error ? null : data?.session || null;
+        if (!callbackSettled) {
+          // An early SDK PASSWORD_RECOVERY may precede this script's listener.
+          // A matching SDK-accepted fragment session can recover that intent;
+          // an ordinary login or a forged account=recovery query cannot.
+          if (!error && !callback.error && callback.hasRecoveryTokens && callback.matchesSession?.(currentSession)) {recoveryReady = true; recoveryUserId = currentSession.user.id;}
+          callbackProblem = Boolean(callback.error || ((callback.recoveryRequested || callback.present) && !currentSession) || (callback.recoveryRequested && !recoveryReady));
+          callbackSettled = true;
+          callback.release?.();
+          clearAuthFragment();
+        }
+        if (!currentSession || (recoveryReady && currentSession.user.id !== recoveryUserId)) recoveryReady = false;
+        return currentSession;
+      } catch (_) {
+        currentSession = null;
+        if (!callbackSettled) {callbackSettled = true; callbackProblem = Boolean(callback.recoveryRequested || callback.present); callback.release?.(); clearAuthFragment();}
+        return null;
+      } finally {sessionRead = null;}
+    })();
+    return sessionRead;
   }
   function onAuthChange(callback) {
     listeners.add(callback);
@@ -72,7 +107,7 @@
     if (!db?.auth) return unavailable();
     try {
       const result = await db.auth.signInWithPassword({ email: email.trim(), password });
-      if (!result.error) emit(result.data.session);
+      if (!result.error) {recoveryReady = false; emit(result.data.session);}
       return { data: result.data, error: friendly(result.error) };
     } catch (error) { return { data: null, error: friendly(error) }; }
   }
@@ -124,9 +159,10 @@
   async function updatePassword(password) {
     const db = client();
     if (!db?.auth?.updateUser) return unavailable();
+    if (!recoveryReady || !currentSession) return {data: null, error: pairedError("Open a valid password reset link before choosing a new password. Request a new link below.", "Buka tautan pemulihan yang valid sebelum membuat kata sandi baru. Minta tautan baru di bawah.", "recovery_required")};
     try {
       const result = await db.auth.updateUser({password});
-      if (!result.error) lastAuthEvent = "USER_UPDATED";
+      if (!result.error) {lastAuthEvent = "USER_UPDATED"; recoveryReady = false;}
       return {data: result.data, error: friendly(result.error)};
     } catch (error) {return {data: null, error: friendly(error)};}
   }
@@ -170,11 +206,12 @@
       return { data: result.data, error: friendly(result.error) };
     } catch (error) { return { data: null, error: friendly(error) }; }
   }
-  async function save(table, input, kind) {
+  async function save(table, input, kind, expectedOwnerId) {
     const db = client();
     if (!db) return unavailable();
     const active = await session();
     if (!active) return { data: null, error: pairedError("Sign in before saving to cloud. Local editing remains available.", "Masuk sebelum menyimpan ke cloud. Pengeditan lokal tetap tersedia.") };
+    if (expectedOwnerId && active.user.id !== expectedOwnerId) return {data: null, error: pairedError("Your account changed before saving. Your local draft is safe. Reload your account and try again.", "Akun berubah sebelum penyimpanan. Draf lokal tetap aman. Muat ulang akun lalu coba lagi.")};
     try {
       const payload = { title: text(input.title, tr("Title", "Judul"), 140), topic: String(input.topic || "all").slice(0, 80), owner_id: active.user.id };
       if (kind === "questions") payload.questions = normalizeQuestions(input.questions);
@@ -227,13 +264,14 @@
         </form>
         <form class="tpx-auth-reset" hidden><h3 data-auth-en="Reset password" data-auth-id="Atur ulang kata sandi"></h3><p data-auth-en="We will email you a secure link to choose a new password." data-auth-id="Kami akan mengirim tautan aman melalui email untuk mengganti kata sandi."></p><label><span data-auth-en="Email" data-auth-id="Email"></span><input name="reset_email" type="email" required autocomplete="username" maxlength="254" autocapitalize="none"></label><div class="tpx-auth-actions"><button type="submit" data-auth-en="Send reset link" data-auth-id="Kirim tautan pemulihan"></button><button type="button" data-back data-auth-en="Back to sign in" data-auth-id="Kembali ke masuk"></button></div></form>
         <form class="tpx-auth-recovery" hidden><h3 data-auth-en="Choose a new password" data-auth-id="Buat kata sandi baru"></h3><label><span data-auth-en="New password" data-auth-id="Kata sandi baru"></span><input name="new_password" type="password" required minlength="6" maxlength="128" autocomplete="new-password"></label><label><span data-auth-en="Confirm new password" data-auth-id="Ulangi kata sandi baru"></span><input name="confirm_new_password" type="password" required minlength="6" maxlength="128" autocomplete="new-password"></label><div class="tpx-auth-actions"><button type="submit" data-auth-en="Save new password" data-auth-id="Simpan kata sandi baru"></button></div></form>
+        <p class="tpx-auth-callback" hidden data-auth-en="Checking your secure account link…" data-auth-id="Memeriksa tautan akun aman Anda…"></p>
         <button type="button" class="tpx-auth-signout" hidden data-auth-en="Sign out" data-auth-id="Keluar"></button>
         <p class="tpx-auth-note" data-auth-en="Your question sets stay private in your account. Local drafts work without signing in." data-auth-id="Paket soal tersimpan secara pribadi di akun Anda. Draf lokal tetap bisa digunakan tanpa masuk."></p>
         <a class="tpx-auth-guide" target="_blank" rel="noopener" data-auth-en="Account setup help" data-auth-id="Bantuan pengaturan akun"></a>
       </div><p class="tpx-auth-message" role="status" aria-live="polite" aria-atomic="true"></p>`;
     const summary = container.querySelector(".tpx-auth-state"), fields = container.querySelector(".tpx-auth-fields"), form = container.querySelector(".tpx-auth-form"), verify = container.querySelector(".tpx-auth-verify"), reset = container.querySelector(".tpx-auth-reset"), recovery = container.querySelector(".tpx-auth-recovery"), logout = container.querySelector(".tpx-auth-signout"), status = container.querySelector(".tpx-auth-message"), toggle = container.querySelector(".tpx-auth-toggle"), modes = container.querySelector(".tpx-auth-modes"), resend = container.querySelector("[data-resend]");
     container.querySelector(".tpx-auth-guide").href = new URL("docs/PANDUAN-SUPABASE.md", siteBase).href;
-    let activeSession = null, statusCopy = null, mode = options.mode === "register" ? "register" : "signin", pendingEmail = "", busy = false, resendUntil = 0, resendTimer = null;
+    let activeSession = null, statusCopy = null, mode = options.mode === "register" ? "register" : "signin", pendingEmail = "", busy = false, resendUntil = 0, resendTimer = null, callbackApplied = false;
     function message(en, id) { statusCopy = {en, id}; status.textContent = tr(en, id); }
     function errorMessage(error) { statusCopy = error.messageEn ? {en: error.messageEn, id: error.messageId} : null; status.textContent = error.message; }
     const dialog = document.createElement("dialog");
@@ -246,7 +284,23 @@
     accountState.className = "tpx-auth-dialog-state";
     dialog.append(accountState, fields, status);
     container.append(dialog);
-    let returnFocus = null;
+    let returnFocus = null, recoveryFocusTouched = false;
+    dialog.addEventListener("pointerdown", () => {recoveryFocusTouched = true;});
+    dialog.addEventListener("keydown", () => {recoveryFocusTouched = true;});
+    function focusRecovery() {
+      recoveryFocusTouched = false;
+      recovery.elements.new_password.focus();
+      const restore = () => {
+        const active = document.activeElement;
+        if (!recoveryFocusTouched && dialog.open && mode === "recovery" && !recovery.hidden && (!active || active === document.body || active === document.documentElement || active === dialog)) recovery.elements.new_password.focus({preventScroll: true});
+      };
+      // Initial fragment focus can run after a fast Auth callback opens the
+      // dialog. Repair only that browser reset, without moving user focus.
+      const afterLayout = () => requestAnimationFrame(restore);
+      afterLayout();
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", afterLayout, {once: true});
+      if (document.readyState !== "complete") window.addEventListener("load", afterLayout, {once: true});
+    }
     function expand(open = true) {
       fields.hidden = !open;
       toggle.setAttribute("aria-expanded", String(open));
@@ -280,8 +334,19 @@
     function render(active, event = "") {
       activeSession = active;
       if (!active && event === "SIGNED_OUT") mode = "signin";
-      if (event === "PASSWORD_RECOVERY" && active) { mode = "recovery"; expand(); }
-      if (active && mode !== "recovery") mode = "signin";
+      if (mode === "recovery" && (!recoveryReady || !active)) {
+        mode = "reset";
+        message("Your recovery session has ended. Request a new reset link below.", "Sesi pemulihan sudah berakhir. Minta tautan pemulihan baru di bawah.");
+      }
+      let openCallback = false;
+      if (recoveryReady && active && mode !== "recovery") {mode = "recovery"; openCallback = true; callbackApplied = true;}
+      else if (callbackSettled && callbackProblem && !callbackApplied) {
+        mode = "reset"; callbackApplied = true; openCallback = true;
+        if (callbackProblem === "unavailable") message("The account service could not load. Check your connection and reload this page, then request a new reset link. Your password has not changed.", "Layanan akun belum dapat dimuat. Periksa koneksi dan muat ulang halaman ini, lalu minta tautan pemulihan baru. Kata sandi Anda belum berubah.");
+        else message("This account link is missing, invalid, expired, or already used. Request a new reset link below and open the newest email in this browser. A normal sign-in does not start password recovery.", "Tautan akun tidak lengkap, tidak valid, sudah kedaluwarsa, atau sudah digunakan. Minta tautan pemulihan baru di bawah dan buka email terbaru di browser ini. Login biasa tidak memulai pemulihan kata sandi.");
+      } else if (!callbackSettled && (callback.present || callback.recoveryRequested)) {mode = "callback"; openCallback = true;}
+      else if (mode === "callback") {mode = "signin"; openCallback = true;}
+      if (active && !["recovery", "reset", "callback"].includes(mode)) mode = "signin";
       summary.textContent = active ? `${tr("Connected", "Terhubung")}: ${active.user.email || tr("account", "akun")}` : tr("Sign in to your THERMPYX account", "Masuk ke akun THERMPYX");
       summary.hidden = !active;
       accountState.hidden = !active;
@@ -290,9 +355,10 @@
       form.hidden = Boolean(active) || !["signin", "register"].includes(mode);
       modes.hidden = Boolean(active) || !["signin", "register"].includes(mode);
       verify.hidden = Boolean(active) || mode !== "verify";
-      reset.hidden = Boolean(active) || mode !== "reset";
+      reset.hidden = mode !== "reset";
       recovery.hidden = !active || mode !== "recovery";
-      logout.hidden = !active || mode === "recovery";
+      container.querySelector(".tpx-auth-callback").hidden = mode !== "callback";
+      logout.hidden = !active || ["recovery", "callback"].includes(mode);
       const registering = mode === "register";
       container.querySelector("[data-signin]").setAttribute("aria-pressed", String(!registering));
       container.querySelector("[data-register]").setAttribute("aria-pressed", String(registering));
@@ -307,6 +373,7 @@
       form.querySelector("[data-auth-submit]").textContent = registering ? tr("Create account", "Buat akun") : tr("Sign in", "Masuk");
       verify.querySelector(".tpx-auth-verify-address").textContent = pendingEmail;
       cooldown();
+      if (openCallback) {expand(); if (mode === "recovery") focusRecovery();}
     }
     function localize() {
       container.querySelectorAll("[data-auth-en]").forEach(node => { node.textContent = tr(node.dataset.authEn, node.dataset.authId); });
@@ -341,9 +408,12 @@
       perform(async () => {
         const result = await (register ? signUp : signIn)(email, password);
         if (result.error) { errorMessage(result.error); if (!register && result.error.code === "email_not_confirmed") {pendingEmail = email; mode = "verify";} }
-        else if (register && !result.data?.session) {
+        else if (register && !result.data?.session && Array.isArray(result.data?.user?.identities) && !result.data.user.identities.length) {
+          mode = "signin";
+          message("No new account was confirmed. If you already registered this email, sign in or use Forgot password. A confirmation code may not be sent for an existing account.", "Belum ada akun baru yang dikonfirmasi. Jika email ini sudah pernah didaftarkan, masuk atau gunakan Lupa kata sandi. Kode konfirmasi mungkin tidak dikirim untuk akun yang sudah ada.");
+        } else if (register && !result.data?.session) {
           pendingEmail = email; mode = "verify"; resendUntil = Date.now() + 60000;
-          message("Check your email for the confirmation code or link.", "Periksa email untuk kode atau tautan konfirmasi.");
+          message("Request accepted. Check your inbox and Spam for a confirmation link or code; email delivery is not yet confirmed. Already registered? Go back to sign in or reset your password.", "Permintaan diterima. Periksa kotak masuk dan Spam untuk tautan atau kode konfirmasi; pengiriman email belum dapat dipastikan. Sudah terdaftar? Kembali untuk masuk atau atur ulang kata sandi.");
         } else {message("Account connected.", "Akun terhubung.");}
         if (!result.error) {form.elements.password.value = ""; form.elements.confirm_password.value = "";}
       });
@@ -364,7 +434,7 @@
     });
     resend.addEventListener("click", () => {
       if (Date.now() < resendUntil) return;
-      perform(async () => {const result = await resendVerification(pendingEmail); if (result.error) errorMessage(result.error); else {resendUntil = Date.now() + 60000; message("Check your email for the new confirmation code or link.", "Periksa email untuk kode atau tautan konfirmasi baru.");}});
+      perform(async () => {const result = await resendVerification(pendingEmail); if (result.error) errorMessage(result.error); else {resendUntil = Date.now() + 60000; message("Request accepted. If this email still needs confirmation, check your inbox and Spam for a new link or code. Already confirmed? Go back to sign in or reset your password.", "Permintaan diterima. Jika email masih perlu dikonfirmasi, periksa kotak masuk dan Spam untuk tautan atau kode baru. Sudah terkonfirmasi? Kembali untuk masuk atau atur ulang kata sandi.");}});
     });
     form.querySelector(".tpx-auth-forgot").addEventListener("click", () => {reset.elements.reset_email.value = form.elements.email.value; changeMode("reset", true);});
     reset.addEventListener("submit", event => {
@@ -378,7 +448,8 @@
     });
     logout.addEventListener("click", () => perform(async () => {const result = await signOut(); if (result.error) errorMessage(result.error); else {mode = "signin"; pendingEmail = ""; verify.reset(); form.reset(); message("Signed out. Local drafts are unchanged.", "Sudah keluar. Draf lokal tetap tersimpan.");}}));
     window.addEventListener("thermpyx:languagechange", localize);
-    localize(); expand(false);
+    localize();
+    if (!callback.present && !callback.recoveryRequested && !recoveryReady) expand(false);
     onAuthChange(render); session().then(active => render(active, lastAuthEvent));
     const controller = {open: () => expand(), showSignIn: () => changeMode("signin", true), showRegister: () => changeMode("register", true)};
     mounted.set(container, controller);
@@ -387,10 +458,13 @@
   window.TPXContent = {
     session, onAuthChange, signIn, signUp, signOut, verifyEmailCode, resendVerification, requestPasswordReset, updatePassword, mountAuth, normalizeQuestions, normalizeCards, errorMessage: contentErrorMessage,
     listQuestionSets: () => list("tpx_question_sets", true),
-    saveQuestionSet: input => save("tpx_question_sets", input, "questions"),
+    saveQuestionSet: (input, expectedOwnerId) => save("tpx_question_sets", input, "questions", expectedOwnerId),
     deleteQuestionSet: id => remove("tpx_question_sets", id),
     listDecks: () => list("tpx_flashcard_decks", false),
     saveDeck: input => save("tpx_flashcard_decks", input, "cards"),
     deleteDeck: id => remove("tpx_flashcard_decks", id)
   };
+  // Subscribe immediately, before a view mounts, so SDK initialization cannot
+  // lose PASSWORD_RECOVERY between loading the scripts and DOMContentLoaded.
+  session();
 })();

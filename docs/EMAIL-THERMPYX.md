@@ -1,6 +1,17 @@
 # Email verifikasi dari THERMPYX
 
-Web menyediakan pendaftaran, formulir kode verifikasi, kirim ulang kode, serta pemulihan kata sandi. Supabase Auth mengelola akun. Nama dan alamat pengirim email diatur di Dashboard; perubahan kode web saja tidak dapat mengganti alamat pengirim.
+Web menyediakan pendaftaran, formulir kode verifikasi, kirim ulang kode, serta pemulihan kata sandi. Supabase Auth mengelola akun. Nama dan alamat pengirim email diatur di Dashboard; perubahan kode web saja tidak dapat mengganti alamat pengirim atau memastikan email diterima.
+
+## Mulai dengan akun yang tepat
+
+Gunakan proyek Supabase yang sudah dipakai kuis live. Tidak perlu membuat proyek baru, menghapus pengguna lama, atau mengganti key untuk mengatur sandi.
+
+1. Buka **Authentication → Users** dan periksa email Anda.
+2. Jika akun sudah terkonfirmasi, gunakan **Masuk**. Jika lupa/belum tahu sandinya, gunakan **Lupa kata sandi**. **UID bukan kata sandi**, dan sandi lama tidak dapat dilihat di Dashboard.
+3. **Buat akun** dan **Kirim ulang kode** digunakan untuk pendaftaran yang belum dikonfirmasi. Keduanya bukan cara mengatur sandi akun lama yang sudah terkonfirmasi. Mendaftarkan ulang email lama dapat menghasilkan jawaban umum dari Supabase tanpa mengirim email konfirmasi baru, untuk melindungi informasi keberadaan akun.
+4. Untuk menguji pendaftaran baru, gunakan alamat email lain milik Anda yang belum terdaftar serta memenuhi pengaturan penerima email proyek di bawah.
+
+Jangan mengirim password, kode sekali pakai, atau tautan pemulihan ke chat/GitHub. Pesan bahwa permintaan diterima tidak membuktikan email sudah tiba.
 
 ## 1. Aktifkan konfirmasi email
 
@@ -16,8 +27,11 @@ Jika Confirm email dimatikan, Supabase langsung memberi sesi saat mendaftar dan 
 2. Isi subjek **Kode verifikasi akun THERMPYX**.
 3. Salin isi [`supabase/confirm-signup-email.html`](../supabase/confirm-signup-email.html) ke badan template, lalu simpan.
 4. Pertahankan `{{ .Token }}`: Supabase menggantinya dengan kode nyata. Jangan mengetik kode tetap. Web memakai `verifyOtp` dengan tipe `signup` dan `resend` untuk kode pendaftaran.
+5. Pertahankan juga `{{ .ConfirmationURL }}` pada tombol konfirmasi. Template menyediakan kode **dan** tautan sebagai dua pilihan untuk konfirmasi yang sama; cukup gunakan salah satunya. Setelah meminta kirim ulang, gunakan email yang terbaru.
 
-Template ini mengirim kode yang dimasukkan di web. Email pemulihan kata sandi tetap menggunakan tautan: jangan mengganti `{{ .ConfirmationURL }}` pada template **Reset password** dengan token pendaftaran.
+Mengubah berkas HTML di GitHub tidak otomatis mengubah template email proyek Supabase. Salin template ke Dashboard dan simpan. Jika template **Confirm signup** bawaan Anda hanya mempunyai tautan, pengguna dapat mengkliknya; email tersebut memang tidak menampilkan angka untuk disalin ke kolom kode.
+
+**Jangan menyalin template Confirm signup ke Reset password.** Email pemulihan kata sandi harus tetap menggunakan tautan `{{ .ConfirmationURL }}` dari template **Reset password**. Token pendaftaran tidak dapat digunakan untuk mengganti kata sandi.
 
 ## 3. Atur nama dan alamat pengirim
 
@@ -30,7 +44,11 @@ Agar kolom **From** menampilkan THERMPYX dengan alamat milik Anda, gunakan pengi
 5. Isi host, port, username, serta password SMTP sesuai penyedia. Simpan hanya di Dashboard.
 6. Simpan pengaturan dan lakukan uji pendaftaran dengan alamat email milik Anda.
 
-Tanpa custom SMTP, template dapat memakai identitas THERMPYX tetapi layanan email bawaan Supabase tetap memiliki alamat pengirim serta pembatasan penerima/pengiriman. Nama pengirim saja tidak menjamin bahwa email dapat dikirim ke semua pengguna. Jangan memasukkan password SMTP atau secret key ke JavaScript maupun GitHub.
+Jika **Custom SMTP belum aktif**, layanan bawaan Supabase ditujukan untuk percobaan dan membatasi pengiriman ke alamat anggota tim organisasi proyek, bukan semua alamat yang ditambahkan ke **Authentication → Users**. Karena itu, email pemulihan ke alamat pemilik proyek bisa diterima, sementara pendaftaran dengan alamat lain tidak bisa menerima email. Menambahkan pengguna aplikasi atau mengganti template tidak menghapus batas ini.
+
+Layanan bawaan juga memiliki kuota kecil; dokumentasi Supabase menyebut **dua email per jam per proyek** sebagai batas default gabungan untuk pendaftaran, pemulihan, dan endpoint email terkait. Itu bukan hasil pemeriksaan kuota proyek Anda. Periksa **Authentication → Rate Limits** dan kebijakan pengiriman yang berlaku untuk proyek tersebut; pengaturan batas yang dapat diubah mengikuti konfigurasi SMTP proyek. Jangan menekan kirim ulang berkali-kali. Custom SMTP tetap memiliki batas Supabase dan batas penyedianya sendiri.
+
+Untuk uji terbatas, gunakan alamat anggota tim yang sudah ada. Untuk mengizinkan dosen/siswa mendaftar dengan alamat mereka, siapkan **Custom SMTP** dengan pengirim terverifikasi. Jangan menambah semua siswa sebagai anggota organisasi Supabase hanya untuk menerima email. Jangan memasukkan password SMTP atau secret key ke JavaScript maupun GitHub.
 
 ## 4. Atur tautan pemulihan
 
@@ -42,14 +60,34 @@ Pada **Authentication → URL Configuration**:
 
 Sesuaikan daftar redirect dengan URL yang benar-benar dipakai; jangan menambahkan wildcard luas untuk mengatasi error.
 
+Untuk situs THERMPYX yang sekarang, nilainya adalah:
+
+| Pengaturan | Nilai |
+| --- | --- |
+| Site URL | `https://thermpyx.github.io/thermpyxgsekawan/` |
+| Redirect URL konfirmasi | `https://thermpyx.github.io/thermpyxgsekawan/index.html#account` |
+| Redirect URL pemulihan | `https://thermpyx.github.io/thermpyxgsekawan/index.html?account=recovery#account` |
+
+Jika nilai tersebut sudah disimpan, pertahankan. Setelah menerbitkan perbaikan web, minta **satu tautan pemulihan baru** melalui **Lupa kata sandi** dan buka email terbaru. Tautan lama dapat sudah digunakan atau kedaluwarsa. Halaman harus membuka formulir **Buat kata sandi baru** dan **Ulangi kata sandi baru**. URL pemulihan saja bukan izin mengganti sandi: Supabase tetap harus memvalidasi sesi dari tautan email.
+
 ## 5. Uji alur nyata
 
-1. Di beranda pilih **Buat akun**; gunakan email yang dapat Anda buka.
+1. Untuk pendaftaran baru, di beranda pilih **Buat akun**; gunakan email yang dapat Anda buka, belum terdaftar, dan diizinkan pengaturan email proyek. Untuk akun lama, pilih **Masuk** atau **Lupa kata sandi**.
 2. Periksa email, termasuk folder spam. Kolom pengirim harus menampilkan THERMPYX/alamat Anda setelah SMTP aktif.
 3. Masukkan kode di web. Setelah berhasil, status akun menjadi terhubung.
 4. Buka Latihan → Quiz → Bank Soal, simpan satu paket ke akun, lalu muat ulang.
 5. Keluar dan coba masuk kembali. Jika diperlukan, uji **Lupa kata sandi** dan tautan pemulihan.
 
-Jika email tidak terkirim, periksa **Authentication → Logs**, batas pengiriman, konfigurasi SMTP, serta status verifikasi domain. Kode salah/kedaluwarsa dapat dikirim ulang melalui web. Keberhasilan uji dengan backend tiruan tidak membuktikan SMTP proyek Anda sudah aktif.
+Jika email tidak terkirim, jangan langsung menghapus atau membuat ulang akun. Ikuti pemeriksaan ini:
+
+1. Perhatikan teks error di web dan waktu percobaannya.
+2. Di Supabase buka **Authentication → Logs** atau **Logs → Auth**, sesuai tampilan Dashboard. Cari kejadian pada waktu yang sama. Jangan menyalin token atau data pribadi ke laporan.
+3. Jika permintaan **ditolak**, periksa kode/pesan error: penerima tidak diizinkan, kuota email habis, provider Email nonaktif, atau masalah SMTP. Perbaiki penyebabnya sebelum mencoba lagi.
+4. Jika permintaan **diterima**, itu baru berarti Supabase menerima permintaan. Periksa apakah email sudah terkonfirmasi, template hanya berisi tautan, folder spam, dan log pengiriman penyedia SMTP jika dipakai. Status diterima bukan jaminan pesan masuk ke kotak email.
+5. Jika kode salah/kedaluwarsa, tunggu sesuai pesan lalu minta kode baru sekali; gunakan email terbaru. Untuk akun terkonfirmasi yang lupa sandi, gunakan pemulihan sandi, bukan kirim ulang pendaftaran.
+
+Keberhasilan uji dengan backend tiruan tidak membuktikan SMTP proyek Anda sudah aktif atau email nyata sudah terkirim. Tidak diperlukan pengiriman email otomatis untuk pengujian kode lokal.
 
 Untuk Live Server, gunakan alamat lokal yang benar-benar tampil di browser. Contoh jika proyek disajikan langsung di port 5500: Site URL `http://127.0.0.1:5500`, Redirect URLs `http://127.0.0.1:5500/index.html#account` dan `http://127.0.0.1:5500/index.html?account=recovery#account`. `localhost` dan `127.0.0.1` adalah alamat berbeda; gunakan host yang sama dengan browser.
+
+Rujukan pengaturan resmi: [SMTP Supabase](https://supabase.com/docs/guides/auth/auth-smtp), [batas Auth](https://supabase.com/docs/guides/auth/rate-limits), dan [template email](https://supabase.com/docs/guides/auth/auth-email-templates). Dashboard proyek dan log aktual menentukan status pengiriman yang sedang berlaku.

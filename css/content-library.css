@@ -40,7 +40,7 @@ html:has(.tpx-auth-dialog[open]),body:has(.tpx-auth-dialog[open]){overflow:hidde
 .tpx-auth-dialog-heading h2{margin:5px 0 0;font:600 23px Oxanium,sans-serif;letter-spacing:-.5px}
 .tpx-auth-eyebrow{margin:0;color:#46ced1;font:600 10px Oxanium,sans-serif;letter-spacing:2px}
 .tpx-auth-dialog-intro{font-size:13px;line-height:1.7;color:var(--text-secondary,#a9c2cd);margin:17px 0 22px}
-.tpx-auth-dialog-state{padding:12px;border:1px solid var(--border,#345361);border-radius:10px;font-size:13px;overflow-wrap:anywhere;color:var(--text-primary,#e6f5fb)}
+.tpx-auth-dialog-state{margin:0 0 16px;padding:12px;border:1px solid var(--border,#345361);border-radius:10px;font-size:13px;overflow-wrap:anywhere;color:var(--text-primary,#e6f5fb)}
 .tpx-auth-dialog .tpx-auth-fields{margin:0}
 .tpx-auth-dialog .tpx-auth-form{grid-template-columns:1fr}
 .tpx-auth-dialog .tpx-auth-modes{padding:4px;border:1px solid var(--border,#345361);border-radius:12px;gap:4px;flex-wrap:nowrap}
