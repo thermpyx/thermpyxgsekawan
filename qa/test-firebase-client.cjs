@@ -40,6 +40,7 @@ function fixture(initial = teacher("teacherA"), configured = true) {
     ref: (db, location = "") => location,
     push: () => ({ key: "fixture-key-" + ++nextKey }),
     getDatabase: () => ({}),
+    serverTimestamp: () => Date.now(),
     async get(location) {
       log.push(["get", location]);
       const captured = valueAt(location);
@@ -120,14 +121,37 @@ function fixture(initial = teacher("teacherA"), configured = true) {
   check((await api.questionSets.list()).data.length === 1, "list returns current owner's sets");
   check((await api.questionSets.save({ title: "Unit", topic: "heat", questions: [question] }, "other")).error.code === "auth/account-changed", "expected owner is checked before writing");
   check((await api.questionSets.save({ title: "Unit", topic: "heat", questions: [{ ...question, options: ["Same", "same", "C", "D"] }] })).error.code === "firebase/invalid-input", "duplicate options are refused");
+  const deckInput = { title: "Thermal energy", topic: "Energy", cards: [{ front: "What is heat?", back: "Energy transferred by a temperature difference." }], source_name: "notes.pdf", source_type: "pdf" };
+  const deck = await api.flashcardDecks.save(deckInput, "teacherA");
+  check(!deck.error && deck.data.owner_id === "teacherA" && deck.data.cards[0].front === "What is heat?", "private flashcard deck is confirmed under its owner");
+  const revisedDeck = await api.flashcardDecks.save({ ...deck.data, title: "Updated deck" }, "teacherA");
+  check(revisedDeck.data.created_at === deck.data.created_at, "flashcard update preserves creation time");
+  check((await api.flashcardDecks.list()).data.length === 1 && (await api.flashcardDecks.get(deck.data.id)).data.title === "Updated deck", "flashcard owner can list and read persisted content");
+  check((await api.flashcardDecks.save(deckInput, "other")).error.code === "auth/account-changed", "flashcard expected owner is checked before writing");
+  for (const invalid of [{ cards: [] }, { cards: Array.from({ length: 101 }, () => deckInput.cards[0]) }, { cards: [{ front: "", back: "A" }] }, { cards: [{ front: "A", back: "B".repeat(8001) }] }, { title: "T".repeat(141) }, { source_name: "a".repeat(256) }]) {
+    check((await api.flashcardDecks.save({ ...deckInput, ...invalid })).error.code === "firebase/invalid-input", "invalid flashcard input is rejected without a save");
+  }
+  await api.flashcardDecks.remove(deck.data.id);
+  check((await api.flashcardDecks.list()).data.length === 0, "flashcard owner can remove a private deck");
+  const sameIdDeck = await api.flashcardDecks.save({ ...deckInput, id: "same-id" }, "teacherA");
+  site.changeUser(teacher("teacherB"));
+  await api.flashcardDecks.save({ ...deckInput, id: "same-id" }, "teacherB");
+  check((await api.flashcardDecks.remove("same-id", "teacherA")).error.code === "auth/account-changed", "an old-owner deck deletion cannot target a new owner's same-id deck");
+  check((await api.flashcardDecks.get("same-id")).data.owner_id === "teacherB", "new-owner same-id deck survives stale deletion");
+  await api.questionSets.save({ id: "same-id", title: "Teacher B", topic: "heat", questions: [question] }, "teacherB");
+  check((await api.questionSets.remove("same-id", "teacherA")).error.code === "auth/account-changed", "an old-owner question deletion cannot target a new owner's same-id set");
+  check((await api.questionSets.get("same-id")).data.owner_id === "teacherB", "new-owner same-id question set survives stale deletion");
+  site.changeUser(teacher("teacherA"));
   const created = await live.createRoom({ topic: "heat", questions: [question], is_custom: false });
   check(!created.error && created.data.questions[0].question === "Heat?", "built-in room also stores an immutable snapshot");
   const room = created.data;
+  check(room.skills_enabled === false, "new rooms keep skills off unless the host explicitly enables them");
   site.changeUser(null);
   const joined = await live.joinRoom(room.room_code, "Student");
   check(!joined.error && joined.data.player.id === "anon1", "join creates anonymous participant");
   check(site.anonymousCount() === 1, "one participant identity is created");
   check(await api.auth.session() === null, "anonymous participant is never a teacher session");
+  check((await api.flashcardDecks.save(deckInput)).error.code === "auth/sign-in-required", "anonymous participants cannot manage private flashcard collections");
   check((await live.joinRoom(room.room_code, "Changed")).data.player.nickname === "Student", "joining again returns the persisted profile");
   site.cancelPopup();
   const popup = api.auth.signInWithGoogle();
@@ -138,6 +162,15 @@ function fixture(initial = teacher("teacherA"), configured = true) {
   check((await live.joinRoom(room.room_code, "student")).error.code === "quiz/nickname-taken", "another participant's case-insensitive nickname claim reports a collision");
   site.changeUser(anonymous("anon1"));
   site.put("rooms/" + room.id + "/status", "playing");
+  site.put("players/" + room.id + "/anon1/question_started_at", new Date().toISOString());
+  check((await live.useSkill(room.id, "anon1", { kind: "prism", question_index: 0 })).error.code === "quiz/skill-unavailable", "skills remain unavailable in a room with skills disabled");
+  site.put("rooms/" + room.id + "/skills_enabled", true);
+  check((await live.useSkill(room.id, "anon1", { kind: "prism", question_index: 1 })).error.code === "quiz/skill-unavailable", "a participant cannot use a skill on another question");
+  const skill = await live.useSkill(room.id, "anon1", { kind: "prism", question_index: 0 });
+  check(!skill.error && skill.data.kind === "prism" && Number.isFinite(skill.data.used_at), "skill use returns its persisted server timestamp");
+  check((await live.useSkill(room.id, "anon1", { kind: "prism", question_index: 0 })).error.code === "quiz/skill-used", "a second skill use cannot replace the first");
+  check((await live.listSkillUses(room.id, "anon1")).data[0].player_id === "anon1", "participant can restore the saved skill record");
+  check((await live.listSkillUses(room.id)).data[0].player_id === "anon1", "host skill rows carry their participant identity");
   const answer = await live.submitAnswer(room.id, "anon1", 0, { selected_answer: 1, score: 999, response_time_ms: 123 });
   check(!answer.error && answer.data.score === 100, "score is derived from the room snapshot");
   const retry = await live.submitAnswer(room.id, "anon1", 0, { selected_answer: 0, response_time_ms: 99 });
@@ -182,5 +215,29 @@ function fixture(initial = teacher("teacherA"), configured = true) {
   const oldRead = stale.global.TPXFirebase.questionSets.list();
   await blocked; stale.changeUser(teacher("teacherB")); release();
   check((await oldRead).error.code === "auth/account-changed", "a delayed old-owner read cannot return into a new account");
+
+  const staleDeck = fixture(); await staleDeck.global.TPXFirebase.ready();
+  let releaseDeck, reachedDeck;
+  const blockedDeck = new Promise(resolve => { reachedDeck = resolve; });
+  staleDeck.setReadHook(async location => { if (location === "flashcardDecks/teacherA") { reachedDeck(); await new Promise(resolve => { releaseDeck = resolve; }); } });
+  const oldDeckRead = staleDeck.global.TPXFirebase.flashcardDecks.list();
+  await blockedDeck; staleDeck.changeUser(teacher("teacherB")); releaseDeck();
+  check((await oldDeckRead).error.code === "auth/account-changed", "delayed flashcard reads are rejected after account change");
+
+  const skills = fixture(anonymous("learner")); await skills.global.TPXFirebase.ready();
+  const skillsLive = skills.global.TPXLive;
+  skills.put("rooms/room", { id: "room", status: "playing", skills_enabled: true, questions: [question, question] });
+  skills.put("players/room/learner", { id: "learner", current_question: 0, question_started_at: new Date(Date.now() - 20001).toISOString() });
+  check((await skillsLive.useSkill("room", "learner", { kind: "prism", question_index: 0 })).error.code === "quiz/skill-unavailable", "expired question cannot use a skill through the wrapper");
+  skills.put("players/room/learner/question_started_at", new Date().toISOString());
+  skills.put("answers/room/learner/0", { selected_answer: 1 });
+  check((await skillsLive.useSkill("room", "learner", { kind: "prism", question_index: 0 })).error.code === "quiz/skill-unavailable", "answered question cannot use a skill");
+  skills.put("answers/room/learner/0", null);
+  const skillRace = await Promise.all([skillsLive.useSkill("room", "learner", { kind: "prism", question_index: 0 }), skillsLive.useSkill("room", "learner", { kind: "prism", question_index: 0 })]);
+  check(skillRace.filter(outcome => !outcome.error).length === 1 && skillRace.filter(outcome => outcome.error?.code === "quiz/skill-used").length === 1, "simultaneous skill calls acknowledge exactly one persisted use");
+  let skillUpdates = 0;
+  const stopSkills = skillsLive.watchSkillUses("room", "learner", response => { if (response.data?.[0]?.player_id === "learner") skillUpdates++; });
+  await turn(); stopSkills();
+  check(skillUpdates === 1, "skill watcher restores the committed record with participant identity");
   console.log("Firebase native wrapper: " + assertions + " assertions passed (in-memory SDK fixture; no production requests).");
 })().catch(error => { console.error(error); process.exitCode = 1; });

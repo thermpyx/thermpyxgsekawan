@@ -19,7 +19,7 @@
     loading: () => fault("firebase/loading", "The connection is loading. Please try again in a moment.", "Koneksi sedang dimuat. Silakan coba lagi sebentar."),
     config: () => fault("firebase/configuration", "Firebase is not configured. Follow the Firebase setup guide.", "Firebase belum dikonfigurasi. Ikuti panduan pengaturan Firebase."),
     database: () => fault("firebase/database-not-configured", "The database is not connected yet. Add its URL in the Firebase configuration.", "Database belum terhubung. Tambahkan URL database pada konfigurasi Firebase."),
-    signin: () => fault("auth/sign-in-required", "Sign in with Google to manage your questions and host a quiz.", "Masuk dengan Google untuk mengelola soal dan menjadi host kuis."),
+    signin: () => fault("auth/sign-in-required", "Sign in with Google to save your learning collections and host a quiz.", "Masuk dengan Google untuk menyimpan koleksi belajar dan menjadi host kuis."),
     participant: () => fault("auth/participant-required", "Your quiz identity is unavailable. Join the room again.", "Identitas peserta belum tersedia. Masuk kembali ke ruang kuis."),
     changed: () => fault("auth/account-changed", "Your account changed during this request. Please try again with the current account.", "Akun Anda berubah saat permintaan diproses. Coba kembali dengan akun aktif."),
     missing: () => fault("quiz/room-not-found", "Room not found. Check the code with your host.", "Ruang tidak ditemukan. Periksa kode dengan host."),
@@ -27,6 +27,8 @@
     nickname: () => fault("quiz/nickname-taken", "This nickname is already used in the room. Choose another name.", "Nama panggilan sudah dipakai di ruang ini. Gunakan nama lain."),
     invalid: () => fault("firebase/invalid-input", "Check the entered values and try again.", "Periksa nilai yang diisi lalu coba lagi."),
     conflict: () => fault("quiz/state-changed", "The room has changed. Reload its current state and try again.", "Kondisi ruang sudah berubah. Muat ulang kondisi terbaru lalu coba lagi."),
+    skillUsed: () => fault("quiz/skill-used", "Prism has already been used in this room.", "Prisma sudah digunakan di ruang ini."),
+    skillUnavailable: () => fault("quiz/skill-unavailable", "Prism is unavailable for this question. Your answer and timer are unchanged.", "Prisma tidak tersedia untuk soal ini. Jawaban dan waktu Anda tidak berubah."),
     connection: () => fault("firebase/connection", "The connection failed. Your draft is kept; check the connection and try again.", "Koneksi gagal. Draf Anda tetap tersimpan; periksa koneksi lalu coba lagi.")
   };
   function safeError(error) {
@@ -244,14 +246,65 @@
       if (!saved.committed || data?.id !== id || data?.owner_id !== ctx.uid) throw errors.connection();
       return data;
     }),
-    remove: id => result(async () => {
+    remove: (id, expectedOwnerId) => result(async () => {
       const ctx = await context(true);
+      if (expectedOwnerId && expectedOwnerId !== ctx.uid) throw errors.changed();
       current(ctx);
       await ctx.sdk.remove(ctx.sdk.ref(ctx.db, "questionSets/" + ctx.uid + "/" + key(id)));
       current(ctx);
       return { id: String(id) };
     })
   };
+
+  function deckCards(value) {
+    if (!Array.isArray(value) || value.length < 1 || value.length > 100) throw errors.invalid();
+    return value.map(card => {
+      if (!card || typeof card.front !== "string" || typeof card.back !== "string") throw errors.invalid();
+      const front = card.front.trim(), back = card.back.trim();
+      if (!front || !back || front.length > 2000 || back.length > 8000) throw errors.invalid();
+      return { front, back };
+    });
+  }
+  const flashcardDecks = {
+    list: () => result(async () => {
+      const ctx = await context(true);
+      const data = await read(ctx, "flashcardDecks/" + ctx.uid);
+      return Object.values(data || {}).filter(item => item.owner_id === ctx.uid)
+        .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
+    }),
+    get: id => result(async () => {
+      const ctx = await context(true);
+      return await read(ctx, "flashcardDecks/" + ctx.uid + "/" + key(id));
+    }),
+    save: (input, expectedOwnerId) => result(async () => {
+      const ctx = await context(true);
+      if (expectedOwnerId && expectedOwnerId !== ctx.uid) throw errors.changed();
+      const title = String(input?.title || "").trim(), selectedTopic = String(input?.topic || "").trim();
+      const sourceName = String(input?.source_name || "").trim(), sourceType = String(input?.source_type || "").trim();
+      if (!title || title.length > 140 || !selectedTopic || selectedTopic.length > 80 || sourceName.length > 255 || sourceType.length > 40) throw errors.invalid();
+      const id = input.id ? key(input.id) : ctx.sdk.push(ctx.sdk.ref(ctx.db, "flashcardDecks/" + ctx.uid)).key;
+      const row = { id, owner_id: ctx.uid, title, topic: selectedTopic, cards: deckCards(input.cards),
+        source_name: sourceName, source_type: sourceType, created_at: stamp() };
+      const saved = await transact(ctx, "flashcardDecks/" + ctx.uid + "/" + id,
+        existing => ({ ...row, created_at: existing?.created_at || row.created_at }));
+      const data = saved.snapshot.val();
+      if (!saved.committed || data?.id !== id || data?.owner_id !== ctx.uid || !Array.isArray(data.cards)) throw errors.connection();
+      return data;
+    }),
+    remove: (id, expectedOwnerId) => result(async () => {
+      const ctx = await context(true);
+      if (expectedOwnerId && expectedOwnerId !== ctx.uid) throw errors.changed();
+      current(ctx);
+      await ctx.sdk.remove(ctx.sdk.ref(ctx.db, "flashcardDecks/" + ctx.uid + "/" + key(id)));
+      current(ctx);
+      return { id: String(id) };
+    })
+  };
+
+  function skillRows(data, uid) {
+    return uid ? Object.values(data || {}).map(row => ({ ...row, player_id: uid })) :
+      Object.entries(data || {}).flatMap(([playerId, uses]) => Object.values(uses || {}).map(row => ({ ...row, player_id: playerId })));
+  }
 
   const live = {
     createRoom: input => result(async () => {
@@ -268,7 +321,7 @@
       }
       if (!reservation) throw fault("quiz/code-unavailable", "A room code could not be reserved. Please try again.", "Kode ruang belum berhasil dibuat. Silakan coba lagi.");
       const room = { id, owner_id: ctx.uid, room_code: code, status: "waiting", topic: selectedTopic,
-        questions: snapshot, is_custom: !!input.is_custom, created_at: stamp() };
+        questions: snapshot, is_custom: !!input.is_custom, skills_enabled: input.skills_enabled === true, created_at: stamp() };
       try {
         current(ctx);
         await ctx.sdk.set(ctx.sdk.ref(ctx.db, "rooms/" + id), room);
@@ -352,6 +405,33 @@
       const ctx = await context();
       const data = await read(ctx, "answers/" + key(roomId) + (uid ? "/" + key(uid) : ""));
       return uid ? Object.values(data || {}) : Object.values(data || {}).flatMap(items => Object.values(items || {}));
+    }),
+    listSkillUses: (roomId, uid) => result(async () => {
+      const ctx = await context();
+      const playerId = uid == null ? null : key(uid);
+      const data = await read(ctx, "skillUses/" + key(roomId) + (playerId ? "/" + playerId : ""));
+      return skillRows(data, playerId);
+    }),
+    useSkill: (roomId, uid, input) => result(async () => {
+      const ctx = await context();
+      if (ctx.uid !== uid) throw errors.changed();
+      const id = key(roomId), playerId = key(uid), index = input?.question_index;
+      if (input?.kind !== "prism" || !Number.isInteger(index) || index < 0 || index > 99) throw errors.invalid();
+      const [room, player, answer, previous] = await Promise.all([
+        read(ctx, "rooms/" + id), read(ctx, "players/" + id + "/" + playerId),
+        read(ctx, "answers/" + id + "/" + playerId + "/" + index), read(ctx, "skillUses/" + id + "/" + playerId + "/prism")
+      ]);
+      if (previous) throw errors.skillUsed();
+      const started = Date.parse(player?.question_started_at || ""), elapsed = Date.now() - started;
+      if (room?.status !== "playing" || room.skills_enabled !== true || player?.id !== playerId ||
+          player.current_question !== index || !room.questions?.[index] || answer ||
+          !Number.isFinite(started) || elapsed < -5000 || elapsed >= 20000) throw errors.skillUnavailable();
+      const row = { kind: "prism", question_index: index, used_at: ctx.sdk.serverTimestamp() };
+      const saved = await transact(ctx, "skillUses/" + id + "/" + playerId + "/prism", existing => existing == null ? row : undefined);
+      if (!saved.committed) throw errors.skillUsed();
+      const persisted = saved.snapshot.val();
+      if (persisted?.kind !== "prism" || persisted.question_index !== index || !Number.isFinite(persisted.used_at)) throw errors.connection();
+      return { ...persisted, player_id: playerId };
     }),
     updateProgress: (roomId, uid, input) => result(async () => {
       const ctx = await context();
@@ -444,9 +524,15 @@
     try { return watch("answers/" + key(id), callback, value => Object.values(value || {}).flatMap(items => Object.values(items || {}))); }
     catch (error) { queueMicrotask(() => callback({ data: null, error: safeError(error) })); return () => {}; }
   };
+  live.watchSkillUses = (id, uid, callback) => {
+    try {
+      const playerId = uid == null ? null : key(uid);
+      return watch("skillUses/" + key(id) + (playerId ? "/" + playerId : ""), callback, value => skillRows(value, playerId));
+    } catch (error) { queueMicrotask(() => callback({ data: null, error: safeError(error) })); return () => {}; }
+  };
   live.watchConnection = callback => watch(".info/connected", response => callback(!response.error && response.data === true));
 
-  global.TPXFirebase = Object.freeze({ auth: Object.freeze(auth), questionSets: Object.freeze(questionSets),
+  global.TPXFirebase = Object.freeze({ auth: Object.freeze(auth), questionSets: Object.freeze(questionSets), flashcardDecks: Object.freeze(flashcardDecks),
     ready: () => ready.then(() => ({ data: { configured: !!runtime && !initializationError }, error: initializationError })) });
   global.TPXLive = Object.freeze(live);
 })(window);

@@ -79,6 +79,38 @@ async function main() {
       await success(teacherA.ref("questionSets/teacher-a/set-a").remove());
     });
 
+    await scenario("Private flashcards: Google owner CRUD, field validation and cross-account isolation", async () => {
+      const deck = (id = "deck-a") => ({ id, owner_id: "teacher-a", title: "Heat review", topic: "Thermal energy",
+        cards: [{ front: "What is heat?", back: "Energy transferred because of a temperature difference." }],
+        source_name: "lesson.pdf", source_type: "pdf", created_at: timestamp });
+      const location = "flashcardDecks/teacher-a/deck-a";
+      await success(teacherA.ref(location).set(deck()));
+      await success(teacherA.ref("flashcardDecks/teacher-a").once("value"));
+      await failure(teacherB.ref("flashcardDecks/teacher-a").once("value"));
+      await failure(alice.ref(location).once("value"));
+      await failure(unauthenticated.ref(location).once("value"));
+      await failure(teacherB.ref(location + "/title").set("Stolen"));
+      await failure(alice.ref("flashcardDecks/alice/deck-a").set({ ...deck(), owner_id: "alice" }));
+      await success(teacherA.ref(location + "/title").set("Revised review"));
+      await failure(teacherA.ref(location + "/created_at").set("2026-10-17T00:00:00.000Z"));
+      await failure(teacherA.ref(location + "/owner_id").set("teacher-b"));
+      await failure(teacherA.ref(location + "/id").set("deck-b"));
+      for (const invalid of [
+        { title: "" }, { title: "T".repeat(141) }, { topic: "" }, { topic: "T".repeat(81) },
+        { source_name: "s".repeat(256) }, { source_type: "s".repeat(41) }, { is_public: true },
+        { cards: [] }, { cards: Array.from({ length: 101 }, () => deck().cards[0]) },
+        { cards: [{ front: "", back: "A" }] }, { cards: [{ front: "Q", back: "" }] },
+        { cards: [{ front: "Q".repeat(2001), back: "A" }] }, { cards: [{ front: "Q", back: "A".repeat(8001) }] },
+        { cards: [{ front: 12, back: "A" }] }, { cards: [{ front: "Q", back: "A", executable: "no" }] }
+      ]) await failure(teacherA.ref("flashcardDecks/teacher-a/deck-b").set({ ...deck("deck-b"), ...invalid }));
+      await success(teacherA.ref("flashcardDecks/teacher-a/deck-b").set({ ...deck("deck-b"),
+        source_name: "", source_type: "", cards: Array.from({ length: 100 }, () => ({ front: "Q".repeat(2000), back: "A".repeat(8000) })) }));
+      await failure(teacherA.ref("flashcardDecks").once("value"));
+      await success(teacherA.ref(location).remove());
+      await success(teacherB.ref("flashcardDecks/teacher-b/deck-b").set({ ...deck("deck-b"), owner_id: "teacher-b" }));
+      await failure(teacherA.ref("flashcardDecks/teacher-b/deck-b").remove());
+    });
+
     await scenario("Room code reservations are atomic, exact-only and immutable across teachers", async () => {
       await failure(unauthenticated.ref("roomCodes/123456").once("value"));
       await success(alice.ref("roomCodes/123456").once("value"));
@@ -190,6 +222,75 @@ async function main() {
       await failure(bob.ref("answers/room-a/bob/1").set(answerData("bob", 1)));
       await failure(bob.ref("players/room-a/bob/current_question").set(2));
       await success(alice.ref("answers/room-a").once("value"));
+    });
+
+    await scenario("Prism skills: opt-in immutable room flag, member scope, one use and active question checks", async () => {
+      await success(teacherA.ref("roomCodes/123456").set(claimData()));
+      await success(teacherA.ref("rooms/room-a").set({ ...roomData(), skills_enabled: true }));
+      await failure(teacherA.ref("rooms/room-a/skills_enabled").set(false));
+      await join(); await join(bob, "bob", "Bob");
+      const location = "skillUses/room-a/alice/prism";
+      const skill = (question_index = 0) => ({ kind: "prism", question_index, used_at: { ".sv": "timestamp" } });
+      await failure(alice.ref(location).set(skill()));
+      await success(teacherA.ref("rooms/room-a/status").set("playing"));
+      await failure(alice.ref(location).set(skill()));
+      await success(alice.ref("players/room-a/alice/question_started_at").set(timestamp));
+      await failure(teacherA.ref(location).set(skill()));
+      await failure(bob.ref(location).set(skill()));
+      await failure(outsider.ref("skillUses/room-a/outsider/prism").set(skill()));
+      await failure(unauthenticated.ref(location).set(skill()));
+      await failure(alice.ref(location).set(skill(1)));
+      await failure(alice.ref(location).set(skill(-1)));
+      await failure(alice.ref(location).set(skill(100)));
+      await failure(alice.ref(location).set({ ...skill(), kind: "shield" }));
+      await failure(alice.ref(location).set({ ...skill(), used_at: Date.now() + 86400000 }));
+      await failure(alice.ref(location).set({ ...skill(), used_at: 1 }));
+      await failure(alice.ref(location).set({ ...skill(), score: 1000 }));
+      await failure(alice.ref("skillUses/room-a/alice/shield").set(skill()));
+      const outcomes = await Promise.all([
+        alice.ref(location).transaction(current => current ? undefined : skill()),
+        alice.ref(location).transaction(current => current ? undefined : skill())
+      ]);
+      assert.equal(outcomes.filter(outcome => outcome.committed).length, 1, "Concurrent tabs persist exactly one skill use"); checks++;
+      const saved = await success(alice.ref(location).once("value"));
+      assert.equal(saved.child("kind").val(), "prism"); checks++;
+      assert.equal(typeof saved.child("used_at").val(), "number"); checks++;
+      await success(teacherA.ref("skillUses/room-a").once("value"));
+      await failure(alice.ref("skillUses/room-a").once("value"));
+      await failure(bob.ref("skillUses/room-a/alice").once("value"));
+      await failure(teacherB.ref("skillUses/room-a").once("value"));
+      await failure(outsider.ref(location).once("value"));
+      await failure(unauthenticated.ref(location).once("value"));
+      await failure(alice.ref(location).set(skill()));
+      await failure(alice.ref(location).remove());
+      await success(alice.ref("players/room-a/alice/current_question").set(1));
+      await failure(alice.ref(location).set(skill(1)));
+      await success(bob.ref("players/room-a/bob/question_started_at").set(timestamp));
+      await success(bob.ref("answers/room-a/bob/0").set(answerData("bob")));
+      await failure(bob.ref("skillUses/room-a/bob/prism").set(skill()));
+      await success(bob.ref("players/room-a/bob/current_question").set(1));
+      await success(teacherA.ref("rooms/room-a/status").set("finished"));
+      await failure(bob.ref("skillUses/room-a/bob/prism").set(skill(1)));
+      await success(alice.ref("skillUses/room-a/alice").once("value"));
+    });
+
+    await scenario("Prism rejects old and disabled rooms, left players and foreign-room membership", async () => {
+      await makeRoom(); await join();
+      await success(teacherA.ref("rooms/room-a/status").set("playing"));
+      await success(alice.ref("players/room-a/alice/question_started_at").set(timestamp));
+      const skill = { kind: "prism", question_index: 0, used_at: { ".sv": "timestamp" } };
+      await failure(alice.ref("skillUses/room-a/alice/prism").set(skill));
+      await success(teacherA.ref("roomCodes/234567").set(claimData("room-b")));
+      await success(teacherA.ref("rooms/room-b").set({ ...roomData("room-b", "234567"), skills_enabled: false }));
+      await join(bob, "bob", "Bob", "room-b");
+      await success(teacherA.ref("rooms/room-b/status").set("playing"));
+      await success(bob.ref("players/room-b/bob/question_started_at").set(timestamp));
+      await failure(bob.ref("skillUses/room-b/bob/prism").set(skill));
+      await failure(alice.ref("skillUses/room-b/alice/prism").set(skill));
+      await success(bob.ref("players/room-b/bob/current_question").set(-1));
+      await failure(bob.ref("skillUses/room-b/bob/prism").set(skill));
+      await success(teacherA.ref("roomCodes/345678").set(claimData("room-c")));
+      await failure(teacherA.ref("rooms/room-c").set({ ...roomData("room-c", "345678"), skills_enabled: "yes" }));
     });
 
     await scenario("Thirty participants can join and save unique answers without private-bank access", async () => {

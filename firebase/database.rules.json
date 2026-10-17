@@ -150,6 +150,9 @@
         },
         "$other": {
           ".validate": false
+        },
+        "skills_enabled": {
+          ".validate": "newData.isBoolean()"
         }
       }
     },
@@ -234,6 +237,81 @@
           ".read": "auth != null",
           ".write": "auth != null && $key.matches(/^[a-f0-9]{64}$/) && root.child('rooms').child($roomId).child('status').val() === 'waiting' && ((!data.exists() && newData.val() === auth.uid) || (data.val() === auth.uid && (!newData.exists() || newData.val() === auth.uid)))",
           ".validate": "newData.isString() && newData.val() === auth.uid"
+        }
+      }
+    },
+    "flashcardDecks": {
+      "$ownerUid": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider === 'google.com' && auth.uid === $ownerUid",
+        "$deckId": {
+          ".write": "auth != null && auth.token.firebase.sign_in_provider === 'google.com' && auth.uid === $ownerUid",
+          ".validate": "newData.hasChildren(['id','owner_id','title','topic','cards','source_name','source_type','created_at'])",
+          "id": {
+            ".validate": "(newData.isString() && newData.val() === $deckId && newData.val().length <= 128) && (!data.exists() || newData.val() === data.val())"
+          },
+          "owner_id": {
+            ".validate": "(newData.isString() && newData.val() === $ownerUid) && (!data.exists() || newData.val() === data.val())"
+          },
+          "title": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 140"
+          },
+          "topic": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80"
+          },
+          "cards": {
+            ".validate": "newData.hasChild('0')",
+            "$index": {
+              ".validate": "$index.matches(/^(0|[1-9][0-9]?)$/) && newData.hasChildren(['front','back'])",
+              "front": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 2000"
+              },
+              "back": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 8000"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "source_name": {
+            ".validate": "newData.isString() && newData.val().length >= 0 && newData.val().length <= 255"
+          },
+          "source_type": {
+            ".validate": "newData.isString() && newData.val().length >= 0 && newData.val().length <= 40"
+          },
+          "created_at": {
+            ".validate": "(newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$/)) && (!data.exists() || newData.val() === data.val())"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "skillUses": {
+      "$roomId": {
+        ".read": "auth != null && root.child('rooms').child($roomId).child('owner_id').val() === auth.uid",
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid && root.child('players').child($roomId).child($uid).exists()",
+          "prism": {
+            ".write": "auth != null && auth.uid === $uid && !data.exists() && newData.exists() && root.child('players').child($roomId).child($uid).exists() && root.child('players').child($roomId).child($uid).child('question_started_at').isString() && root.child('rooms').child($roomId).child('status').val() === 'playing' && root.child('rooms').child($roomId).child('skills_enabled').val() === true && root.child('players').child($roomId).child($uid).child('current_question').val() === newData.child('question_index').val() && root.child('rooms').child($roomId).child('questions').child(newData.child('question_index').val() + '').exists() && !root.child('answers').child($roomId).child($uid).child(newData.child('question_index').val() + '').exists()",
+            ".validate": "newData.hasChildren(['kind','question_index','used_at'])",
+            "kind": {
+              ".validate": "newData.val() === 'prism'"
+            },
+            "question_index": {
+              ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 99"
+            },
+            "used_at": {
+              ".validate": "newData.isNumber() && newData.val() >= now - 10000 && newData.val() <= now"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
         }
       }
     }
