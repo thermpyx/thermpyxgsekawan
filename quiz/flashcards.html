@@ -4,7 +4,7 @@
 <script src="../js/persistent-navigation.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title data-en="Flashcards — Coming soon | THERMPYX" data-id="Flashcard — Segera hadir | THERMPYX">Flashcards — Coming soon | THERMPYX</title>
+  <title data-en="Flashcards | THERMPYX" data-id="Flashcard | THERMPYX">Flashcard | THERMPYX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet">
@@ -17,24 +17,91 @@
 <link rel="stylesheet" href="../css/ui-consistency.css">
 <link rel="stylesheet" href="../css/brand-identity.css">
 <script defer src="../js/brand-identity.js"></script>
+<link rel="stylesheet" href="../css/futuristic-surfaces.css">
 </head>
-<body class="tpx-flashcards-coming">
-<header class="quiz-topbar">
-  <a class="quiz-back" href="quiz.html" data-en="Back to Practice" data-id="Kembali ke Latihan">Back to Practice</a>
-  <div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
-  <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☾</span><span class="theme-text" id="themeText">Dark Mode</span></button>
-</header>
-<main class="fc-coming-main">
-  <section class="fc-coming-panel" aria-labelledby="flashcardComingTitle">
-    <div class="fc-coming-art" aria-hidden="true"><span class="fc-coming-card fc-coming-card-back"></span><span class="fc-coming-card fc-coming-card-front"><span>Q</span><i></i><i></i><i></i></span><span class="fc-coming-orbit"></span></div>
-    <p class="fc-coming-label" data-en="COMING SOON" data-id="SEGERA HADIR">COMING SOON</p>
-    <h1 id="flashcardComingTitle" data-en="Flashcards" data-id="Flashcard">Flashcards</h1>
-    <p data-en="A little review can make a big difference. We are preparing a focused space to revisit the ideas you want to remember." data-id="Ulasan singkat bisa membuat pemahaman lebih kuat. Kami sedang menyiapkan ruang belajar untuk mengingat kembali konsep penting.">A little review can make a big difference. We are preparing a focused space to revisit the ideas you want to remember.</p>
-    <div class="fc-coming-divider" aria-hidden="true"></div>
-    <p class="fc-coming-note" data-en="While you wait, try an independent quiz or create a live session for your class." data-id="Sambil menunggu, coba kuis mandiri atau buat sesi kuis langsung untuk kelas Anda.">While you wait, try an independent quiz or create a live session for your class.</p>
-    <div class="fc-coming-actions"><a class="fc-coming-primary" href="practice.html" data-en="Start a quiz" data-id="Mulai kuis">Start a quiz</a><a href="host.html" data-en="Host a live quiz" data-id="Host kuis langsung">Host a live quiz</a></div>
-  </section>
-</main>
-<script src="../js/script.js"></script>
+<body class="flashcards-page tpx-futuristic">
+  <header class="quiz-topbar">
+    <a class="quiz-back" href="quiz.html" data-fc-id="Kembali ke Latihan" data-fc-en="Back to Practice">Kembali ke Latihan</a>
+    <a class="quiz-logo" href="../index.html" aria-label="THERMPYX home">THERMPY<span class="wordmark-accent">X</span></a>
+    <button aria-label="Toggle theme" class="page-theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☾</span><span class="theme-text" id="themeText">Dark Mode</span></button>
+  </header>
+  <main class="fc-shell" data-tpx-no-translate>
+    <section class="fc-hero" aria-labelledby="fcTitle">
+      <div>
+        <p class="fc-eyebrow" data-fc-id="THERMPYX / KARTU BELAJAR" data-fc-en="THERMPYX / STUDY CARDS">THERMPYX / KARTU BELAJAR</p>
+        <h1 id="fcTitle"><svg class="fc-hero-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="5" width="28" height="34" rx="5"></rect><path d="M16 14h9M13 21h14M13 27h11M34 12h4a5 5 0 0 1 5 5v21a5 5 0 0 1-5 5H18"></path></svg><span data-fc-id="Flashcard" data-fc-en="Flashcards">Flashcard</span></h1>
+        <p data-fc-id="Pahami satu ide, balik kartunya, lalu lanjutkan. Susun materi sendiri atau mulai dari PDF dan DOCX." data-fc-en="Learn one idea, flip the card, and keep going. Build your own deck or start with a PDF or DOCX.">Pahami satu ide, balik kartunya, lalu lanjutkan. Susun materi sendiri atau mulai dari PDF dan DOCX.</p>
+      </div>
+      <div class="fc-hero-mark" aria-hidden="true"><span>01</span><span><span data-fc-id="PERTANYAAN" data-fc-en="QUESTION">PERTANYAAN</span><br><span data-fc-id="JAWABAN" data-fc-en="ANSWER">JAWABAN</span></span><svg viewBox="0 0 24 24"><path d="M4 6h13l-3-3m3 3-3 3M20 18H7l3 3m-3-3 3-3"></path></svg></div>
+    </section>
+    <div data-content-auth class="fc-auth"></div>
+    <p id="fcStatus" class="fc-status" role="status" aria-live="polite" hidden></p>
+    <div class="fc-workspace">
+      <aside class="fc-library" aria-labelledby="fcLibraryTitle">
+        <div class="fc-library-heading"><h2 id="fcLibraryTitle" data-fc-id="Koleksi kartu" data-fc-en="Your decks">Koleksi kartu</h2><span id="fcDeckCount" class="fc-count">0</span></div>
+        <button id="fcNewDeck" class="fc-button fc-button-primary fc-full" type="button" data-fc-id="Susun materi baru" data-fc-en="Create a new deck">Susun materi baru</button>
+        <div id="fcDeckList" class="fc-deck-list"></div>
+        <button id="fcReloadCloud" type="button" class="fc-button fc-button-quiet fc-full" hidden data-fc-id="Muat ulang koleksi akun" data-fc-en="Refresh account decks">Muat ulang koleksi akun</button>
+        <p class="fc-library-note" data-fc-id="Materi lokal disimpan di browser ini. Masuk dengan Google untuk menyimpan koleksi pribadi di akun Anda." data-fc-en="Local decks stay in this browser. Sign in with Google to save a private collection to your account.">Materi lokal disimpan di browser ini. Masuk dengan Google untuk menyimpan koleksi pribadi di akun Anda.</p>
+      </aside>
+      <section class="fc-content" aria-label="Ruang kartu belajar" data-fc-aria-id="Ruang kartu belajar" data-fc-aria-en="Flashcard workspace">
+        <div class="fc-tabs" role="tablist" aria-label="Mode kartu belajar" data-fc-aria-id="Mode kartu belajar" data-fc-aria-en="Flashcard mode">
+          <button id="fcStudyTab" class="fc-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="fcStudyPanel" data-fc-id="Belajar" data-fc-en="Study">Belajar</button>
+          <button id="fcEditTab" class="fc-tab" type="button" role="tab" aria-selected="false" aria-controls="fcEditPanel" tabindex="-1" data-fc-id="Susun materi" data-fc-en="Edit material">Susun materi</button>
+        </div>
+        <section id="fcStudyPanel" class="fc-panel" role="tabpanel" aria-labelledby="fcStudyTab">
+          <div class="fc-study-heading"><div><p id="fcStudyTopic" class="fc-eyebrow" data-tpx-no-translate></p><h2 id="fcStudyTitle" data-tpx-no-translate></h2></div><button id="fcEditCurrent" type="button" class="fc-button fc-button-quiet" data-fc-id="Edit materi" data-fc-en="Edit deck">Edit materi</button></div>
+          <div id="fcProgressLabel" class="fc-progress-label" aria-live="polite"></div>
+          <div class="fc-progress-track" aria-hidden="true"><div id="fcProgressFill"></div></div>
+          <button id="fcStudyCard" class="fc-study-card" type="button" aria-describedby="fcStudyHint" aria-pressed="false">
+            <span id="fcCardSide" class="fc-card-side"></span>
+            <span id="fcCardText" class="fc-card-text" data-tpx-no-translate></span>
+            <span class="fc-card-flip" data-fc-id="Balik kartu" data-fc-en="Flip card">Balik kartu</span>
+          </button>
+          <p id="fcStudyHint" class="fc-study-hint" data-fc-id="Klik kartu atau tekan Space untuk melihat jawaban. Gunakan panah kiri dan kanan untuk berpindah." data-fc-en="Click the card or press Space to reveal the answer. Use the left and right arrows to move.">Klik kartu atau tekan Space untuk melihat jawaban. Gunakan panah kiri dan kanan untuk berpindah.</p>
+          <div class="fc-study-controls">
+            <button id="fcPrev" class="fc-button" type="button" data-fc-id="Sebelumnya" data-fc-en="Previous">Sebelumnya</button>
+            <button id="fcShuffle" class="fc-button fc-button-quiet" type="button" data-fc-id="Acak kartu" data-fc-en="Shuffle">Acak kartu</button>
+            <button id="fcNext" class="fc-button fc-button-primary" type="button" data-fc-id="Berikutnya" data-fc-en="Next">Berikutnya</button>
+          </div>
+        </section>
+        <section id="fcEditPanel" class="fc-panel" role="tabpanel" aria-labelledby="fcEditTab" hidden>
+          <div class="fc-edit-heading"><div><p class="fc-eyebrow" data-fc-id="RUANG MATERI" data-fc-en="MATERIAL STUDIO">RUANG MATERI</p><h2 data-fc-id="Ide Anda, kartu Anda." data-fc-en="Your ideas. Your cards.">Ide Anda, kartu Anda.</h2></div><span id="fcDirtyLabel" class="fc-dirty" hidden data-fc-id="Belum disimpan" data-fc-en="Unsaved changes">Belum disimpan</span></div>
+          <div class="fc-meta-fields">
+            <label class="fc-field"><span data-fc-id="Judul materi" data-fc-en="Deck title">Judul materi</span><input id="fcDeckTitle" type="text" maxlength="140" required placeholder="Contoh: Hukum I Termodinamika" data-fc-placeholder-id="Contoh: Hukum I Termodinamika" data-fc-placeholder-en="Example: First Law of Thermodynamics"></label>
+            <label class="fc-field"><span data-fc-id="Topik" data-fc-en="Topic">Topik</span><input id="fcDeckTopic" type="text" maxlength="80" placeholder="Contoh: Energi & kalor" data-fc-placeholder-id="Contoh: Energi & kalor" data-fc-placeholder-en="Example: Energy & heat"></label>
+          </div>
+          <details class="fc-import" id="fcImportPanel">
+            <summary><span class="fc-import-symbol" aria-hidden="true">▤</span><span data-fc-id="Impor materi dari PDF / DOCX" data-fc-en="Import material from PDF / DOCX">Impor materi dari PDF / DOCX</span><span class="fc-import-tag" data-fc-id="LOKAL" data-fc-en="LOCAL">LOKAL</span></summary>
+            <div class="fc-import-body">
+              <p data-fc-id="Dokumen dibaca di perangkat Anda. Yang disimpan ke cloud hanyalah teks kartu setelah Anda menekan Simpan; berkas asli tidak diunggah." data-fc-en="Documents are read on your device. Only card text is saved to the cloud after you press Save; the original file is never uploaded.">Dokumen dibaca di perangkat Anda. Yang disimpan ke cloud hanyalah teks kartu setelah Anda menekan Simpan; berkas asli tidak diunggah.</p>
+              <label class="fc-file-field"><span data-fc-id="Pilih dokumen" data-fc-en="Choose a document">Pilih dokumen</span><input id="fcImportFile" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+              <p class="fc-small" data-fc-id="Maks. 8 MB · PDF maks. 32 halaman · PDF scan membutuhkan OCR terlebih dahulu · .DOC lama: simpan ulang sebagai .DOCX." data-fc-en="Max. 8 MB · PDFs up to 32 pages · Scanned PDFs need OCR first · Old .DOC files: save as .DOCX.">Maks. 8 MB · PDF maks. 32 halaman · PDF scan membutuhkan OCR terlebih dahulu · .DOC lama: simpan ulang sebagai .DOCX.</p>
+              <p id="fcImportStatus" class="fc-import-status" role="status" aria-live="polite"></p>
+              <label class="fc-field fc-source-field"><span data-fc-id="Pratinjau teks / tempel materi" data-fc-en="Text preview / paste material">Pratinjau teks / tempel materi</span><textarea id="fcSourceText" rows="7" maxlength="120000" placeholder="Teks dari dokumen akan tampil di sini. Anda juga bisa menempel materi sendiri." data-fc-placeholder-id="Teks dari dokumen akan tampil di sini. Anda juga bisa menempel materi sendiri." data-fc-placeholder-en="Document text will appear here. You can also paste your own material."></textarea></label>
+              <div class="fc-import-actions"><button id="fcGenerate" class="fc-button" type="button" data-fc-id="Buat draf kartu dari teks" data-fc-en="Draft cards from text">Buat draf kartu dari teks</button><span id="fcSourceCount" class="fc-small">0 / 120.000</span></div>
+              <p class="fc-small" data-fc-id="Draf mengikuti judul dan paragraf, bukan dibuat oleh AI. Periksa pertanyaan, rumus, dan jawaban sebelum menyimpan. Maksimal 100 kartu per materi." data-fc-en="Drafts follow headings and paragraphs; they are not generated by AI. Review questions, formulas and answers before saving. Up to 100 cards per deck.">Draf mengikuti judul dan paragraf, bukan dibuat oleh AI. Periksa pertanyaan, rumus, dan jawaban sebelum menyimpan. Maksimal 100 kartu per materi.</p>
+            </div>
+          </details>
+          <div class="fc-card-editor-heading"><h3><span data-fc-id="Kartu materi" data-fc-en="Study cards">Kartu materi</span> <span id="fcEditCount" class="fc-count">0 / 100</span></h3><button id="fcAddCard" type="button" class="fc-button fc-button-quiet" data-fc-id="Tambah kartu" data-fc-en="Add card">Tambah kartu</button></div>
+          <div id="fcCardEditor" class="fc-card-editor"></div>
+          <div class="fc-save-options">
+            <label><input id="fcCloudSave" type="checkbox"><span data-fc-id="Simpan ke akun THERMPYX" data-fc-en="Save to THERMPYX account">Simpan ke akun THERMPYX</span></label>
+            <p class="fc-small" data-fc-id="Koleksi akun hanya dapat diakses oleh akun Google pemiliknya." data-fc-en="Account decks are only accessible to the Google account that owns them.">Koleksi akun hanya dapat diakses oleh akun Google pemiliknya.</p>
+            <button id="fcSignIn" type="button" class="fc-button fc-button-quiet" data-fc-id="Masuk dengan Google untuk menyimpan online" data-fc-en="Sign in with Google to save online">Masuk dengan Google untuk menyimpan online</button>
+          </div>
+          <div class="fc-save-actions"><button id="fcSaveDeck" type="button" class="fc-button fc-button-primary" data-fc-id="Simpan materi" data-fc-en="Save deck">Simpan materi</button><button id="fcCancelEdit" type="button" class="fc-button fc-button-quiet" data-fc-id="Batal" data-fc-en="Cancel">Batal</button></div>
+          <p class="fc-small" data-fc-id="Tanpa masuk, Anda tetap bisa membuat, mengimpor, dan belajar menggunakan materi lokal." data-fc-en="You can create, import and study local decks without signing in.">Tanpa masuk, Anda tetap bisa membuat, mengimpor, dan belajar menggunakan materi lokal.</p>
+        </section>
+      </section>
+    </div>
+  </main>
+  <dialog id="fcConfirmDialog" class="fc-confirm-dialog" aria-labelledby="fcConfirmTitle" aria-describedby="fcConfirmText" data-tpx-no-translate><form method="dialog"><h2 id="fcConfirmTitle"></h2><p id="fcConfirmText"></p><div class="fc-save-actions"><button class="fc-button" value="cancel" autofocus data-fc-id="Batal" data-fc-en="Cancel">Batal</button><button id="fcConfirmAction" class="fc-button fc-button-primary" value="confirm">Lanjutkan</button></div></form></dialog>
+  <script src="../js/script.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/firebase-client.js"></script>
+  <script src="../js/content-store.js"></script>
+  <script src="../js/document-import.js"></script>
+  <script src="flashcards.js"></script>
 </body>
 </html>

@@ -25,6 +25,7 @@
     topicSelect.disabled = creating;
     setSelect.disabled = creating || loadingSets;
     refresh.disabled = creating || loadingSets;
+    byId("skillsEnabled").disabled = creating;
     const en = creating ? "CREATING ROOM…" : "CREATE ROOM";
     const id = creating ? "MEMBUAT RUANG…" : "BUAT RUANG";
     createRoomBtn.dataset.en = en; createRoomBtn.dataset.id = id;
@@ -148,7 +149,7 @@
         questions = content.normalizeQuestions(builtin);
       }
       status("Creating a room…", "Membuat ruang…");
-      const result = await live.createRoom({ topic, questions, is_custom: sourceSelect.value === "custom" });
+      const result = await live.createRoom({ topic, questions, is_custom: sourceSelect.value === "custom", skills_enabled: byId("skillsEnabled").checked });
       // Never attach a completed write to a different local Google account.
       if (accountChanged()) return;
       if (result.error) throw result.error;

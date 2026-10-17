@@ -79,3 +79,14 @@ test("preserves wrapped answers and earlier questions from PDF/DOCX text", () =>
   assert.equal(split.map(card => card.back).join(" "), "kata ".repeat(1600).trim());
   assert.ok(split.every(card => card.front === "Jelaskan materi berikut?" && card.back.length <= 5000));
 });
+
+test("preserves long definitions and valid long question fronts without silent truncation", () => {
+  const definition = "Thermal energy: " + "energy ".repeat(1600);
+  const cards = importer.generateDraft(definition, {language: "en"});
+  assert.ok(cards.length > 1);
+  assert.equal(cards.map(card => card.back).join(" "), "energy ".repeat(1600).trim());
+  assert.ok(cards.every(card => card.front === "Explain Thermal energy."));
+  const question = "What changes when " + "temperature ".repeat(50) + "rises?";
+  const explicit = importer.generateDraft("Q: " + question + "\nA: The internal energy changes according to the system's properties.", {language: "en"});
+  assert.equal(explicit[0].front, question);
+});

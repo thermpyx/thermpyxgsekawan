@@ -22,8 +22,8 @@
       step("Explore first. Keep what matters.", "Jelajahi dulu, simpan yang penting",
         "Theory, calculations, simulations, and independent practice are ready to use without an account.",
         "Teori, kalkulator, simulator, dan latihan mandiri dapat digunakan tanpa akun.",
-        ["Sign in when you want to save question sets to your account.", "Open Quick guide again whenever you need a reminder."],
-        ["Masuk ketika ingin menyimpan paket soal ke akun Anda.", "Buka Panduan singkat lagi kapan saja jika perlu pengingat."])
+        ["Sign in to save question sets and flashcards to your account.", "Open Quick guide again whenever you need a reminder."],
+        ["Masuk untuk menyimpan paket soal dan flashcard ke akun Anda.", "Buka Panduan singkat lagi kapan saja jika perlu pengingat."])
     ]},
     theory: {label: pair("READ · UNDERSTAND · APPLY", "BACA · PAHAMI · TERAPKAN"), mark: "Q", steps: [
       step("Build the idea before the equation", "Pahami konsep sebelum rumusnya",

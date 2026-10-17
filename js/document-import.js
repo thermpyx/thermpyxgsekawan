@@ -145,7 +145,7 @@
     if (!text) return [];
     if (text.length > LIMITS.text) throw new ImportError("too-much-text", "Materi maksimal 120.000 karakter.");
     const language = options.language === "en" ? "en" : "id", lines = text.split("\n"), cards = [];
-    const push = (front, back) => { if (cards.length < LIMITS.cards && back.trim()) cards.push({ front: front.slice(0, 300).trim(), back: back.slice(0, 5000).trim() }); };
+    const push = (front, back) => { if (cards.length < LIMITS.cards && back.trim()) cards.push({ front: front.slice(0, 2000).trim(), back: back.slice(0, 5000).trim() }); };
     let heading = "", paragraphs = [], question = "";
     const flush = (front = heading, wholeAnswer = false) => {
       if (!paragraphs.length) return;
@@ -169,7 +169,7 @@
       // Keep those lines together until the next question or section boundary.
       if (a && question) { paragraphs.push(a[1]); continue; }
       const definition = clean.match(/^([^:：]{2,90})\s*[:：]\s*(.{20,})$/);
-      if (definition && !/^https?$/i.test(definition[1])) { flush(question || heading, Boolean(question)); question = ""; push(language === "en" ? `Explain ${definition[1]}.` : `Jelaskan ${definition[1]}.`, definition[2]); continue; }
+      if (definition && !/^https?$/i.test(definition[1])) { flush(question || heading, Boolean(question)); question = ""; paragraphs = [definition[2]]; flush(language === "en" ? `Explain ${definition[1]}.` : `Jelaskan ${definition[1]}.`, true); continue; }
       const short = clean.length >= 3 && clean.length <= 110 && clean.split(/\s+/).length <= 13;
       const isHeading = short && !/[.!?]$/.test(clean) && (/^(?:\d+(?:\.\d+)*[.)]?\s|bab\s|chapter\s|bagian\s)/i.test(clean) || clean.endsWith(":") || (clean === clean.toUpperCase() && /[A-ZÀ-ÖØ-Þ]/.test(clean)));
       if (isHeading) { flush(question || heading, Boolean(question)); question = ""; heading = clean.replace(/:$/, ""); }

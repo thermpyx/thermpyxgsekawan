@@ -1,6 +1,6 @@
 /* Learning path uses the shared THERMPYX palette and type system. */
-.learning-body {--lp-accent:#71d5ea;--lp-success:#76d5b5;--lp-soft:rgba(113,213,234,.065);}
-.learning-body.light-mode {--lp-accent:#086c87;--lp-success:#087b5d;--lp-soft:rgba(8,108,135,.055);}
+.learning-body {--lp-accent:#71d5ea;--lp-success:#76d5b5;--lp-soft:rgba(113,213,234,.065);--lp-warm:#efb177;--lp-panel:#101f2b;--lp-panel-end:#112831;--lp-art:rgba(113,213,234,.19);}
+.learning-body.light-mode {--lp-accent:#086c87;--lp-success:#087b5d;--lp-soft:rgba(8,108,135,.055);--lp-warm:#9c571c;--lp-panel:#f8fcfd;--lp-panel-end:#e4f2f3;--lp-art:rgba(8,108,135,.2);}
 html:has(>.learning-body) {scroll-padding-top:140px;}
 .lp-module-tab,.lp-self-check input {scroll-margin-block:150px 90px;}
 .lp-topbar {padding-inline:max(5%,calc((100vw - 1240px)/2));height:76px;gap:16px;}
@@ -12,7 +12,14 @@ html:has(>.learning-body) {scroll-padding-top:140px;}
 .lp-page :is(a,button,input,summary):focus-visible,.lp-footer a:focus-visible {outline:2px solid var(--lp-accent);outline-offset:5px;}
 .lp-page button {cursor:pointer;}
 .lp-eyebrow {font-family:"Oxanium",sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;line-height:1.6;color:var(--lp-accent);}
-.lp-hero {display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px, .8fr);gap:clamp(32px,6vw,86px);padding:80px 0 64px;align-items:center;}
+.lp-hero {position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px, .8fr);gap:clamp(32px,6vw,86px);padding:80px 0 64px;align-items:center;}
+.lp-hero-art {position:absolute;z-index:-1;inset:0;overflow:hidden;pointer-events:none;mask-image:linear-gradient(to bottom,#000 40%,transparent 100%);}
+.lp-hero-art svg {display:block;width:100%;height:100%;min-height:540px;}
+.lp-art-contour {stroke:var(--lp-art);stroke-width:1;}
+.lp-art-contour-inner {stroke-dasharray:4 12;opacity:.65;}
+.lp-art-route {stroke:var(--lp-art);stroke-width:1;opacity:.8;}
+.lp-art-nodes {fill:var(--lp-panel);stroke:var(--lp-art);stroke-width:1.5;}
+.lp-hero-copy {position:relative;}
 .lp-hero-copy>.lp-eyebrow {display:flex;gap:10px;align-items:center;}
 .lp-hero-copy>.lp-eyebrow>span:first-child {width:7px;height:7px;flex:none;border-radius:50%;background:var(--lp-accent);box-shadow:0 0 14px var(--lp-accent);}
 .lp-hero h1 {font:600 clamp(38px,5.2vw,65px)/1.12 "Oxanium",sans-serif;letter-spacing:-.045em;margin:22px 0;}
@@ -28,10 +35,11 @@ html:has(>.learning-body) {scroll-padding-top:140px;}
 .lp-text-link {font-size:12px;font-weight:600;color:var(--text-secondary);}
 .lp-text-link:hover {color:var(--lp-accent);}
 .lp-hero-meta {display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;font-size:11px;color:var(--text-secondary);}
-.lp-progress-card {border:1px solid var(--border);border-radius:16px;padding:30px;position:relative;background:radial-gradient(ellipse at top right,var(--lp-soft),transparent 70%),var(--bg-card);box-shadow:0 20px 55px rgba(0,0,0,.08);}
+.lp-progress-card {border:1px solid var(--border);border-radius:16px;padding:30px;position:relative;background:radial-gradient(ellipse at 100% 0,rgba(113,213,234,.09),transparent 70%),linear-gradient(145deg,var(--lp-panel),var(--lp-panel-end));box-shadow:0 20px 55px rgba(0,0,0,.1);}
+.lp-progress-card:after {content:"";position:absolute;top:16px;right:16px;width:17px;height:17px;border-top:1px solid var(--lp-art);border-right:1px solid var(--lp-art);border-top-right-radius:4px;pointer-events:none;}
 .lp-progress-card>.lp-eyebrow {font-size:10px;}
 .lp-progress-orbit {--lp-progress:0%;width:166px;height:166px;display:grid;place-items:center;margin:24px auto;background:conic-gradient(var(--lp-accent) var(--lp-progress),var(--border-light) 0);border-radius:50%;position:relative;}
-.lp-progress-orbit:before {content:"";position:absolute;inset:5px;border-radius:50%;background:var(--bg-card);}
+.lp-progress-orbit:before {content:"";position:absolute;inset:5px;border-radius:50%;background:var(--lp-panel);}
 .lp-progress-orbit>div {position:relative;display:grid;text-align:center;}
 .lp-progress-orbit strong {font:600 44px/1.1 "Oxanium",sans-serif;letter-spacing:-.04em;}
 .lp-progress-orbit span {font-size:11px;color:var(--text-secondary);margin-top:7px;}
@@ -45,7 +53,10 @@ html:has(>.learning-body) {scroll-padding-top:140px;}
 .lp-section-heading>p {max-width:285px;color:var(--text-secondary);font-size:12px;line-height:1.8;}
 .lp-outcomes {padding:40px 0 34px;border-top:1px solid var(--border-light);scroll-margin-top:100px;}
 .lp-outcome-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
-.lp-outcome-grid article {padding:25px;border:1px solid var(--border-light);background:var(--bg-card);border-radius:9px;}
+.lp-outcome-grid article {padding:25px;border:1px solid var(--border-light);background:radial-gradient(ellipse at top right,rgba(88,174,182,.07),transparent 80%),var(--bg-card);border-radius:9px;}
+.lp-outcome-grid article:nth-child(2) {background:radial-gradient(ellipse at top right,rgba(207,147,87,.08),transparent 80%),var(--bg-card);}
+.lp-outcome-grid article:nth-child(2)>span {color:var(--lp-warm);}
+.lp-outcome-grid article:nth-child(3) {background:radial-gradient(ellipse at top right,rgba(96,151,203,.08),transparent 80%),var(--bg-card);}
 .lp-outcome-grid article>span {color:var(--lp-accent);font:600 12px "Oxanium",sans-serif;}
 .lp-outcome-grid h3 {font:600 18px "Oxanium",sans-serif;margin:20px 0 11px;}
 .lp-outcome-grid p {font-size:12px;line-height:1.8;color:var(--text-secondary);}

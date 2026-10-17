@@ -9,8 +9,10 @@ THERMPYX is a static bilingual learning site. Use the existing checkout: each cl
 - `TPXFirebase` is published synchronously while SDK readiness is asynchronous. Await its supported methods internally. Call the ready Google popup method directly within user activation; do not await a session read first. Fail clearly when Firebase is unavailable; never simulate a production sign-in or successful save.
 - Preserve the Google-only modal, ID/EN labels and errors, keyboard focus, Escape, busy/double-click protection and local drafts. An in-flight old session read must not override a newer sign-in, sign-out or account change.
 - Realtime Database access is governed by `firebase/database.rules.json`. Preserve Google-owner restrictions, exact room-code lookup, membership checks, nickname uniqueness and answer/room-state validation. Do not use public read/write rules, disable validation or rely on UI checks alone.
+- Flashcard decks are private Google-owner records in `flashcardDecks/$ownerUid/$deckId`, using `TPXFirebase.flashcardDecks`. Manual decks and PDF/DOCX drafts also work locally. Original documents stay on the device; only edited card text and source metadata are saved. Retain the 8 MB / 32 PDF pages / 100 cards limits and never translate imported user material. Cloud saves/deletes must carry the captured owner ID and reject stale responses after an account change.
 - For question-set writes, keep four distinct answers, one correct index and a maximum of 100 questions. Preserve drafts on failure or account changes, confirm the returned cloud record before claiming success, and never apply an old request to another owner/draft. Keep the room's question snapshot independent of later bank edits.
 - Supabase SQL, email templates, old configuration and their QA files remain historical migration material. Do not reconnect active pages to them or delete remote/legacy data as part of routine setup. Old email callback credentials are sanitized before the page enters the shell; they may open the Google account dialog but cannot authenticate a Firebase user. Never log/store callback tokens or put them in shell query strings/history metadata.
+- Updated flashcard/Prism Rules were verified by official GitHub CI run `38990392529` (source commit `9d00ffb`, 9 scenarios / 345 checks, Rules SHA-256 `d0aa9b333b565aab15cbb91667fdd16e10ed230bed1356e5f021df64d0c21014`). The user confirmed publishing these new Rules through Console. This is user-reported publication, separate from emulator proof; do not claim admin verification or new production gameplay tests.
 - Setup is confirmed: Google and Anonymous enabled, `thermpyx.github.io` authorized, Singapore (`asia-southeast1`) Realtime Database configured at `https://thermpyx-default-rtdb.asia-southeast1.firebasedatabase.app`, and Rules publication successful. The frontend uses the existing Pages branch `codex/simulator-visual-refinement`; the user does not need to upload again or switch branches.
 - The user reported the Google button visible on actual Pages, successful real Google login, question creation/use and a friend joining and answering the live quiz in a normal trial. This is user-reported production evidence, separate from development fixtures/emulators; agents did not write live records to obtain it. Do not extend that report to unconfirmed production reload, deletion, leaderboard correctness or cross-account isolation. Keep the reusable steps in [the Firebase guide](docs/PANDUAN-FIREBASE.md).
 
@@ -25,7 +27,7 @@ THERMPYX is a static bilingual learning site. Use the existing checkout: each cl
 
 ## Visual preferences
 
-- Nathan's role is Project Leader / Ketua Proyek. Preserve original developer photos and the profile/intro/card interactions; keep the material card and futuristic background styling scoped to the Developer page.
+- Nathan's role is Project Leader / Ketua Proyek. Preserve original developer photos and the profile/intro/card interactions; keep its material card and photo interactions scoped to the Developer page. Other learning pages opt in to the static `css/futuristic-surfaces.css` atmosphere using `body.tpx-futuristic`; the homepage, shell and Developer page retain their own background layers.
 - Use the First Law piston as the simulator equipment reference: coherent lab surfaces, recognizable apparatus and readable labels. Inspect real screenshots; a font check alone does not prove a scene renders.
 - Keep text, symbols, readouts and buttons comfortably inside containers. Verify 320px and desktop, ID/EN and both themes. Sticky headers must not cover focus/anchors. Preserve keyboard and reduced-motion support.
 - Avoid decorative long-dash separators and heading/example accent rules. Preserve mathematical minus signs, plots and number ranges.
@@ -33,8 +35,8 @@ THERMPYX is a static bilingual learning site. Use the existing checkout: each cl
 
 ## Email feedback
 
-- Feedback on the homepage prepares drafts addressed to `thermpyx@gmail.com`. Users send through Gmail or their email application. Never claim delivery from opening a draft, add frontend email credentials, or send real messages during QA. Preserve message validation, ID/EN, draft contents on language changes, Gmail/copy/manual fallbacks, and the persistent shell/music. Email context must exclude URL query strings and fragments.
-- Quiz skills in `docs/IDE-SKILL-QUIZ.md` are proposals, not implemented gameplay. Keep current scores, timers, question snapshots and Firebase rules unchanged unless a skill implementation is authorized separately.
+- Feedback opens from the homepage navigation in a native popup; the form is not a homepage section. It prepares drafts addressed to `thermpyx@gmail.com`. Users send through Gmail or their email application. Never claim delivery from opening a draft, add frontend email credentials, or send real messages during QA. Preserve message validation, ID/EN, draft contents on language changes, Gmail/copy/manual fallbacks, and the persistent shell/music. Email context must exclude URL query strings and fragments.
+- Live quiz skills are now implemented: Reactor Energy is cosmetic feedback from confirmed answers; Prism is one atomic token per participant per room that removes two wrong options after Firebase confirmation. Hosts choose the immutable `skills_enabled` setting when creating a room. Old rooms without the setting have no assist. Scores stay 100/0 and the normal client timer stays 20 seconds. Never let a pending skill transaction block timeout submission or the next question, and never apply a late acknowledgement to another question. See `docs/IDE-SKILL-QUIZ.md` for the actual timing/trust model. New records require the updated Rules; preserve Google/private ownership and do not relax existing access.
 
 ## Verification
 
@@ -45,6 +47,10 @@ node qa/test-firebase-client.cjs
 node qa/test-firebase-account.cjs
 node qa/test-firebase-live.cjs
 node qa/test-firebase-navigation.cjs
+node qa/test-quiz-skills.cjs
+node qa/test-flashcards-firebase.cjs
+node qa/test-feedback.cjs
+node qa/test-feedback-modal.cjs
 ```
 
 Browser suites require Playwright/Chromium; account/navigation suites also use the local HTTP server. `qa/test-firebase-sdk.cjs` requires the actual Firebase 13 browser bundle via `TPX_FIREBASE_SDK_BUNDLE` and an Auth emulator at `127.0.0.1:9099`, using project `demo-thermpyx-qa`. Its Google credentials and RTDB network are local fixtures; it does not prove production OAuth or deployed database rules. See the preparation notes in that file.

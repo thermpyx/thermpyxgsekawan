@@ -11,7 +11,7 @@ Versi aktif memakai Firebase Authentication untuk **guru Google** dan **peserta 
 - Halaman kuis menggunakan operasi dan langganan Realtime Database untuk ruang, peserta, pertanyaan, jawaban dan hasil. Ruang menyimpan snapshot paket soal agar penyuntingan bank berikutnya tidak mengubah kuis yang sudah dibuat.
 - Tautan email Supabase lama dibersihkan dari kredensial sebelum masuk shell. Link lama dapat diarahkan ke popup akun Google; link tersebut tidak membuat sesi Firebase atau memberi akses perubahan sandi.
 
-Shell dan pemutar musik, Alur Belajar tujuh topik, progres lokal, materi ID/EN, perhitungan fisika, simulator, kontrol volume Hukum I, kalkulator, konverter, foto dan aset pengguna dipertahankan. Flashcard tetap Coming Soon. Berkas SQL, konfigurasi dan dokumentasi Supabase disimpan sebagai arsip; tidak ada penghapusan atau migrasi otomatis akun/bank soal lama.
+Shell dan pemutar musik, Alur Belajar tujuh topik, progres lokal, materi ID/EN, perhitungan fisika, simulator, kontrol volume Hukum I, kalkulator, konverter, foto dan aset pengguna dipertahankan. Flashcard kini menyediakan editor manual, impor PDF/DOCX lokal dan koleksi privat akun Google. Berkas SQL, konfigurasi dan dokumentasi Supabase disimpan sebagai arsip; tidak ada penghapusan atau migrasi otomatis akun/bank soal lama.
 
 ## Status pengaturan proyek
 
@@ -73,3 +73,18 @@ NODE_PATH="$PWD/qa/firebase/node_modules" TPX_FIREBASE_TEST_PROJECT=demo-thermpy
 `qa/test-firebase-sdk.cjs` menjelaskan cara membangun bundle Firebase **untuk QA saja**, menjalankan Auth emulator proyek `demo-thermpyx-qa` di `127.0.0.1:9099`, lalu memasok `TPX_FIREBASE_SDK_BUNDLE` ke tes. Bundle dan data emulator tidak perlu disertakan dalam situs yang diterbitkan.
 
 Untuk navigasi, musik, simulasi dan materi, jalankan suite terkait yang tercantum di [AGENTS.md](../AGENTS.md). Tes dengan nama lama seperti `test-auth-sdk`, `test-auth-recovery`, `test-home-account`, `test-email-template`, `test-teacher-sql`, `test-question-set-flow`, `test-host-auth-race`, `test-upload-flow`, `test-live-entry` dan `test-quiz` masih memuat asumsi Supabase. Berkasnya dipertahankan untuk riwayat; hasilnya tidak membuktikan alur Firebase aktif.
+
+
+## Pembaruan flashcard dan skill live quiz
+
+Rules baru menambahkan `flashcardDecks/$ownerUid/$deckId` untuk koleksi privat Google dan `skillUses/$roomId/$uid/prism` untuk satu token Prisma per peserta. Pengguna anonim tetap peserta kuis, bukan pemilik materi. Hapus koleksi juga membawa ID pemilik yang ditangkap saat tindakan dimulai, sehingga pergantian akun tidak menghapus koleksi akun baru dengan ID sama.
+
+Bukti emulator resmi terbaru: [run 38990392529](https://github.com/thermpyx/thermpyxgsekawan/actions/runs/38990392529), commit sumber `9d00ffbaa4354219c2a699b6ef25ac35839014b2`, **9 skenario / 345 pemeriksaan lulus**. Laporan lengkap tersedia di `qa/firebase-ci-result.json`. SHA-256 Rules: `d0aa9b333b565aab15cbb91667fdd16e10ed230bed1356e5f021df64d0c21014`. Pengujian ini mencakup semua pemeriksaan lama serta validasi/isolation flashcard, anggota/nonanggota, ruang dengan/tanpa bantuan, penggunaan serentak dan pembatasan sekali pakai. Ini pengujian emulator pada proyek `demo-*`, bukan perubahan atau bukti publikasi Rules produksi.
+
+Unduhan emulator resmi pada lingkungan cloud lokal diblokir proxy HTTP 403. Workflow GitHub menggunakan emulator resmi dan menghasilkan laporan yang hash Rules serta hash tesnya sudah dicocokkan dengan berkas lokal. Tidak ada pelonggaran Rules atau pengalihan pengujian ke database produksi.
+
+Prisma hanya berlaku sebelum jawaban tersimpan pada soal aktif dalam ruang yang mengaktifkannya. Reaktor Energi bersifat kosmetik. Waktu 20 detik tetap memakai jam klien/ISO sesuai arsitektur kuis sebelumnya; Rules tidak mengubahnya menjadi jam ujian otoritatif. Jawaban benar juga sudah termuat dalam snapshot kuis yang dapat dibaca anggota. Fitur ini merupakan bantuan latihan kelas, bukan jaminan pencegahan kecurangan.
+
+Untuk mengaktifkan jalur data baru: buka Firebase Console → Realtime Database → Rules, salin seluruh berkas Rules baru, lalu Publish. Pengaturan Google/Anonymous dan URL Singapore yang sudah dikonfirmasi tetap digunakan. Tidak diperlukan Storage bucket untuk impor flashcard.
+
+Pengguna mengonfirmasi telah memublikasikan Rules baru melalui Firebase Console pada sesi revisi ini. Ini konfirmasi pengguna; agen tidak melakukan penulisan data produksi atau memverifikasi isi Rules produksi dengan kredensial admin.

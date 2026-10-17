@@ -32,9 +32,12 @@ const base = (process.env.TPX_TEST_URL || "http://127.0.0.1:8003").replace(/\/$/
     page.on("pageerror", error => errors.push(error.message));
     await page.goto(base + "/app.html?page=index.html", {waitUntil: "domcontentloaded"});
     const frame = page.frameLocator("#tpx-content-frame");
-    await frame.locator("#feedbackForm").waitFor();
+    await frame.locator("#feedbackForm").waitFor({state: "attached"});
     const child = page.frames().find(item => item !== page.mainFrame());
     await child.waitForFunction(() => Boolean(window.TPXFeedback?.mount()));
+    assert.equal(await frame.locator("#feedbackForm").isVisible(), false);
+    await frame.locator("[data-feedback-open]").click();
+    await frame.locator("#feedbackDialog[open]").waitFor();
     const form = frame.locator("#feedbackForm"), message = form.locator("#feedbackMessage"), status = form.locator("#feedbackStatus"), manual = form.locator("#feedbackPreparedMessage");
     assert.equal(await frame.locator("#feedbackRecipient").textContent(), "thermpyx@gmail.com");
     assert.equal(await frame.locator("#feedbackRecipient .tpx-wordmark").count(), 0);

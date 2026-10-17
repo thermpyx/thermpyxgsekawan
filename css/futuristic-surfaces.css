@@ -1,0 +1,41 @@
+/* Shared atmosphere for learning pages. Opt-in only; the homepage and
+   Developer page retain their own backgrounds. No animation or canvas layer. */
+body.tpx-futuristic:not(.dev-page) {
+  --tpx-atmosphere-base: #0a141d;
+  --tpx-atmosphere-teal: rgba(64, 166, 166, .16);
+  --tpx-atmosphere-blue: rgba(49, 99, 140, .16);
+  --tpx-atmosphere-amber: rgba(181, 112, 62, .08);
+  --tpx-atmosphere-grid: rgba(110, 185, 194, .033);
+  --tpx-atmosphere-ring: rgba(109, 190, 187, .09);
+  min-height: 100vh;
+  background-color: var(--tpx-atmosphere-base);
+  background-image:
+    radial-gradient(circle at 92% 240px, transparent 0 190px, var(--tpx-atmosphere-ring) 191px 192px, transparent 193px 247px, var(--tpx-atmosphere-ring) 248px 249px, transparent 250px),
+    radial-gradient(ellipse 850px 620px at 4% 160px, var(--tpx-atmosphere-teal), transparent 75%),
+    radial-gradient(ellipse 850px 720px at 105% 850px, var(--tpx-atmosphere-blue), transparent 76%),
+    radial-gradient(ellipse 620px 500px at 8% 1550px, var(--tpx-atmosphere-amber), transparent 76%),
+    linear-gradient(var(--tpx-atmosphere-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tpx-atmosphere-grid) 1px, transparent 1px);
+  background-size: auto, auto, auto, auto, 64px 64px, 64px 64px;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+}
+body.tpx-futuristic.light-mode:not(.dev-page) {
+  --tpx-atmosphere-base: #edf5f7;
+  --tpx-atmosphere-teal: rgba(92, 181, 174, .2);
+  --tpx-atmosphere-blue: rgba(104, 159, 198, .15);
+  --tpx-atmosphere-amber: rgba(221, 166, 108, .12);
+  --tpx-atmosphere-grid: rgba(50, 114, 132, .04);
+  --tpx-atmosphere-ring: rgba(39, 125, 126, .1);
+}
+/* These legacy full-page fills otherwise conceal the body atmosphere.
+   Content surfaces, graphs, equations and inputs keep their existing styles. */
+body.tpx-futuristic :is(.theory-page, .quiz-page) { background: transparent; }
+body.tpx-futuristic :is(.theory-page, .quiz-page)::before { background-image: none; }
+body.tpx-futuristic :is(.theory-hero, .quiz-hub-hero, .quiz-hero) {
+  background-color: transparent;
+}
+@media (max-width: 600px) {
+  body.tpx-futuristic:not(.dev-page) {
+    background-size: auto, auto, auto, auto, 48px 48px, 48px 48px;
+  }
+}

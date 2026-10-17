@@ -11,6 +11,19 @@ const QUESTION_MS = 20000;
 let questions = [], index = 0, startedMs = 0, tick = null, unsubscribeRoom = null, unsubscribeConnection = null;
 let customQuestions = false, locked = false, saving = false, advancing = false, finished = false, leaving = false, pending = null;
 let progressQueue = Promise.resolve();
+let skillPending = false;
+const skills = window.TPXQuizSkills?.create({
+  root: $("quizSkills"), options: optionsEl, live, roomId, playerId,
+  isActive: target => target === index && !locked && !finished && !leaving && Date.now() - startedMs < QUESTION_MS,
+  onPendingChange(value) {
+    skillPending = value;
+    if (value) lockOptions();
+    else if (!locked && !finished && !leaving) {
+      if (Date.now() - startedMs >= QUESTION_MS) submit(-1);
+      else optionsEl.querySelectorAll("button").forEach(button => { button.disabled = button.hasAttribute("data-prism-eliminated"); });
+    }
+  }
+});
 const txt = (en, id) => window.TPX?.t ? window.TPX.t(en, id) : en;
 // Saved answers determine completed questions. Monitoring progress never blocks
 // the first question or an answer that Firebase has already confirmed.
@@ -63,6 +76,7 @@ function render() {
     if (customQuestions) protectUserText(button);
     button.textContent = name; button.addEventListener("click", () => submit(choice)); optionsEl.append(button);
   });
+  skills?.renderQuestion(index, item);
   message("Choose one answer before time runs out.", "Pilih satu jawaban sebelum waktu habis.");
   refreshClock(); if (!locked) tick = setInterval(refreshClock, 200);
 }
@@ -84,8 +98,16 @@ function showChoice(choice) {
 }
 async function submit(choice) {
   if (locked || finished || leaving) return;
+  if (skillPending) {
+    if (Date.now() - startedMs < QUESTION_MS) return;
+    // A Firebase transaction may await reconnection indefinitely. The
+    // question still expires at 20 seconds; its timeout save must not await
+    // the assist request, or block the next question after that save.
+    skillPending = false; skills?.questionTimedOut(); choice = -1;
+  }
   if (Date.now() - startedMs >= QUESTION_MS) choice = -1;
-  locked = true; clearClock(); lockOptions();
+  if (choice >= 0 && skills?.eliminatedOptions().includes(choice)) return;
+  locked = true; skills?.setLocked(true); clearClock(); lockOptions();
   pending = { room_id: roomId, player_id: playerId, question_index: index, selected_answer: choice,
     response_time_ms: choice < 0 ? QUESTION_MS : Math.max(0, Math.min(QUESTION_MS, Date.now() - startedMs)) };
   await persistAnswer();
@@ -93,6 +115,7 @@ async function submit(choice) {
 function results() {
   if (finished) return;
   finished = true; locked = true; clearClock(); unsubscribeRoom?.(); unsubscribeConnection?.();
+  skills?.dispose();
   location.replace("leaderboard.html");
 }
 async function roomHasEnded() {
@@ -114,6 +137,7 @@ async function persistAnswer() {
       throw error || new Error("Answer save was not confirmed");
     if (savedIndex !== index || finished || leaving) return;
     pending = null;
+    skills?.confirmAnswer(data);
     // A retry can return an earlier immutable write after an interrupted reply.
     // Display that persisted choice, never the possibly different local choice.
     showChoice(Number(data.selected_answer));
@@ -136,6 +160,9 @@ async function restorePlayer() {
     if (finished || leaving) return;
     if (player.error || answers.error || !player.data) throw player.error || answers.error || new Error("Player not found");
     if (Number(player.data.current_question) === -1) throw new Error("Player left this quiz");
+    // Token checks are independent of the saved-answer session. A slow token
+    // read must not delay the first question or grant an unchecked assist.
+    skills?.restore(answers.data || []);
     const completed = new Set(TPXQuizScores.uniqueAnswers(answers.data || []).map(answer => Number(answer.question_index)));
     let next = 0; while (completed.has(next) && next < questions.length) next++;
     if (next >= questions.length) { index = next; complete(); return; }
@@ -155,6 +182,7 @@ async function restorePlayer() {
 function complete() {
   if (finished || leaving) return;
   finished = true; clearClock(); locked = true;
+  skills?.setLocked(true);
   window.TPXHistory?.log("quiz", "Live Quiz", "All questions submitted", location.href,
     { titleEn: "Live Quiz", titleId: "Kuis Langsung", detailEn: "All questions submitted", detailId: "Semua soal terkirim" });
   numberEl.textContent = txt("Quiz Completed", "Kuis Selesai");
@@ -176,6 +204,7 @@ async function initialize() {
   if (room.status === "finished") { results(); return; }
   if (room.status !== "playing") { location.replace("waiting-room.html"); return; }
   customQuestions = Boolean(room.is_custom); questions = getQuestionsForRoom(room);
+  skills?.configure(room);
   if (!questions.length) { message("No questions for this topic.", "Tidak ada soal pada topik ini."); return; }
   unsubscribeRoom?.(); unsubscribeConnection?.();
   unsubscribeRoom = live.watchRoom(roomId, result => {
@@ -191,11 +220,12 @@ async function initialize() {
   await restorePlayer();
 }
 initialize().catch(() => showRetry(initialize));
-window.addEventListener("beforeunload", () => { clearClock(); unsubscribeRoom?.(); unsubscribeConnection?.(); });
+window.addEventListener("beforeunload", () => { clearClock(); skills?.dispose(); unsubscribeRoom?.(); unsubscribeConnection?.(); });
 const leave = $("leavePlayBtn");
 if (leave) leave.addEventListener("click", async event => {
   event.preventDefault(); if (leaving || finished) return;
-  leaving = true; clearClock(); locked = true; leave.setAttribute("aria-disabled", "true");
+  if (skillPending) return;
+  leaving = true; clearClock(); locked = true; skills?.setLocked(true); leave.setAttribute("aria-disabled", "true");
   try {
     await progressQueue.catch(() => {});
     const result = await live.markLeft(roomId, playerId);
@@ -210,7 +240,7 @@ if (leave) leave.addEventListener("click", async event => {
     else if (pending) showRetry(persistAnswer, "Failed to leave. Your answer is kept; retry saving or leaving.", "Gagal keluar. Jawaban tetap tersimpan sementara; coba simpan atau keluar kembali.");
     else {
       message("Failed to leave. Please retry.", "Gagal keluar. Silakan coba lagi.");
-      locked = false; refreshClock(); if (!locked) tick = setInterval(refreshClock, 200);
+      locked = false; skills?.setLocked(false); refreshClock(); if (!locked) tick = setInterval(refreshClock, 200);
     }
   } finally { leaving = false; leave.setAttribute("aria-disabled", "false"); }
 });

@@ -155,6 +155,8 @@
     sync(state, true);
     if (state.trigger.disabled || state.wrapper.hidden) return;
     close(opened);
+    const portal = state.select.closest("dialog") || document.body;
+    if (state.menu.parentElement !== portal) portal.append(state.menu);
     opened = state;
     state.menu.hidden = false;
     state.wrapper.classList.add("is-open");
@@ -260,7 +262,9 @@
     states.set(select, state);
     select.before(wrapper);
     wrapper.append(select, trigger);
-    document.body.append(menu);
+    // Native modal dialogs make nodes outside their top layer inert. Keep
+    // their listboxes inside the same dialog while ordinary selects use body.
+    (select.closest("dialog") || document.body).append(menu);
     select.classList.add("tpx-select-native");
     select.setAttribute("tabindex", "-1");
     select.setAttribute("aria-hidden", "true");

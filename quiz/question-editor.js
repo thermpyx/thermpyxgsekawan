@@ -597,12 +597,18 @@
     if (busy || !currentSession || !content) return;
     if (!window.confirm('Hapus "' + (set.title || 'Set soal tanpa nama') + '" dari cloud? Draf lokal tetap tersedia. Set ini tidak bisa dipilih untuk room baru setelah dihapus.')) return;
     const userId = currentSession.user.id;
+    if (set.owner_id && set.owner_id !== userId) {
+      const copy = {en: 'Your account changed. Reload your question library before deleting.', id: 'Akun Anda berubah. Muat ulang koleksi soal sebelum menghapus.'};
+      publishStatus(tr(copy.en, copy.id), 'error', copy);
+      return;
+    }
     busy = true;
     updateControls();
     publishStatus('Menghapus set soal cloud…');
     try {
-      const result = await content.deleteQuestionSet(set.id);
+      const result = await content.deleteQuestionSet(set.id, userId);
       if (result.error) throw result.error;
+      if (currentSession?.user.id !== userId) return;
       state.drafts.forEach(draft => {
         if (draft.cloudId === set.id && draft.cloudOwner === userId) {
           draft.cloudId = null;
@@ -614,6 +620,7 @@
       publishStatus('Set soal cloud dihapus. Draf lokal tetap tersedia.', 'success');
       await loadCloudSets();
     } catch (error) {
+      if (currentSession?.user.id !== userId) return;
       publishStatus(errorMessage(error), 'error');
     } finally {
       busy = false;

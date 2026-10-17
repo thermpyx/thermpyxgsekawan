@@ -72,10 +72,10 @@
 </nav>
 <!-- Bottom Navigation -->
 <div class="sidebar-bottom">
-<a class="nav-item" href="#feedback">
+<button class="nav-item feedback-nav-trigger" type="button" data-feedback-open aria-haspopup="dialog" aria-controls="feedbackDialog" aria-expanded="false">
 <span class="nav-icon" aria-hidden="true">✉</span>
 <span class="nav-text" data-en="Feedback" data-id="Masukan">Feedback</span>
-</a>
+</button>
 <a class="nav-item" href="#about">
 <span class="nav-icon">ⓘ</span>
 <span class="nav-text">About</span>
@@ -332,7 +332,7 @@
 <div class="quiz-content">
 <p class="calculator-label" data-tool-en="YOUR LEARNING SPACE" data-tool-id="RUANG BELAJAR ANDA">YOUR LEARNING SPACE</p>
 <h3 data-tool-en="Understand. Practice. Remember." data-tool-id="Pahami. Latih. Ingat.">Understand. Practice. Remember.</h3>
-<p data-tool-en="Practice at your own pace or join a live quiz. Teachers can prepare their own question sets. Flashcards are coming soon." data-tool-id="Latihan mandiri atau ikuti kuis live. Guru dapat membuat paket soal sendiri. Flashcard akan segera hadir.">Practice at your own pace or join a live quiz. Teachers can prepare their own question sets. Flashcards are coming soon.</p>
+<p data-tool-en="Practice at your own pace, join a live quiz, or review flashcards made from your material. Teachers can prepare their own question sets." data-tool-id="Latihan mandiri, ikuti kuis live, atau pelajari flashcard dari materi Anda. Guru dapat membuat paket soal sendiri.">Practice at your own pace, join a live quiz, or review flashcards made from your material. Teachers can prepare their own question sets.</p>
 <div class="tool-preview-tags" aria-hidden="true"><span data-tool-en="Quiz" data-tool-id="Kuis">Quiz</span><span data-tool-en="Flashcards" data-tool-id="Flashcard">Flashcards</span></div>
 <a class="primary-button" href="quiz/quiz.html" data-tool-en="Start Practice" data-tool-id="Mulai Latihan">Start Practice</a>
 </div>
@@ -377,42 +377,7 @@
 </div>
 </div>
 </section>
-<section class="content-section feedback-section" id="feedback" aria-labelledby="feedbackTitle">
-<div class="feedback-layout">
-<div class="feedback-intro">
-<p class="section-label" data-en="SHAPE THE NEXT CHAPTER" data-id="BANTU LANGKAH BERIKUTNYA">SHAPE THE NEXT CHAPTER</p>
-<h2 id="feedbackTitle" data-en="A better lab starts with your ideas." data-id="Laboratorium yang lebih baik dimulai dari ide Anda.">A better lab starts with your ideas.</h2>
-<p data-en="Found something to improve? Share a suggestion, report a problem, or tell us what would make learning here more useful." data-id="Ada yang perlu diperbaiki? Bagikan saran, laporkan masalah, atau ceritakan hal yang bisa membuat belajar di sini lebih bermanfaat.">Found something to improve? Share a suggestion, report a problem, or tell us what would make learning here more useful.</p>
-<a class="feedback-recipient" id="feedbackRecipient" href="mailto:thermpyx@gmail.com" target="_blank" rel="noopener noreferrer" data-tpx-no-translate data-tpx-user-text>thermpyx@gmail.com</a>
-<p class="feedback-note" data-en="Your message opens as an email draft. Review it and press Send in Gmail or your email app." data-id="Pesan Anda dibuka sebagai draf email. Periksa, lalu tekan Kirim di Gmail atau aplikasi email Anda.">Your message opens as an email draft. Review it and press Send in Gmail or your email app.</p>
-</div>
-<form class="feedback-form" id="feedbackForm" novalidate>
-<div class="feedback-field">
-<label for="feedbackName" data-en="Name (optional)" data-id="Nama (opsional)">Name (optional)</label>
-<input id="feedbackName" name="name" type="text" autocomplete="name" maxlength="80">
-</div>
-<div class="feedback-field">
-<label for="feedbackCategory" data-en="What would you like to share?" data-id="Apa yang ingin Anda sampaikan?">What would you like to share?</label>
-<select id="feedbackCategory" name="category">
-<option value="suggestion" data-en="Suggestion or feature idea" data-id="Saran atau ide fitur">Suggestion or feature idea</option>
-<option value="bug" data-en="Report a problem" data-id="Laporkan masalah">Report a problem</option>
-<option value="other" data-en="Other feedback" data-id="Masukan lainnya">Other feedback</option>
-</select>
-</div>
-<div class="feedback-field">
-<label for="feedbackMessage" data-en="Your message" data-id="Pesan Anda">Your message</label>
-<textarea id="feedbackMessage" name="message" rows="6" maxlength="2000" required aria-describedby="feedbackMessageHint"></textarea>
-<small id="feedbackMessageHint" data-en="For a problem report, describe the page and what happened. Up to 2,000 characters." data-id="Untuk laporan masalah, sebutkan halaman dan kejadian yang dialami. Maksimal 2.000 karakter.">For a problem report, describe the page and what happened. Up to 2,000 characters.</small>
-</div>
-<div class="feedback-actions">
-<button id="feedbackEmailButton" type="submit" data-en="Open email draft" data-id="Buka draf email">Open email draft</button>
-<button id="feedbackGmailButton" type="button" data-en="Open Gmail" data-id="Buka Gmail">Open Gmail</button>
-<button id="feedbackCopyButton" type="button" data-en="Copy message" data-id="Salin pesan">Copy message</button>
-</div>
-<p id="feedbackStatus" role="status" aria-live="polite" aria-atomic="true"></p>
-</form>
-</div>
-</section>
+
 <!-- ==============================
              ABOUT
         =============================== -->
@@ -447,6 +412,42 @@
             </p>
 </footer>
 </main>
+<dialog class="feedback-dialog" id="feedbackDialog" aria-labelledby="feedbackTitle" aria-describedby="feedbackDescription">
+<div class="feedback-dialog-heading"><p class="section-label" data-en="YOUR IDEAS MATTER" data-id="IDE ANDA BERARTI">YOUR IDEAS MATTER</p><button class="feedback-close" type="button" data-feedback-close data-en="Close" data-id="Tutup">Close</button></div>
+<div class="feedback-layout">
+<div class="feedback-intro">
+<h2 id="feedbackTitle" tabindex="-1" data-en="Help shape THERMPYX" data-id="Bantu kembangkan THERMPYX">Help shape THERMPYX</h2>
+<p id="feedbackDescription" data-en="Found something to improve? Share a suggestion, report a problem, or tell us what would make learning here more useful." data-id="Ada yang perlu diperbaiki? Bagikan saran, laporkan masalah, atau ceritakan hal yang bisa membuat belajar di sini lebih bermanfaat.">Found something to improve? Share a suggestion, report a problem, or tell us what would make learning here more useful.</p>
+<a class="feedback-recipient" id="feedbackRecipient" href="mailto:thermpyx@gmail.com" target="_blank" rel="noopener noreferrer" data-tpx-no-translate data-tpx-user-text>thermpyx@gmail.com</a>
+<p class="feedback-note" data-en="Your message opens as an email draft. Review it and press Send in Gmail or your email app." data-id="Pesan Anda dibuka sebagai draf email. Periksa, lalu tekan Kirim di Gmail atau aplikasi email Anda.">Your message opens as an email draft. Review it and press Send in Gmail or your email app.</p>
+</div>
+<form class="feedback-form" id="feedbackForm" novalidate>
+<div class="feedback-field">
+<label for="feedbackName" data-en="Name (optional)" data-id="Nama (opsional)">Name (optional)</label>
+<input id="feedbackName" name="name" type="text" autocomplete="name" maxlength="80">
+</div>
+<div class="feedback-field">
+<label for="feedbackCategory" data-en="What would you like to share?" data-id="Apa yang ingin Anda sampaikan?">What would you like to share?</label>
+<select id="feedbackCategory" name="category">
+<option value="suggestion" data-en="Suggestion or feature idea" data-id="Saran atau ide fitur">Suggestion or feature idea</option>
+<option value="bug" data-en="Report a problem" data-id="Laporkan masalah">Report a problem</option>
+<option value="other" data-en="Other feedback" data-id="Masukan lainnya">Other feedback</option>
+</select>
+</div>
+<div class="feedback-field">
+<label for="feedbackMessage" data-en="Your message" data-id="Pesan Anda">Your message</label>
+<textarea id="feedbackMessage" name="message" rows="6" maxlength="2000" required aria-describedby="feedbackMessageHint"></textarea>
+<small id="feedbackMessageHint" data-en="For a problem report, describe the page and what happened. Up to 2,000 characters." data-id="Untuk laporan masalah, sebutkan halaman dan kejadian yang dialami. Maksimal 2.000 karakter.">For a problem report, describe the page and what happened. Up to 2,000 characters.</small>
+</div>
+<div class="feedback-actions">
+<button id="feedbackEmailButton" type="submit" data-en="Open email draft" data-id="Buka draf email">Open email draft</button>
+<button id="feedbackGmailButton" type="button" data-en="Open Gmail" data-id="Buka Gmail">Open Gmail</button>
+<button id="feedbackCopyButton" type="button" data-en="Copy message" data-id="Salin pesan">Copy message</button>
+</div>
+<p id="feedbackStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+</form>
+</div>
+</dialog>
 <!-- JavaScript -->
 <script src="js/script.js"></script>
 <script defer src="js/tool-preview.js"></script>

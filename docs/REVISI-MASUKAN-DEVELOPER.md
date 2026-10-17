@@ -13,3 +13,6 @@ Skill kuis masih berupa usulan pada [ide skill kuis](IDE-SKILL-QUIZ.md). Revisi 
 Pengujian email menggunakan navigasi dan clipboard tiruan yang terisolasi; tidak mengirim pesan sungguhan. Pengujian antarmuka juga memblokir layanan luar agar tidak menulis data produksi.
 
 Pemeriksaan lulus: formulir masukan 20, intro Developer 18, navigasi 60, tata letak About 15, dan antarmuka akun Firebase 20. Musik tetap berjalan melewati enam pergantian halaman. Peran serta tata letak Developer diperiksa pada delapan kombinasi bahasa, tema, dan lebar layar; tampilan formulir diperiksa mulai 320 piksel. Pembukaan tab Gmail juga diuji dengan navigasi browser sungguhan dan isi halaman email tiruan lokal, sehingga tidak menghubungi Gmail atau mengirim email.
+
+
+Pembaruan berikutnya: Masukan kini membuka dialog dari menu, dan formulir tidak lagi tampil sebagai bagian beranda. Draf, validasi, Gmail/salin, dan sifat pengiriman oleh pengguna tetap sama. Implementasi skill yang kini aktif dijelaskan di [rincian skill](IDE-SKILL-QUIZ.md).

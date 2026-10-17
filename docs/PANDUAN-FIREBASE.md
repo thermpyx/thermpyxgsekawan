@@ -145,3 +145,12 @@ Pengguna sudah melaporkan temannya berhasil bergabung dan menjawab kuis pada web
 | Paket lama Supabase tidak muncul | Backend Firebase memakai akun dan penyimpanan baru; tidak ada pemindahan otomatis. |
 
 Kirimkan **teks pesan status** jika membutuhkan bantuan. Sandi, kode, token dan credential privat tetap disimpan sendiri. Detail arsitektur, pengujian lokal dan batas validasi tersedia pada [catatan revisi Firebase](REVISI-FIREBASE.md).
+
+
+## Flashcard dan skill Prisma
+
+Sesudah Rules terbaru dipublikasikan, buka Latihan → Flashcard. Materi manual serta PDF/DOCX dibaca dan diedit lokal. Masuk dengan Google, lalu pilih Simpan ke akun untuk menyimpan teks kartu secara pribadi. Muat ulang dan periksa koleksi; ubah judul atau hapus hanya materi milik akun tersebut. Gunakan akun Google kedua untuk memeriksa bahwa koleksi privat akun pertama tidak tampil. Dokumen asli tidak diunggah.
+
+Pada Host Live Quiz, pilih Aktifkan bantuan Prisma sebelum membuat ruang. Pilihan ini tetap untuk ruang tersebut. Siswa mendapat satu token untuk menyingkirkan dua pilihan salah; pemakaian tersimpan dan tidak diperbarui oleh reload. Guru melihat soal yang dibantu pada monitor. Skor dan waktu kuis tidak berubah. Ruang lama tanpa pengaturan skill tetap dapat dimainkan tanpa Prisma.
+
+Jika penyimpanan flashcard atau pembuatan ruang baru ditolak Rules, periksa bahwa seluruh `firebase/database.rules.json` versi baru sudah dipublikasikan di database Singapore yang digunakan web. Jangan memberi akses publik atau mematikan validasi untuk menghilangkan pesan tersebut.

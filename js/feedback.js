@@ -3,6 +3,7 @@
   "use strict";
   const RECIPIENT = "thermpyx@gmail.com", MAX_MESSAGE = 2000, MAX_MAILTO = 1900;
   const mounted = new WeakMap();
+  let popup;
   const categories = {suggestion: {en: "Suggestion", id: "Saran"}, bug: {en: "Problem report", id: "Laporan masalah"}, other: {en: "Other feedback", id: "Masukan lainnya"}};
   function language() {
     const active = window.TPX?.getLanguage?.();
@@ -142,6 +143,74 @@
     window.addEventListener("thermpyx:languagechange", localize); localize();
     const controller = {prepare: read}; mounted.set(form, controller); return controller;
   }
-  window.TPXFeedback = {mount, buildDraft};
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => mount(), {once: true}); else mount();
+  function mountPopup() {
+    if (popup) return popup;
+    const dialog = document.getElementById("feedbackDialog");
+    if (!dialog || !mount()) return null;
+    let returnFocus = null, scrollState = null, backdropDown = false;
+    const triggers = () => document.querySelectorAll("[data-feedback-open]");
+    function restore() {
+      if (dialog.open || !scrollState) return;
+      document.documentElement.style.overflow = scrollState.html;
+      document.body.style.overflow = scrollState.body;
+      scrollState = null;
+      triggers().forEach(button => button.setAttribute("aria-expanded", "false"));
+      let target = returnFocus;
+      if (target?.closest(".sidebar") && innerWidth <= 768 && !document.body.classList.contains("sidebar-mobile-open")) target = document.getElementById("sidebarToggle");
+      if (target?.isConnected && target !== document.body) target.focus({preventScroll: true});
+      returnFocus = null;
+    }
+    function open(trigger) {
+      if (dialog.open) return true;
+      window.TPXOnboarding?.close?.();
+      // A sign-in or another active workflow keeps its native focus boundary.
+      if (document.querySelector("dialog[open]")) return false;
+      window.ThermpyxSelect?.closeAll?.();
+      returnFocus = trigger || document.activeElement;
+      scrollState = {html: document.documentElement.style.overflow, body: document.body.style.overflow};
+      document.documentElement.style.overflow = "hidden"; document.body.style.overflow = "hidden";
+      try {dialog.showModal();} catch (_) {restore(); return false;}
+      triggers().forEach(button => button.setAttribute("aria-expanded", "true"));
+      dialog.scrollTop = 0;
+      dialog.querySelector("h2")?.focus({preventScroll: true});
+      return true;
+    }
+    function close() {
+      if (!dialog.open) return;
+      window.ThermpyxSelect?.closeAll?.();
+      dialog.close(); restore();
+    }
+    dialog.querySelector("[data-feedback-close]")?.addEventListener("click", close);
+    dialog.addEventListener("cancel", event => {event.preventDefault(); close();});
+    dialog.addEventListener("close", restore);
+    // The document lives inside the persistent music shell. Keep sequential
+    // focus here as well, so Tab cannot jump to controls in the parent frame.
+    dialog.addEventListener("keydown", event => {
+      if (event.key !== "Tab") return;
+      const controls = [...dialog.querySelectorAll("button,a[href],input,textarea,select,[tabindex]")].filter(node => node.tabIndex >= 0 && !node.disabled && !node.closest("[hidden]") && node.getClientRects().length);
+      const first = controls[0], last = controls.at(-1), active = document.activeElement;
+      if (event.shiftKey && (active === first || active === dialog.querySelector("h2"))) {event.preventDefault(); last?.focus();}
+      else if (!event.shiftKey && active === last) {event.preventDefault(); first?.focus();}
+    });
+    const outside = event => {
+      const rect = dialog.getBoundingClientRect();
+      return event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom);
+    };
+    dialog.addEventListener("pointerdown", event => {backdropDown = outside(event);});
+    dialog.addEventListener("click", event => {if (backdropDown && outside(event)) close(); backdropDown = false;});
+    document.addEventListener("click", event => {
+      const trigger = event.target.closest?.("[data-feedback-open],a[href='#feedback'],a[href='index.html#feedback']");
+      if (!trigger) return;
+      event.preventDefault(); open(trigger);
+    });
+    window.addEventListener("hashchange", () => {if (location.hash === "#feedback") open(document.querySelector("[data-feedback-open]"));});
+    popup = {open, close};
+    return popup;
+  }
+  function start() {
+    mount(); mountPopup();
+    if (location.hash === "#feedback") popup?.open(document.querySelector("[data-feedback-open]"));
+  }
+  window.TPXFeedback = {mount, buildDraft, open: trigger => mountPopup()?.open(trigger) ?? false, close: () => popup?.close()};
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, {once: true}); else start();
 })();

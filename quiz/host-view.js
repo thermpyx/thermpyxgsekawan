@@ -10,6 +10,7 @@ const live=window.TPXLive;
 let unsubs=[],unsubscribeConnection=null,closing=false,questionCount=0,connected=true,syncError=false;
 let ready={room:false,players:false,answers:false},failureCopy=null;
 let snapshot={room:null,players:[],answers:[]};
+let skillWatchStarted=false,skillsSynced=false,skillsError=false,skillUses=[];
 const element=(tag,cls,value)=>{
  const e=document.createElement(tag);if(cls)e.className=cls;
  if(value!==undefined)e.textContent=value;return e;
@@ -36,6 +37,16 @@ function render(){
  $("hostState").textContent=room.status==="finished"?T("FINISHED","SELESAI"):T("LIVE SESSION","SESI LANGSUNG");
  $("hostLiveStatus").textContent=!connected||syncError?T("RECONNECTING","MENGHUBUNGKAN"):room.status==="finished"?T("COMPLETE","SELESAI"):T("LIVE","LANGSUNG");
  $("hostFinishBtn").disabled=room.status!=="playing"||closing||!connected||syncError;
+ const skillStatus=$("hostSkillsStatus");
+ if(skillStatus)skillStatus.textContent=room.skills_enabled!==true?
+   T("Prism is off for this room. Energy Reactor is visual feedback only.","Prisma nonaktif untuk ruang ini. Reaktor Energi hanya umpan balik visual."):
+   skillsError?T("Assistance records could not be synced. Scores still use saved answers; retry the connection to review Prism use.","Catatan bantuan belum tersinkron. Skor tetap memakai jawaban tersimpan; coba sambungkan kembali untuk meninjau Prisma."):
+   !skillsSynced?T("Syncing Prism records…","Menyinkronkan catatan Prisma…"):
+   T("Prism is on. Assisted questions are marked below; they use the same score and timer rules.","Prisma aktif. Soal berbantuan ditandai di bawah; aturan skor dan waktunya tetap sama.");
+ if(skillStatus&&skillsError){
+   const retry=element("button","play-retry",T("RETRY CONNECTION","COBA SAMBUNGKAN"));retry.type="button";
+   retry.addEventListener("click",startWatching);skillStatus.append(" ",retry);
+ }
  $("hostFinishHint").textContent=room.status==="finished"?
    T("Results are ready. Open the leaderboard to see the final standings.","Hasil siap. Buka papan peringkat untuk melihat hasil akhir."):
    T("The session ends automatically when all active participants complete every question. Use the button only when you need to end it early.","Sesi berakhir otomatis saat semua peserta aktif menyelesaikan soal. Gunakan tombol hanya bila perlu mengakhiri lebih awal.");
@@ -60,7 +71,16 @@ function render(){
    const stat=element("div","host-player-stats");
    stat.append(element("span","",`${count}/${questionCount} ${T("answers","jawaban")}`),
      element("span","",`${p.score} pts`),element("b","",S.formatTime(p.totalMs)));
-   box.append(title,track,stat);list.append(box);
+   box.append(title,track,stat);
+   const assisted=skillUses.filter(use=>String(use.player_id)===String(p.id)&&use.kind==="prism");
+   assisted.forEach(use=>{
+     const answer=answers.find(value=>String(value.player_id)===String(p.id)&&Number(value.question_index)===Number(use.question_index));
+     const note=element("p","host-assist-note");note.setAttribute("data-tpx-no-translate","");
+     note.append(element("b","",`${T("Prism","Prisma")} · ${T("Question","Soal")} ${Number(use.question_index)+1}`),
+       document.createTextNode(" · "+(!answer?T("Answer pending","Menunggu jawaban"):answer.is_correct===true?T("Correct with assist","Benar dengan bantuan"):T("Incorrect with assist","Salah dengan bantuan"))));
+     box.append(note);
+   });
+   list.append(box);
  });
  const ranks=$("hostStandings");ranks.replaceChildren();
  if(!ordered.length)ranks.append(element("p","",T("Waiting for answers...","Menunggu jawaban...")));
@@ -84,7 +104,7 @@ async function endSession(auto=false){
    failureCopy=["Unable to end the session. Try again.","Gagal mengakhiri sesi. Coba lagi."];
  }finally{closing=false;render();}
 }
-function stopWatching(){unsubs.forEach(unsubscribe=>unsubscribe?.());unsubs=[];}
+function stopWatching(){unsubs.forEach(unsubscribe=>unsubscribe?.());unsubs=[];skillWatchStarted=false;}
 function streamError(){
  syncError=true;
  $("hostLiveStatus").textContent=T("RECONNECTING","MENGHUBUNGKAN");
@@ -102,6 +122,15 @@ function updateSnapshot(key,result){
  if(key==="room"){
    try{questionCount=getQuestionsForRoom(result.data).length;}
    catch(error){streamError();return;}
+   if(result.data.skills_enabled===true&&!skillWatchStarted){
+     skillWatchStarted=true;
+     if(typeof live.watchSkillUses==="function")unsubs.push(live.watchSkillUses(roomId,null,result=>{
+       skillsError=Boolean(result.error);skillsSynced=!result.error;
+       if(!result.error)skillUses=result.data||[];
+       render();
+     }));
+     else skillsError=true;
+   }
  }
  render();
  if(!Object.values(ready).every(Boolean)||syncError)return;
@@ -110,7 +139,7 @@ function updateSnapshot(key,result){
  if(snapshot.room.status==="playing"&&questionCount>0&&active.length>0&&active.every(player=>player.completed))endSession(true);
 }
 function startWatching(){
- stopWatching();syncError=false;failureCopy=null;ready={room:false,players:false,answers:false};
+ stopWatching();syncError=false;failureCopy=null;skillsSynced=false;skillsError=false;ready={room:false,players:false,answers:false};
  $("hostLiveStatus").textContent=T("SYNCING","MENYINKRONKAN");$("hostFinishBtn").disabled=true;
  unsubs.push(live.watchRoom(roomId,result=>updateSnapshot("room",result)));
  unsubs.push(live.watchPlayers(roomId,result=>updateSnapshot("players",result)));

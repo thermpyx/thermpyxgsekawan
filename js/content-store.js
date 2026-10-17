@@ -118,11 +118,61 @@
       return {data: result.data, error: friendly(result.error)};
     } catch (error) {return {data: null, error: friendly(error)};}
   }
-  async function deleteQuestionSet(id) {
+  async function deleteQuestionSet(id, expectedOwnerId) {
     const api = backend(); if (!api?.questionSets) return unavailable();
-    if (!await session()) return {data: null, error: pairedError("Sign in with Google to delete online content.", "Masuk dengan Google untuk menghapus konten online.", "auth/sign-in-required")};
-    try {const result = await api.questionSets.remove(id); return {data: result.data, error: friendly(result.error)};}
-    catch (error) {return {data: null, error: friendly(error)};}
+    const active = await session();
+    if (!active) return {data: null, error: pairedError("Sign in with Google to delete online content.", "Masuk dengan Google untuk menghapus konten online.", "auth/sign-in-required")};
+    const ownerId = active.user.id, revision = authRevision;
+    if (expectedOwnerId && expectedOwnerId !== ownerId) return accountChanged();
+    try {
+      const result = await api.questionSets.remove(id, ownerId);
+      if (revision !== authRevision || currentSession?.user?.id !== ownerId) return accountChanged();
+      return {data: result.data || null, error: friendly(result.error)};
+    } catch (error) {return {data: null, error: friendly(error)};}
+  }
+  const accountChanged = () => ({data: null, error: pairedError("Your account changed during the cloud request. Your local draft is safe. Refresh the account collection before trying again.", "Akun berubah saat permintaan cloud berlangsung. Draf lokal tetap aman. Muat ulang koleksi akun sebelum mencoba lagi.", "auth/account-changed")});
+  async function listDecks() {
+    const api = backend(); if (!api?.flashcardDecks) return unavailable();
+    const active = await session();
+    if (!active) return {data: [], error: null};
+    const ownerId = active.user.id, revision = authRevision;
+    try {
+      const result = await api.flashcardDecks.list();
+      if (revision !== authRevision || currentSession?.user?.id !== ownerId) return accountChanged();
+      if (result.error) return {data: null, error: friendly(result.error)};
+      const data = Array.isArray(result.data) ? result.data : [];
+      if (data.some(deck => deck?.owner_id !== ownerId)) return {data: null, error: pairedError("The cloud did not confirm this account as the deck owner.", "Cloud belum mengonfirmasi akun ini sebagai pemilik materi.", "content/owner-mismatch")};
+      return {data, error: null};
+    } catch (error) {return {data: null, error: friendly(error)};}
+  }
+  async function saveDeck(input, expectedOwnerId) {
+    const api = backend(); if (!api?.flashcardDecks) return unavailable();
+    const active = await session();
+    if (!active) return {data: null, error: pairedError("Sign in with Google before saving online. Your local draft is safe.", "Masuk dengan Google sebelum menyimpan online. Draf lokal Anda tetap aman.", "auth/sign-in-required")};
+    const ownerId = active.user.id, revision = authRevision;
+    if (expectedOwnerId && expectedOwnerId !== ownerId) return accountChanged();
+    try {
+      const payload = {title: text(input.title, {en: "Title", id: "Judul"}, 140), topic: String(input.topic || tr("General", "Umum")).trim(), cards: normalizeCards(input.cards), source_name: String(input.source_name || ""), source_type: String(input.source_type || "")};
+      if (payload.topic.length > 80 || payload.source_name.length > 255 || payload.source_type.length > 40) throw invalid("Topic or document details are too long.", "Topik atau keterangan dokumen terlalu panjang.");
+      if (input.id) payload.id = input.id;
+      const result = await api.flashcardDecks.save(payload, ownerId);
+      if (revision !== authRevision || currentSession?.user?.id !== ownerId) return accountChanged();
+      if (result.error) return {data: null, error: friendly(result.error)};
+      if (!result.data?.id || result.data.owner_id !== ownerId) return {data: null, error: pairedError("The cloud did not confirm the saved deck and its owner. Refresh your collection to check the result.", "Cloud belum mengonfirmasi materi tersimpan beserta pemiliknya. Muat ulang koleksi untuk memeriksa hasilnya.", "content/save-unconfirmed")};
+      return {data: result.data, error: null};
+    } catch (error) {return {data: null, error: friendly(error)};}
+  }
+  async function deleteDeck(id, expectedOwnerId) {
+    const api = backend(); if (!api?.flashcardDecks) return unavailable();
+    const active = await session();
+    if (!active) return {data: null, error: pairedError("Sign in with Google to delete online content.", "Masuk dengan Google untuk menghapus konten online.", "auth/sign-in-required")};
+    const ownerId = active.user.id, revision = authRevision;
+    if (expectedOwnerId && ownerId !== expectedOwnerId) return accountChanged();
+    try {
+      const result = await api.flashcardDecks.remove(id, ownerId);
+      if (revision !== authRevision || currentSession?.user?.id !== ownerId) return accountChanged();
+      return {data: result.data || null, error: friendly(result.error)};
+    } catch (error) {return {data: null, error: friendly(error)};}
   }
   function mountAuth(container) {
     if (!container) return null;
@@ -132,12 +182,12 @@
     container.innerHTML = `<div class="tpx-auth-summary"><span class="tpx-auth-state"></span><button class="tpx-auth-toggle" type="button" aria-controls="${uid}-dialog" aria-expanded="false" aria-haspopup="dialog"></button></div>
       <dialog class="tpx-auth-dialog" id="${uid}-dialog" aria-labelledby="${uid}-title" aria-describedby="${uid}-intro">
         <div class="tpx-auth-dialog-heading"><div><p class="tpx-auth-eyebrow">THERMPYX</p><h2 id="${uid}-title" data-auth-en="Your learning account" data-auth-id="Akun belajar Anda"></h2></div><button type="button" class="tpx-auth-close" data-auth-en="Close" data-auth-id="Tutup"></button></div>
-        <p class="tpx-auth-dialog-intro" id="${uid}-intro" data-auth-en="Use your Google account to save question sets and host live quizzes. Learning tools and local drafts are available without an account." data-auth-id="Gunakan akun Google untuk menyimpan paket soal dan membuat kuis langsung. Alat belajar dan draf lokal bisa digunakan tanpa akun."></p>
+        <p class="tpx-auth-dialog-intro" id="${uid}-intro" data-auth-en="Use your Google account to save question sets and flashcards, or host live quizzes. Learning tools and local drafts are available without an account." data-auth-id="Gunakan akun Google untuk menyimpan paket soal dan flashcard, atau membuat kuis langsung. Alat belajar dan draf lokal bisa digunakan tanpa akun."></p>
         <div class="tpx-auth-fields" hidden>
           <div class="tpx-auth-google-section"><button type="button" class="tpx-auth-google"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.25 5.48-4.76 7.18l7.73 6C44.42 38.04 46.98 31.89 46.98 24.55Z"/><path fill="#FBBC05" d="M10.53 28.59A14.41 14.41 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.85 23.85 0 0 0 0 24c0 3.87.93 7.53 2.56 10.78l7.97-6.19Z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg><span data-auth-en="Continue with Google" data-auth-id="Lanjutkan dengan Google"></span></button><p class="tpx-auth-provider-note" data-auth-en="Choose a Google account in the secure sign-in window." data-auth-id="Pilih akun Google melalui jendela masuk yang aman."></p></div>
           <div class="tpx-auth-account-info" hidden><span class="tpx-auth-avatar" aria-hidden="true"></span><div><p class="tpx-auth-account-name"></p><p class="tpx-auth-account-email"></p></div></div>
           <button type="button" class="tpx-auth-signout" hidden data-auth-en="Sign out" data-auth-id="Keluar"></button>
-          <p class="tpx-auth-note" data-auth-en="Your question sets stay private in your account. Local drafts work without signing in." data-auth-id="Paket soal tersimpan secara pribadi di akun Anda. Draf lokal tetap bisa digunakan tanpa masuk."></p>
+          <p class="tpx-auth-note" data-auth-en="Your question sets and flashcards stay private in your account. Local drafts work without signing in." data-auth-id="Paket soal dan flashcard tersimpan secara pribadi di akun Anda. Draf lokal tetap bisa digunakan tanpa masuk."></p>
           <a class="tpx-auth-guide" target="_blank" rel="noopener" data-auth-en="Account setup help" data-auth-id="Bantuan pengaturan akun"></a>
         </div><p class="tpx-auth-message" role="status" aria-live="polite" aria-atomic="true"></p>
       </dialog>`;
@@ -181,6 +231,6 @@
     const controller = {open: () => expand(), showSignIn: () => expand(), showRegister: () => expand()}; mounted.set(container, controller); return controller;
   }
   window.TPXContent = {session, onAuthChange, signInWithGoogle, signOut, mountAuth, normalizeQuestions, normalizeCards, errorMessage: contentErrorMessage, listQuestionSets, saveQuestionSet, deleteQuestionSet,
-    listDecks: async () => unavailable(), saveDeck: async () => unavailable(), deleteDeck: async () => unavailable()};
+    listDecks, saveDeck, deleteDeck};
   session();
 })();
