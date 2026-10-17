@@ -60,6 +60,8 @@ async function refresh(){
    if(p.error||a.error||room.error)throw(p.error||a.error||room.error);
    lastPlayers=p.data||[];lastAnswers=a.data||[];render();
    const ended=room.data?.status==="finished";
+   const reviewLink = $("reviewAnswersLink");
+   if (reviewLink) reviewLink.hidden = !ended;
    $("liveStatus").textContent=ended?t("Final Results","Hasil Akhir"):t("Live / provisional","Langsung / sementara");
    $("liveStatus").classList.toggle("connected",true);
  } catch(e) {

@@ -107,6 +107,7 @@
     return nav;
   }
   function mountSwitchers(){
+    if(document.querySelector(".dev-language")) return;
     const sidebar=document.querySelector(".sidebar-bottom");
     if(sidebar)sidebar.append(makeSwitcher());
     const mobile=document.querySelector(".topbar:not(.theory-topbar) .mobile-theme-toggle");

@@ -333,6 +333,16 @@
 
   function renderMember() {
     const member = developers[currentIndex];
+    const charm = document.getElementById("devCharm");
+    const symbol = document.getElementById("devCharmSymbol");
+    if (charm && symbol) {
+      charm.dataset.member = String(currentIndex);
+      symbol.replaceChildren();
+      const charmImage = document.createElement("img");
+      charmImage.src = "assets/developers/charm-" + ["billiard", "crown", "guitar", "dragon"][currentIndex] + ".svg";
+      charmImage.alt = "";
+      symbol.append(charmImage);
+    }
 
     const number =
       String(currentIndex + 1).padStart(2, "0");
@@ -570,7 +580,21 @@
      3D ROTATION
   ======================================================= */
 
+  let previousRotation = 0;
+  let charmAnimation;
   function applyPhotoRotation() {
+    const charm = document.getElementById("devCharm");
+    const swing = Math.max(-32, Math.min(32, (rotationY - previousRotation) * -1.4));
+    previousRotation = rotationY;
+    if (charm && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      charmAnimation?.cancel();
+      charmAnimation = charm.animate([
+        {transform:`translateZ(15px) rotate(${swing}deg)`},
+        {transform:`translateZ(15px) rotate(${-swing * .55}deg)`,offset:.4},
+        {transform:`translateZ(15px) rotate(${swing * .22}deg)`,offset:.7},
+        {transform:"translateZ(15px) rotate(0deg)"}
+      ], {duration:850,easing:"ease-out"});
+    }
     elements.photo3D.style.setProperty(
       "--photo-rotate-x",
       `${rotationX}deg`

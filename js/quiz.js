@@ -225,6 +225,7 @@ let shuffledQuestions = [];
 let currentQuestion = 0;
 let score = 0;
 let answered = false;
+let reviewAnswers = [];
 
 /* =========================================================
    5. SCREEN MANAGEMENT
@@ -246,6 +247,7 @@ function showTopicSelection() {
 }
 
 function startQuiz(topicKey) {
+    reviewAnswers = [];
     selectedTopic = topicKey;
     currentQuestion = 0;
     score = 0;
@@ -327,6 +329,7 @@ function selectAnswer(selectedButton) {
 
     const selectedAnswer = selectedButton.dataset.answer;
     const current = shuffledQuestions[currentQuestion];
+    reviewAnswers[currentQuestion] = selectedAnswer;
     const correctAnswer = current.answer;
     const explanation = current.explanation;
     const allOptions = quizOptions.querySelectorAll(".quiz-option");
@@ -365,6 +368,13 @@ function selectAnswer(selectedButton) {
    8. RESULT
 ========================================================= */
 function showResult() {
+    sessionStorage.setItem("thermpyx-practice-review", JSON.stringify({
+      topic: selectedTopicName,
+      questions: shuffledQuestions.map((question, index) => ({
+        question: question.question, answer: question.answer,
+        explanation: question.explanation, selected: reviewAnswers[index] ?? null
+      }))
+    }));
     window.TPXHistory?.log("quiz", selectedTopicName || "Practice Quiz",
       `${score} / ${shuffledQuestions.length}`, location.href);
     quizContainer.style.display = "none";

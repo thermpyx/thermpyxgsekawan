@@ -1,0 +1,22 @@
+name: THERMPYX QA
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  quiz-and-calculators:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Quiz progress, retry and rankings
+        run: node qa/test-quiz.cjs
+      - name: Calculators, simulator and learning history
+        run: node qa/test-rev08.cjs
+      - name: Answer review and session states
+        run: node qa/test-answer-review.cjs
