@@ -1,5 +1,5 @@
 /* Bilingual expanded theory, scoped to preserve the existing interface. */
-.tpx-study{scroll-margin-top:90px;overflow-wrap:anywhere}
+.tpx-study[id]{scroll-margin-top:90px;overflow-wrap:anywhere}
 .tpx-study .theory-card{margin-bottom:20px;transform:none}
 .tpx-study p,.tpx-study li{line-height:1.9;font-size:16px;color:var(--text-secondary)}
 .tpx-study h3{font-size:clamp(20px,3vw,25px);line-height:1.4;margin:0 0 18px;color:var(--text-primary)}
@@ -28,6 +28,6 @@
 .tpx-study-actions a:focus-visible,.tpx-study a:focus-visible,.tpx-study-overview a:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 @media(max-width:900px){.tpx-study-overview{align-items:flex-start;flex-direction:column}.tpx-study-overview .primary-button{align-self:flex-start}}
 @media(max-width:600px){.tpx-study-overview{padding:20px}.tpx-study .tpx-study-examples{grid-template-columns:1fr}.tpx-study-actions{gap:8px}}
-@media(max-width:650px){.tpx-study,.tpx-study [id]{scroll-margin-top:130px}}
+@media(max-width:650px){.tpx-study[id],.tpx-study [id]{scroll-margin-top:130px}}
 @media(max-width:600px){.tpx-study.theory-content{padding-left:5%;padding-right:5%}.tpx-study .theory-card{padding:20px}.tpx-study p,.tpx-study li{font-size:15px}}
 @media print{.tpx-study{display:block!important}.tpx-study .theory-card{box-shadow:none;background:white;color:black;break-inside:auto}.tpx-study p,.tpx-study li,.tpx-study h3,.tpx-study h4{color:black}.tpx-study-formula,.tpx-study-answer{break-inside:avoid}.tpx-study h3,.tpx-study h4{break-after:avoid}}

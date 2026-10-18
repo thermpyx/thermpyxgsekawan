@@ -58,11 +58,13 @@ jobs:
           node qa/test-navigation-layout.cjs
           node qa/test-about-layout.cjs
           node qa/test-developer-intro.cjs
+          node qa/test-developer-card.cjs
           node qa/test-onboarding.cjs
           node qa/test-feedback-modal.cjs
           node qa/test-learning-path.cjs
           node qa/test-learning-assessment.cjs
           node qa/test-learning-ui.cjs
+          node qa/test-theory-material.cjs
           node qa/test-firebase-account.cjs
           node qa/test-firebase-live.cjs
           node qa/test-firebase-navigation.cjs

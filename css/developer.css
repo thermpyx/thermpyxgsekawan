@@ -111,7 +111,7 @@ body.dev-page.light-mode {
 .dev-kicker {
   margin: 0 0 10px;
 
-  color: #ff8a42;
+  color: var(--secondary, #ffb367);
 
   font: 700 11px "Oxanium", sans-serif;
   letter-spacing: 2px;
@@ -131,7 +131,7 @@ body.dev-page.light-mode {
 
 
 .dev-intro h1 span {
-  color: #ff7628;
+  color: var(--secondary, #ffb367);
 }
 
 .dev-intro h1 > span { display: block; }
@@ -276,7 +276,7 @@ body.dev-page.light-mode {
 
 .dev-label,
 .dev-block-label {
-  color: #ff8a42;
+  color: var(--secondary, #ffb367);
 
   font: 700 10px "Oxanium", sans-serif;
   letter-spacing: 2px;
@@ -928,7 +928,7 @@ body.dev-page.light-mode {
 
 
 .dev-card-footer > span {
-  color: #ff8a42;
+  color: var(--secondary, #ffb367);
 
   font: 700 10px "Oxanium", sans-serif;
   letter-spacing: 1px;
@@ -1202,7 +1202,7 @@ body.dev-page.light-mode {
 
 
 .dev-outro > span {
-  color: #ff8a42;
+  color: var(--secondary, #ffb367);
 
   font: 700 11px "Oxanium", sans-serif;
   letter-spacing: 2px;
@@ -1850,7 +1850,8 @@ body.light-mode .dev-charm-caption { color: var(--secondary, #9e4b18); }
   .dev-photo-3d, .dev-charm, .charm-pendulum { transition: none !important; }
 }
 
-/* The photo remains a dark surface in both themes. */
-.dev-photo-overlay .tpx-wordmark { color: #effffa; }
+/* Both photo faces remain dark materials, including their generated wordmarks. */
+.dev-photo-front .dev-photo-overlay .tpx-wordmark { color: #effffa; }
+.dev-photo-back .dev-back-code .tpx-wordmark { color: inherit; }
 .dev-rotation-controls button:first-child,
 .dev-rotation-controls button:last-child { font-size: 24px; line-height: 1; }
