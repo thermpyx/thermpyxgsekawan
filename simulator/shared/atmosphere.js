@@ -16,6 +16,18 @@
       link.href = new URL("simulator-atmosphere.css", source).href;
       document.head.append(link);
     }
+    const actions = [...document.querySelectorAll("button:is(#startBtn,#pauseBtn,#resetBtn,#start,#pause,#reset,#processRun,#processReset)")];
+    const feedbackTimers = new WeakMap();
+    actions.forEach(button => button.classList.add("tpx-sim-action"));
+    document.addEventListener("click", event => {
+      const button = event.target.closest?.("button.tpx-sim-action");
+      if (!button || button.disabled || button.getAttribute("aria-disabled") === "true") return;
+      clearTimeout(feedbackTimers.get(button));
+      button.classList.remove("tpx-sim-action-feedback");
+      void button.offsetWidth;
+      button.classList.add("tpx-sim-action-feedback");
+      feedbackTimers.set(button, setTimeout(() => button.classList.remove("tpx-sim-action-feedback"), 420));
+    }, {capture: true});
     const hero = document.querySelector(".theory-hero,.simulator-hero,.hero-banner,.intro-section,.hero") || document.querySelector("body.tpx-legacy-zeroth > header");
     if (!hero) return;
     hero.classList.add("tpx-sim-flight-host");

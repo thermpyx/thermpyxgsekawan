@@ -69,6 +69,26 @@ body.tpx-sim-atmosphere :is(.control-panel,.controls-panel) > h2 {margin-bottom:
 body.tpx-sim-atmosphere :is(.section-title,.section-heading,.graph-header) {column-gap: 18px;row-gap: 10px;}
 body.tpx-sim-atmosphere :is(.section-title,.section-heading,.graph-header) :is(h2,p) {overflow-wrap: anywhere;}
 body.tpx-sim-atmosphere :is(.simulation-buttons,.simulation-controls,.process-buttons,.button-row) {gap: 10px;}
+body.tpx-sim-atmosphere .tpx-sim-action:active:not(:disabled) {
+  scale: .97;
+  filter: brightness(.78);
+}
+body.tpx-sim-atmosphere .tpx-sim-action-feedback {
+  animation: tpx-sim-action-press 420ms ease-out;
+}
+body.tpx-sim-atmosphere .tpx-sim-action:disabled,
+body.tpx-sim-atmosphere .tpx-sim-action[aria-disabled="true"] {
+  opacity: .58;
+  cursor: not-allowed;
+}
+body.tpx-sim-atmosphere .tpx-sim-action[aria-busy="true"] {
+  filter: brightness(.8);
+  box-shadow: inset 0 0 0 2px var(--tpx-instrument-edge);
+}
+@keyframes tpx-sim-action-press {
+  0%,35% {scale: .97;filter: brightness(.78);box-shadow: inset 0 0 0 2px var(--tpx-instrument-edge);}
+  100% {scale: 1;}
+}
 body.tpx-sim-atmosphere :is(.particle,.crystal-particle,.engine-particle,.heat-particles span) {
   background-image: radial-gradient(circle at 32% 25%,rgba(255,255,255,.9),transparent 58%);
   box-shadow: 0 0 5px rgba(75,201,255,.65),0 0 11px rgba(31,153,228,.26);
@@ -94,6 +114,13 @@ body.tpx-sim-atmosphere.light-mode :is(#canvasA,#canvasB,#hotCanvas,#coldCanvas)
   body.tpx-sim-atmosphere :is(.control-top,.control-group label) {flex-wrap: wrap;}
 }
 @media (prefers-reduced-motion: reduce) {
+  body.tpx-sim-atmosphere .tpx-sim-action:active:not(:disabled),
+  body.tpx-sim-atmosphere .tpx-sim-action-feedback {
+    animation: none;
+    scale: none;
+    filter: brightness(.78);
+    box-shadow: inset 0 0 0 2px var(--tpx-instrument-edge);
+  }
   body.tpx-sim-atmosphere .tpx-sim-flight-lane {display: none;}
   body.tpx-sim-atmosphere .tpx-sim-flight {animation: none;}
   body.tpx-sim-atmosphere .tpx-sim-flight-host {padding-top: 32px;}

@@ -27,7 +27,7 @@ const experiments = [
       await page.goto(`${base}/app.html?page=${encodeURIComponent(route)}`, {waitUntil:"domcontentloaded"});
       const frame = page.frames().find(f => f.parentFrame() === page.mainFrame());
       await frame.waitForFunction(() => window.TPX);
-      for (const width of [320,390,1440]) {
+      for (const width of [320,390,768,1440]) {
         await page.setViewportSize({width,height:900});
         for (const theme of ["dark","light"]) for (const language of ["id","en"]) {
           await frame.evaluate(({theme,language}) => {
@@ -137,7 +137,19 @@ const experiments = [
               });
             } else {
               const cards=[...document.querySelectorAll(".simulator-selection-grid > a")];
-              if (cards.length!==6 || !cards.some(card=>card.getAttribute("href")==="work&energy/index.html")) findings.push("six experiment links missing");
+              const targets=["hkm0.html","hkm1.html","hkm2.html","hkm3.html","heat-temperature.html","work&energy/index.html","process.html"];
+              if (cards.length!==7 || targets.some(target=>cards.filter(card=>card.getAttribute("href")===target).length!==1)) findings.push("seven unique experiment links missing");
+              if (document.querySelector(".sim-process-launch")) findings.push("process lab has a separate banner instead of a standard card");
+              for (const card of cards) {
+                if (!card.matches(".law-choice-card.is-available.tpx-clickable-card") || !card.querySelector(".law-choice-number") || !card.querySelector("h3") || !card.querySelector(".law-choice-button.tpx-card-cta")) findings.push("experiment card structure differs");
+                for (const other of cards) {
+                  const bounds=rect(card), comparison=rect(other);
+                  if (Math.abs(bounds.width-comparison.width)>1) findings.push("experiment card widths differ");
+                  if (Math.abs(bounds.height-comparison.height)>1) findings.push("experiment card heights differ");
+                }
+              }
+              const processCard=cards.find(card=>card.getAttribute("href")==="process.html");
+              if (processCard && (!processCard.querySelector("h3").textContent.includes(language==="id"?"Proses Termodinamika":"Thermodynamic Processes") || processCard.querySelector(".law-choice-number").textContent!=="07")) findings.push("process card translation or number missing");
               const title=document.querySelector(".theory-hero h1"), range=document.createRange();
               range.selectNodeContents(title);
               if ([...range.getClientRects()].some(r=>r.left< -1||r.right>innerWidth+1)) findings.push("collection title text clipped");
@@ -162,6 +174,6 @@ const experiments = [
     }
     assert.deepEqual(errors,[],"No browser errors");
     assert.deepEqual(failedAssets,[],"All local simulator resources load successfully");
-    console.log(`PASS ${checks} apparatus and collection checks: loaded styles/resources, visible text, complete devices, label containment, separate instruments, and six simulator links in both languages/themes.`);
+    console.log(`PASS ${checks} apparatus and collection checks: loaded styles/resources, visible text, complete devices, label containment, separate instruments, and seven consistent simulator cards in both languages/themes.`);
   } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
