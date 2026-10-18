@@ -47,3 +47,5 @@ The revised report is separate from the application's runtime files:
 The original Indonesian DOCX is retained. Publisher PDFs are linked rather than copied into application assets. The report distinguishes recorded software checks from classroom learning outcomes and production observations.
 
 Developer keychains have been removed; photos and full card rotation are preserved. Feedback now submits through Firebase without opening an email application. Its dedicated Database Rules must be published before production can accept messages; see [feedback activation instructions](docs/EMAIL-THERMPYX.md). A frontend deployment alone does not publish Database Rules.
+
+[Notifikasi email masukan](docs/NOTIFIKASI-EMAIL-FIREBASE.md): backend Cloud Functions opsional tersedia di `functions/`, dengan tujuan awal `thermpyx@gmail.com`. Aktivasi memerlukan Blaze, Gmail App Password yang disimpan pada Secret Manager, dan Firebase deploy. Kode di GitHub tidak otomatis mengaktifkan email.

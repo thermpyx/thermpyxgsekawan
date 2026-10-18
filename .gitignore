@@ -4,3 +4,8 @@ firebase-debug.*.log
 database-debug.log
 ui-debug.log
 qa/firebase/node_modules/
+functions/node_modules/
+functions/.env*
+functions/.secret.local
+
+!functions/.env.example

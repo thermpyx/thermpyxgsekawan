@@ -133,3 +133,7 @@ Keberhasilan uji dengan backend tiruan tidak membuktikan SMTP proyek Anda sudah 
 Untuk Live Server, gunakan alamat lokal yang benar-benar tampil di browser. Contoh jika proyek disajikan langsung di port 5500: Site URL `http://127.0.0.1:5500`, Redirect URLs `http://127.0.0.1:5500/index.html` dan `http://127.0.0.1:5500/index.html?account=recovery`. `localhost` dan `127.0.0.1` adalah alamat berbeda; gunakan host yang sama dengan browser.
 
 Rujukan pengaturan resmi: [SMTP Supabase](https://supabase.com/docs/guides/auth/auth-smtp), [batas Auth](https://supabase.com/docs/guides/auth/rate-limits), dan [template email](https://supabase.com/docs/guides/auth/auth-email-templates). Dashboard proyek dan log aktual menentukan status pengiriman yang sedang berlaku.
+
+## Notifikasi ke kotak masuk email
+
+Backend opsional untuk mengirim notifikasi Gmail setelah masukan baru tersimpan tersedia di `functions/`. Ikuti [panduan aktivasi notifikasi email](NOTIFIKASI-EMAIL-FIREBASE.md). Ini memerlukan Cloud Functions/Blaze, Secret Manager dan deployment Firebase tersendiri. Push GitHub Pages tidak mengaktifkannya; fungsi belum dideploy atau diuji dengan pengiriman email produksi.
