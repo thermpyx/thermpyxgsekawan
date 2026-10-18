@@ -2,7 +2,7 @@ name: Firebase access rules
 
 on:
   push:
-    branches: [codex/firebase-google-quiz, codex/learning-skills-flashcards-20261017]
+    branches: [codex/firebase-google-quiz, codex/learning-skills-flashcards-20261017, codex/simulator-visual-refinement]
     paths:
       - firebase/**
       - firebase.json

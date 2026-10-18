@@ -1,4 +1,4 @@
-/* Local email drafts; no background submission or account requirement. */
+/* Private in-site feedback; native popup and responsive fields. */
 .feedback-nav-trigger{font:inherit;text-align:left}
 .feedback-dialog{box-sizing:border-box;width:min(980px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - 32px);margin:auto;padding:26px;border:1px solid var(--border,#28424f);border-radius:24px;color:var(--text-primary,#e6f5fb);background:radial-gradient(ellipse at 3% 0%,rgba(38,191,201,.09),transparent 48%),var(--bg-secondary,#0d1924);box-shadow:0 28px 100px rgba(0,0,0,.4);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--border,#345361) transparent}
 .feedback-dialog:not([open]){display:none}
@@ -41,7 +41,7 @@
 .feedback-manual textarea{min-height:200px;max-height:320px;user-select:text}
 .feedback-manual p{margin:0;font-size:12px;line-height:1.7;color:var(--text-secondary,#a9c2cd)}
 .feedback-form [hidden]{display:none!important}
-body.light-mode #feedbackEmailButton{color:#fff}
+body.light-mode #feedbackSubmitButton{color:#fff}
 body.light-mode .feedback-recipient{color:var(--blue,#08759c)}
 body.light-mode .feedback-error{color:#b54432}
 @media(max-width:860px){.feedback-layout{grid-template-columns:minmax(0,1fr);gap:22px}.feedback-intro h2{max-width:620px}.feedback-form{width:100%}.feedback-intro .feedback-note{margin-top:12px}}

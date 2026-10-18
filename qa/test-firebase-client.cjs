@@ -21,7 +21,7 @@ const turn = () => new Promise(resolve => setTimeout(resolve, 0));
 
 function fixture(initial = teacher("teacherA"), configured = true) {
   let authCallback, cancelled = false, anonymousCount = 0, popupCalls = 0, nextKey = 0;
-  let failRoomWrite = false, readHook = null;
+  let failRoomWrite = false, readHook = null, setHook = null;
   const state = { currentUser: initial, authStateReady: async () => {} };
   const records = {}, log = [], watchers = new Map();
   const valueAt = location => location.split("/").filter(Boolean).reduce((node, key) => node?.[key], records) ?? null;
@@ -50,6 +50,7 @@ function fixture(initial = teacher("teacherA"), configured = true) {
     async set(location, value) {
       log.push(["set", location]);
       if (failRoomWrite && location.startsWith("rooms/")) throw { code: "PERMISSION_DENIED" };
+      if (setHook) await setHook(location, value);
       put(location, value);
     },
     async update(location, values) {
@@ -103,7 +104,8 @@ function fixture(initial = teacher("teacherA"), configured = true) {
     cancelPopup: () => { cancelled = true; },
     anonymousCount: () => anonymousCount, popupCalls: () => popupCalls,
     failRoomWrite: () => { failRoomWrite = true; },
-    setReadHook: callback => { readHook = callback; }
+    setReadHook: callback => { readHook = callback; },
+    setWriteHook: callback => { setHook = callback; }
   };
 }
 
@@ -141,6 +143,58 @@ function fixture(initial = teacher("teacherA"), configured = true) {
   await api.questionSets.save({ id: "same-id", title: "Teacher B", topic: "heat", questions: [question] }, "teacherB");
   check((await api.questionSets.remove("same-id", "teacherA")).error.code === "auth/account-changed", "an old-owner question deletion cannot target a new owner's same-id set");
   check((await api.questionSets.get("same-id")).data.owner_id === "teacherB", "new-owner same-id question set survives stale deletion");
+  site.changeUser(teacher("teacherA"));
+  const feedbackInput = { id: "feedback-test", name: "Student", category: "bug", message: "A diagram label is clipped.", language: "en", page: "https://example.test/index.html" };
+  const feedback = await api.feedback.submit(feedbackInput, "teacherA");
+  check(!feedback.error && feedback.data.sender_id === "teacherA" && Number.isFinite(feedback.data.submitted_at), "feedback confirms a persisted server timestamp under the current Google sender");
+  const feedbackPath = "feedback/teacherA/feedback-test";
+  const writes = site.log.filter(([operation, location]) => operation === "set" && location === feedbackPath).length;
+  const sameFeedback = await api.feedback.submit(feedbackInput, "teacherA");
+  check(!sameFeedback.error && sameFeedback.data.submitted_at === feedback.data.submitted_at, "feedback retry returns the original confirmed record");
+  check(site.log.filter(([operation, location]) => operation === "set" && location === feedbackPath).length === writes, "feedback retry never overwrites a create-only record");
+  check((await api.feedback.submit({ ...feedbackInput, message: "Changed message" }, "teacherA")).error.code === "firebase/invalid-input", "reusing an ID with changed feedback is rejected");
+  for (const invalid of [{ message: " " }, { message: "m".repeat(2001) }, { name: "n".repeat(81) }, { category: "unknown" }, { language: "fr" }, { page: "https://example.test/?token=secret" }, { page: "https://example.test/#secret" }, { page: "javascript:alert(1)" }, { id: "bad/id" }]) {
+    check((await api.feedback.submit({ ...feedbackInput, ...invalid })).error?.code === "firebase/invalid-input", "invalid feedback is rejected before writing");
+  }
+  site.setWriteHook(async location => { if (location.includes("feedback-failed")) throw { code: "PERMISSION_DENIED" }; });
+  check((await api.feedback.submit({ ...feedbackInput, id: "feedback-failed" }, "teacherA")).error.code === "firebase/permission-denied", "feedback never reports success when a write is denied");
+  site.setWriteHook(null);
+  const restored = await api.feedback.submit({ ...feedbackInput, id: "feedback-failed" }, "teacherA");
+  check(!restored.error && restored.data.id === "feedback-failed", "failed feedback can retry with its original ID");
+  let confirmationReads = 0;
+  site.setReadHook(async location => { if (location === "feedback/teacherA/feedback-confirmation" && ++confirmationReads === 2) throw { code: "network-error" }; });
+  const unconfirmedFeedback = await api.feedback.submit({ ...feedbackInput, id: "feedback-confirmation" }, "teacherA");
+  check(unconfirmedFeedback.error?.code === "firebase/connection" && site.valueAt("feedback/teacherA/feedback-confirmation"), "a failed post-write confirmation reports failure even when the record was stored");
+  site.setReadHook(null);
+  const confirmationRetry = await api.feedback.submit({ ...feedbackInput, id: "feedback-confirmation" }, "teacherA");
+  check(!confirmationRetry.error && confirmationRetry.data.id === "feedback-confirmation", "retry restores the confirmed record after a lost confirmation response");
+  check(site.log.filter(([operation, location]) => operation === "set" && location === "feedback/teacherA/feedback-confirmation").length === 1, "lost-confirmation retry creates only one feedback record");
+  let releaseFeedbackWrite, startedFeedbackWrite, writeSettled = false;
+  const heldFeedbackWrite = new Promise(resolve => { releaseFeedbackWrite = resolve; });
+  const feedbackWriteStarted = new Promise(resolve => { startedFeedbackWrite = resolve; });
+  site.setWriteHook(async location => { if (location === "feedback/teacherA/feedback-ack") { startedFeedbackWrite(); await heldFeedbackWrite; } });
+  const awaitingFeedbackWrite = api.feedback.submit({ ...feedbackInput, id: "feedback-ack" }, "teacherA").then(response => {writeSettled = true; return response;});
+  await feedbackWriteStarted; await turn();
+  check(!writeSettled && !site.valueAt("feedback/teacherA/feedback-ack"), "feedback stays pending until its server write acknowledgement");
+  releaseFeedbackWrite();
+  check(!(await awaitingFeedbackWrite).error, "acknowledged feedback is confirmed before returning success");
+  site.setWriteHook(null);
+  let feedbackGate, feedbackStarted;
+  const feedbackHeld = new Promise(resolve => { feedbackGate = resolve; });
+  const feedbackReadStarted = new Promise(resolve => { feedbackStarted = resolve; });
+  site.setReadHook(async location => { if (location === "feedback/teacherA/feedback-stale") { feedbackStarted(); await feedbackHeld; } });
+  const staleFeedback = api.feedback.submit({ ...feedbackInput, id: "feedback-stale" }, "teacherA");
+  await feedbackReadStarted; site.changeUser(teacher("teacherB")); feedbackGate();
+  check((await staleFeedback).error.code === "auth/account-changed", "feedback rejects account changes while reading before a write");
+  check(!site.valueAt("feedback/teacherA/feedback-stale") && !site.valueAt("feedback/teacherB/feedback-stale"), "stale feedback does not write under either account");
+  site.setReadHook(null);
+  check((await api.feedback.submit({ ...feedbackInput, id: "feedback-stale" }, "teacherA")).error.code === "auth/account-changed", "retry keeps its captured sender rather than attaching the draft to another account");
+  const anonymousSite = fixture(null);
+  const anonymousAPI = anonymousSite.global.TPXFirebase;
+  await anonymousAPI.ready();
+  const anonymousFeedback = await anonymousAPI.feedback.submit({ ...feedbackInput, id: "feedback-anonymous", name: "" });
+  check(!anonymousFeedback.error && anonymousFeedback.data.sender_id === "anon1", "feedback creates an anonymous sender without requiring Google");
+  check(await anonymousAPI.auth.session() === null, "anonymous feedback does not create a teacher session");
   site.changeUser(teacher("teacherA"));
   const created = await live.createRoom({ topic: "heat", questions: [question], is_custom: false });
   check(!created.error && created.data.questions[0].question === "Heat?", "built-in room also stores an immutable snapshot");

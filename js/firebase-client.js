@@ -301,6 +301,44 @@
     })
   };
 
+  const feedback = {
+    submit: (input, expectedSenderId) => result(async () => {
+      const id = key(input?.id);
+      const name = typeof input?.name === "string" ? input.name.trim() : "";
+      const message = typeof input?.message === "string" ? input.message.trim() : "";
+      const category = input?.category, language = input?.language, page = input?.page;
+      if (name.length > 80 || !message || message.length > 2000 ||
+          !["suggestion", "bug", "other"].includes(category) || !["id", "en"].includes(language) ||
+          typeof page !== "string" || !page || page.length > 600 || /[?#\s]/.test(page) ||
+          !(page === "THERMPYX" || /^https?:\/\/[^/]+\//.test(page))) throw errors.invalid();
+      database(await requireRuntime());
+      const identity = await auth.ensureParticipant();
+      if (identity.error) throw identity.error;
+      const ctx = await context();
+      if (ctx.uid !== identity.data.uid || (expectedSenderId && expectedSenderId !== ctx.uid)) throw errors.changed();
+      const path = "feedback/" + key(ctx.uid) + "/" + id;
+      const row = { id, sender_id: ctx.uid, name, category, message, language, page, submitted_at: ctx.sdk.serverTimestamp() };
+      const same = saved => saved?.id === id && saved.sender_id === ctx.uid && saved.name === name &&
+        saved.category === category && saved.message === message && saved.language === language && saved.page === page &&
+        Number.isFinite(saved.submitted_at) && saved.submitted_at > 0;
+      // The exact record is sender-readable for retries. Reusing an ID never
+      // overwrites a message; a changed payload must have a new ID.
+      const existing = await read(ctx, path);
+      if (existing) {
+        if (!same(existing)) throw errors.invalid();
+        return existing;
+      }
+      current(ctx);
+      // Await the server acknowledgement, then confirm the saved record. Never
+      // treat a local event or an attempted write as delivered feedback.
+      await ctx.sdk.set(ctx.sdk.ref(ctx.db, path), row);
+      current(ctx);
+      const saved = await read(ctx, path);
+      if (!same(saved)) throw errors.connection();
+      return saved;
+    })
+  };
+
   function skillRows(data, uid) {
     return uid ? Object.values(data || {}).map(row => ({ ...row, player_id: uid })) :
       Object.entries(data || {}).flatMap(([playerId, uses]) => Object.values(uses || {}).map(row => ({ ...row, player_id: playerId })));
@@ -532,7 +570,7 @@
   };
   live.watchConnection = callback => watch(".info/connected", response => callback(!response.error && response.data === true));
 
-  global.TPXFirebase = Object.freeze({ auth: Object.freeze(auth), questionSets: Object.freeze(questionSets), flashcardDecks: Object.freeze(flashcardDecks),
+  global.TPXFirebase = Object.freeze({ auth: Object.freeze(auth), questionSets: Object.freeze(questionSets), flashcardDecks: Object.freeze(flashcardDecks), feedback: Object.freeze(feedback),
     ready: () => ready.then(() => ({ data: { configured: !!runtime && !initializationError }, error: initializationError })) });
   global.TPXLive = Object.freeze(live);
 })(window);

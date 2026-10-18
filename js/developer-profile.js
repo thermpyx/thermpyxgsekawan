@@ -9,8 +9,6 @@
   const developers = [
     {
       nickname: "Nathan",
-      charm: "billiard",
-      charmName: { en: "Billiard ball", id: "Bola biliar" },
       fullName: "Reinhart Van Diaz",
       role: {en: "Project Leader", id: "Ketua Proyek"},
       image: "assets/developers/dev-1.jpg",
@@ -59,8 +57,6 @@
 
     {
       nickname: "John",
-      charm: "crown",
-      charmName: { en: "Crown", id: "Mahkota" },
       fullName: "Zikri Luthfi",
       role: {en: "API & System Development", id: "Pengembangan API & Sistem"},
       image: "assets/developers/dev-2.jpg",
@@ -109,8 +105,6 @@
 
     {
       nickname: "Van",
-      charm: "guitar",
-      charmName: { en: "Guitar", id: "Gitar" },
       fullName: "edwart Van djovi",
       role: {en: "Research & Development", id: "Riset & Pengembangan"},
       image: "assets/developers/dev-3.jpg",
@@ -159,8 +153,6 @@
 
     {
       nickname: "MISEL CINTA NASPAD",
-      charm: "dragon",
-      charmName: { en: "Dragon", id: "Naga" },
       fullName: "Misel Natalis Sawato Gulo",
       role: {en: "UI / UX Designer, Frontend Developer", id: "Desainer UI / UX, Pengembang Frontend"},
       image: "assets/developers/dev-4.jpg",
@@ -286,15 +278,6 @@
     rim:
       document.getElementById("devCardRim"),
 
-    charm:
-      document.getElementById("devCharm"),
-
-    charmPendulum:
-      document.getElementById("devCharmPendulum"),
-
-    charmCaption:
-      document.getElementById("devCharmCaption"),
-
     glare:
       document.getElementById("devPhotoGlare"),
 
@@ -371,16 +354,6 @@
 
   function renderMember() {
     const member = developers[currentIndex];
-    elements.charm.dataset.charm = member.charm;
-    const charmImage = document.createElement("img");
-    charmImage.src = `assets/developers/charm-${member.charm}.svg`;
-    charmImage.alt = "";
-    document.getElementById("devCharmSymbol").replaceChildren(charmImage);
-    const shortName = member.charm === "dragon" ? "Misel" : member.nickname;
-    elements.charmCaption.dataset.en = `${shortName}’s signature charm · ${member.charmName.en}`;
-    elements.charmCaption.dataset.id = `Gantungan khas ${shortName} · ${member.charmName.id}`;
-    elements.charmCaption.textContent = elements.charmCaption.dataset[currentLanguage];
-
     const number =
       String(currentIndex + 1).padStart(2, "0");
 
@@ -777,12 +750,6 @@
      3D ROTATION
   ======================================================= */
 
-  let charmFrame = 0;
-  let lastCharmTime = 0;
-  let charmAngle = 0;
-  let charmVelocity = 0;
-  let lastRotationX = 0;
-  let lastRotationY = 0;
   let activePointer = null;
   let rimWidth = 0;
   let rimHeight = 0;
@@ -833,47 +800,9 @@
     elements.rim.replaceChildren(panels);
   }
 
-  function settleCharm() {
-    if (charmFrame) cancelAnimationFrame(charmFrame);
-    charmFrame = 0;
-    charmAngle = 0;
-    charmVelocity = 0;
-    lastCharmTime = 0;
-    elements.charmPendulum.style.setProperty("--charm-swing", "0deg");
-  }
-
-  function animateCharm(time) {
-    const dt = lastCharmTime ? Math.min((time - lastCharmTime) / 1000, 0.032) : 1 / 60;
-    lastCharmTime = time;
-    charmVelocity += (-72 * charmAngle - 12 * charmVelocity) * dt;
-    charmAngle = Math.max(-32, Math.min(32, charmAngle + charmVelocity * dt));
-    elements.charmPendulum.style.setProperty("--charm-swing", `${charmAngle.toFixed(3)}deg`);
-    if (Math.abs(charmAngle) > 0.03 || Math.abs(charmVelocity) > 0.1) {
-      charmFrame = requestAnimationFrame(animateCharm);
-    } else {
-      settleCharm();
-    }
-  }
-
-  function applyPhotoRotation({ swing = true } = {}) {
-    const deltaY = rotationY - lastRotationY;
-    const deltaX = rotationX - lastRotationX;
-    lastRotationY = rotationY;
-    lastRotationX = rotationX;
+  function applyPhotoRotation() {
     elements.photo3D.style.setProperty("--photo-rotate-x", `${rotationX}deg`);
     elements.photo3D.style.setProperty("--photo-rotate-y", `${rotationY}deg`);
-    // The fluffy ball behaves as a sphere and stays visible at a side view.
-    elements.charm.style.setProperty("--charm-face-x", `${-rotationX}deg`);
-    elements.charm.style.setProperty("--charm-face-y", `${-rotationY}deg`);
-    if (!swing || reducedMotion.matches) {
-      settleCharm();
-      return;
-    }
-    charmVelocity = Math.max(-240, Math.min(240, charmVelocity - deltaY * 2.1 - deltaX));
-    if (!charmFrame && Math.abs(charmVelocity) > 0.1) {
-      lastCharmTime = 0;
-      charmFrame = requestAnimationFrame(animateCharm);
-    }
   }
 
   function startDrag(event) {
@@ -1161,7 +1090,6 @@
 
   elements.photoScene.addEventListener("lostpointercapture", stopDrag);
   elements.photoScene.addEventListener("keydown", handleCardKey);
-  reducedMotion.addEventListener?.("change", () => { if (reducedMotion.matches) settleCharm(); });
 
   elements.photoScene.addEventListener(
     "dblclick",

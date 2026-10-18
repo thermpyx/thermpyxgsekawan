@@ -314,6 +314,42 @@
           }
         }
       }
+    },
+    "feedback": {
+      "$senderUid": {
+        "$feedbackId": {
+          ".read": "auth != null && auth.uid === $senderUid",
+          ".write": "auth != null && (auth.token.firebase.sign_in_provider === 'google.com' || auth.token.firebase.sign_in_provider === 'anonymous') && auth.uid === $senderUid && $feedbackId.matches(/^[A-Za-z0-9_-]{1,128}$/) && !data.exists() && newData.exists()",
+          ".validate": "newData.hasChildren(['id','sender_id','name','category','message','language','page','submitted_at'])",
+          "id": {
+            ".validate": "newData.isString() && newData.val() === $feedbackId"
+          },
+          "sender_id": {
+            ".validate": "newData.isString() && newData.val() === $senderUid && newData.val() === auth.uid"
+          },
+          "name": {
+            ".validate": "newData.isString() && newData.val().length <= 80"
+          },
+          "category": {
+            ".validate": "newData.val() === 'suggestion' || newData.val() === 'bug' || newData.val() === 'other'"
+          },
+          "message": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 2000 && newData.val().matches(/[\\s\\S]*\\S[\\s\\S]*/)"
+          },
+          "language": {
+            ".validate": "newData.val() === 'id' || newData.val() === 'en'"
+          },
+          "page": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 600 && (newData.val() === 'THERMPYX' || newData.val().matches(/^https?:\\/\\/[^\\s?#]+$/))"
+          },
+          "submitted_at": {
+            ".validate": "newData.isNumber() && newData.val() >= now - 600000 && newData.val() <= now"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
     }
   }
 }

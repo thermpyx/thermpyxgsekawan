@@ -1,3 +1,31 @@
+# Masukan langsung dari web / Direct website feedback
+
+Form **Masukan / Feedback** pada navigasi beranda sekarang mengirim pesan langsung ke Firebase Realtime Database. Pengunjung tidak perlu membuka aplikasi email atau masuk dengan Google. Jika belum masuk, aplikasi memakai identitas Firebase Anonymous yang sudah tersedia. Nama opsional, pesan maksimal 2.000 karakter; draf tetap berada dalam formulir saat popup ditutup, bahasa diganti atau permintaan gagal.
+
+The homepage **Feedback** popup now submits directly to Firebase Realtime Database. Visitors do not need an email application or Google login. An existing Google identity or Firebase Anonymous Authentication is used. The name is optional and messages are limited to 2,000 characters. Closing the popup, changing languages or retrying a failed request keeps the local form draft.
+
+## Aktivasi satu kali / One-time activation
+
+1. Buka proyek Firebase **thermpyx** yang sama, lalu **Build → Realtime Database → Rules**.
+2. Salin seluruh isi [`firebase/database.rules.json`](../firebase/database.rules.json) dari branch `codex/simulator-visual-refinement`, periksa, lalu **Publish**. Berkas ini mempertahankan aturan akun, bank soal, kuis dan flashcard; hanya jalur `feedback` yang ditambahkan. Jangan mengganti dengan aturan baca/tulis publik.
+3. Buka web versi terbaru dan gunakan **Masukan → Kirim masukan** untuk pesan sungguhan ketika diperlukan. Status sukses hanya muncul setelah server mengonfirmasi rekaman. Pengujian pengembangan tidak mengirim masukan ke produksi.
+4. Sebagai administrator proyek, buka tab **Data → feedback → UID pengirim → ID masukan** untuk melihat `name`, `category`, `message`, `language`, `page` dan `submitted_at` (waktu server dalam milidetik Unix). Pesan tidak dikirim ke Gmail dan tidak dibuka untuk pengguna lain.
+
+Open the existing **thermpyx** project in **Firebase Console → Build → Realtime Database → Rules**. Replace the Rules with the complete version linked above and choose **Publish**. Deploying GitHub Pages alone does not publish database Rules. Administrators read submissions under **Data → feedback → sender UID → submission ID**. No frontend secret, email service or public database access is needed.
+
+## Batas dan kegagalan / Limits and errors
+
+- Sebelum Rules baru dipublikasikan, pengiriman ditolak; formulir menampilkan kesalahan dan mempertahankan draf. / Until the new Rules are published, submissions fail visibly and drafts are preserved.
+- Setiap pesan memakai ID tetap saat dicoba ulang; rekaman bersifat **create-only**. Pengirim hanya dapat membaca rekaman miliknya untuk konfirmasi, bukan daftar masukan orang lain. / Retrying uses the same ID; records are create-only and sender-readable for confirmation.
+- URL halaman tidak mencakup parameter atau fragment. Jangan sertakan kata sandi maupun data sensitif dalam pesan. / Page context excludes query strings and fragments; do not include passwords or sensitive data.
+- Aturan ukuran dan kepemilikan melindungi data, tetapi ini bukan sistem moderasi atau pembatasan spam tingkat server. / Field limits and ownership checks are enforced; dedicated server-side moderation or rate limiting is not included.
+
+---
+
+## Arsip: email autentikasi Supabase
+
+Panduan di bawah bersifat historis dan bukan alur masukan aktif.
+
 > **Arsip email Supabase.** Versi aktif menggunakan Google melalui Firebase dan tidak memakai kode/reset email ini. Ikuti [panduan Firebase](PANDUAN-FIREBASE.md); panduan lama berikut dipertahankan untuk riwayat.
 
 # Email verifikasi dari THERMPYX

@@ -111,6 +111,39 @@ async function main() {
       await failure(teacherA.ref("flashcardDecks/teacher-b/deck-b").remove());
     });
 
+    await scenario("Private direct feedback: sender-only read, create-only writes, bounded and validated fields", async () => {
+      const feedback = (id = "feedback-a", sender = "alice") => ({ id, sender_id: sender, name: "Alice", category: "bug",
+        message: "The apparatus label is clipped.", language: "en", page: "https://example.test/index.html", submitted_at: Date.now() });
+      const location = "feedback/alice/feedback-a";
+      await success(alice.ref(location).set(feedback()));
+      const persisted = await success(alice.ref(location).once("value"));
+      assert.equal(persisted.child("message").val(), feedback().message); checks++;
+      await failure(unauthenticated.ref(location).once("value"));
+      await failure(bob.ref(location).once("value"));
+      await failure(teacherA.ref(location).once("value"));
+      await failure(alice.ref("feedback").once("value"));
+      await failure(alice.ref("feedback/alice").once("value"));
+      await failure(bob.ref(location).set(feedback()));
+      await failure(alice.ref(location).set(feedback()));
+      await failure(alice.ref(location + "/message").set("Edited"));
+      await failure(alice.ref(location).remove());
+      await failure(unauthenticated.ref("feedback/nobody/feedback-b").set(feedback("feedback-b", "nobody")));
+      await success(teacherA.ref("feedback/teacher-a/feedback-b").set(feedback("feedback-b", "teacher-a")));
+      await success(teacherA.ref("feedback/teacher-a/feedback-b").once("value"));
+      for (const invalid of [
+        { id: "wrong-id" }, { sender_id: "bob" }, { name: "n".repeat(81) }, { name: 42 },
+        { category: "unknown" }, { language: "fr" }, { message: "" }, { message: " \n\t " }, { message: "m".repeat(2001) }, { message: 42 },
+        { page: "" }, { page: "javascript:alert(1)" }, { page: "https://example.test/?secret=token" }, { page: "https://example.test/#token" }, { page: "https://example.test/has space" }, { page: "https://example.test/" + "p".repeat(600) },
+        { submitted_at: "2026-10-18" }, { submitted_at: Date.now() + 86400000 }, { submitted_at: Date.now() - 86400000 }, { extra: true }
+      ]) await failure(alice.ref("feedback/alice/feedback-invalid").set({ ...feedback("feedback-invalid"), ...invalid }));
+      for (const field of ["id", "sender_id", "name", "category", "message", "language", "page", "submitted_at"]) {
+        const incomplete = feedback("feedback-incomplete"); delete incomplete[field];
+        await failure(alice.ref("feedback/alice/feedback-incomplete").set(incomplete));
+      }
+      await success(alice.ref("feedback/alice/feedback-limit").set({ ...feedback("feedback-limit"), name: "n".repeat(80), message: "m".repeat(2000), category: "other", language: "id", page: "THERMPYX" }));
+      await success(alice.ref("feedback/alice/feedback-empty-name").set({ ...feedback("feedback-empty-name"), name: "" }));
+    });
+
     await scenario("Room code reservations are atomic, exact-only and immutable across teachers", async () => {
       await failure(unauthenticated.ref("roomCodes/123456").once("value"));
       await success(alice.ref("roomCodes/123456").once("value"));

@@ -43,7 +43,7 @@ function contrast(foreground, background) {
         page.on('pageerror', error => errors.push(error.message));
         await page.goto(base + '/app.html?page=developer.html', {waitUntil: 'domcontentloaded'});
         const frame = page.frames().find(item => item.parentFrame() === page.mainFrame());
-        await frame.locator('#devCharmSymbol img').waitFor();
+        await frame.locator('#devImage').waitFor();
         await frame.locator('.tpx-page-transition').waitFor({state: 'hidden'});
         for (const language of ['en', 'id']) {
           await frame.locator(`[data-tpx-language="${language}"]`).click();
@@ -51,7 +51,7 @@ function contrast(foreground, background) {
             if (await frame.locator('html').getAttribute('data-theme') !== theme) await frame.locator('#themeToggle').click();
             await frame.waitForFunction(theme => document.documentElement.dataset.theme === theme, theme);
             const state = await frame.evaluate(() => {
-              const selectors = ['.dev-kicker', '.dev-label', '.dev-block-label', '.dev-card-footer > span', '.dev-outro > span', '.dev-charm-caption'];
+              const selectors = ['.dev-kicker', '.dev-label', '.dev-block-label', '.dev-card-footer > span', '.dev-outro > span'];
               const bodyStyle = getComputedStyle(document.body);
               const backgrounds = ['--bg-primary', '--bg-card'].map(name => bodyStyle.getPropertyValue(name).trim());
               const opaqueSurface = node => {
@@ -121,23 +121,16 @@ function contrast(foreground, background) {
         assert.equal(rim.filter(panel => panel.width > 10).length, 4);
         assert.ok(rim.every(panel => panel.depth === 20 && panel.width > 0 && panel.transform.includes('rotateX(90deg)') && panel.visibility === 'visible'));
         checks++;
-        for (const [index, charm] of ['billiard', 'crown', 'guitar', 'dragon'].entries()) {
+        assert.equal(await frame.locator('#devCharm, .dev-charm-caption').count(), 0, 'Developer accessories have been removed'); checks++;
+        for (let index = 0; index < 4; index++) {
           await frame.locator('.dev-chip').nth(index).click();
-          await frame.waitForFunction(charm => {
-            const photo = document.getElementById('devImage'), symbol = document.querySelector('#devCharmSymbol img');
-            return document.getElementById('devCharm').dataset.charm === charm &&
-              symbol?.src.endsWith(`charm-${charm}.svg`) && symbol.complete && symbol.naturalWidth > 0 && photo.complete && photo.naturalWidth > 0;
-          }, charm);
+          await frame.waitForFunction(() => { const image=document.getElementById('devImage');return image.complete && image.naturalWidth>0; });
           assert.equal(await frame.locator('.dev-chip[aria-pressed="true"]').count(), 1);
-          assert.equal(await frame.locator('#devCharmCaption').innerText(), [
-            'Gantungan khas Nathan · Bola biliar', 'Gantungan khas John · Mahkota',
-            'Gantungan khas Van · Gitar', 'Gantungan khas Misel · Naga'
-          ][index]);
           checks++;
         }
         assert.deepEqual(errors, []); checks++;
       } finally { await context.close(); }
     }
-    console.log(`PASS ${checks} Developer checks: ID/EN, both themes at 320/1440px, readable shared accents, full rotation controls, rounded rim geometry and four loaded signature charms`);
+    console.log(`PASS ${checks} Developer checks: ID/EN, both themes at 320/1440px, readable shared accents, full rotation controls, rounded rim geometry and four intact profiles without keychains`);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
