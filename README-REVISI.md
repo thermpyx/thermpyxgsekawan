@@ -1,6 +1,6 @@
 # THERMPYX: pembelajaran, kuis dan masukan
 
-Menu **Masukan / Feedback** membuka popup dengan draf untuk `thermpyx@gmail.com`, pilihan aplikasi email, Gmail, dan salin pesan. Form tidak memenuhi beranda. Pengguna tetap mengirim sendiri melalui layanan emailnya.
+Menu **Masukan / Feedback** membuka popup dan menyimpan pesan langsung ke Firebase setelah konfirmasi backend, tanpa membuka aplikasi email. Notifikasi otomatis ke `thermpyx@gmail.com` tersedia dalam kode server, tetapi belum aktif pada paket Spark; aktivasi memerlukan Blaze, secret Gmail di server, dan deploy Cloud Functions. [Panduan aktivasi](docs/NOTIFIKASI-EMAIL-FIREBASE.md).
 
 **Learning Path** memiliki latar teal/navy, grid dan kontur teknik, serta panel progres berwarna. Halaman belajar lainnya memakai atmosfer futuristik statis yang mendukung tema terang/gelap; perhitungan dan alat simulator tetap dipertahankan.
 
@@ -46,6 +46,10 @@ The revised report is separate from the application's runtime files:
 
 The original Indonesian DOCX is retained. Publisher PDFs are linked rather than copied into application assets. The report distinguishes recorded software checks from classroom learning outcomes and production observations.
 
-Developer keychains have been removed; photos and full card rotation are preserved. Feedback now submits through Firebase without opening an email application. Its dedicated Database Rules must be published before production can accept messages; see [feedback activation instructions](docs/EMAIL-THERMPYX.md). A frontend deployment alone does not publish Database Rules.
+Misel is CEO ThermPyX and Nathan remains Project Leader. Their rotating cards have blue and black dragon charms respectively, with the original photos, closed card edges, keyboard controls and full rotation preserved. Feedback now submits through Firebase without opening an email application. Its dedicated Database Rules must be published before production can accept messages; see [feedback activation instructions](docs/EMAIL-THERMPYX.md). A frontend deployment alone does not publish Database Rules.
 
 [Notifikasi email masukan](docs/NOTIFIKASI-EMAIL-FIREBASE.md): backend Cloud Functions opsional tersedia di `functions/`, dengan tujuan awal `thermpyx@gmail.com`. Aktivasi memerlukan Blaze, Gmail App Password yang disimpan pada Secret Manager, dan Firebase deploy. Kode di GitHub tidak otomatis mengaktifkan email.
+
+## Kartu developer, proses gas ideal, dan popup roket
+
+Revisi 18 Oktober menambahkan [laboratorium proses termodinamika](simulator/process.html), memperbarui gantungan naga Misel/Nathan, serta intro roket–meteor pada dialog akun, feedback dan panduan. Simulator lama memakai partikel/permukaan grafik yang diperjelas dan roket dekoratif, dengan skrip perhitungan lama tetap utuh. [Rincian dan hasil pengujian](docs/REVISI-DEVELOPER-SIMULATOR-20261018.md). Notifikasi email masih memerlukan aktivasi server; status feedback diterima tidak membuktikan email masuk.

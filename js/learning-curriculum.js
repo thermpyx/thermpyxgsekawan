@@ -63,8 +63,8 @@
         ["Choose a process equation and state its assumptions before calculating.", "Memilih persamaan proses dan menyatakan asumsi sebelum menghitung."],
         ["Relate the area under a P–V curve to work and compare energy balances for ideal-gas processes.", "Menghubungkan luas di bawah kurva P–V dengan usaha dan membandingkan neraca energi proses gas ideal."]
       ],
-      theory: "theory/processes.html#materi-lengkap", simulator: "simulator/hkm1.html", calculator: "calculators.html#processes",
-      experiment: ["Compare isobaric and isochoric P–V paths with the same heat input; explain why isochoric work is zero. Then choose isothermal or adiabatic, set the final volume above or below the initial volume, and compare expansion and compression. Check the process relations with the calculator.", "Bandingkan lintasan P–V isobarik dan isokhorik dengan kalor masuk yang sama; jelaskan mengapa usaha isokhorik nol. Lalu pilih isotermal atau adiabatik, atur volume akhir di atas atau di bawah volume awal, dan bandingkan ekspansi serta kompresi. Periksa hubungan proses dengan kalkulator."],
+      theory: "theory/processes.html#materi-lengkap", simulator: "simulator/process.html", calculator: "calculators.html#processes",
+      experiment: ["Compare isobaric and isochoric P–V paths: vary final volume for the first and heating for the rigid vessel. Explain why isochoric work is zero. Then compare isothermal and adiabatic expansion or compression from the same initial state. Check Q, W and ΔU against the calculator.", "Bandingkan lintasan P–V isobarik dan isokhorik: ubah volume akhir untuk proses pertama dan pemanasan untuk bejana kaku. Jelaskan mengapa usaha isokhorik nol. Lalu bandingkan ekspansi atau kompresi isotermal dan adiabatik dari keadaan awal yang sama. Periksa Q, W dan ΔU dengan kalkulator."],
       reflection: ["Explain why an isochoric process has W = 0, while an adiabatic process has Q = 0. These are different constraints.", "Jelaskan mengapa proses isokhorik memiliki W = 0, sedangkan proses adiabatik memiliki Q = 0. Keduanya merupakan batasan yang berbeda."]
     },
     {

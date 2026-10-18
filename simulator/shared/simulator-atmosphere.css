@@ -1,0 +1,100 @@
+/* Presentation only: do not change apparatus dimensions, canvas drawing, or simulation timing. */
+body.tpx-sim-atmosphere {
+  --tpx-instrument-glow: rgba(49,191,239,.17);
+  --tpx-instrument-edge: rgba(91,198,238,.32);
+  --tpx-flight-color: #8cddfa;
+}
+body.tpx-sim-atmosphere.light-mode {
+  --tpx-instrument-glow: rgba(12,132,177,.09);
+  --tpx-instrument-edge: rgba(33,128,162,.28);
+  --tpx-flight-color: #1979a1;
+}
+body.tpx-sim-atmosphere .tpx-sim-flight-host {
+  position: relative;
+  padding-top: 50px;
+}
+body.tpx-sim-atmosphere .tpx-sim-flight-lane {
+  position: absolute;
+  inset: 7px 0 auto;
+  height: 30px;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: layout paint;
+  color: var(--tpx-flight-color);
+  background: radial-gradient(circle at 12% 65%,currentColor 0 1px,transparent 1.7px),radial-gradient(circle at 47% 28%,currentColor 0 .7px,transparent 1.4px),radial-gradient(circle at 76% 77%,currentColor 0 .8px,transparent 1.5px),radial-gradient(circle at 92% 30%,currentColor 0 .6px,transparent 1.3px);
+  opacity: .7;
+}
+body.tpx-sim-atmosphere .tpx-sim-flight {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-110px);
+  animation: tpx-sim-flyby 23s linear 1.5s infinite;
+}
+body.tpx-sim-atmosphere .tpx-sim-flight svg {
+  display: block;
+  width: 76px;
+  height: 29px;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px var(--tpx-instrument-glow));
+}
+body.tpx-sim-atmosphere.tpx-sim-motion-paused .tpx-sim-flight,
+body.tpx-sim-atmosphere .tpx-sim-flight-host.tpx-sim-flight-offscreen .tpx-sim-flight {animation-play-state: paused;}
+body.tpx-sim-atmosphere :is(.graph-panel,.graph-section) {
+  min-width: 0;
+  border-color: var(--tpx-instrument-edge);
+  background-image: linear-gradient(132deg,var(--tpx-instrument-glow),transparent 44%);
+  box-shadow: 0 12px 32px rgba(0,0,0,.08),inset 0 1px 0 rgba(151,225,255,.08);
+}
+body.tpx-sim-atmosphere :is(.graph-wrapper,.graph-container) {
+  border-color: var(--tpx-instrument-edge);
+  background-color: var(--graph-bg,var(--bg-card,#0d141c));
+  box-shadow: inset 0 0 22px var(--tpx-instrument-glow);
+}
+body.tpx-sim-atmosphere #entropyGraph {
+  border-color: var(--tpx-instrument-edge);
+  box-shadow: 0 0 0 4px var(--tpx-instrument-glow);
+}
+body.tpx-sim-atmosphere :is(.graph-legend,.graph-heading,.graph-header) {gap: 12px;flex-wrap: wrap;}
+body.tpx-sim-atmosphere :is(.graph-tooltip,.simulation-tooltip) {
+  max-width: min(260px,calc(100vw - 48px));
+  border-color: var(--tpx-instrument-edge);
+  box-shadow: 0 10px 24px rgba(0,0,0,.2);
+  line-height: 1.65;
+}
+body.tpx-sim-atmosphere :is(.control-panel,.controls-panel,.controls-grid,.control-card) {min-width: 0;}
+body.tpx-sim-atmosphere .control-group + .control-group {margin-top: 22px;}
+body.tpx-sim-atmosphere :is(.control-group label,.control-card label,.control-top) {line-height: 1.55;gap: 8px;}
+body.tpx-sim-atmosphere :is(.control-panel,.controls-panel) > h2 {margin-bottom: 18px;}
+body.tpx-sim-atmosphere :is(.section-title,.section-heading,.graph-header) {column-gap: 18px;row-gap: 10px;}
+body.tpx-sim-atmosphere :is(.section-title,.section-heading,.graph-header) :is(h2,p) {overflow-wrap: anywhere;}
+body.tpx-sim-atmosphere :is(.simulation-buttons,.simulation-controls,.process-buttons,.button-row) {gap: 10px;}
+body.tpx-sim-atmosphere :is(.particle,.crystal-particle,.engine-particle,.heat-particles span) {
+  background-image: radial-gradient(circle at 32% 25%,rgba(255,255,255,.9),transparent 58%);
+  box-shadow: 0 0 5px rgba(75,201,255,.65),0 0 11px rgba(31,153,228,.26);
+}
+body.tpx-sim-atmosphere :is(#canvasA,#canvasB,#hotCanvas,#coldCanvas) {
+  filter: brightness(1.25) saturate(1.25) drop-shadow(0 0 2px rgba(62,185,250,.55));
+}
+body.tpx-sim-atmosphere.light-mode :is(.particle,.crystal-particle,.engine-particle,.heat-particles span) {
+  box-shadow: 0 0 3px rgba(10,127,183,.4),0 0 8px rgba(31,153,228,.2);
+}
+body.tpx-sim-atmosphere.light-mode :is(#canvasA,#canvasB,#hotCanvas,#coldCanvas) {
+  filter: saturate(1.3) drop-shadow(0 0 1px rgba(10,110,167,.45));
+}
+@keyframes tpx-sim-flyby {
+  0% {transform: translateX(-110px);opacity: 0;}
+  1% {opacity: 1;}
+  23% {opacity: 1;}
+  25%,100% {transform: translateX(calc(100% + 110px));opacity: 0;}
+}
+@media (max-width: 760px) {
+  body.tpx-sim-atmosphere .tpx-sim-flight-host {padding-top: 48px;}
+  body.tpx-sim-atmosphere :is(.graph-legend,.graph-header) {font-size: 12px;}
+  body.tpx-sim-atmosphere :is(.control-top,.control-group label) {flex-wrap: wrap;}
+}
+@media (prefers-reduced-motion: reduce) {
+  body.tpx-sim-atmosphere .tpx-sim-flight-lane {display: none;}
+  body.tpx-sim-atmosphere .tpx-sim-flight {animation: none;}
+  body.tpx-sim-atmosphere .tpx-sim-flight-host {padding-top: 32px;}
+}

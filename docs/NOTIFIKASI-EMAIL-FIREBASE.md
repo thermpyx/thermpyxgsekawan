@@ -6,6 +6,14 @@ Form masukan saat ini menyimpan pesan di Realtime Database. Backend opsional yan
 
 Alamat tujuan awal adalah **thermpyx@gmail.com**. Pengunjung tetap menekan **Kirim masukan** dari website, tanpa membuka aplikasi email. Secret pengiriman hanya tersedia pada backend. Kode ini disiapkan dan diuji secara lokal; keberadaannya di GitHub **belum mengaktifkan email**.
 
+## Jika proyek masih Spark atau paketnya belum diketahui
+
+**Notifikasi Gmail dengan backend ini belum bisa diaktifkan pada paket Spark.** Penyimpanan masukan ke Firebase tetap bekerja dengan Rules yang sudah dipublikasikan; administrator dapat membacanya di **Realtime Database → Data → feedback**. Status sukses pada formulir berarti pesan tersimpan di database, bukan email sudah masuk.
+
+Periksa paket di [Firebase Console proyek thermpyx](https://console.firebase.google.com/project/thermpyx/overview), bagian **Usage and billing / Penggunaan dan penagihan**. Jangan mengganti proyek, database atau Rules untuk mengaktifkan email. Perubahan paket harus dipilih sendiri oleh pemilik proyek. Panduan di bawah berlaku setelah pemilik memutuskan menggunakan Blaze; pembaruan website tidak mengubah paket atau penagihan.
+
+Setelah Blaze dipilih, cukup siapkan Gmail pengirim beserta App Password, simpan dua secret melalui Firebase CLI, lalu deploy fungsi yang sudah tersedia. Tidak perlu membuat Supabase lagi atau menaruh sandi Gmail di website.
+
 ## 1. Aktifkan persyaratan Firebase
 
 Deploy Cloud Functions memerlukan paket **Blaze** dan akun Google yang memiliki izin deployment pada proyek `thermpyx`. Blaze memakai penagihan sesuai pemakaian; mengaktifkannya merupakan tindakan pada akun Firebase Anda, bukan bagian dari push GitHub Pages. Atur anggaran di Google Cloud sesuai kebutuhan.
@@ -74,6 +82,14 @@ firebase deploy --only functions:feedback-mail:notifyFeedbackEmail --project the
 Perintah tersebut men-deploy fungsi **`notifyFeedbackEmail`**, bukan seluruh aplikasi atau Rules. Pada deployment pertama, Firebase dapat meminta aktivasi API dan pemberian izin layanan yang diperlukan. Periksa hasil terminal sampai deployment benar-benar berhasil.
 
 Push GitHub Pages hanya memperbarui frontend. Fungsi baru aktif setelah perintah Firebase deploy berhasil. Workflow **Feedback email backend QA** hanya menjalankan pengujian; workflow itu tidak deploy dan tidak mengirim email.
+
+Untuk memeriksa daftar fungsi pada proyek yang Anda kelola tanpa mengirim pesan atau membuat record database:
+
+```sh
+firebase functions:list --project thermpyx
+```
+
+Pastikan `notifyFeedbackEmail` tercantum dengan region `asia-southeast1`. Daftar fungsi membuktikan fungsi terpasang, bukan bahwa Gmail sudah menerima pesan.
 
 ## 7. Periksa hasil setelah deploy
 

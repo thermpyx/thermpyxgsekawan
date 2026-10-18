@@ -4,12 +4,16 @@ Form **Masukan / Feedback** pada navigasi beranda sekarang mengirim pesan langsu
 
 The homepage **Feedback** popup now submits directly to Firebase Realtime Database. Visitors do not need an email application or Google login. An existing Google identity or Firebase Anonymous Authentication is used. The name is optional and messages are limited to 2,000 characters. Closing the popup, changing languages or retrying a failed request keeps the local form draft.
 
+**Ingin pesan masuk ke `thermpyx@gmail.com`?** Jalur otomatis sudah disiapkan di backend, tetapi memerlukan Cloud Functions pada paket **Blaze**, dua secret Gmail dan deployment terpisah. Pada paket **Spark**, pesan tetap dapat disimpan dan dibaca administrator di Firebase; belum diteruskan ke Gmail. Ikuti [aktivasi notifikasi Gmail](NOTIFIKASI-EMAIL-FIREBASE.md). Push GitHub Pages tidak mengaktifkan backend email atau mengubah paket penagihan.
+
+**Want delivery to `thermpyx@gmail.com`?** The prepared backend requires the **Blaze** plan, two server-side Gmail secrets and a separate Cloud Functions deployment. On **Spark**, feedback remains available to administrators in Firebase, without Gmail forwarding. See the [Gmail activation guide](NOTIFIKASI-EMAIL-FIREBASE.md). A GitHub Pages deployment does not activate email or change billing.
+
 ## Aktivasi satu kali / One-time activation
 
 1. Buka proyek Firebase **thermpyx** yang sama, lalu **Build → Realtime Database → Rules**.
 2. Salin seluruh isi [`firebase/database.rules.json`](../firebase/database.rules.json) dari branch `codex/simulator-visual-refinement`, periksa, lalu **Publish**. Berkas ini mempertahankan aturan akun, bank soal, kuis dan flashcard; hanya jalur `feedback` yang ditambahkan. Jangan mengganti dengan aturan baca/tulis publik.
 3. Buka web versi terbaru dan gunakan **Masukan → Kirim masukan** untuk pesan sungguhan ketika diperlukan. Status sukses hanya muncul setelah server mengonfirmasi rekaman. Pengujian pengembangan tidak mengirim masukan ke produksi.
-4. Sebagai administrator proyek, buka tab **Data → feedback → UID pengirim → ID masukan** untuk melihat `name`, `category`, `message`, `language`, `page` dan `submitted_at` (waktu server dalam milidetik Unix). Pesan tidak dikirim ke Gmail dan tidak dibuka untuk pengguna lain.
+4. Sebagai administrator proyek, buka tab **Data → feedback → UID pengirim → ID masukan** untuk melihat `name`, `category`, `message`, `language`, `page` dan `submitted_at` (waktu server dalam milidetik Unix). Tanpa aktivasi backend email terpisah, pesan tidak diteruskan ke Gmail. Masukan tetap tidak dibuka untuk pengguna lain.
 
 Open the existing **thermpyx** project in **Firebase Console → Build → Realtime Database → Rules**. Replace the Rules with the complete version linked above and choose **Publish**. Deploying GitHub Pages alone does not publish database Rules. Administrators read submissions under **Data → feedback → sender UID → submission ID**. No frontend secret, email service or public database access is needed.
 
@@ -133,7 +137,3 @@ Keberhasilan uji dengan backend tiruan tidak membuktikan SMTP proyek Anda sudah 
 Untuk Live Server, gunakan alamat lokal yang benar-benar tampil di browser. Contoh jika proyek disajikan langsung di port 5500: Site URL `http://127.0.0.1:5500`, Redirect URLs `http://127.0.0.1:5500/index.html` dan `http://127.0.0.1:5500/index.html?account=recovery`. `localhost` dan `127.0.0.1` adalah alamat berbeda; gunakan host yang sama dengan browser.
 
 Rujukan pengaturan resmi: [SMTP Supabase](https://supabase.com/docs/guides/auth/auth-smtp), [batas Auth](https://supabase.com/docs/guides/auth/rate-limits), dan [template email](https://supabase.com/docs/guides/auth/auth-email-templates). Dashboard proyek dan log aktual menentukan status pengiriman yang sedang berlaku.
-
-## Notifikasi ke kotak masuk email
-
-Backend opsional untuk mengirim notifikasi Gmail setelah masukan baru tersimpan tersedia di `functions/`. Ikuti [panduan aktivasi notifikasi email](NOTIFIKASI-EMAIL-FIREBASE.md). Ini memerlukan Cloud Functions/Blaze, Secret Manager dan deployment Firebase tersendiri. Push GitHub Pages tidak mengaktifkannya; fungsi belum dideploy atau diuji dengan pengiriman email produksi.

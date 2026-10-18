@@ -66,6 +66,8 @@ jobs:
         run: node qa/test-onboarding.cjs
       - name: Test feedback dialog
         run: node qa/test-feedback-modal.cjs
+      - name: Test rocket and meteor popup entrances
+        run: node qa/test-popup-launch.cjs
       - name: Test guided learning path
         run: node qa/test-learning-path.cjs
       - name: Test learning assessment
@@ -88,6 +90,10 @@ jobs:
         run: node qa/test-answer-review.cjs
       - name: Test simulator design and source integrity
         run: node qa/test-simulator-design.cjs
+      - name: Test simulator atmosphere and process laboratory
+        run: |
+          node qa/test-simulator-atmosphere.cjs
+          node qa/test-process-simulator.cjs
       - name: Test browser history
         run: node qa/test-history.cjs --browser
       - name: Test persistent music shell

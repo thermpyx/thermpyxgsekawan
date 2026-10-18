@@ -67,12 +67,14 @@ function contrast(foreground, background) {
                 return {selector: node.className || node.parentElement.className, color: getComputedStyle(node).color, surface: opaqueSurface(node)};
               });
               const frontWordmark = document.querySelector('.dev-photo-overlay .tpx-wordmark');
+              const passWordmark = document.querySelector('.dev-photo-pass .tpx-wordmark');
               const backWordmark = document.querySelector('.dev-back-code .tpx-wordmark');
               // These faces retain dark materials even when the page is light.
               // Photo pixels vary; its solid backing and the rear's solid gradient
               // stops catch page-palette overrides without claiming a pixel audit.
               const materialBadges = [
                 {face: 'front', color: getComputedStyle(frontWordmark).color, surfaces: [opaqueSurface(frontWordmark)]},
+                {face: 'pass', color: getComputedStyle(passWordmark).color, surfaces: [opaqueSurface(passWordmark)]},
                 {face: 'back', color: getComputedStyle(backWordmark).color,
                   surfaces: getComputedStyle(document.querySelector('.dev-photo-back')).backgroundImage.match(/rgb\([^)]*\)/g) || []}
               ];
@@ -121,16 +123,58 @@ function contrast(foreground, background) {
         assert.equal(rim.filter(panel => panel.width > 10).length, 4);
         assert.ok(rim.every(panel => panel.depth === 20 && panel.width > 0 && panel.transform.includes('rotateX(90deg)') && panel.visibility === 'visible'));
         checks++;
-        assert.equal(await frame.locator('#devCharm, .dev-charm-caption').count(), 0, 'Developer accessories have been removed'); checks++;
+        assert.equal(await frame.locator('#devCharm').isVisible(), true, 'Nathan has his attached dragon');
+        assert.equal(await frame.locator('#devPhoto3D').getAttribute('data-dragon'), 'onyx');
+        assert.equal(await frame.locator('#devCharmSwing').evaluate(node => parseFloat(node.style.getPropertyValue('--charm-sway')) || 0), 0, 'Reduced motion keeps accessories still');
+        checks++;
         for (let index = 0; index < 4; index++) {
           await frame.locator('.dev-chip').nth(index).click();
           await frame.waitForFunction(() => { const image=document.getElementById('devImage');return image.complete && image.naturalWidth>0; });
           assert.equal(await frame.locator('.dev-chip[aria-pressed="true"]').count(), 1);
+          assert.equal(await frame.locator('#devPassNumber').textContent(), `CREW / ${String(index + 1).padStart(2, '0')}`);
+          assert.equal(await frame.locator('#devImage').getAttribute('src'), `assets/developers/dev-${index + 1}.jpg`, 'Original portraits are preserved');
+          assert.equal(await frame.locator('#devCharm').isVisible(), index === 0 || index === 3);
+          if (index === 3) {
+            assert.equal(await frame.locator('#devPhoto3D').getAttribute('data-dragon'), 'azure');
+            assert.equal(await frame.locator('#devCharm').evaluate(node => getComputedStyle(node).getPropertyValue('--dragon-body').trim()), '#248ac9');
+            for (const language of ['id', 'en', 'id']) {
+              await frame.locator(`[data-tpx-language="${language}"]`).click();
+              assert.equal(await frame.locator('#devRole').getAttribute('data-en'), 'CEO ThermPyX');
+              assert.match(await frame.locator('#devRole').textContent(), /^CEO\s+Thermpyx?$/i);
+              assert.equal(await frame.locator('#devRole .tpx-wordmark').getAttribute('aria-label'), 'THERMPYX');
+              assert.match(await frame.locator('#devCharmCaption').textContent(), language === 'id' ? /^Naga biru/ : /^Blue dragon/);
+            }
+          }
           checks++;
         }
         assert.deepEqual(errors, []); checks++;
       } finally { await context.close(); }
     }
-    console.log(`PASS ${checks} Developer checks: ID/EN, both themes at 320/1440px, readable shared accents, full rotation controls, rounded rim geometry and four intact profiles without keychains`);
+    const context = await browser.newContext({viewport: {width: 1440, height: 900}});
+    try {
+      await context.route('https://**/*', route => route.abort());
+      const page = await context.newPage();
+      await page.goto(base + '/app.html?page=developer.html', {waitUntil: 'domcontentloaded'});
+      const frame = page.frames().find(item => item.parentFrame() === page.mainFrame());
+      await frame.locator('#devPhotoScene').waitFor();
+      await frame.locator('.dev-entrance').waitFor({state: 'detached', timeout: 4000});
+      const scene = frame.locator('#devPhotoScene');
+      await scene.scrollIntoViewIfNeeded();
+      const bounds = await scene.boundingBox();
+      await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(bounds.x + bounds.width / 2 + 110, bounds.y + bounds.height / 2 + 20, {steps: 8});
+      await page.mouse.up();
+      const angle = await frame.locator('#devPhoto3D').evaluate(node => parseFloat(node.style.getPropertyValue('--photo-rotate-y')));
+      assert.ok(angle > 65 && angle < 90, 'Pointer dragging still rotates the physical card'); checks++;
+      const sway = frame.locator('#devCharmSwing');
+      await frame.waitForFunction(() => Math.abs(parseFloat(document.getElementById('devCharmSwing').style.getPropertyValue('--charm-sway'))) > .1);
+      assert.ok(Math.abs(await sway.evaluate(node => parseFloat(node.style.getPropertyValue('--charm-sway')))) <= 14, 'The tethered swing stays bounded'); checks++;
+      await frame.waitForFunction(() => parseFloat(document.getElementById('devCharmSwing').style.getPropertyValue('--charm-sway')) === 0, null, {timeout: 5000}); checks++;
+      await frame.locator('#rotateRight').click();
+      await page.emulateMedia({reducedMotion: 'reduce'});
+      await frame.waitForFunction(() => parseFloat(document.getElementById('devCharmSwing').style.getPropertyValue('--charm-sway')) === 0); checks++;
+    } finally { await context.close(); }
+    console.log(`PASS ${checks} Developer checks: ID/EN, both themes at 320/1440px, readable shared accents, full rotation, closed rounded rim, preserved portraits, CEO role, blue/black dragons and bounded motion`);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

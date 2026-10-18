@@ -12,6 +12,7 @@
       fullName: "Reinhart Van Diaz",
       role: {en: "Project Leader", id: "Ketua Proyek"},
       image: "assets/developers/dev-1.jpg",
+      dragon: "onyx",
 
       motto: {
         en: "I leave for an assignment and come home when someone calls.",
@@ -154,8 +155,9 @@
     {
       nickname: "MISEL CINTA NASPAD",
       fullName: "Misel Natalis Sawato Gulo",
-      role: {en: "UI / UX Designer, Frontend Developer", id: "Desainer UI / UX, Pengembang Frontend"},
+      role: {en: "CEO ThermPyX", id: "CEO ThermPyX"},
       image: "assets/developers/dev-4.jpg",
+      dragon: "azure",
 
       motto: {
         en: "Create with love, code with a little anger and emotion.",
@@ -277,6 +279,10 @@
 
     rim:
       document.getElementById("devCardRim"),
+    charm: document.getElementById("devCharm"),
+    charmSwing: document.getElementById("devCharmSwing"),
+    charmCaption: document.getElementById("devCharmCaption"),
+    passNumber: document.getElementById("devPassNumber"),
 
     glare:
       document.getElementById("devPhotoGlare"),
@@ -345,7 +351,7 @@
   }
   [elements.nickname, elements.fullName, elements.motto, elements.cardNickname,
     elements.cardName, elements.photoNickname, elements.backNickname,
-    elements.backName, elements.image].forEach(protectPersonalText);
+    elements.backName, elements.image, elements.passNumber].forEach(protectPersonalText);
 
 
   /* =======================================================
@@ -407,6 +413,15 @@
 
     elements.backRole.textContent =
       elements.role.textContent;
+    elements.photo3D.dataset.dragon = member.dragon || "none";
+    elements.charm.hidden = !member.dragon;
+    elements.charmCaption.hidden = !member.dragon;
+    elements.passNumber.textContent = `CREW / ${number}`;
+    if (member.dragon) {
+      elements.charmCaption.textContent = currentLanguage === "id"
+        ? `Naga ${member.dragon === "azure" ? "biru" : "hitam"} · Ikut bergerak saat kartu diputar`
+        : `${member.dragon === "azure" ? "Blue" : "Black"} dragon · Sways as you rotate the card`;
+    }
 
 
     renderHistory(member);
@@ -753,6 +768,35 @@
   let activePointer = null;
   let rimWidth = 0;
   let rimHeight = 0;
+  let charmFrame = 0;
+  let charmAngle = 0;
+  let charmVelocity = 0;
+  let lastCharmRotation = 0;
+  let charmLastTime = 0;
+  function stopCharm() {
+    cancelAnimationFrame(charmFrame);
+    charmFrame = 0;
+    charmLastTime = 0;
+    charmAngle = 0;
+    charmVelocity = 0;
+    elements.charmSwing.style.setProperty("--charm-sway", "0deg");
+  }
+  function animateCharm(time) {
+    const step = Math.min(2, charmLastTime ? (time - charmLastTime) / 16.67 : 1);
+    charmLastTime = time;
+    charmVelocity = (charmVelocity - charmAngle * .025 * step) * Math.pow(.88, step);
+    charmAngle = Math.max(-14, Math.min(14, charmAngle + charmVelocity * step));
+    elements.charmSwing.style.setProperty("--charm-sway", `${charmAngle.toFixed(3)}deg`);
+    if (Math.abs(charmAngle) + Math.abs(charmVelocity) < .035) stopCharm();
+    else charmFrame = requestAnimationFrame(animateCharm);
+  }
+  function swayCharm(delta) {
+    if (reducedMotion.matches || elements.charm.hidden || !Number.isFinite(delta)) return;
+    charmVelocity = Math.max(-3.5, Math.min(3.5, charmVelocity - delta * .07));
+    if (!charmFrame && Math.abs(charmVelocity) > .005) charmFrame = requestAnimationFrame(animateCharm);
+  }
+  reducedMotion.addEventListener?.("change", stopCharm);
+  window.addEventListener("pagehide", stopCharm);
 
   /*
     The front and back are two ends of one rounded extrusion. Each tangent
@@ -803,6 +847,8 @@
   function applyPhotoRotation() {
     elements.photo3D.style.setProperty("--photo-rotate-x", `${rotationX}deg`);
     elements.photo3D.style.setProperty("--photo-rotate-y", `${rotationY}deg`);
+    swayCharm(rotationY - lastCharmRotation);
+    lastCharmRotation = rotationY;
   }
 
   function startDrag(event) {
@@ -902,6 +948,8 @@
 
 
   function resetPhotoRotation(animate = true) {
+    stopCharm();
+    lastCharmRotation = 0;
     // Return by the shortest visible route, even after several full turns.
     rotationY = ((rotationY % 360) + 540) % 360 - 180;
     elements.photo3D.classList.add("is-resetting");

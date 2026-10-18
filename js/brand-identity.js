@@ -180,9 +180,17 @@
 /* Shared presentation controls load without changing preserved simulator scripts. */
 (() => {
   const source = document.currentScript?.src;
-  if (!source || document.querySelector('script[data-tpx-refinement]')) return;
-  const script = document.createElement('script');
-  script.src = new URL('refinement.js', source).href;
-  script.dataset.tpxRefinement = '';
-  document.head.append(script);
+  if (!source) return;
+  function load(path, marker) {
+    if (document.querySelector(`script[${marker}]`)) return;
+    const script = document.createElement('script');
+    script.src = new URL(path, source).href;
+    script.setAttribute(marker, '');
+    document.head.append(script);
+  }
+  load('refinement.js', 'data-tpx-refinement');
+  load('popup-launch.js', 'data-tpx-popup-launch');
+  if (location.pathname.startsWith(new URL('../simulator/', source).pathname)) {
+    load('../simulator/shared/atmosphere.js', 'data-tpx-simulator-atmosphere');
+  }
 })();
