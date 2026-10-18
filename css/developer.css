@@ -1759,65 +1759,29 @@ body.light-mode .dev-entrance-skip { background: #fff; border-color: #bed8de; co
 .dev-photo-back { border-color: #93b5c1; box-shadow: inset 0 0 0 5px #c1d9df24, inset 0 0 0 7px #06131c; }
 .dev-photo-back h3 { max-width: 100%; overflow-wrap: anywhere; font-size: clamp(19px, 2vw, 27px); line-height: 1.25; }
 .dev-photo-overlay strong { font-size: clamp(18px, 1.7vw, 25px); line-height: 1.2; }
-.dev-charm {
-  --dragon-body: #24343d;
-  --dragon-highlight: #516773;
-  --dragon-shade: #101c25;
-  --dragon-outline: #839ca8;
-  --dragon-belly: #435965;
-  --dragon-wing: #1a2632;
-  --dragon-horn: #a9b6c2;
-  --dragon-muzzle: #354a56;
-  --dragon-eye: #72d6c7;
-  --dragon-stitch: #9eb9c5;
-  position: absolute;
-  z-index: 8;
-  right: -14px;
-  top: 13px;
-  width: 96px;
-  height: 170px;
-  transform: translateZ(24px);
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-.dev-charm[hidden], .dev-charm-caption[hidden] { display: none; }
-.dev-charm::before {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 30px;
-  width: 17px;
-  height: 17px;
-  border: 3px solid #c3d8de;
-  border-radius: 50%;
-  background: #11202a;
-  box-shadow: 0 1px 2px #001019, inset 0 1px 3px #000;
-}
-.dev-charm-swing { width: 100%; height: 100%; transform-origin: 40% 10px; transform: rotateZ(var(--charm-sway, 0deg)); }
-.dev-dragon { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(2px 5px 3px #00101999); }
-.dev-dragon-body, .dev-dragon-paw, .dev-dragon-tail { fill: url(#devDragonFur); }
-.dev-dragon-belly { fill: var(--dragon-belly); }
-.dev-dragon-wing, .dev-dragon-spikes { fill: var(--dragon-wing); }
-.dev-dragon-horn { fill: var(--dragon-horn); }
-.dev-dragon-muzzle { fill: var(--dragon-muzzle); }
-[data-dragon="azure"] .dev-charm {
-  --dragon-body: #248ac9;
-  --dragon-highlight: #70d1ec;
-  --dragon-shade: #145080;
-  --dragon-outline: #a4dfff;
-  --dragon-belly: #7dc9eb;
-  --dragon-wing: #155186;
-  --dragon-horn: #c5eafb;
-  --dragon-muzzle: #4bafdc;
-  --dragon-eye: #f2bc53;
-  --dragon-stitch: #d0eeff;
-}
-.dev-charm-caption { position: relative; z-index: 5; margin: 7px 18px 0; color: var(--text-secondary); text-align: center; font: 400 10px / 1.5 "IBM Plex Sans", sans-serif; }
-@media (max-width: 380px) {
-  .dev-charm { width: 83px; height: 147px; right: -10px; }
-  .dev-charm::before { left: 24px; width: 16px; height: 16px; }
-  .dev-photo-pass { left: 14px; padding: 7px 8px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .dev-charm-swing { transform: none; }
-}
+/* The sculpted dragon surrounds a gilt frame; its transparent window reveals the original portrait. */
+.dev-dragon-frame[hidden],.dev-frame-caption[hidden]{display:none!important}
+.dev-photo-scene.has-dragon-frame{width:calc(100% - 22px);max-width:430px;height:auto;aspect-ratio:5/7;margin:10px auto 0;border-radius:0;isolation:auto}
+.has-dragon-frame .dev-photo-3d{position:absolute;left:24%;top:26.7%;width:46.9%;height:54.2%;transform-origin:55.4371% 42.98893%}
+.dev-dragon-frame{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d}
+.dev-frame-art{position:absolute;left:-51.172708%;top:-49.261993%;width:213.219616%;height:184.501845%;max-width:none;display:block;object-fit:fill;pointer-events:none;user-select:none;backface-visibility:hidden;-webkit-backface-visibility:hidden;filter:drop-shadow(0 5px 6px #030d1a66)}
+.dev-frame-art-front{transform:translateZ(12px)}
+.dev-frame-art-back{transform:translateZ(-12px) rotateY(180deg) scaleX(-1)}
+.has-dragon-frame .dev-photo-face{border:0;border-radius:2px;box-shadow:none}
+.has-dragon-frame .dev-photo-front{padding:0;transform:translateZ(10px);background:#081822}
+.has-dragon-frame .dev-photo-front::before{display:none}
+.has-dragon-frame .dev-photo-front img{border-radius:0}
+.has-dragon-frame .dev-photo-pass{top:9px;left:9px;max-width:calc(100% - 18px);padding:5px 7px;font-size:7px;letter-spacing:.04em;border-radius:4px}
+.has-dragon-frame .dev-photo-pass>span:last-child{font-size:6px}
+.has-dragon-frame .dev-photo-overlay{left:11px;right:11px;bottom:12px}
+.has-dragon-frame .dev-photo-overlay span{font-size:7px}
+.has-dragon-frame .dev-photo-overlay strong{font-size:clamp(11px,1.15vw,18px);line-height:1.2;overflow-wrap:anywhere}
+.has-dragon-frame .dev-photo-back{padding:12px 9px;transform:rotateY(180deg) translateZ(10px);background:radial-gradient(ellipse at 50% 15%,#18303e,#10212f 60%,#08131d)}
+.has-dragon-frame .dev-back-code{font-size:6px;letter-spacing:.8px;margin-bottom:14px}
+.has-dragon-frame .dev-back-logo{font-size:clamp(12px,1.35vw,20px)}
+.has-dragon-frame .dev-photo-back h3{font-size:clamp(13px,1.25vw,19px);margin:14px 0 5px}
+.has-dragon-frame .dev-photo-back p{font-size:clamp(8px,.85vw,12px);line-height:1.4}
+.has-dragon-frame .dev-photo-back small{font-size:7px;line-height:1.5;letter-spacing:.5px}
+.has-dragon-frame .dev-rim-segment{background:linear-gradient(90deg,#71552c,#cfb276 35%,#edcf8e 55%,#876535);border-color:#b99b65}
+.dev-frame-caption{position:relative;z-index:5;margin:8px 16px 0;color:var(--text-secondary);text-align:center;font:400 10px/1.5 "IBM Plex Sans",sans-serif}
+@media(max-width:380px){.dev-photo-scene.has-dragon-frame{width:calc(100% - 12px)}.has-dragon-frame .dev-photo-pass{padding:4px 5px;font-size:6px}.has-dragon-frame .dev-photo-overlay{left:8px;right:8px;bottom:9px}.has-dragon-frame .dev-photo-overlay strong{font-size:10px}.has-dragon-frame .dev-back-logo{font-size:12px}.has-dragon-frame .dev-photo-back h3{font-size:11px}.has-dragon-frame .dev-photo-back p{font-size:8px}}

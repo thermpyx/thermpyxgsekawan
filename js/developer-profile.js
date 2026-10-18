@@ -279,9 +279,10 @@
 
     rim:
       document.getElementById("devCardRim"),
-    charm: document.getElementById("devCharm"),
-    charmSwing: document.getElementById("devCharmSwing"),
-    charmCaption: document.getElementById("devCharmCaption"),
+    frame: document.getElementById("devDragonFrame"),
+    frameFront: document.getElementById("devDragonFrameFront"),
+    frameBack: document.getElementById("devDragonFrameBack"),
+    frameCaption: document.getElementById("devFrameCaption"),
     passNumber: document.getElementById("devPassNumber"),
 
     glare:
@@ -414,13 +415,19 @@
     elements.backRole.textContent =
       elements.role.textContent;
     elements.photo3D.dataset.dragon = member.dragon || "none";
-    elements.charm.hidden = !member.dragon;
-    elements.charmCaption.hidden = !member.dragon;
+    elements.photoScene.classList.toggle("has-dragon-frame", Boolean(member.dragon));
+    elements.frame.hidden = !member.dragon;
+    elements.frameCaption.hidden = !member.dragon;
     elements.passNumber.textContent = `CREW / ${number}`;
     if (member.dragon) {
-      elements.charmCaption.textContent = currentLanguage === "id"
-        ? `Naga ${member.dragon === "azure" ? "biru" : "hitam"} · Ikut bergerak saat kartu diputar`
-        : `${member.dragon === "azure" ? "Blue" : "Black"} dragon · Sways as you rotate the card`;
+      const blue = member.dragon === "azure";
+      const frameURL = `assets/developers/dragon-frame-${blue ? "blue" : "black"}.png`;
+      [elements.frameFront, elements.frameBack].forEach(image => {
+        if (image.getAttribute("src") !== frameURL) image.setAttribute("src", frameURL);
+      });
+      elements.frameCaption.textContent = currentLanguage === "id"
+        ? `Bingkai naga ${blue ? "biru" : "hitam"} · Seret untuk memutar kartu`
+        : `${blue ? "Blue" : "Black"} dragon frame · Drag to rotate the card`;
     }
 
 
@@ -768,36 +775,6 @@
   let activePointer = null;
   let rimWidth = 0;
   let rimHeight = 0;
-  let charmFrame = 0;
-  let charmAngle = 0;
-  let charmVelocity = 0;
-  let lastCharmRotation = 0;
-  let charmLastTime = 0;
-  function stopCharm() {
-    cancelAnimationFrame(charmFrame);
-    charmFrame = 0;
-    charmLastTime = 0;
-    charmAngle = 0;
-    charmVelocity = 0;
-    elements.charmSwing.style.setProperty("--charm-sway", "0deg");
-  }
-  function animateCharm(time) {
-    const step = Math.min(2, charmLastTime ? (time - charmLastTime) / 16.67 : 1);
-    charmLastTime = time;
-    charmVelocity = (charmVelocity - charmAngle * .025 * step) * Math.pow(.88, step);
-    charmAngle = Math.max(-14, Math.min(14, charmAngle + charmVelocity * step));
-    elements.charmSwing.style.setProperty("--charm-sway", `${charmAngle.toFixed(3)}deg`);
-    if (Math.abs(charmAngle) + Math.abs(charmVelocity) < .035) stopCharm();
-    else charmFrame = requestAnimationFrame(animateCharm);
-  }
-  function swayCharm(delta) {
-    if (reducedMotion.matches || elements.charm.hidden || !Number.isFinite(delta)) return;
-    charmVelocity = Math.max(-3.5, Math.min(3.5, charmVelocity - delta * .07));
-    if (!charmFrame && Math.abs(charmVelocity) > .005) charmFrame = requestAnimationFrame(animateCharm);
-  }
-  reducedMotion.addEventListener?.("change", stopCharm);
-  window.addEventListener("pagehide", stopCharm);
-
   /*
     The front and back are two ends of one rounded extrusion. Each tangent
     panel spans the full 20px depth; the curved corners use small facets.
@@ -809,7 +786,7 @@
     if (!width || !height || (width === rimWidth && height === rimHeight)) return;
     rimWidth = width;
     rimHeight = height;
-    const radius = 20;
+    const radius = elements.photoScene.classList.contains("has-dragon-frame") ? 2 : 20;
     const depth = 20;
     const points = [];
     const corners = [
@@ -847,8 +824,6 @@
   function applyPhotoRotation() {
     elements.photo3D.style.setProperty("--photo-rotate-x", `${rotationX}deg`);
     elements.photo3D.style.setProperty("--photo-rotate-y", `${rotationY}deg`);
-    swayCharm(rotationY - lastCharmRotation);
-    lastCharmRotation = rotationY;
   }
 
   function startDrag(event) {
@@ -948,8 +923,6 @@
 
 
   function resetPhotoRotation(animate = true) {
-    stopCharm();
-    lastCharmRotation = 0;
     // Return by the shortest visible route, even after several full turns.
     rotationY = ((rotationY % 360) + 540) % 360 - 180;
     elements.photo3D.classList.add("is-resetting");
@@ -958,7 +931,7 @@
     rotationX = 0;
     rotationY = 0;
     if (animate) elements.photo3D.classList.remove("is-resetting");
-    applyPhotoRotation({ swing: animate });
+    applyPhotoRotation();
     if (!animate) {
       elements.photo3D.getBoundingClientRect();
       elements.photo3D.classList.remove("is-resetting");
