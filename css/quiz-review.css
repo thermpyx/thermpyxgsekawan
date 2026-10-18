@@ -1,0 +1,79 @@
+/* Quiz recap: calm surfaces, cyan accents, and amber learning notes. */
+.quiz-review-page .review-shell {
+    position: relative;
+    width: min(100% - 40px, 1040px);
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: clamp(44px, 7vw, 90px) 0 60px;
+}
+.quiz-review-page .review-hero { display: flex; justify-content: space-between; align-items: center; gap: 32px; margin-bottom: 32px; }
+.quiz-review-page .review-hero-copy { max-width: 670px; }
+.quiz-review-page .review-hero .section-label { font-size: 10px; letter-spacing: 2px; }
+.quiz-review-page .review-hero h1 { margin: 12px 0 14px; font: 700 clamp(36px, 6vw, 62px)/1.06 "Oxanium", sans-serif; letter-spacing: -2px; }
+.quiz-review-page .review-intro { max-width: 560px; color: var(--text-secondary); font-size: clamp(14px, 2vw, 16px); line-height: 1.8; }
+.review-hero-art { position: relative; display: flex; flex-shrink: 0; align-items: center; gap: 8px; width: 210px; height: 150px; padding-bottom: 15px; border: 1px solid var(--border); border-radius: 24px; background: radial-gradient(ellipse at top right, color-mix(in srgb, var(--blue) 16%, transparent), transparent 80%), var(--bg-card); transform: rotate(-5deg); justify-content: center; }
+.review-hero-art span { display: grid; place-items: center; width: 58px; height: 68px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-primary); color: var(--blue); font: 600 34px "Oxanium", sans-serif; }
+.review-hero-art span:nth-of-type(2) { border-color: color-mix(in srgb, var(--secondary, #f5b65b) 35%, transparent); color: var(--secondary, #f5b65b); transform: translateY(9px) rotate(8deg); }
+.review-hero-art > svg { color: var(--text-secondary); }
+.review-hero-art b { position: absolute; bottom: 15px; color: var(--text-muted); font: 500 8px "Oxanium", sans-serif; letter-spacing: 2px; }
+.review-overview { display: grid; grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr)); align-items: center; gap: 20px; padding: 26px 28px; border: 1px solid var(--border); border-radius: 20px; background: linear-gradient(115deg, color-mix(in srgb, var(--blue) 8%, var(--bg-card)), var(--bg-card)); }
+.review-overview[hidden], .review-filters[hidden] { display: none; }
+.review-overview-lead { min-width: 0; }
+.review-overview-lead > span { display: block; margin-bottom: 6px; color: var(--blue); font: 600 9px "Oxanium", sans-serif; letter-spacing: 1.5px; }
+.review-overview-lead > strong { display: block; color: var(--text-primary); font: 600 19px/1.45 "Oxanium", sans-serif; text-transform: capitalize; overflow-wrap: anywhere; }
+.review-stat { border-left: 1px solid var(--border-light); padding-left: 22px; }
+.review-stat > strong { display: block; color: var(--text-primary); font: 600 32px/1.2 "Oxanium", sans-serif; }
+.review-stat > span { display: block; margin-top: 4px; color: var(--text-secondary); font-size: 12px; }
+.quiz-review-page .review-summary { margin: 20px 0; color: var(--text-secondary); font-size: 13px; line-height: 1.8; }
+.review-filters { display: flex; gap: 8px; margin: 28px 0 20px; flex-wrap: wrap; }
+.review-filters button { min-height: 42px; padding: 10px 17px; border: 1px solid var(--border-light); border-radius: 999px; background: var(--bg-card); color: var(--text-secondary); font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
+.review-filters button:hover { color: var(--text-primary); border-color: var(--blue); }
+.review-filters button[aria-pressed="true"] { color: var(--blue); border-color: var(--blue); background: color-mix(in srgb, var(--blue) 11%, var(--bg-card)); }
+.quiz-review-page .review-list { display: grid; gap: 22px; margin: 0 0 32px; }
+.quiz-review-page .review-card { position: relative; overflow: hidden; padding: clamp(22px, 4vw, 34px); border: 1px solid var(--border-light); border-radius: 22px; background: var(--bg-card); box-shadow: 0 12px 40px #00000008; }
+.quiz-review-page .review-card::before { content: ""; position: absolute; top: 0; left: 28px; width: 44px; height: 3px; border-radius: 0 0 4px 4px; background: var(--blue); }
+.quiz-review-page .review-card--incorrect::before, .quiz-review-page .review-card--unanswered::before { background: var(--secondary, #f5b65b); }
+.quiz-review-page .review-status { display: inline-block; padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; color: var(--blue); background: color-mix(in srgb, var(--blue) 7%, transparent); font: 600 10px/1.5 "Oxanium", sans-serif; letter-spacing: .8px; }
+.quiz-review-page .review-card--incorrect .review-status, .quiz-review-page .review-card--unanswered .review-status { color: var(--secondary, #f5b65b); border-color: color-mix(in srgb, var(--secondary, #f5b65b) 30%, transparent); background: color-mix(in srgb, var(--secondary, #f5b65b) 7%, transparent); }
+.quiz-review-page .review-card h2 { margin: 18px 0 22px; color: var(--text-primary); font: 600 clamp(17px, 2vw, 21px)/1.65 "Oxanium", sans-serif; letter-spacing: -.3px; overflow-wrap: anywhere; }
+.quiz-review-page .review-card .review-answer { margin: 10px 0; padding: 12px 16px; border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0; color: var(--text-primary); background: color-mix(in srgb, var(--blue) 5%, transparent); font-size: 14px; line-height: 1.75; }
+.quiz-review-page .review-card .review-your-answer.incorrect { border-left-color: var(--secondary, #f5b65b); background: color-mix(in srgb, var(--secondary, #f5b65b) 5%, transparent); }
+.quiz-review-page .review-card .review-answer-key { font-weight: 600; }
+.quiz-review-page .review-card--key .review-your-answer { color: var(--text-secondary); background: transparent; border-left-color: var(--border); font-size: 12px; }
+.review-explanation { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+.review-explanation-label { color: var(--secondary, #f5b65b); font: 600 10px "Oxanium", sans-serif; letter-spacing: 1.2px; }
+.quiz-review-page .review-card .review-explanation p { margin: 8px 0 0; color: var(--text-secondary); font-size: 14px; line-height: 1.9; }
+.review-empty { padding: 32px; border: 1px dashed var(--border); border-radius: 18px; color: var(--text-secondary); background: var(--bg-card); text-align: center; }
+.review-footer { padding-top: 28px; border-top: 1px solid var(--border-light); }
+.review-footer > p { color: var(--text-secondary); font-size: 13px; }
+.review-footer-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
+.review-return, .review-practice, .quiz-review-page .review-retry { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 46px; padding: 12px 20px; border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary); background: var(--bg-card); font-size: 12px; font-weight: 600; transition: border-color .2s, transform .2s; }
+.review-practice::after { content: ""; width: 16px; height: 16px; background: currentColor; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 18 18 6M6 6h12v12' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+.review-return::before { content: ""; width: 16px; height: 16px; background: currentColor; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 12H4m6-6-6 6 6 6' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+.review-practice { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 11%, var(--bg-card)); color: var(--blue); font-family: "Oxanium", sans-serif; letter-spacing: .5px; }
+.quiz-review-page .review-retry { margin-bottom: 28px; cursor: pointer; }
+.quiz-review-page .review-retry[hidden] { display: none; }
+.review-return:hover, .review-practice:hover, .quiz-review-page .review-retry:hover { transform: translateY(-2px); border-color: var(--blue); }
+.quiz-review-page :is(.review-filters button, .review-return, .review-practice, .review-retry):focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+.quiz-review-page.light-mode .review-hero-art { box-shadow: 0 20px 42px #226b7b0b; }
+.quiz-review-page.light-mode .review-card { background: var(--bg-card); }
+@media (max-width: 700px) {
+    .quiz-review-page .review-shell { width: min(100% - 28px, 1040px); padding-top: 40px; }
+    .quiz-review-page .review-hero { gap: 20px; }
+    .review-hero-art { display: none; }
+    .quiz-review-page .review-hero h1 { letter-spacing: -1.2px; }
+    .review-overview { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 10px; padding: 22px; }
+    .review-overview-lead { grid-column: 1 / -1; padding-bottom: 18px; border-bottom: 1px solid var(--border-light); }
+    .review-stat { padding-left: 12px; }
+    .review-stat:nth-child(2) { border-left: 0; padding-left: 0; }
+    .review-stat > strong { font-size: 28px; }
+    .review-stat > span { font-size: 11px; }
+    .review-filters { gap: 6px; }
+    .review-filters button { padding: 10px 12px; font-size: 11px; }
+    .quiz-review-page .review-card { border-radius: 17px; }
+    .quiz-review-page .review-card .review-answer, .quiz-review-page .review-card .review-explanation p { font-size: 13px; }
+    .review-footer-actions > a { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .quiz-review-page :is(button, a) { transition: none; }
+}

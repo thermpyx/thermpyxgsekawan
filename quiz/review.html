@@ -1,19 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Review your THERMPYX quiz answers, learn the correct answer, and understand the reasoning behind every question.">
 <title>Review Answers | THERMPYX</title>
-<link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="../css/quiz.css"><link rel="stylesheet" href="../css/neo-lab.css"><link rel="stylesheet" href="../css/global-ui.css"><link rel="stylesheet" href="../css/refinement.css">
-<script defer src="../js/i18n-dictionary.js"></script><script defer src="../js/i18n.js"></script><script defer src="../js/refinement.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/quiz.css">
+<link rel="stylesheet" href="../css/neo-lab.css">
+<link rel="stylesheet" href="../css/global-ui.css">
+<link rel="stylesheet" href="../css/site-experience.css">
+<link rel="stylesheet" href="../css/refinement.css">
+<link rel="stylesheet" href="../css/quiz-review.css">
+<script defer src="../js/i18n-dictionary.js"></script>
+<script defer src="../js/i18n.js"></script>
+<script defer src="../js/site-experience.js"></script>
+<script defer src="../js/refinement.js"></script>
 </head>
-<body>
-<header class="quiz-topbar"><a class="quiz-back" id="reviewBack" href="leaderboard.html">← Back to results</a><div class="quiz-logo">THERMPYX</div><button id="themeToggle" class="page-theme-toggle" type="button" aria-label="Toggle theme"><span id="themeIcon">☾</span><span id="themeText">Light Mode</span></button></header>
+<body class="quiz-review-page">
+<header class="quiz-topbar">
+<a class="quiz-back" id="reviewBack" href="leaderboard.html">Back to results</a>
+<div class="quiz-logo">THERMPY<span class="wordmark-accent">X</span></div>
+<button id="themeToggle" class="page-theme-toggle" type="button" aria-label="Toggle theme"><span class="theme-icon" id="themeIcon">☾</span><span class="theme-text" id="themeText">Light Mode</span></button>
+</header>
 <main class="review-shell">
-<p class="section-label" data-en="LEARN FROM EVERY ANSWER" data-id="PELAJARI SETIAP JAWABAN">LEARN FROM EVERY ANSWER</p>
+<header class="review-hero">
+<div class="review-hero-copy">
+<p class="section-label" data-en="RESULTS ARE JUST THE BEGINNING" data-id="HASIL ADALAH AWAL PEMAHAMAN">RESULTS ARE JUST THE BEGINNING</p>
 <h1 id="reviewHeading">Review Answers</h1>
-<p id="reviewSummary" role="status" aria-live="polite">Loading your answers…</p>
+<p class="review-intro" data-en="Look closer. Learn why. Take the next quiz with confidence." data-id="Periksa jawabanmu, pahami alasannya, dan hadapi kuis berikutnya dengan percaya diri.">Look closer. Learn why. Take the next quiz with confidence.</p>
+</div>
+<div class="review-hero-art" aria-hidden="true"><span>Q</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>A</span><b>UNDERSTAND / IMPROVE</b></div>
+</header>
+<section class="review-overview" id="reviewOverview" aria-label="Answer review summary" hidden>
+<div class="review-overview-lead"><span id="reviewMode">YOUR QUIZ RECAP</span><strong id="reviewTopic">—</strong></div>
+<div class="review-stat"><strong id="reviewCorrectCount">0</strong><span id="reviewCorrectLabel">Correct</span></div>
+<div class="review-stat"><strong id="reviewImproveCount">0</strong><span id="reviewImproveLabel">To revisit</span></div>
+<div class="review-stat"><strong id="reviewTotalCount">0</strong><span id="reviewTotalLabel">Questions</span></div>
+</section>
+<p class="review-summary" id="reviewSummary" role="status" aria-live="polite">Loading your answers…</p>
+<nav class="review-filters" id="reviewFilters" aria-label="Filter questions" hidden>
+<button id="reviewFilterAll" type="button" aria-pressed="true">All questions</button>
+<button id="reviewFilterRevisit" type="button" aria-pressed="false">To revisit</button>
+<button id="reviewFilterCorrect" type="button" aria-pressed="false">Correct</button>
+</nav>
 <div class="review-list" id="reviewList"></div>
-<button class="review-link" id="reviewRetry" type="button" hidden>Retry / Coba lagi</button>
+<button class="review-link review-retry" id="reviewRetry" type="button" hidden>Retry / Coba lagi</button>
+<footer class="review-footer">
+<p data-en="Every explanation is a step toward understanding." data-id="Setiap pembahasan adalah langkah menuju pemahaman.">Every explanation is a step toward understanding.</p>
+<div class="review-footer-actions">
+<a class="review-return" id="reviewReturn" href="leaderboard.html">Back to leaderboard</a>
+<a class="review-practice" href="practice.html" data-en="PRACTICE AGAIN" data-id="LATIHAN LAGI">PRACTICE AGAIN</a>
+</div>
+</footer>
 </main>
-<script src="../js/script.js"></script><script src="question-bank.js"></script><script src="score-utils.js"></script><script src="review.js"></script>
-</body></html>
+<script src="../js/script.js"></script>
+<script src="question-bank.js"></script>
+<script src="score-utils.js"></script>
+<script src="review.js"></script>
+</body>
+</html>

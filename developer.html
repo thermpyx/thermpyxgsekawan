@@ -317,7 +317,10 @@
             <div
               class="dev-photo-scene"
               id="devPhotoScene"
-              aria-label="Interactive developer card"
+              tabindex="0"
+              role="group"
+              aria-label="Interactive developer card. Use the left and right arrow keys to rotate, or Home to reset."
+              aria-describedby="devRotateHint"
             >
 
               <div
@@ -325,9 +328,20 @@
                 id="devPhoto3D"
               >
 
-                <i class="dev-card-edge edge-top" aria-hidden="true"></i>
-                <i class="dev-card-edge edge-bottom" aria-hidden="true"></i>
-                <div class="dev-charm" id="devCharm" aria-hidden="true"><span class="charm-chain"></span><span class="charm-pom"><span id="devCharmSymbol">❽</span></span></div>
+                <!-- A rounded, closed perimeter is sized by ResizeObserver. -->
+                <div class="dev-card-rim" id="devCardRim" aria-hidden="true"></div>
+
+                <div class="dev-charm" id="devCharm" data-charm="billiard" aria-hidden="true">
+                  <span class="charm-ring"></span>
+                  <div class="charm-pendulum" id="devCharmPendulum">
+                    <span class="charm-chain"></span>
+                    <span class="charm-pom">
+                      <span class="charm-emblem" id="devCharmSymbol">
+                        <img src="assets/developers/charm-billiard.svg" alt="">
+                      </span>
+                    </span>
+                  </div>
+                </div>
 
                 <!-- FRONT -->
 
@@ -432,9 +446,11 @@
               class="dev-rotate-hint"
               id="devRotateHint"
             >
-              DRAG / TOUCH TO ROTATE 360°
+              DRAG TO ROTATE 360° · ← → KEYS · HOME TO RESET
             </p>
 
+
+            <p class="dev-charm-caption" id="devCharmCaption">Nathan’s signature · Billiard</p>
 
             <!-- Footer -->
 

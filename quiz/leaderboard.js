@@ -6,8 +6,8 @@ const playerId=sessionStorage.getItem("playerId");
 const userRole=sessionStorage.getItem("userRole");
 const $=id=>document.getElementById(id);
 const S=window.TPXQuizScores;
-let channel=null,poll=null,busy=false,lastPlayers=[],lastAnswers=[];
-const t=(en,id)=>window.TPX?.t ? window.TPX.t(en,id) : en;
+let channel=null,poll=null,busy=false,lastPlayers=[],lastAnswers=[],roomFinished=false;
+const t=(en,id)=>window.TPX?.t ? window.TPX.t(en,id) : localStorage.getItem("thermpyx-language")==="id" ? id : en;
 const elt=(tag,cls,text)=>{
   const el=document.createElement(tag);if(cls)el.className=cls;
   if(text!=null)el.textContent=text;return el;
@@ -27,6 +27,7 @@ function resultCard(p,rank){
  return card;
 }
 function render(){
+ updateReviewAccess();
  const players=rankings(lastPlayers,lastAnswers);
  $("totalPlayers").textContent=players.length;
  const me=players.findIndex(p=>String(p.id)===String(playerId));
@@ -48,6 +49,20 @@ function render(){
   row.append(elt("div","rank-number","#"+(i+1)),detail,score);list.append(row);
  });
 }
+function updateReviewAccess(){
+ const eyebrow=$("answerReviewEyebrow");
+ if(eyebrow)eyebrow.textContent=t("FROM RESULTS TO UNDERSTANDING","DARI HASIL KE PEMAHAMAN");
+ const link=$("reviewAnswersLink");
+ if(link){
+   link.hidden=!roomFinished;
+   link.textContent=t("REVIEW ANSWERS","PERIKSA JAWABAN");
+ }
+ const heading=$("answerReviewHeading"),description=$("answerReviewDescription");
+ if(heading)heading.textContent=t("Your next step: understand every answer.","Langkah berikutnya: pahami setiap jawaban.");
+ if(description)description.textContent=roomFinished?
+   t("See your answers, the answer key, and the reasoning behind each question.","Lihat jawabanmu, kunci jawaban, dan alasan di balik setiap soal."):
+   t("The answer key and explanations open when the host finishes the session.","Kunci jawaban dan pembahasan terbuka setelah host mengakhiri sesi.");
+}
 async function refresh(){
  if(!roomId||busy)return;
  busy=true;
@@ -58,10 +73,9 @@ async function refresh(){
      supabaseClient.from("quiz_rooms").select("status").eq("id",roomId).single()
    ]);
    if(p.error||a.error||room.error)throw(p.error||a.error||room.error);
-   lastPlayers=p.data||[];lastAnswers=a.data||[];render();
    const ended=room.data?.status==="finished";
-   const reviewLink = $("reviewAnswersLink");
-   if (reviewLink) reviewLink.hidden = !ended;
+   roomFinished=ended;
+   lastPlayers=p.data||[];lastAnswers=a.data||[];render();
    $("liveStatus").textContent=ended?t("Final Results","Hasil Akhir"):t("Live / provisional","Langsung / sementara");
    $("liveStatus").classList.toggle("connected",true);
  } catch(e) {
@@ -70,6 +84,8 @@ async function refresh(){
    if(!lastPlayers.length)$("leaderboardList").textContent=t("Unable to load standings. Retrying...","Peringkat gagal dimuat. Mencoba ulang...");
  } finally{busy=false;}
 }
+updateReviewAccess();
+window.addEventListener("thermpyx:languagechange",render);
 if(!roomId){$("leaderboardList").textContent=t("No active room. Return to Quiz Menu.","Tidak ada ruang aktif. Kembali ke menu kuis.");}
 else {
  $("leaderboardRoomCode").textContent=roomCode||"------";
@@ -80,6 +96,5 @@ else {
    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"quiz_rooms",filter:`id=eq.${roomId}`},refresh)
    .subscribe();
  poll=setInterval(refresh,3000);
- window.addEventListener("thermpyx:languagechange",render);
 }
 window.addEventListener("beforeunload",()=>{if(poll)clearInterval(poll);if(channel)supabaseClient.removeChannel(channel);});
