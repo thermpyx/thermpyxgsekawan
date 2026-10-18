@@ -35,7 +35,8 @@ function getQuestionsForTopic(topic){
                 "Joule"
             ],
 
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "Kelvin (K) is the SI base unit of thermodynamic temperature. Celsius and Fahrenheit are other temperature scales; joule measures energy."
         },
 
 
@@ -50,7 +51,8 @@ function getQuestionsForTopic(topic){
                 "Small volume to large volume"
             ],
 
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "Heat transfers spontaneously from higher temperature to lower temperature until thermal equilibrium is reached. Pressure alone does not determine this direction."
         },
 
 
@@ -65,7 +67,8 @@ function getQuestionsForTopic(topic){
                 "U"
             ],
 
-            correctAnswer:0
+            correctAnswer:0,
+            explanation: "Q denotes energy transferred as heat. P is pressure, V is volume, and U is internal energy."
         }
 
     ];
@@ -90,7 +93,8 @@ function getQuestionsForTopic(topic){
                 "PV = nRT"
             ],
 
-            correctAnswer:0
+            correctAnswer:0,
+            explanation: "Boundary work is the integral of pressure with respect to volume. At constant pressure it becomes W = P(Vfinal − Vinitial) = PΔV."
         },
 
 
@@ -105,7 +109,8 @@ function getQuestionsForTopic(topic){
                 "Becomes zero"
             ],
 
-            correctAnswer:2
+            correctAnswer:2,
+            explanation: "Expansion means the gas occupies more space, so its final volume is greater than its initial volume."
         },
 
 
@@ -120,7 +125,8 @@ function getQuestionsForTopic(topic){
                 "Watt"
             ],
 
-            correctAnswer:2
+            correctAnswer:2,
+            explanation: "Work is energy transfer and is measured in joules (J). Pascal measures pressure, kelvin temperature, and watt power."
         }
 
     ];
@@ -146,7 +152,8 @@ function getQuestionsForTopic(topic){
                 "PV = nRT"
             ],
 
-            correctAnswer:0
+            correctAnswer:0,
+            explanation: "Energy conservation gives ΔU = Q − W when Q into the system is positive and W done by the system is positive."
         },
 
 
@@ -161,7 +168,8 @@ function getQuestionsForTopic(topic){
                 "T"
             ],
 
-            correctAnswer:2
+            correctAnswer:2,
+            explanation: "U denotes internal energy, the microscopic kinetic and potential energy stored within the system."
         },
 
 
@@ -176,7 +184,8 @@ function getQuestionsForTopic(topic){
                 "Temperature"
             ],
 
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "Q is the energy transferred across the system boundary because of a temperature difference: heat."
         },
 
 
@@ -191,7 +200,8 @@ function getQuestionsForTopic(topic){
                 "Mass and force"
             ],
 
-            correctAnswer:0
+            correctAnswer:0,
+            explanation: "For a closed system, heat and work are the two ways energy crosses its boundary. They are transfers, unlike stored internal energy."
         },
 
 
@@ -206,7 +216,8 @@ function getQuestionsForTopic(topic){
                 "Temperature is unrelated to energy"
             ],
 
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "Compressing the air does work on it. This increases internal energy and can raise temperature, making the pump feel hot."
         },
 
 
@@ -221,7 +232,8 @@ function getQuestionsForTopic(topic){
                 "Become zero"
             ],
 
-            correctAnswer:0
+            correctAnswer:0,
+            explanation: "With no work done, W = 0. Positive heat input gives ΔU = Q > 0, so internal energy increases."
         },
 
 
@@ -236,7 +248,8 @@ function getQuestionsForTopic(topic){
                 "Only potential energy"
             ],
 
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "Electrical work supplies energy to laptop components. Some increases their internal energy and is then transferred as heat to the surroundings."
         },
 
 
@@ -251,7 +264,8 @@ function getQuestionsForTopic(topic){
                 "Because heat does not exist"
             ],
 
-            correctAnswer:0
+            correctAnswer:0,
+            explanation: "The system boundary determines which energy transfers count as heat and work entering or leaving the system."
         },
 
 
@@ -264,7 +278,8 @@ function getQuestionsForTopic(topic){
                 "Mass loss",
                 "Temperature only"
             ],
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "A moving piston compresses the gas through a force acting over a distance. This is mechanical work transferred to the gas."
         },
         {
             question:
@@ -275,7 +290,8 @@ function getQuestionsForTopic(topic){
                 "Always zero",
                 "Impossible to determine"
             ],
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "Internal energy is a state function. Its change depends only on the initial and final states, regardless of the path between them."
         }
     ];
     // ======================================================
@@ -294,7 +310,8 @@ function getQuestionsForTopic(topic){
                 "Internal energy"
             ],
 
-            correctAnswer:1
+            correctAnswer:1,
+            explanation: "An isobaric process holds pressure constant. The prefix iso means equal and baric refers to pressure."
         },
         {
             question:
@@ -307,7 +324,8 @@ function getQuestionsForTopic(topic){
                 "Heat"
             ],
 
-            correctAnswer:2
+            correctAnswer:2,
+            explanation: "An isochoric process holds volume constant, so boundary work PΔV is zero."
         },
         {
             question:
@@ -320,7 +338,8 @@ function getQuestionsForTopic(topic){
                 "Work"
             ],
 
-            correctAnswer:0
+            correctAnswer:0,
+            explanation: "An isothermal process holds temperature constant. Pressure and volume may still change."
         }
     ];
     // ======================================================

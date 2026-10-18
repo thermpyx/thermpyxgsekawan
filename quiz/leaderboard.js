@@ -35,6 +35,7 @@ function resultCard(p,rank){
  return card;
 }
 function render(){
+ renderReviewAccess();
  const players=rankings(lastPlayers,lastAnswers);
  $("totalPlayers").textContent=players.length;
  const me=players.findIndex(p=>String(p.id)===String(playerId));
@@ -55,6 +56,14 @@ function render(){
   score.append(elt("small","rank-time",S.formatTime(p.totalMs)));
   row.append(elt("div","rank-number","#"+(i+1)),detail,score);list.append(row);
  });
+}
+function renderReviewAccess(){
+ const link=$("reviewAnswersLink"),description=$("answerReviewDescription");
+ const finished=ready.room&&lastRoom?.status==="finished";
+ if(link)link.hidden=!finished;
+ if(description)description.textContent=finished?
+   t("See your answers, the answer key, and the author's explanation for each question.","Lihat jawabanmu, kunci jawaban, dan pembahasan dari pembuat soal."):
+   t("The answer key and explanations open when the host finishes the session.","Kunci jawaban dan pembahasan terbuka setelah host mengakhiri sesi.");
 }
 function renderStatus(){
  const complete=Object.values(ready).every(Boolean);
@@ -82,11 +91,13 @@ function accept(key,result){
  render();renderStatus();
 }
 function startWatching(){
- stopWatching();syncError=false;ready={room:false,players:false,answers:false};renderStatus();
+ stopWatching();syncError=false;ready={room:false,players:false,answers:false};renderStatus();renderReviewAccess();
  unsubs.push(live.watchRoom(roomId,result=>accept("room",result)));
  unsubs.push(live.watchPlayers(roomId,result=>accept("players",result)));
  unsubs.push(live.watchAnswers(roomId,result=>accept("answers",result)));
 }
+renderReviewAccess();
+window.addEventListener("thermpyx:languagechange",renderReviewAccess);
 if(!roomId){$("leaderboardList").textContent=t("No active room. Return to Quiz Menu.","Tidak ada ruang aktif. Kembali ke menu kuis.");}
 else if(!live){$("liveStatus").textContent=t("Connection unavailable. Reload to try again.","Koneksi belum tersedia. Muat ulang untuk mencoba lagi.");}
 else {

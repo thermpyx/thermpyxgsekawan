@@ -4989,3 +4989,33 @@ window.TPX_TRANSLATIONS = {
     window.TPX_TRANSLATIONS.idEn[indonesian] ??= english;
   }
 })();
+
+/* Authored built-in quiz explanations; imported teacher content remains untouched. */
+(() => {
+  const dictionary = window.TPX_TRANSLATIONS;
+  const pairs = {
+    "Kelvin (K) is the SI base unit of thermodynamic temperature. Celsius and Fahrenheit are other temperature scales; joule measures energy.": "Kelvin (K) adalah satuan pokok SI untuk temperatur termodinamika. Celsius dan Fahrenheit merupakan skala temperatur lainnya, sedangkan joule adalah satuan energi.",
+    "Heat transfers spontaneously from higher temperature to lower temperature until thermal equilibrium is reached. Pressure alone does not determine this direction.": "Kalor berpindah secara spontan dari temperatur yang lebih tinggi ke temperatur yang lebih rendah hingga tercapai kesetimbangan termal. Tekanan saja tidak menentukan arah perpindahan ini.",
+    "Q denotes energy transferred as heat. P is pressure, V is volume, and U is internal energy.": "Q melambangkan energi yang berpindah sebagai kalor. P adalah tekanan, V adalah volume, dan U adalah energi dalam.",
+    "Boundary work is the integral of pressure with respect to volume. At constant pressure it becomes W = P(Vfinal − Vinitial) = PΔV.": "Usaha batas merupakan integral tekanan terhadap perubahan volume. Pada tekanan tetap, persamaannya menjadi W = P(Vakhir − Vawal) = PΔV.",
+    "Expansion means the gas occupies more space, so its final volume is greater than its initial volume.": "Ekspansi berarti gas menempati ruang yang lebih besar sehingga volume akhirnya lebih besar daripada volume awalnya.",
+    "Work is energy transfer and is measured in joules (J). Pascal measures pressure, kelvin temperature, and watt power.": "Usaha merupakan perpindahan energi dan diukur dalam joule (J). Pascal adalah satuan tekanan, kelvin adalah satuan temperatur, dan watt adalah satuan daya.",
+    "Energy conservation gives ΔU = Q − W when Q into the system is positive and W done by the system is positive.": "Kekekalan energi memberikan persamaan ΔU = Q − W dengan konvensi Q yang masuk ke sistem bernilai positif dan W yang dilakukan oleh sistem bernilai positif.",
+    "U denotes internal energy, the microscopic kinetic and potential energy stored within the system.": "U melambangkan energi dalam, yaitu energi kinetik dan energi potensial mikroskopis yang tersimpan di dalam sistem.",
+    "Q is the energy transferred across the system boundary because of a temperature difference: heat.": "Q adalah energi yang berpindah melintasi batas sistem akibat perbedaan temperatur, yaitu kalor.",
+    "For a closed system, heat and work are the two ways energy crosses its boundary. They are transfers, unlike stored internal energy.": "Pada sistem tertutup, energi melintasi batas sistem melalui kalor dan usaha. Keduanya merupakan perpindahan energi, sedangkan energi dalam adalah energi yang tersimpan di dalam sistem.",
+    "Compressing the air does work on it. This increases internal energy and can raise temperature, making the pump feel hot.": "Pemampatan udara berarti melakukan usaha pada udara. Usaha ini meningkatkan energi dalam dan dapat menaikkan temperatur sehingga pompa terasa panas.",
+    "With no work done, W = 0. Positive heat input gives ΔU = Q > 0, so internal energy increases.": "Jika tidak ada usaha yang dilakukan, W = 0. Kalor yang masuk bernilai positif sehingga ΔU = Q > 0 dan energi dalam meningkat.",
+    "Electrical work supplies energy to laptop components. Some increases their internal energy and is then transferred as heat to the surroundings.": "Usaha listrik memasok energi ke komponen laptop. Sebagian energi ini meningkatkan energi dalam komponen, lalu berpindah ke lingkungan sebagai kalor.",
+    "The system boundary determines which energy transfers count as heat and work entering or leaving the system.": "Batas sistem menentukan perpindahan energi yang dihitung sebagai kalor dan usaha yang masuk ke atau keluar dari sistem.",
+    "A moving piston compresses the gas through a force acting over a distance. This is mechanical work transferred to the gas.": "Piston yang bergerak memampatkan gas melalui gaya yang bekerja sepanjang suatu perpindahan. Proses ini memindahkan energi ke gas dalam bentuk usaha mekanis.",
+    "Internal energy is a state function. Its change depends only on the initial and final states, regardless of the path between them.": "Energi dalam adalah fungsi keadaan. Perubahannya hanya bergantung pada keadaan awal dan akhir, tanpa bergantung pada lintasan proses di antara keduanya.",
+    "An isobaric process holds pressure constant. The prefix iso means equal and baric refers to pressure.": "Proses isobarik berlangsung pada tekanan tetap. Awalan iso berarti sama, sedangkan barik berkaitan dengan tekanan.",
+    "An isochoric process holds volume constant, so boundary work PΔV is zero.": "Proses isokhorik berlangsung pada volume tetap sehingga usaha batas PΔV bernilai nol.",
+    "An isothermal process holds temperature constant. Pressure and volume may still change.": "Proses isotermal berlangsung pada temperatur tetap. Tekanan dan volume tetap dapat berubah selama proses ini."
+  };
+  for (const [english, indonesian] of Object.entries(pairs)) {
+    if (!Object.hasOwn(dictionary.enId, english)) dictionary.enId[english] = indonesian;
+    if (!Object.hasOwn(dictionary.idEn, indonesian)) dictionary.idEn[indonesian] = english;
+  }
+})();

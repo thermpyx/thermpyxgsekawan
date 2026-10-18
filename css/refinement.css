@@ -1,0 +1,301 @@
+/* THERMPYX shared finish. Cyan is the primary; amber is its warm supporting accent. */
+:root,
+body:not(.light-mode) {
+  --primary: #5bd8d0;
+  --secondary: #ffb367;
+  --primary-soft: rgba(72, 201, 195, .09);
+  --secondary-soft: rgba(255, 160, 85, .09);
+  --action: #116975;
+  --blue: #5bd8d0;
+  --blue-light: #88e7de;
+  --blue-dark: #167e88;
+  --brand-orange: #ff934f;
+  --accent-orange: var(--brand-orange);
+  --bg-primary: #08151c;
+  --bg-secondary: #0b1c24;
+  --bg-card: #10242d;
+  --bg-card-hover: #15313a;
+  --surface-soft: #122b34;
+  --text-primary: #e9f4f4;
+  --text-secondary: #abc2c7;
+  --text-muted: #8ca8af;
+  --border: rgba(95, 185, 185, .25);
+  --border-light: rgba(142, 190, 194, .13);
+  --shadow-blue: 0 12px 35px rgba(0, 100, 113, .13);
+  color-scheme: dark;
+}
+body.light-mode,
+body.light-mode.sim-external,
+body.light-mode.sim-zeroth,
+body.light-mode.simulator-standalone {
+  --primary: #096b73;
+  --secondary: #9e4b18;
+  --primary-soft: rgba(17, 133, 140, .08);
+  --secondary-soft: rgba(190, 108, 48, .08);
+  --action: #096b73;
+  --blue: #096b73;
+  --blue-light: #087a80;
+  --blue-dark: #07545f;
+  --brand-orange: #bb4c16;
+  --accent-orange: var(--brand-orange);
+  --bg-primary: #eef4f2;
+  --bg-secondary: #e7f0ee;
+  --bg-card: #fbfdfa;
+  --bg-card-hover: #e9f5f1;
+  --surface-soft: #e5f0ed;
+  --text-primary: #17373c;
+  --text-secondary: #45636a;
+  --text-muted: #577078;
+  --border: #bed4cf;
+  --border-light: #d1e1dc;
+  --shadow-blue: 0 14px 35px rgba(24, 81, 81, .09);
+  --graph-bg: #f9fcfa;
+  --graph-grid: #d0e2dc;
+  --hot-bg: #fff0df;
+  --hot-text: #9e4b18;
+  --cold-bg: #dff1ef;
+  --cold-text: #096b73;
+  color-scheme: light;
+}
+body { accent-color: var(--primary); }
+body:not(.light-mode) :is(.topbar, .theory-topbar, .quiz-topbar, .thermpyx-sim-header) {
+  background: rgba(8, 21, 28, .92);
+  border-color: var(--border-light);
+}
+:is(#themeToggle, #mobileThemeToggle, #darkBtn, #themeButton) { gap: 9px; }
+:is(#themeToggle, #mobileThemeToggle, #darkBtn, #themeButton) .theme-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+:is(#themeToggle, #mobileThemeToggle, #darkBtn, #themeButton) .theme-icon svg { display: block; }
+:is(#darkBtn, #themeButton) .theme-icon { margin-right: 7px; }
+/* Keep white button labels legible while links use the brighter primary. */
+:is(.primary-button, .calculate-button, .convert-button, .quiz-next-button,
+    .quiz-restart-button, .first-law-calc-button, .live-primary-button,
+    .leaderboard-primary, .host-board-link, .tpx-language-control button.is-active),
+.work-calculator .calculate-button {
+  background: linear-gradient(120deg, var(--action), #145a66);
+  border-color: var(--action);
+  color: #fff;
+}
+:is(.primary-button, .calculate-button, .convert-button, .quiz-next-button,
+    .quiz-restart-button, .first-law-calc-button, .live-primary-button,
+    .leaderboard-primary, .host-board-link):hover,
+.work-calculator .calculate-button:hover {
+  background: linear-gradient(120deg, #16808a, #116975);
+  color: #fff;
+}
+body.light-mode :is(.primary-button, .calculate-button, .convert-button,
+    .quiz-next-button, .quiz-restart-button, .first-law-calc-button, .live-primary-button,
+    .leaderboard-primary, .host-board-link) {
+  background: linear-gradient(120deg, #096b73, #07545f);
+  border-color: #096b73;
+}
+body.light-mode .tpx-language-control button.is-active { background: #096b73; }
+body.light-mode .wordmark-accent { color: #bb4c16 !important; }
+:is(.hero-label, .section-label, .feature-card a, .feature-card .tpx-card-cta) {
+  color: var(--primary);
+}
+:is(.cl-kicker, .cl-card-top, .tpx-calculator-entry a, .tpx-about-signature a:hover) {
+  color: var(--secondary);
+}
+/* A softly lit gradient rail; the orange edge echoes the X in the wordmark. */
+.sidebar {
+  background:
+    radial-gradient(ellipse at 0 0, rgba(69, 184, 177, .16), transparent 52%),
+    radial-gradient(ellipse at 100% 100%, rgba(255, 151, 76, .08), transparent 45%),
+    linear-gradient(165deg, #142d36, #0b1c28 56%, #17252e);
+  border-right: 1px solid rgba(113, 191, 190, .24);
+  box-shadow: 12px 0 42px rgba(0, 0, 0, .14), inset -1px 0 rgba(225, 255, 251, .025);
+}
+body.light-mode .sidebar {
+  background:
+    radial-gradient(ellipse at 0 0, #c1e4de, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, #f5e3cb, transparent 52%),
+    linear-gradient(165deg, #e3efea, #f2f6ed 55%, #e2eeea);
+  border-color: #b9d3cb;
+  box-shadow: 12px 0 42px rgba(41, 79, 73, .07), inset -1px 0 #fff8;
+}
+.sidebar .logo-symbol {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+  box-shadow: 0 0 24px var(--primary-soft);
+}
+.sidebar :is(.nav-item, .theme-toggle) {
+  position: relative;
+  border-radius: 11px;
+  transition: background .18s, border-color .18s, color .18s;
+}
+.sidebar :is(.nav-item, .theme-toggle):hover,
+.sidebar :is(.nav-item, .theme-toggle):focus-visible {
+  transform: none;
+  background: linear-gradient(100deg, var(--primary-soft), var(--secondary-soft));
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+.sidebar .nav-item.active {
+  color: var(--primary);
+  background: linear-gradient(105deg, rgba(71, 195, 188, .15), rgba(71, 195, 188, .025));
+  border-color: var(--border);
+  box-shadow: inset 3px 0 var(--primary);
+}
+.sidebar :is(.nav-item, .theme-toggle):focus-visible,
+:is(.page-theme-toggle, .mobile-theme-toggle, .sidebar-toggle):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+.sidebar :is(.nav-icon, .theme-icon) {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 22px;
+  pointer-events: none;
+  line-height: 1;
+  text-decoration: none;
+}
+.sidebar :is(.nav-icon, .theme-icon)::before,
+.sidebar :is(.nav-icon, .theme-icon)::after { content: none; }
+.sidebar :is(.nav-icon, .theme-icon) svg { display: block; overflow: visible; }
+.navigation-tooltip {
+  position: fixed;
+  z-index: 10050;
+  pointer-events: none;
+  max-width: min(220px, calc(100vw - 24px));
+  padding: 10px 15px;
+  border: 1px solid #5eb3ad70;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #183b42, #102730);
+  color: #edf9f5;
+  font: 500 13px/1.4 'IBM Plex Sans', sans-serif;
+  box-shadow: 0 8px 24px #00191e2e;
+  overflow-wrap: anywhere;
+}
+.navigation-tooltip[hidden] { display: none; }
+body.light-mode .navigation-tooltip { background: linear-gradient(120deg, #174b4e, #16373c); border-color: #598f86; }
+/* Daylight is a warm, textured laboratory with cool architectural lines. */
+body.light-mode:has(.home-section) {
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(ellipse at 88% 6%, #bcded599, transparent 44%),
+    radial-gradient(ellipse at 7% 67%, #f1d9b866, transparent 40%),
+    linear-gradient(#527e6d09 1px, transparent 1px),
+    linear-gradient(90deg, #527e6d09 1px, transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
+}
+body.light-mode :is(.topbar, .theory-topbar, .quiz-topbar, .thermpyx-sim-header) {
+  background: rgba(239, 246, 241, .93) !important;
+  border-color: #c4d9d1 !important;
+}
+body.light-mode .home-section {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 90% 35%, #b6ded2a8, transparent 43%),
+    radial-gradient(ellipse at 5% 85%, #efdbbd8c, transparent 43%),
+    linear-gradient(130deg, #edf5ed, #f9f8ed 55%, #e2eeea);
+}
+body.light-mode .home-section::before {
+  content: '';
+  position: absolute;
+  width: clamp(360px, 65vw, 920px);
+  aspect-ratio: 1;
+  border: 1px solid #729f8b36;
+  border-radius: 50%;
+  right: -22%;
+  top: 7%;
+  box-shadow: 0 0 0 60px #749c8409, 0 0 0 120px #749c8408;
+  pointer-events: none;
+  z-index: -1;
+}
+body.light-mode .home-section .background-grid {
+  background-image: linear-gradient(#3b8e7c14 1px, transparent 1px), linear-gradient(90deg, #3b8e7c14 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+body.light-mode .home-section::after { color: #56796e; bottom: 76px; }
+body.light-mode .hero-title { color: #17373c; }
+body.light-mode .hero-visual .visual-ring { border-color: #548f7d44; }
+body.light-mode .hero-visual .energy-core {
+  background: radial-gradient(circle, #fcfff4, #d7e9dc);
+  box-shadow: 0 0 65px #419e8833, inset 0 0 26px #52885c20;
+}
+body.light-mode .content-section {
+  background: linear-gradient(120deg, #f8faf3e6, #eaf3eee6),
+    repeating-linear-gradient(90deg, transparent 0 47px, #1b76530b 47px 48px);
+}
+body.light-mode .content-section:nth-of-type(odd) {
+  background: radial-gradient(ellipse at 100% 0, #e4d8ba50, transparent 50%), linear-gradient(115deg, #e4efea, #f5f8ef);
+}
+body.light-mode :is(.feature-card, .law-choice-card, .simulator-preview-card, .quiz-topic-card,
+    .converter-tool, .calculator-card, .work-calculator, .heat-calculator, .ranking-section,
+    .review-card, .cl-card, .history-panel, .quiz-container) {
+  background: linear-gradient(140deg, #fffff9f5, #edf5eef5);
+  border-color: #bfd6cb;
+  box-shadow: 0 12px 32px #315e4b0c, inset 0 1px #fff;
+}
+body.light-mode :is(.feature-card, .law-choice-card, .quiz-topic-card):hover {
+  background: linear-gradient(140deg, #fffef5, #e1efe6);
+  border-color: #76a99c;
+  box-shadow: 0 18px 35px #1d6d5720;
+}
+body.light-mode :is(.section-label, .law-choice-kicker, .quiz-question-label, .navigation-title) { color: var(--primary); }
+body.light-mode:not(.tpx-futuristic):not(.dev-page) :is(.theory-hero, .quiz-hero, .laws-hero, .cl-hero) {
+  background: radial-gradient(ellipse at 100% 0, #e8d5b45e, transparent 56%), linear-gradient(120deg, #dceee5bd, #fbfcf3cf);
+  border-color: var(--border);
+}
+/* Shared section rhythm also keeps translated headings from colliding. */
+.content-section { scroll-margin-top: 90px; }
+.section-heading { max-width: 850px; }
+.section-heading > p:not(.section-label) { max-width: 65ch; line-height: 1.85; }
+.feature-card h3 { overflow-wrap: anywhere; }
+a.feature-card.tpx-clickable-card { display: flex; flex-direction: column; align-items: flex-start; }
+.feature-card .tpx-card-cta { margin-top: auto; }
+/* Native snapshots preserve real content throughout the circular theme reveal. */
+::view-transition-group(root) { animation-duration: 560ms; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
+html.theme-revealing *, html.theme-revealing *::before, html.theme-revealing *::after { transition: none !important; }
+.theme-reveal-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 80% 15%, #173b40, #08151c 70%);
+}
+.theme-reveal-fallback[data-mode='light'] { background: radial-gradient(ellipse at 80% 15%, #d3e8db, #f2f5ea 70%); }
+@media (max-width: 600px) {
+  .section-heading h2 { font-size: clamp(1.6rem, 7vw, 2.3rem); }
+  .tpx-about-signature { align-items: flex-start; gap: 20px; }
+  .quiz-topbar { gap: 12px; flex-wrap: wrap; }
+  .navigation-tooltip { max-width: calc(100vw - 24px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .theme-reveal-fallback { display: none; }
+  ::view-transition-group(root) { animation-duration: 0s; }
+}
+
+
+/* Tune the existing opt-in atmosphere without replacing its layering contract. */
+body.tpx-futuristic.light-mode:not(.dev-page) {
+  --tpx-atmosphere-base: #eef4f2;
+  --tpx-atmosphere-teal: rgba(92, 181, 163, .20);
+  --tpx-atmosphere-blue: rgba(104, 168, 157, .13);
+  --tpx-atmosphere-amber: rgba(221, 166, 108, .13);
+  --tpx-atmosphere-grid: rgba(50, 114, 100, .04);
+  --tpx-atmosphere-ring: rgba(39, 125, 112, .10);
+}
+/* In an iframe shell the outer document owns the reveal, including its music UI. */
+html.theme-revealing #tpx-content-frame { view-transition-name: none; }
+
+/* Action labels keep their contrast when a legacy control uses the primary. */
+#nextQuestionBtn,
+:is(.converter-button, .converter-swap):hover,
+.law-choice-button:not(.is-disabled):hover { background: var(--action); color: #fff; }
+body.light-mode .feedback-actions button:first-child { color: #fff; }

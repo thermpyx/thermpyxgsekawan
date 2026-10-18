@@ -9,6 +9,8 @@
   const developers = [
     {
       nickname: "Nathan",
+      charm: "billiard",
+      charmName: { en: "Billiard ball", id: "Bola biliar" },
       fullName: "Reinhart Van Diaz",
       role: {en: "Project Leader", id: "Ketua Proyek"},
       image: "assets/developers/dev-1.jpg",
@@ -57,6 +59,8 @@
 
     {
       nickname: "John",
+      charm: "crown",
+      charmName: { en: "Crown", id: "Mahkota" },
       fullName: "Zikri Luthfi",
       role: {en: "API & System Development", id: "Pengembangan API & Sistem"},
       image: "assets/developers/dev-2.jpg",
@@ -105,6 +109,8 @@
 
     {
       nickname: "Van",
+      charm: "guitar",
+      charmName: { en: "Guitar", id: "Gitar" },
       fullName: "edwart Van djovi",
       role: {en: "Research & Development", id: "Riset & Pengembangan"},
       image: "assets/developers/dev-3.jpg",
@@ -153,6 +159,8 @@
 
     {
       nickname: "MISEL CINTA NASPAD",
+      charm: "dragon",
+      charmName: { en: "Dragon", id: "Naga" },
       fullName: "Misel Natalis Sawato Gulo",
       role: {en: "UI / UX Designer, Frontend Developer", id: "Desainer UI / UX, Pengembang Frontend"},
       image: "assets/developers/dev-4.jpg",
@@ -275,6 +283,18 @@
     photo3D:
       document.getElementById("devPhoto3D"),
 
+    rim:
+      document.getElementById("devCardRim"),
+
+    charm:
+      document.getElementById("devCharm"),
+
+    charmPendulum:
+      document.getElementById("devCharmPendulum"),
+
+    charmCaption:
+      document.getElementById("devCharmCaption"),
+
     glare:
       document.getElementById("devPhotoGlare"),
 
@@ -351,6 +371,15 @@
 
   function renderMember() {
     const member = developers[currentIndex];
+    elements.charm.dataset.charm = member.charm;
+    const charmImage = document.createElement("img");
+    charmImage.src = `assets/developers/charm-${member.charm}.svg`;
+    charmImage.alt = "";
+    document.getElementById("devCharmSymbol").replaceChildren(charmImage);
+    const shortName = member.charm === "dragon" ? "Misel" : member.nickname;
+    elements.charmCaption.dataset.en = `${shortName}’s signature charm · ${member.charmName.en}`;
+    elements.charmCaption.dataset.id = `Gantungan khas ${shortName} · ${member.charmName.id}`;
+    elements.charmCaption.textContent = elements.charmCaption.dataset[currentLanguage];
 
     const number =
       String(currentIndex + 1).padStart(2, "0");
@@ -741,88 +770,149 @@
      3D ROTATION
   ======================================================= */
 
-  function applyPhotoRotation() {
-    elements.photo3D.style.setProperty(
-      "--photo-rotate-x",
-      `${rotationX}deg`
-    );
+  let charmFrame = 0;
+  let lastCharmTime = 0;
+  let charmAngle = 0;
+  let charmVelocity = 0;
+  let lastRotationX = 0;
+  let lastRotationY = 0;
+  let activePointer = null;
+  let rimWidth = 0;
+  let rimHeight = 0;
 
-    elements.photo3D.style.setProperty(
-      "--photo-rotate-y",
-      `${rotationY}deg`
-    );
+  /*
+    The front and back are two ends of one rounded extrusion. Each tangent
+    panel spans the full 20px depth; the curved corners use small facets.
+    This closes all four sides instead of leaving gaps at the rounded ends.
+  */
+  function buildCardRim() {
+    const width = elements.photo3D.clientWidth;
+    const height = elements.photo3D.clientHeight;
+    if (!width || !height || (width === rimWidth && height === rimHeight)) return;
+    rimWidth = width;
+    rimHeight = height;
+    const radius = 20;
+    const depth = 20;
+    const points = [];
+    const corners = [
+      [width - radius, radius, -90],
+      [width - radius, height - radius, 0],
+      [radius, height - radius, 90],
+      [radius, radius, 180]
+    ];
+    corners.forEach(([cx, cy, start]) => {
+      for (let step = 0; step <= 12; step += 1) {
+        const angle = (start + step * 7.5) * Math.PI / 180;
+        points.push([cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius]);
+      }
+    });
+    const panels = document.createDocumentFragment();
+    points.forEach(([x, y], index) => {
+      const [nextX, nextY] = points[(index + 1) % points.length];
+      const dx = nextX - x;
+      const dy = nextY - y;
+      const angle = Math.atan2(dy, dx);
+      const panel = document.createElement("i");
+      panel.className = "dev-rim-segment";
+      panel.style.left = `${x}px`;
+      panel.style.top = `${y}px`;
+      // A subpixel overlap prevents hairline seams at the bevel joints.
+      panel.style.width = `${Math.hypot(dx, dy) + 0.55}px`;
+      panel.style.height = `${depth}px`;
+      panel.style.setProperty("--rim-light", `${32 + Math.round((1 - Math.sin(angle)) * 17)}%`);
+      panel.style.transform = `translateZ(${-depth / 2}px) rotateZ(${angle}rad) rotateX(90deg)`;
+      panels.append(panel);
+    });
+    elements.rim.replaceChildren(panels);
   }
 
-
-  function startDrag(event) {
-    dragging = true;
-
-    startX = event.clientX;
-    startY = event.clientY;
-
-    startRotationX = rotationX;
-    startRotationY = rotationY;
-
-
-    elements.photoScene.setPointerCapture?.(
-      event.pointerId
-    );
+  function settleCharm() {
+    if (charmFrame) cancelAnimationFrame(charmFrame);
+    charmFrame = 0;
+    charmAngle = 0;
+    charmVelocity = 0;
+    lastCharmTime = 0;
+    elements.charmPendulum.style.setProperty("--charm-swing", "0deg");
   }
 
+  function animateCharm(time) {
+    const dt = lastCharmTime ? Math.min((time - lastCharmTime) / 1000, 0.032) : 1 / 60;
+    lastCharmTime = time;
+    charmVelocity += (-72 * charmAngle - 12 * charmVelocity) * dt;
+    charmAngle = Math.max(-32, Math.min(32, charmAngle + charmVelocity * dt));
+    elements.charmPendulum.style.setProperty("--charm-swing", `${charmAngle.toFixed(3)}deg`);
+    if (Math.abs(charmAngle) > 0.03 || Math.abs(charmVelocity) > 0.1) {
+      charmFrame = requestAnimationFrame(animateCharm);
+    } else {
+      settleCharm();
+    }
+  }
 
-  function dragPhoto(event) {
-    if (!dragging) {
+  function applyPhotoRotation({ swing = true } = {}) {
+    const deltaY = rotationY - lastRotationY;
+    const deltaX = rotationX - lastRotationX;
+    lastRotationY = rotationY;
+    lastRotationX = rotationX;
+    elements.photo3D.style.setProperty("--photo-rotate-x", `${rotationX}deg`);
+    elements.photo3D.style.setProperty("--photo-rotate-y", `${rotationY}deg`);
+    // The fluffy ball behaves as a sphere and stays visible at a side view.
+    elements.charm.style.setProperty("--charm-face-x", `${-rotationX}deg`);
+    elements.charm.style.setProperty("--charm-face-y", `${-rotationY}deg`);
+    if (!swing || reducedMotion.matches) {
+      settleCharm();
       return;
     }
+    charmVelocity = Math.max(-240, Math.min(240, charmVelocity - deltaY * 2.1 - deltaX));
+    if (!charmFrame && Math.abs(charmVelocity) > 0.1) {
+      lastCharmTime = 0;
+      charmFrame = requestAnimationFrame(animateCharm);
+    }
+  }
 
+  function startDrag(event) {
+    if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+    dragging = true;
+    activePointer = event.pointerId;
+    startX = event.clientX;
+    startY = event.clientY;
+    startRotationX = rotationX;
+    startRotationY = rotationY;
+    elements.photoScene.classList.add("is-dragging");
+    elements.photoScene.setPointerCapture?.(event.pointerId);
+  }
 
-    const deltaX =
-      event.clientX - startX;
-
-    const deltaY =
-      event.clientY - startY;
-
-
-    /*
-      Horizontal rotation is unlimited.
-      This allows 360°, 720°, etc.
-    */
-
-    rotationY =
-      startRotationY +
-      deltaX * 0.7;
-
-
-    /*
-      Vertical rotation is limited
-      so the frame stays comfortable to use.
-    */
-
-    rotationX =
-      Math.max(
-        -18,
-        Math.min(
-          18,
-          startRotationX -
-          deltaY * 0.15
-        )
-      );
-
-
+  function dragPhoto(event) {
+    if (!dragging || event.pointerId !== activePointer) return;
+    const deltaX = event.clientX - startX;
+    const deltaY = event.clientY - startY;
+    rotationY = startRotationY + deltaX * 0.7;
+    rotationX = Math.max(-18, Math.min(18, startRotationX - deltaY * 0.15));
     applyPhotoRotation();
-
     updateGlare(event);
   }
 
-
   function stopDrag(event) {
+    if (event.pointerId !== activePointer) return;
     dragging = false;
-
-    elements.photoScene.releasePointerCapture?.(
-      event.pointerId
-    );
+    activePointer = null;
+    elements.photoScene.classList.remove("is-dragging");
+    if (elements.photoScene.hasPointerCapture?.(event.pointerId)) {
+      elements.photoScene.releasePointerCapture(event.pointerId);
+    }
   }
 
+  function handleCardKey(event) {
+    const actions = {
+      ArrowLeft: () => rotateBy(-45),
+      ArrowRight: () => rotateBy(45),
+      Home: () => resetPhotoRotation(),
+      ArrowUp: () => { rotationX = Math.min(18, rotationX + 6); applyPhotoRotation(); },
+      ArrowDown: () => { rotationX = Math.max(-18, rotationX - 6); applyPhotoRotation(); }
+    };
+    if (!actions[event.key]) return;
+    event.preventDefault();
+    actions[event.key]();
+  }
 
   function updateGlare(event) {
     if (!elements.glare) {
@@ -876,24 +966,18 @@
 
 
   function resetPhotoRotation(animate = true) {
+    // Return by the shortest visible route, even after several full turns.
+    rotationY = ((rotationY % 360) + 540) % 360 - 180;
+    elements.photo3D.classList.add("is-resetting");
+    elements.photo3D.style.setProperty("--photo-rotate-y", `${rotationY}deg`);
+    elements.photo3D.getBoundingClientRect();
     rotationX = 0;
     rotationY = 0;
-
-
-    if (animate) {
-      elements.photo3D.style.transition =
-        "transform 0.5s cubic-bezier(.2,.8,.2,1)";
-    }
-
-
-    applyPhotoRotation();
-
-
-    if (animate) {
-      window.setTimeout(() => {
-        elements.photo3D.style.transition =
-          "transform 0.12s ease-out";
-      }, 520);
+    if (animate) elements.photo3D.classList.remove("is-resetting");
+    applyPhotoRotation({ swing: animate });
+    if (!animate) {
+      elements.photo3D.getBoundingClientRect();
+      elements.photo3D.classList.remove("is-resetting");
     }
   }
 
@@ -939,7 +1023,10 @@
         "MEDIA SOSIAL";
 
       elements.rotateHint.textContent =
-        "GESER / SENTUH UNTUK MEMUTAR 360°";
+        "GESER UNTUK MEMUTAR 360° · TOMBOL ← → · HOME UNTUK RESET";
+      elements.photoScene.setAttribute("aria-label", "Kartu pengembang interaktif. Gunakan panah kiri dan kanan untuk memutar, atau Home untuk mengatur ulang.");
+      elements.rotateLeft.setAttribute("aria-label", "Putar kartu ke kiri");
+      elements.rotateRight.setAttribute("aria-label", "Putar kartu ke kanan");
 
       elements.backLink.textContent =
         "Kembali ke Tentang";
@@ -965,7 +1052,10 @@
         "SOCIAL MEDIA";
 
       elements.rotateHint.textContent =
-        "DRAG / TOUCH TO ROTATE 360°";
+        "DRAG TO ROTATE 360° · ← → KEYS · HOME TO RESET";
+      elements.photoScene.setAttribute("aria-label", "Interactive developer card. Use left and right arrow keys to rotate, or Home to reset.");
+      elements.rotateLeft.setAttribute("aria-label", "Rotate card left");
+      elements.rotateRight.setAttribute("aria-label", "Rotate card right");
 
       elements.backLink.textContent =
         "Back to About";
@@ -1062,6 +1152,10 @@
   );
 
 
+  elements.photoScene.addEventListener("lostpointercapture", stopDrag);
+  elements.photoScene.addEventListener("keydown", handleCardKey);
+  reducedMotion.addEventListener?.("change", () => { if (reducedMotion.matches) settleCharm(); });
+
   elements.photoScene.addEventListener(
     "dblclick",
     () => resetPhotoRotation()
@@ -1134,6 +1228,12 @@
 
 
   setTheme(initialTheme);
+  buildCardRim();
+  if (typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(buildCardRim).observe(elements.photo3D);
+  } else {
+    window.addEventListener("resize", buildCardRim);
+  }
 
   renderSelector();
 

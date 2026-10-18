@@ -822,50 +822,6 @@ body.dev-page.light-mode {
    FRAME THICKNESS
 ========================================================= */
 
-.dev-photo-3d::before,
-.dev-photo-3d::after {
-  content: "";
-
-  position: absolute;
-
-  top: 14px;
-  bottom: 14px;
-
-  width: 8px;
-
-  z-index: -1;
-
-  border-radius: 7px;
-
-  background:
-    linear-gradient(
-      to bottom,
-      #a4c3c1,
-      #36515b 16%,
-      #789695 50%,
-      #243f4c
-    );
-}
-
-
-.dev-photo-3d::before {
-  left: -4px;
-
-  transform:
-    rotateY(90deg)
-    translateZ(4px);
-}
-
-
-.dev-photo-3d::after {
-  right: -4px;
-
-  transform:
-    rotateY(90deg)
-    translateZ(-4px);
-}
-
-
 /* =========================================================
    ROTATION CONTROLS
 ========================================================= */
@@ -1694,3 +1650,207 @@ body.light-mode .dev-entrance-skip { background: #fff; border-color: #bed8de; co
   .dev-chip:hover, .dev-chip.is-active { transform: none; }
   .dev-entrance { display: none; }
 }
+
+
+/* Closed rounded photo extrusion and each developer's signature keyring. */
+.dev-photo-scene {
+  width: calc(100% - 76px);
+  margin: 28px auto 0;
+  perspective: 1800px;
+  box-shadow: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.dev-photo-scene:focus-visible {
+  outline: 2px solid var(--primary, #5bd8d0);
+  outline-offset: 10px;
+}
+.dev-photo-3d { transition: transform .55s cubic-bezier(.2,.75,.2,1); }
+.dev-photo-scene.is-dragging .dev-photo-3d,
+.dev-photo-3d.is-resetting { transition: none; }
+.dev-card-rim {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.dev-rim-segment {
+  position: absolute;
+  display: block;
+  transform-origin: 0 0;
+  backface-visibility: visible;
+  background: linear-gradient(to bottom,
+    hsl(189 24% var(--rim-light)) 0%, #c3dedb 8%,
+    hsl(189 20% var(--rim-light)) 18%, #263e49 44%, #182e39 55%,
+    hsl(189 24% var(--rim-light)) 82%, #bbd8d6 93%, #34535d 100%);
+}
+.dev-photo-face {
+  border-radius: 20px;
+  transform-style: flat;
+  box-shadow: inset 0 0 0 2px #e0f8f733;
+}
+.dev-photo-front { transform: translateZ(10px); }
+.dev-photo-back { transform: rotateY(180deg) translateZ(10px); }
+.dev-photo-front img { -webkit-user-drag: none; }
+.dev-photo-overlay { transform: none; }
+/* The rotating card moves the anchor; the ball keeps a spherical silhouette. */
+.dev-charm {
+  position: absolute;
+  top: -17px;
+  right: -24px;
+  width: 72px;
+  height: 134px;
+  transform-origin: 50% 12px;
+  transform: translateZ(14px) rotateY(var(--charm-face-y, 0deg)) rotateX(var(--charm-face-x, 0deg));
+  transition: transform 0.55s cubic-bezier(.2,.75,.2,1);
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.dev-photo-scene.is-dragging .dev-charm,
+.dev-photo-3d.is-resetting .dev-charm {
+  transition: none;
+}
+
+.charm-ring {
+  position: absolute;
+  left: 23px;
+  top: 0;
+  width: 26px;
+  height: 34px;
+  border: 3px solid #d2e8e5;
+  border-right-color: #829c9f;
+  border-bottom-color: #69868c;
+  border-radius: 48%;
+  box-shadow: inset 1px 1px 0 #fff, 1px 2px 2px #071b2470;
+  background: linear-gradient(110deg, transparent 52%, #cbe6e31c 54%, transparent 60%);
+}
+
+.charm-pendulum {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  width: 72px;
+  transform-origin: 50% 0;
+  transform: rotateZ(var(--charm-swing, 0deg));
+}
+
+.charm-chain {
+  display: block;
+  width: 11px;
+  height: 29px;
+  margin: 0 auto;
+  border: 2px solid #a3bfc0;
+  border-radius: 5px;
+  background: repeating-linear-gradient(0deg, #adc9c7 0 2px, #394d58 2px 5px, #edf8f6 5px 6px);
+  box-shadow: 1px 2px 3px #071b2460;
+}
+
+.charm-pom {
+  --pom-lit: #9bafb7;
+  --pom-mid: #4c646f;
+  --pom-dark: #1e333f;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, var(--pom-lit), var(--pom-mid) 48%, var(--pom-dark) 85%);
+  box-shadow: 3px 8px 12px #06172255;
+}
+
+.charm-pom::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  background: radial-gradient(circle at 30% 20%, var(--pom-lit), var(--pom-mid) 48%, var(--pom-dark) 85%);
+  -webkit-mask: url("../assets/developers/charm-fur.svg") center / contain no-repeat;
+  mask: url("../assets/developers/charm-fur.svg") center / contain no-repeat;
+}
+
+.charm-pom::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: .38;
+  background: repeating-conic-gradient(from 14deg at 50% 50%, transparent 0deg 3deg, #ebffec66 3.3deg 3.7deg, transparent 4deg 7deg);
+  -webkit-mask: radial-gradient(circle, transparent 45%, #000 68%, transparent 74%);
+  mask: radial-gradient(circle, transparent 45%, #000 68%, transparent 74%);
+}
+
+.charm-emblem {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  transform: rotate(-8deg);
+  filter: drop-shadow(1px 3px 2px #0b233a80);
+}
+
+.charm-emblem img {
+  display: block;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.dev-charm[data-charm="crown"] .charm-pom {
+  --pom-lit: #ffe7b6;
+  --pom-mid: #bd914a;
+  --pom-dark: #765321;
+}
+
+.dev-charm[data-charm="guitar"] .charm-pom {
+  --pom-lit: #e3c4b1;
+  --pom-mid: #b17970;
+  --pom-dark: #6a4147;
+}
+
+.dev-charm[data-charm="dragon"] .charm-pom {
+  --pom-lit: #b6e9cf;
+  --pom-mid: #5caa9f;
+  --pom-dark: #23555f;
+}
+
+.dev-rotation-controls { margin-top: 38px; }
+.dev-rotation-controls button:focus-visible {
+  outline: 2px solid var(--primary, #5bd8d0);
+  outline-offset: 4px;
+}
+.dev-rotate-hint {
+  padding: 0 18px;
+  font-size: 8px;
+  line-height: 1.7;
+  letter-spacing: .6px;
+}
+.dev-charm-caption {
+  position: relative;
+  z-index: 6;
+  margin: 10px 20px 0;
+  color: var(--secondary, #ffb367);
+  font: 500 11px / 1.6 "IBM Plex Sans", sans-serif;
+  text-align: center;
+}
+body.light-mode .dev-charm-caption { color: var(--secondary, #9e4b18); }
+@media (max-width: 640px) {
+  .dev-photo-scene { width: calc(100% - 68px); }
+}
+@media (max-width: 380px) {
+  .dev-photo-scene { width: calc(100% - 64px); height: 335px; }
+  .dev-back-logo { font-size: 21px; }
+  .dev-photo-back h3 { font-size: 23px; overflow-wrap: anywhere; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dev-photo-3d, .dev-charm, .charm-pendulum { transition: none !important; }
+}
+
+/* The photo remains a dark surface in both themes. */
+.dev-photo-overlay .tpx-wordmark { color: #effffa; }
+.dev-rotation-controls button:first-child,
+.dev-rotation-controls button:last-child { font-size: 24px; line-height: 1; }

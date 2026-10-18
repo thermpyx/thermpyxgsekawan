@@ -238,6 +238,7 @@ let shuffledQuestions = [];
 let currentQuestion = 0;
 let score = 0;
 let answered = false;
+let reviewAnswers = [];
 
 /* =========================================================
    5. SCREEN MANAGEMENT
@@ -266,6 +267,7 @@ function startQuiz(topicKey) {
     currentQuestion = 0;
     score = 0;
     answered = false;
+    reviewAnswers = [];
 
     if (topicKey === "all") {
         selectedTopicName = "All Materials";
@@ -342,6 +344,7 @@ function selectAnswer(selectedButton) {
     answered = true;
 
     const selectedAnswer = selectedButton.dataset.answer;
+    reviewAnswers[currentQuestion] = selectedAnswer;
     const current = shuffledQuestions[currentQuestion];
     const correctAnswer = current.answer;
     const explanation = current.explanation;
@@ -382,6 +385,19 @@ function selectAnswer(selectedButton) {
 ========================================================= */
 function showResult() {
     const topic = selectedTopic === "all" ? { name: "All Materials", nameId: "Semua Materi" } : quizTopics[selectedTopic];
+    // Save display copies and the original answer identities; mastery/history retain their existing flow.
+    try {
+        sessionStorage.setItem("thermpyx-practice-review", JSON.stringify({
+            topic: selectedTopicName, topicId: topic?.nameId,
+            questions: shuffledQuestions.map((question, index) => ({
+                question: question.question, questionId: question.questionId,
+                answer: question.answer, answerId: question.optionsId?.[question.options.indexOf(question.answer)],
+                explanation: question.explanation, explanationId: question.explanationId,
+                selected: reviewAnswers[index] ?? null,
+                selectedId: question.optionsId?.[question.options.indexOf(reviewAnswers[index])]
+            }))
+        }));
+    } catch (_) { /* Storage restrictions must never block completion or learning assessment. */ }
     const historyLabels = {
         detailEn: `Score: ${score} / ${shuffledQuestions.length}`,
         detailId: `Skor: ${score} / ${shuffledQuestions.length}`

@@ -54,8 +54,17 @@ function fixture() {
     await page.keyboard.press("Escape");
     assert.equal(await dialog.isVisible(), false);
     assert.equal(await frame.locator(".home-account-header").evaluate(node => node === document.activeElement), true); checks++;
-    await child().evaluate(() => TPXContent.mountAuth(document.querySelector(".home-auth-mount [data-content-auth]")).showRegister());
+    await child().evaluate(async () => {
+      const container = document.querySelector(".home-auth-mount [data-content-auth]");
+      const account = TPXContent.mountAuth(container);
+      account.showRegister();
+      // Close and reopen before the browser dispatches the queued close event.
+      container.querySelector("dialog").close();
+      account.showRegister();
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    });
     await google.waitFor(); assert.equal(await auth.locator("input").count(), 0); checks++;
+    assert.equal(await google.evaluate(node => node === document.activeElement), true); checks++;
     for (const [code, english, indonesian] of [
       ["auth/popup-blocked", /blocked/, /memblokir/], ["auth/popup-closed-by-user", /canceled/, /dibatalkan/],
       ["auth/unauthorized-domain", /not authorized/, /belum diizinkan/], ["auth/network-request-failed", /connection/, /koneksi/], ["missing", /did not connect/, /belum menghubungkan/]

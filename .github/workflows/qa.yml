@@ -1,0 +1,74 @@
+name: THERMPYX interface QA
+
+on:
+  push:
+    branches: [codex/simulator-visual-refinement]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  interface:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/thermpyx-browsers
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated browser QA tools
+        run: |
+          npm install --prefix "$RUNNER_TEMP/thermpyx-qa" --ignore-scripts --no-save --package-lock=false --no-audit --no-fund playwright@1.62.1
+          "$RUNNER_TEMP/thermpyx-qa/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/thermpyx-qa/node_modules" >> "$GITHUB_ENV"
+          CHROMIUM_PATH=$(node -e 'console.log(require(process.argv[1]).chromium.executablePath())' "$RUNNER_TEMP/thermpyx-qa/node_modules/playwright")
+          echo "CHROMIUM_PATH=$CHROMIUM_PATH" >> "$GITHUB_ENV"
+      - name: Start static site
+        run: |
+          python3 -m http.server 8003 --bind 127.0.0.1 > "$RUNNER_TEMP/thermpyx-http.log" 2>&1 &
+          python3 - <<'PY'
+          from urllib.request import urlopen
+          from time import sleep
+          for attempt in range(30):
+              try:
+                  with urlopen('http://127.0.0.1:8003/app.html', timeout=2) as response:
+                      assert response.status == 200
+                  break
+              except OSError:
+                  if attempt == 29:
+                      raise
+                  sleep(0.2)
+          PY
+      - name: Test Firebase adapters, calculations and translations with isolated fixtures
+        run: |
+          node qa/test-firebase-client.cjs
+          node qa/test-calculator-validation.cjs
+          node qa/test-i18n.cjs
+          node qa/test-rev08.cjs
+      - name: Test published interface and persistent music
+        run: |
+          node qa/test-interface-theme.cjs
+          node qa/test-navigation-layout.cjs
+          node qa/test-about-layout.cjs
+          node qa/test-developer-intro.cjs
+          node qa/test-onboarding.cjs
+          node qa/test-feedback-modal.cjs
+          node qa/test-learning-path.cjs
+          node qa/test-learning-assessment.cjs
+          node qa/test-learning-ui.cjs
+          node qa/test-firebase-account.cjs
+          node qa/test-firebase-live.cjs
+          node qa/test-firebase-navigation.cjs
+          node qa/test-quiz-skills.cjs
+          node qa/test-flashcards-firebase.cjs
+          node qa/test-answer-review.cjs
+          node qa/test-simulator-design.cjs
+          node qa/test-history.cjs --browser
+          node qa/test-shell-music.cjs

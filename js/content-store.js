@@ -226,7 +226,12 @@
     logout.addEventListener("click", () => perform(async () => {const result = await signOut(); if (result.error) errorMessage(result.error); else {render(null); message("Signed out. Your local drafts are unchanged.", "Sudah keluar. Draf lokal tetap tersimpan."); google.focus();}}));
     toggle.addEventListener("click", () => expand(!dialog.open)); dialog.querySelector(".tpx-auth-close").addEventListener("click", () => expand(false));
     dialog.addEventListener("click", event => {const rect = dialog.getBoundingClientRect(); if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) expand(false);});
-    dialog.addEventListener("close", () => {fields.hidden = true; toggle.setAttribute("aria-expanded", "false"); if (returnFocus?.isConnected) returnFocus.focus();});
+    dialog.addEventListener("close", () => {
+      // A queued close event can arrive after a newer showModal call.
+      if (dialog.open) return;
+      fields.hidden = true; toggle.setAttribute("aria-expanded", "false");
+      if (returnFocus?.isConnected) returnFocus.focus();
+    });
     window.addEventListener("thermpyx:languagechange", localize); onAuthChange(render); localize(); session().then(render);
     const controller = {open: () => expand(), showSignIn: () => expand(), showRegister: () => expand()}; mounted.set(container, controller); return controller;
   }

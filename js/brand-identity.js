@@ -176,3 +176,13 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, {once: true});
   else init();
 })();
+
+/* Shared presentation controls load without changing preserved simulator scripts. */
+(() => {
+  const source = document.currentScript?.src;
+  if (!source || document.querySelector('script[data-tpx-refinement]')) return;
+  const script = document.createElement('script');
+  script.src = new URL('refinement.js', source).href;
+  script.dataset.tpxRefinement = '';
+  document.head.append(script);
+})();

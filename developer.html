@@ -51,6 +51,8 @@
 <link rel="stylesheet" href="css/ui-consistency.css">
 <link rel="stylesheet" href="css/brand-identity.css">
 <script defer src="js/brand-identity.js"></script>
+
+<link rel="stylesheet" href="css/refinement.css">
 </head>
 
 
@@ -316,13 +318,29 @@
             <div
               class="dev-photo-scene"
               id="devPhotoScene"
-              aria-label="Interactive developer card"
+              tabindex="0"
+              role="group"
+              aria-label="Interactive developer card. Use left and right arrow keys to rotate, or Home to reset."
+              aria-describedby="devRotateHint"
             >
 
               <div
                 class="dev-photo-3d"
                 id="devPhoto3D"
               >
+
+                <div class="dev-card-rim" id="devCardRim" aria-hidden="true"></div>
+                <div class="dev-charm" id="devCharm" data-charm="billiard" aria-hidden="true">
+                  <span class="charm-ring"></span>
+                  <div class="charm-pendulum" id="devCharmPendulum">
+                    <span class="charm-chain"></span>
+                    <span class="charm-pom">
+                      <span class="charm-emblem" id="devCharmSymbol">
+                        <img src="assets/developers/charm-billiard.svg" alt="">
+                      </span>
+                    </span>
+                  </div>
+                </div>
 
                 <!-- FRONT -->
 
@@ -427,9 +445,11 @@
               class="dev-rotate-hint"
               id="devRotateHint"
             >
-              DRAG / TOUCH TO ROTATE 360°
+              DRAG TO ROTATE 360° · ← → KEYS · HOME TO RESET
             </p>
 
+
+            <p class="dev-charm-caption" id="devCharmCaption" data-en="Nathan’s signature charm · Billiard ball" data-id="Gantungan khas Nathan · Bola biliar">Nathan’s signature charm · Billiard ball</p>
 
             <!-- Footer -->
 
