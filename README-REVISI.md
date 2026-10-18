@@ -27,3 +27,9 @@ Aturan Realtime Database telah diuji pada emulator resmi: **9 skenario, 345 peme
 [Catatan revisi Firebase](docs/REVISI-FIREBASE.md) memuat batas pengujian dan perintah QA. [Pedoman pengembangan](AGENTS.md), [revisi visual](docs/REVISI-VISUAL-SIMULATOR.md) dan [Alur Belajar](docs/REVISI-ALUR-BELAJAR.md) tetap berlaku. Dokumen/SQL Supabase disimpan sebagai arsip; akun dan bank soal Supabase tidak dipindahkan otomatis ke Firebase. Jangan menghapus data lama hanya karena frontend sudah berganti backend.
 
 Fitur cloud baru memerlukan Rules terbaru di `firebase/database.rules.json` dipublikasikan pada proyek yang sama. Pengujian emulator tidak memublikasikan Rules produksi. Frontend tetap ditujukan ke cabang Pages `codex/simulator-visual-refinement`; cabang tinjauan pengembangan adalah `codex/learning-skills-flashcards-20261017`.
+
+## Unduh isi laporan mata kuliah
+
+[Unduh laporan Word langsung](https://github.com/thermpyx/thermpyxgsekawan/raw/refs/heads/codex/simulator-visual-refinement/docs/LAPORAN-PROYEK-THERMPYX.docx). Berkas berisi Bab I–V dan 12 screenshot sesuai pembahasan, dengan konteks Universitas Negeri Medan, Program Studi Bilingual Pendidikan Fisika. Sampul dan kata pengantar disiapkan terpisah oleh kelompok.
+
+[Sumber Markdown](docs/LAPORAN-PROYEK-THERMPYX.md) dan [gambar asli](docs/images/) juga tersedia. Jika membuka pratinjau berkas di GitHub, pilih **Download raw file** untuk menyimpan Word; tautan unduh langsung di atas tidak memerlukan akses ke ruang kerja Codex.

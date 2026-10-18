@@ -667,7 +667,9 @@
     updateEntranceLanguage();
     entrance.append(ambience, copy, skip);
 
-    const width = Math.min(124, Math.max(66, window.innerWidth * .19));
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const width = Math.min(124, Math.max(66, viewportWidth * .19));
     const height = width * 1.25;
     const gap = width * .71;
     const top = window.innerHeight * .43 - height / 2;
@@ -707,7 +709,7 @@
       document.body.classList.remove("dev-entrance-playing");
       const restoreFocus = entrance.contains(document.activeElement);
       entrance.remove();
-      window.removeEventListener("resize", finish);
+      window.removeEventListener("resize", onViewportResize);
       window.removeEventListener("pagehide", finish);
       window.removeEventListener("scroll", finish);
       document.removeEventListener("keydown", onKey);
@@ -723,9 +725,14 @@
     function onPointer(event) {
       if (event.target !== skip) finish();
     }
+    function onViewportResize() {
+      // Theme hydration also dispatches resize for charts. It must not cancel
+      // an entrance that has just started while the page finishes loading.
+      if (window.innerWidth !== viewportWidth || window.innerHeight !== viewportHeight) finish();
+    }
     stopEntrance = finish;
     skip.addEventListener("click", finish);
-    window.addEventListener("resize", finish);
+    window.addEventListener("resize", onViewportResize);
     window.addEventListener("pagehide", finish);
     window.addEventListener("scroll", finish, {passive: true});
     document.addEventListener("keydown", onKey);

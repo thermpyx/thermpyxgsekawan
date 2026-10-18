@@ -103,6 +103,9 @@ function pdf(empty = false) {
     await frame.locator("#fcImportStatus").filter({hasText: /read successfully/}).waitFor();
     assert.match(await frame.locator("#fcSourceText").inputValue(), /SI unit is the joule/);
     await frame.locator("#fcGenerate").click(); await frame.locator("#fcConfirmAction").click();
+    // A native dialog's close event resumes generation asynchronously; click
+    // completion alone does not mean its replacement cards have been rendered.
+    await frame.locator("#fcImportStatus").filter({hasText: /2 draft cards created/}).waitFor();
     assert.equal(await frame.locator("#fcCardEditor textarea").count(), 4);
     assert.equal(await frame.locator("#fcCardEditor textarea").nth(0).inputValue(), "What is heat?");
     assert.match(await frame.locator("#fcCardEditor textarea").nth(1).inputValue(), /SI unit is the joule/);

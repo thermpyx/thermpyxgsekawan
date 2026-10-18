@@ -22,6 +22,10 @@ const base = process.env.TPX_TEST_URL || "http://127.0.0.1:8003";
     await frame.locator(".dev-entrance").waitFor();
     assert.equal(await frame.locator(".dev-entrance-photo").count(), 4); checks++;
     assert.equal(await frame.locator(".dev-chip").count(), 4); checks++;
+    // Shared theme hydration refreshes charts with a synthetic resize. The
+    // entrance must survive it when the viewport geometry has not changed.
+    await frame.locator(".dev-entrance").evaluate(() => window.dispatchEvent(new Event("resize")));
+    assert.equal(await frame.locator(".dev-entrance").count(), 1); checks++;
     await frame.locator(".dev-entrance").waitFor({state: "detached", timeout: 4000});
     assert.equal(await frame.locator(".dev-selector").evaluate(element => element.classList.contains("is-gathering")), false); checks++;
 
@@ -39,7 +43,7 @@ const base = process.env.TPX_TEST_URL || "http://127.0.0.1:8003";
     await frame.locator(".dev-entrance").waitFor();
     assert.equal(await frame.locator(".dev-entrance-photo").count(), 4); checks++;
     await page.setViewportSize({width: 320, height: 740});
-    await frame.locator(".dev-entrance").waitFor({state: "detached"});
+    await frame.locator(".dev-entrance").waitFor({state: "detached", timeout: 1000});
     assert.equal(await frame.locator(".dev-selector").evaluate(element => element.classList.contains("is-gathering")), false); checks++;
     assert.equal(await frame.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false); checks++;
 

@@ -52,25 +52,43 @@ jobs:
           node qa/test-calculator-validation.cjs
           node qa/test-i18n.cjs
           node qa/test-rev08.cjs
-      - name: Test published interface and persistent music
-        run: |
-          node qa/test-interface-theme.cjs
-          node qa/test-navigation-layout.cjs
-          node qa/test-about-layout.cjs
-          node qa/test-developer-intro.cjs
-          node qa/test-developer-card.cjs
-          node qa/test-onboarding.cjs
-          node qa/test-feedback-modal.cjs
-          node qa/test-learning-path.cjs
-          node qa/test-learning-assessment.cjs
-          node qa/test-learning-ui.cjs
-          node qa/test-theory-material.cjs
-          node qa/test-firebase-account.cjs
-          node qa/test-firebase-live.cjs
-          node qa/test-firebase-navigation.cjs
-          node qa/test-quiz-skills.cjs
-          node qa/test-flashcards-firebase.cjs
-          node qa/test-answer-review.cjs
-          node qa/test-simulator-design.cjs
-          node qa/test-history.cjs --browser
-          node qa/test-shell-music.cjs
+      - name: Test circular theme transitions
+        run: node qa/test-interface-theme.cjs
+      - name: Test responsive navigation
+        run: node qa/test-navigation-layout.cjs
+      - name: Test About layout
+        run: node qa/test-about-layout.cjs
+      - name: Test Developer entrance and return visits
+        run: node qa/test-developer-intro.cjs
+      - name: Test Developer card and readable accents
+        run: node qa/test-developer-card.cjs
+      - name: Test onboarding and help dialogs
+        run: node qa/test-onboarding.cjs
+      - name: Test feedback dialog
+        run: node qa/test-feedback-modal.cjs
+      - name: Test guided learning path
+        run: node qa/test-learning-path.cjs
+      - name: Test learning assessment
+        run: node qa/test-learning-assessment.cjs
+      - name: Test learning interface
+        run: node qa/test-learning-ui.cjs
+      - name: Test theory content and deep links
+        run: node qa/test-theory-material.cjs
+      - name: Test Firebase account interface
+        run: node qa/test-firebase-account.cjs
+      - name: Test Firebase live quiz interface
+        run: node qa/test-firebase-live.cjs
+      - name: Test Firebase navigation
+        run: node qa/test-firebase-navigation.cjs
+      - name: Test quiz skills
+        run: node qa/test-quiz-skills.cjs
+      - name: Test private flashcards
+        run: node qa/test-flashcards-firebase.cjs
+      - name: Test answer review
+        run: node qa/test-answer-review.cjs
+      - name: Test simulator design and source integrity
+        run: node qa/test-simulator-design.cjs
+      - name: Test browser history
+        run: node qa/test-history.cjs --browser
+      - name: Test persistent music shell
+        run: node qa/test-shell-music.cjs
