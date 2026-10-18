@@ -334,13 +334,13 @@
             ".validate": "newData.val() === 'suggestion' || newData.val() === 'bug' || newData.val() === 'other'"
           },
           "message": {
-            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 2000 && newData.val().matches(/[\\s\\S]*\\S[\\s\\S]*/)"
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 2000 && newData.val().replace(' ', '').replace('\\t', '').replace('\\n', '').replace('\\r', '').length > 0"
           },
           "language": {
             ".validate": "newData.val() === 'id' || newData.val() === 'en'"
           },
           "page": {
-            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 600 && (newData.val() === 'THERMPYX' || newData.val().matches(/^https?:\\/\\/[^\\s?#]+$/))"
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 600 && (newData.val() === 'THERMPYX' || ((newData.val().beginsWith('https://') || newData.val().beginsWith('http://')) && !newData.val().contains('?') && !newData.val().contains('#') && !newData.val().contains(' ') && !newData.val().contains('\\t') && !newData.val().contains('\\n') && !newData.val().contains('\\r')))"
           },
           "submitted_at": {
             ".validate": "newData.isNumber() && newData.val() >= now - 600000 && newData.val() <= now"

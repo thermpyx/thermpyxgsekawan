@@ -133,7 +133,7 @@ async function main() {
       for (const invalid of [
         { id: "wrong-id" }, { sender_id: "bob" }, { name: "n".repeat(81) }, { name: 42 },
         { category: "unknown" }, { language: "fr" }, { message: "" }, { message: " \n\t " }, { message: "m".repeat(2001) }, { message: 42 },
-        { page: "" }, { page: "javascript:alert(1)" }, { page: "https://example.test/?secret=token" }, { page: "https://example.test/#token" }, { page: "https://example.test/has space" }, { page: "https://example.test/" + "p".repeat(600) },
+        { page: "" }, { page: "javascript:alert(1)" }, { page: "https://example.test/?secret=token" }, { page: "https://example.test/#token" }, { page: "https://example.test/has space" }, { page: "https://example.test/has\ttab" }, { page: "https://example.test/has\nnewline" }, { page: "https://example.test/" + "p".repeat(600) },
         { submitted_at: "2026-10-18" }, { submitted_at: Date.now() + 86400000 }, { submitted_at: Date.now() - 86400000 }, { extra: true }
       ]) await failure(alice.ref("feedback/alice/feedback-invalid").set({ ...feedback("feedback-invalid"), ...invalid }));
       for (const field of ["id", "sender_id", "name", "category", "message", "language", "page", "submitted_at"]) {
@@ -142,6 +142,9 @@ async function main() {
       }
       await success(alice.ref("feedback/alice/feedback-limit").set({ ...feedback("feedback-limit"), name: "n".repeat(80), message: "m".repeat(2000), category: "other", language: "id", page: "THERMPYX" }));
       await success(alice.ref("feedback/alice/feedback-empty-name").set({ ...feedback("feedback-empty-name"), name: "" }));
+      await success(alice.ref("feedback/alice/feedback-multiline").set({ ...feedback("feedback-multiline"), message: "First line.\nSecond line. ΔU = Q − W 😊" }));
+      const password = environment.authenticatedContext("password-user", { firebase: { sign_in_provider: "password" } }).database();
+      await failure(password.ref("feedback/password-user/feedback-a").set(feedback("feedback-a", "password-user")));
     });
 
     await scenario("Room code reservations are atomic, exact-only and immutable across teachers", async () => {
