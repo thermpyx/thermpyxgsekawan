@@ -33,3 +33,17 @@ Fitur cloud baru memerlukan Rules terbaru di `firebase/database.rules.json` dipu
 [Unduh laporan Word langsung](https://github.com/thermpyx/thermpyxgsekawan/raw/refs/heads/codex/simulator-visual-refinement/docs/LAPORAN-PROYEK-THERMPYX.docx). Berkas berisi Bab I–V dan 12 screenshot sesuai pembahasan, dengan konteks Universitas Negeri Medan, Program Studi Bilingual Pendidikan Fisika. Sampul dan kata pengantar disiapkan terpisah oleh kelompok.
 
 [Sumber Markdown](docs/LAPORAN-PROYEK-THERMPYX.md) dan [gambar asli](docs/images/) juga tersedia. Jika membuka pratinjau berkas di GitHub, pilih **Download raw file** untuk menyimpan Word; tautan unduh langsung di atas tidak memerlukan akses ke ruang kerja Codex.
+
+## Revised English report and direct feedback
+
+The revised report is separate from the application's runtime files:
+
+- [Download the English report (Word)](https://github.com/thermpyx/thermpyxgsekawan/raw/refs/heads/codex/simulator-visual-refinement/docs/THERMPYX-PROJECT-REPORT-EN.docx)
+- [Download the English report (PDF)](https://thermpyx.github.io/thermpyxgsekawan/docs/THERMPYX-PROJECT-REPORT-EN.pdf)
+- [Read the English report](docs/THERMPYX-PROJECT-REPORT-EN.md)
+- [Report download page](https://thermpyx.github.io/thermpyxgsekawan/docs/reports/)
+- [Verified journal and book sources](docs/report-sources.md)
+
+The original Indonesian DOCX is retained. Publisher PDFs are linked rather than copied into application assets. The report distinguishes recorded software checks from classroom learning outcomes and production observations.
+
+Developer keychains have been removed; photos and full card rotation are preserved. Feedback now submits through Firebase without opening an email application. Its dedicated Database Rules must be published before production can accept messages; see [feedback activation instructions](docs/EMAIL-THERMPYX.md). A frontend deployment alone does not publish Database Rules.

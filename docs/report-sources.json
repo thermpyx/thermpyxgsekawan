@@ -1,0 +1,711 @@
+{
+  "title": "THERMPYX supporting-source register",
+  "checked_date": "2026-10-18",
+  "article_window": "2022-01-01 through 2026-10-18; all 10 articles fall within the requested recent-five-year window.",
+  "provenance_statement": "References newly checked for this revision are supporting/comparison sources. Repository inspection does not establish that the original authors historically consulted them.",
+  "articles": [
+    {
+      "id": "J1",
+      "group": "theory_support",
+      "title": "Nature of heat inventory: Assessing students’ understanding of thermal processes in kinetic molecular terms",
+      "authors": [
+        {
+          "given": "Alexander",
+          "family": "Volfson",
+          "name": "Alexander Volfson"
+        },
+        {
+          "given": "Orly",
+          "family": "Lankry",
+          "name": "Orly Lankry"
+        },
+        {
+          "given": "Yuval",
+          "family": "Ben Abu",
+          "name": "Yuval Ben Abu"
+        }
+      ],
+      "year": 2026,
+      "publication_date": "2026-08-05",
+      "journal": "Physical Review Physics Education Research",
+      "volume": "22",
+      "issue": "2",
+      "article_number": "020111",
+      "doi": "10.1103/q4n2-d2w3",
+      "doi_url": "https://doi.org/10.1103/q4n2-d2w3",
+      "publisher_url": "https://journals.aps.org/prper/abstract/10.1103/q4n2-d2w3",
+      "download_url": "https://journals.aps.org/prper/pdf/10.1103/q4n2-d2w3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.1103/q4n2-d2w3",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 541639,
+        "pdf_sha256": "77fd0c035f9df49536625182bcbc4e9c0f920efd20d75cdf817056e5182509f3",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "Development and field testing of a 10-item Nature of Heat Inventory; the 81-student field test found persistent materialistic conceptions of heat.",
+      "report_use": "Supports distinguishing heat transfer from stored internal energy and explaining particle animations carefully.",
+      "limitations": "A diagnostic-instrument study; it does not validate THERMPYX or provide the derivation of Q = mcΔT."
+    },
+    {
+      "id": "J2",
+      "group": "theory_support",
+      "title": "Investigating introductory and advanced students’ difficulties with change in internal energy, work, and heat transfer using a validated instrument",
+      "authors": [
+        {
+          "given": "Mary Jane",
+          "family": "Brundage",
+          "name": "Mary Jane Brundage"
+        },
+        {
+          "given": "David E.",
+          "family": "Meltzer",
+          "name": "David E. Meltzer"
+        },
+        {
+          "given": "Chandralekha",
+          "family": "Singh",
+          "name": "Chandralekha Singh"
+        }
+      ],
+      "year": 2024,
+      "publication_date": "2024-03-12",
+      "journal": "Physical Review Physics Education Research",
+      "volume": "20",
+      "issue": "1",
+      "article_number": "010115",
+      "doi": "10.1103/PhysRevPhysEducRes.20.010115",
+      "doi_url": "https://doi.org/10.1103/PhysRevPhysEducRes.20.010115",
+      "publisher_url": "https://journals.aps.org/prper/abstract/10.1103/PhysRevPhysEducRes.20.010115",
+      "download_url": "https://journals.aps.org/prper/pdf/10.1103/PhysRevPhysEducRes.20.010115",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.1103/PhysRevPhysEducRes.20.010115",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 634256,
+        "pdf_sha256": "08593b71a153cbf938de9ec07b4c1352e1ab941b2a0ba0cfe9ed5ef82d67c3d4",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "A validated 78-item instrument was administered in 12 classes at four US institutions to more than 1000 introductory and advanced students; persistent difficulties involved internal energy, work and heat transfer.",
+      "report_use": "Supports explaining state variables versus path-dependent energy transfers, sign conventions and varied gas-process examples.",
+      "limitations": "Observational diagnostic evidence after traditional instruction, not an intervention test of THERMPYX. Read with the publisher erratum.",
+      "related_erratum_url": "https://doi.org/10.1103/PhysRevPhysEducRes.20.029902",
+      "erratum_summary": "The 2024 correction clarifies split-test administration: some introductory students received the first 48 or last 52 items rather than all 78. J4 also gives corrected separated group statistics in Table II.",
+      "erratum_verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "read_scope": "Full one-page publisher correction PDF.",
+        "checked_date": "2026-10-18"
+      }
+    },
+    {
+      "id": "J3",
+      "group": "theory_support",
+      "title": "Investigating introductory and advanced students’ difficulties with entropy and the second law of thermodynamics using a validated instrument",
+      "authors": [
+        {
+          "given": "Mary Jane",
+          "family": "Brundage",
+          "name": "Mary Jane Brundage"
+        },
+        {
+          "given": "David E.",
+          "family": "Meltzer",
+          "name": "David E. Meltzer"
+        },
+        {
+          "given": "Chandralekha",
+          "family": "Singh",
+          "name": "Chandralekha Singh"
+        }
+      ],
+      "year": 2024,
+      "publication_date": "2024-08-19",
+      "journal": "Physical Review Physics Education Research",
+      "volume": "20",
+      "issue": "2",
+      "article_number": "020110",
+      "doi": "10.1103/PhysRevPhysEducRes.20.020110",
+      "doi_url": "https://doi.org/10.1103/PhysRevPhysEducRes.20.020110",
+      "publisher_url": "https://journals.aps.org/prper/abstract/10.1103/PhysRevPhysEducRes.20.020110",
+      "download_url": "https://journals.aps.org/prper/pdf/10.1103/PhysRevPhysEducRes.20.020110",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.1103/PhysRevPhysEducRes.20.020110",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 759020,
+        "pdf_sha256": "db12061577d0030727bc32f2aaf00177791998dcc9f3745023e5db59992bf8d6",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "Students often treated entropy as conserved, overgeneralized increases, or misused ΔS = Qrev/T; the study used more than 1000 students at four institutions.",
+      "report_use": "Supports making reversibility, absolute temperature and the system-plus-surroundings boundary explicit in the second-law module.",
+      "limitations": "The stated ΔS = Qrev/T form requires reversible isothermal transfer; it is not a universal formula for arbitrary irreversible heat flow."
+    },
+    {
+      "id": "J4",
+      "group": "theory_support",
+      "title": "Development and validation of a conceptual multiple-choice survey instrument to assess student understanding of introductory thermodynamics",
+      "authors": [
+        {
+          "given": "Mary Jane",
+          "family": "Brundage",
+          "name": "Mary Jane Brundage"
+        },
+        {
+          "given": "Chandralekha",
+          "family": "Singh",
+          "name": "Chandralekha Singh"
+        }
+      ],
+      "year": 2023,
+      "publication_date": "2023-08-17",
+      "journal": "Physical Review Physics Education Research",
+      "volume": "19",
+      "issue": "2",
+      "article_number": "020112",
+      "doi": "10.1103/PhysRevPhysEducRes.19.020112",
+      "doi_url": "https://doi.org/10.1103/PhysRevPhysEducRes.19.020112",
+      "publisher_url": "https://journals.aps.org/prper/abstract/10.1103/PhysRevPhysEducRes.19.020112",
+      "download_url": "https://journals.aps.org/prper/pdf/10.1103/PhysRevPhysEducRes.19.020112",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.1103/PhysRevPhysEducRes.19.020112",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 604843,
+        "pdf_sha256": "76cd9ebd4cf5a9053eabb86d01d58a570d5473b15e296eb7abf89989bc3f503a",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "Development and validation of the long Survey of Thermodynamic Processes and First and Second Laws, with 19 physical contexts and 78 items.",
+      "report_use": "Supports conceptual checks and comparing the same first-/second-law concept across different process contexts.",
+      "limitations": "THERMPYX topic quizzes are independently authored practice and are not this validated instrument. Read with the publisher erratum.",
+      "related_erratum_url": "https://doi.org/10.1103/PhysRevPhysEducRes.20.029901",
+      "erratum_summary": "The 2024 correction clarifies split-test administration: some introductory students received the first 48 or last 52 items rather than all 78. J4 also gives corrected separated group statistics in Table II.",
+      "erratum_verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "read_scope": "Full one-page publisher correction PDF.",
+        "checked_date": "2026-10-18"
+      }
+    },
+    {
+      "id": "J5",
+      "group": "theory_support",
+      "title": "Time-Cost-Error Trade-Off Relation in Thermodynamics: The Third Law and Beyond",
+      "authors": [
+        {
+          "given": "Tan",
+          "family": "Van Vu",
+          "name": "Tan Van Vu"
+        },
+        {
+          "given": "Keiji",
+          "family": "Saito",
+          "name": "Keiji Saito"
+        }
+      ],
+      "year": 2025,
+      "publication_date": "2025-11-13",
+      "journal": "Physical Review X",
+      "volume": "15",
+      "issue": "4",
+      "article_number": "041029",
+      "doi": "10.1103/l6b9-rg1j",
+      "doi_url": "https://doi.org/10.1103/l6b9-rg1j",
+      "publisher_url": "https://journals.aps.org/prx/abstract/10.1103/l6b9-rg1j",
+      "download_url": "https://journals.aps.org/prx/pdf/10.1103/l6b9-rg1j",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.1103/l6b9-rg1j",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 926981,
+        "pdf_sha256": "475523763e3bb0b7df4d2827f7e276eb5a4e9adc28c0bf0f24ea47499242578b",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract, introduction and §III.B (publisher PDF p. 6), which explicitly distinguishes Nernst/Planck entropy formulations from the unattainability principle and focuses on the latter."
+      },
+      "finding_summary": "Establishes time-cost-error trade-offs for operations such as cooling, erasure and copying, including classical stochastic and quantum descriptions of unattainability.",
+      "report_use": "Provides recent research context for the third-law limit and why reaching absolute zero requires unbounded resources under the studied assumptions; §III.B explicitly distinguishes the entropy formulation from unattainability.",
+      "limitations": "An advanced theoretical comparison, not a source for the site’s illustrative S/S0 = (T/T0)^3 model or a universal entropy law for all materials."
+    },
+    {
+      "id": "J6",
+      "group": "learning_design_comparison",
+      "title": "Investigating the impact of problem properties on introductory and advanced student responses to introductory thermodynamics conceptual problems",
+      "authors": [
+        {
+          "given": "Mary Jane",
+          "family": "Brundage",
+          "name": "Mary Jane Brundage"
+        },
+        {
+          "given": "David E.",
+          "family": "Meltzer",
+          "name": "David E. Meltzer"
+        },
+        {
+          "given": "Chandralekha",
+          "family": "Singh",
+          "name": "Chandralekha Singh"
+        }
+      ],
+      "year": 2025,
+      "publication_date": "2025-03-28",
+      "journal": "Physical Review Physics Education Research",
+      "volume": "21",
+      "issue": "1",
+      "article_number": "010127",
+      "doi": "10.1103/PhysRevPhysEducRes.21.010127",
+      "doi_url": "https://doi.org/10.1103/PhysRevPhysEducRes.21.010127",
+      "publisher_url": "https://journals.aps.org/prper/abstract/10.1103/PhysRevPhysEducRes.21.010127",
+      "download_url": "https://journals.aps.org/prper/pdf/10.1103/PhysRevPhysEducRes.21.010127",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.1103/PhysRevPhysEducRes.21.010127",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 1385099,
+        "pdf_sha256": "b9ad86d5e705a78204eb808cf885216ffe26ff16b9fb88e591d2622168391db9",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "Survey and think-aloud evidence shows thermodynamics responses depend on problem properties, including state functions, signed P–V work and entropy.",
+      "report_use": "Supports asking learners to explain a principle in multiple representations and reviewing reasoning rather than only scores.",
+      "limitations": "Shares the STPFaSL research program with J2–J4; these papers are related evidence, not independent replications or measured THERMPYX learning gains."
+    },
+    {
+      "id": "J7",
+      "group": "learning_design_comparison",
+      "title": "Learning entropy among peers through the lens of coordination class theory",
+      "authors": [
+        {
+          "given": "Juan",
+          "family": "Velasco",
+          "name": "Juan Velasco"
+        },
+        {
+          "given": "Laura",
+          "family": "Buteler",
+          "name": "Laura Buteler"
+        },
+        {
+          "given": "Carlos",
+          "family": "Briozzo",
+          "name": "Carlos Briozzo"
+        },
+        {
+          "given": "Enrique",
+          "family": "Coleoni",
+          "name": "Enrique Coleoni"
+        }
+      ],
+      "year": 2022,
+      "publication_date": "2022-04-07",
+      "journal": "Physical Review Physics Education Research",
+      "volume": "18",
+      "issue": "1",
+      "article_number": "010127",
+      "doi": "10.1103/PhysRevPhysEducRes.18.010127",
+      "doi_url": "https://doi.org/10.1103/PhysRevPhysEducRes.18.010127",
+      "publisher_url": "https://journals.aps.org/prper/abstract/10.1103/PhysRevPhysEducRes.18.010127",
+      "download_url": "https://journals.aps.org/prper/pdf/10.1103/PhysRevPhysEducRes.18.010127",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.1103/PhysRevPhysEducRes.18.010127",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 1900359,
+        "pdf_sha256": "20e6d015ff433638f84d61ee880d5cc8b1fdbfff1767672105b1758854449e2f",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "A fine-grained analysis of two students jointly solving an entropy task describes how peer interactions contribute to conceptual change.",
+      "report_use": "Supports reflective discussion and explaining entropy reasoning to peers after an individual activity.",
+      "limitations": "A small qualitative case study; it cannot establish a population-wide effect or the effectiveness of a leaderboard."
+    },
+    {
+      "id": "J8",
+      "group": "learning_design_comparison",
+      "title": "Promoting Conceptual Learning Using Scaffolded Activities That Incorporate Interactive Simulations",
+      "authors": [
+        {
+          "given": "Pooja",
+          "family": "Ajayan",
+          "name": "Pooja Ajayan"
+        },
+        {
+          "given": "Raymond",
+          "family": "Cao",
+          "name": "Raymond Cao"
+        },
+        {
+          "given": "Jack F.",
+          "family": "Eichler",
+          "name": "Jack F. Eichler"
+        }
+      ],
+      "year": 2025,
+      "publication_date": "2025-05-02",
+      "journal": "Education Sciences",
+      "volume": "15",
+      "issue": "5",
+      "article_number": "566",
+      "doi": "10.3390/educsci15050566",
+      "doi_url": "https://doi.org/10.3390/educsci15050566",
+      "publisher_url": "https://www.mdpi.com/2227-7102/15/5/566",
+      "download_url": "https://www.mdpi.com/2227-7102/15/5/566/pdf",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.3390/educsci15050566",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 722345,
+        "pdf_sha256": "567565a5d36af3d83b99fc75877ba3c7928519ae8a64623ed9c31ce5f4e5762f",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "A quasi-experimental general-chemistry study compares scaffolded simulation activities with instructor-centered lectures; significant differences were reported for the chemical-kinetics assessments.",
+      "report_use": "Provides a cross-disciplinary comparison for guided prediction, repeated trials and rapid feedback around simulations.",
+      "limitations": "Chemistry topics include phases, colligative properties and kinetics. Do not generalize the result to every topic or to THERMPYX without a learning study."
+    },
+    {
+      "id": "J9",
+      "group": "learning_design_comparison",
+      "title": "The Effect of Virtual Laboratories on Improving Students’ SRL: An Umbrella Systematic Review",
+      "authors": [
+        {
+          "given": "Amalia",
+          "family": "Sapriati",
+          "name": "Amalia Sapriati"
+        },
+        {
+          "given": "Astri Dwi Jayanti",
+          "family": "Suhandoko",
+          "name": "Astri Dwi Jayanti Suhandoko"
+        },
+        {
+          "given": "Audi",
+          "family": "Yundayani",
+          "name": "Audi Yundayani"
+        },
+        {
+          "given": "Rafidah Abdul",
+          "family": "Karim",
+          "name": "Rafidah Abdul Karim"
+        },
+        {
+          "given": "Udan",
+          "family": "Kusmawan",
+          "name": "Udan Kusmawan"
+        },
+        {
+          "given": "Airil Haimi",
+          "family": "Mohd Adnan",
+          "name": "Airil Haimi Mohd Adnan"
+        },
+        {
+          "given": "Ardiansyah Azhary",
+          "family": "Suhandoko",
+          "name": "Ardiansyah Azhary Suhandoko"
+        }
+      ],
+      "year": 2023,
+      "publication_date": "2023-02-21",
+      "journal": "Education Sciences",
+      "volume": "13",
+      "issue": "3",
+      "article_number": "222",
+      "doi": "10.3390/educsci13030222",
+      "doi_url": "https://doi.org/10.3390/educsci13030222",
+      "publisher_url": "https://www.mdpi.com/2227-7102/13/3/222",
+      "download_url": "https://www.mdpi.com/2227-7102/13/3/222/pdf",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.3390/educsci13030222",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 632456,
+        "pdf_sha256": "ea51783dab7602947d8a24b5c2774ddcd99f0afab708891210cfce90babce140",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "An umbrella systematic review examines virtual laboratories and self-regulated learning in higher education; 20 articles met the review’s final criteria.",
+      "report_use": "Supports the rationale for planning, monitoring and reflecting through the learning path and local progress indicators.",
+      "limitations": "The reviewed interventions differ from THERMPYX. The review does not establish that local checkboxes demonstrate mastery or that the current platform improves grades."
+    },
+    {
+      "id": "J10",
+      "group": "learning_design_comparison",
+      "title": "Interactive Learning: Unpacking the Influence of Computer Simulations on Students’ Mathematical Modeling Processes",
+      "authors": [
+        {
+          "given": "Azin",
+          "family": "Sanjari",
+          "name": "Azin Sanjari"
+        },
+        {
+          "given": "Azita",
+          "family": "Manouchehri",
+          "name": "Azita Manouchehri"
+        }
+      ],
+      "year": 2024,
+      "publication_date": "2024-04-10",
+      "journal": "Education Sciences",
+      "volume": "14",
+      "issue": "4",
+      "article_number": "397",
+      "doi": "10.3390/educsci14040397",
+      "doi_url": "https://doi.org/10.3390/educsci14040397",
+      "publisher_url": "https://www.mdpi.com/2227-7102/14/4/397",
+      "download_url": "https://www.mdpi.com/2227-7102/14/4/397/pdf",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "metadata_url": "https://api.crossref.org/works/10.3390/educsci14040397",
+      "verification": {
+        "publisher_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 5763330,
+        "pdf_sha256": "2c2a629a5cf6bab770b7a7e991aa76a2bb4af3ac81614c334c4b7b242cf220f2",
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "read_scope": "Full abstract and relevant introductory/conceptual passages from the publisher PDF; not a systematic review of the full study."
+      },
+      "finding_summary": "A qualitative study of fifth-grade students using three simulations proposes exploration/discovery, structured inquiry and synthesizing as modeling stages.",
+      "report_use": "Offers a cross-disciplinary design comparison for linking parameter changes, visual outputs and mathematical explanations.",
+      "limitations": "Elementary mathematics, not university thermodynamics; use as a modeling-design comparison only."
+    }
+  ],
+  "books": [
+    {
+      "id": "B1",
+      "title": "College Physics 2e",
+      "authors": [
+        {
+          "given": "Paul Peter",
+          "family": "Urone",
+          "name": "Paul Peter Urone"
+        },
+        {
+          "given": "Roger",
+          "family": "Hinrichs",
+          "name": "Roger Hinrichs"
+        }
+      ],
+      "year": 2022,
+      "publication_date": "2022-07-13",
+      "edition": "2nd edition",
+      "publisher": "OpenStax, Rice University",
+      "isbn_digital": "978-1-951693-60-2",
+      "isbn_print": "978-1-711470-83-2",
+      "isbn_softcover": "978-1-711470-82-5",
+      "doi": null,
+      "doi_status": "No DOI listed in the publisher record.",
+      "publisher_url": "https://openstax.org/details/books/college-physics-2e",
+      "metadata_url": "https://openstax.org/apps/cms/api/books/college-physics-2e/",
+      "download_url": "https://assets.openstax.org/oscms-prodcms/media/documents/college-physics-2e_-_WEB.pdf",
+      "license": "Creative Commons Attribution-NonCommercial-ShareAlike License 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "verification": {
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes": 263463256,
+        "read_scope": "Publisher metadata, PDF copyright/ISBN page and table of contents; relevant thermodynamics passages."
+      },
+      "report_use": "Foundational temperature, heat capacity, heat transfer, first law, process work, heat engines and entropy (chapters 13–15).",
+      "limitations": "The publication is the publisher’s current accessible second edition (2022), not a newly published 2026 book. The current publisher license is CC BY-NC-SA 4.0; retain attribution and the linked terms."
+    },
+    {
+      "id": "B2",
+      "title": "Introduction to Engineering Thermodynamics",
+      "authors": [
+        {
+          "given": "Claire Yu",
+          "family": "Yan",
+          "name": "Claire Yu Yan"
+        }
+      ],
+      "year": 2022,
+      "publication_date": "2022-09-01",
+      "edition": "Version 1.0; publisher version history lists creation on 2022-08-31",
+      "publishing_platform": "BCcampus Pressbooks",
+      "isbn_digital": null,
+      "isbn_print": null,
+      "isbn_status": "No ISBN is listed in the publisher metadata, homepage or licensing page inspected; no ISBN is invented.",
+      "doi": null,
+      "doi_status": "No DOI is listed in the publisher metadata or homepage.",
+      "publisher_url": "https://pressbooks.bccampus.ca/thermo1/",
+      "metadata_url": "https://pressbooks.bccampus.ca/thermo1/wp-json/pressbooks/v2/metadata",
+      "version_history_url": "https://pressbooks.bccampus.ca/thermo1/back-matter/versioning-history/",
+      "download_url": "https://pressbooks.bccampus.ca/thermo1/open/download?type=pdf",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "verification": {
+        "checked_date": "2026-10-18",
+        "metadata_http_status": 200,
+        "publisher_http_status": 200,
+        "version_history_http_status": 200,
+        "pdf_http_status": 200,
+        "pdf_magic_verified": true,
+        "pdf_bytes_read": 8192,
+        "read_scope": "Publisher metadata, homepage/table of contents, version history, temperature/zeroth-law and specific-entropy sections; PDF download header only.",
+        "licensing_page_http_status": 200
+      },
+      "report_use": "Closed-system energy balance and work (chapter 4), gas properties/processes (chapter 3), thermal equilibrium and zeroth law (§2.2.2), entropy and the second law (chapter 6).",
+      "limitations": "The host lists the 2022 version; do not invent a later edition or an ISBN. The elementary third-law perfect-crystal statement is not derived by these chapters."
+    }
+  ],
+  "theory_source_matrix": [
+    {
+      "topic": "Heat and temperature",
+      "site_file": "theory/heat.html",
+      "books": [
+        "B1: chapters 13–14",
+        "B2: §4.2"
+      ],
+      "theory_articles": [
+        "J1"
+      ],
+      "supported_claim": "Separate heat transfer from stored internal energy; discuss heat capacity with its assumptions.",
+      "boundary": "Q = mcΔT assumes constant specific heat and no phase change; visual particles are illustrative."
+    },
+    {
+      "topic": "Zeroth law",
+      "site_file": "theory/zeroth-law.html",
+      "books": [
+        "B2: §2.2.2",
+        "B1: §13.1"
+      ],
+      "theory_articles": [
+        "J1 (heat-transfer misconceptions context only)"
+      ],
+      "supported_claim": "Thermal equilibrium is transitive and underlies temperature comparison; the direct law source is B2.",
+      "boundary": "A mixed-sample equilibrium temperature additionally requires an energy balance and heat-capacity assumptions; it is not the zeroth-law equation."
+    },
+    {
+      "topic": "Work and energy",
+      "site_file": "theory/work-energy.html",
+      "books": [
+        "B2: §§4.1, 4.3",
+        "B1: §§15.1–15.2"
+      ],
+      "theory_articles": [
+        "J2"
+      ],
+      "supported_claim": "Internal energy is a state property while heat/work depend on the process; pressure-volume work needs an identified path.",
+      "boundary": "W = PΔV assumes constant relevant boundary pressure; expansion is positive under the project convention."
+    },
+    {
+      "topic": "First law",
+      "site_file": "theory/first-law.html",
+      "books": [
+        "B2: §4.4",
+        "B1: §15.1"
+      ],
+      "theory_articles": [
+        "J2",
+        "J4"
+      ],
+      "supported_claim": "For a closed system with negligible macroscopic kinetic/potential changes, ΔU = Q − W using heat-in/work-by-system signs.",
+      "boundary": "These references support the concept and diagnosis; they do not show the website improved learning."
+    },
+    {
+      "topic": "Thermodynamic processes",
+      "site_file": "theory/processes.html",
+      "books": [
+        "B2: §§3.1, 4.3–4.4, 6.7.4",
+        "B1: §15.2"
+      ],
+      "theory_articles": [
+        "J2",
+        "J4"
+      ],
+      "supported_claim": "Distinguish isothermal, isobaric, isochoric and reversible adiabatic conditions and path-dependent work.",
+      "boundary": "PV^γ = constant requires an ideal gas, reversible adiabatic process and effectively constant heat-capacity ratio."
+    },
+    {
+      "topic": "Second law and entropy",
+      "site_file": "theory/second-law.html",
+      "books": [
+        "B2: §§6.3–6.5",
+        "B1: §§15.3–15.6"
+      ],
+      "theory_articles": [
+        "J3"
+      ],
+      "supported_claim": "Distinguish system entropy change from entropy generation and state the reversible-isothermal conditions for ΔS = Qrev/T.",
+      "boundary": "Carnot efficiency uses absolute temperatures and is an upper bound for the specified reservoir pair; the program’s 80% factor is illustrative."
+    },
+    {
+      "topic": "Third law",
+      "site_file": "theory/third-law.html",
+      "books": [
+        "B2: §2.2.2 (absolute-temperature background only)",
+        "B1: §15.4 (absolute-zero/Carnot background only)"
+      ],
+      "theory_articles": [
+        "J5"
+      ],
+      "supported_claim": "Use §III.B to distinguish the Nernst/Planck entropy formulation from unattainability and use current cooling research to discuss limitations on reaching absolute zero.",
+      "boundary": "J5 does not establish the site’s S ∝ T³ illustration as universal. The report must distinguish the perfect-crystal entropy statement from the unattainability principle and avoid claiming these introductory book sections derive the full third law."
+    }
+  ],
+  "access_notes": {
+    "verified_domains": [
+      "api.crossref.org",
+      "api.openalex.org",
+      "journals.aps.org",
+      "www.mdpi.com",
+      "openstax.org",
+      "assets.openstax.org",
+      "pressbooks.bccampus.ca"
+    ],
+    "excluded_blocked_candidates": [
+      {
+        "title": "Proof of the Nernst theorem",
+        "doi": "10.1140/epjp/s13360-025-06503-w",
+        "reason": "Crossref metadata and CC BY license were available, but the publisher HTML/PDF redirect through idp.springer.com was blocked with proxy CONNECT 403 at the time checked; it is excluded from the 10 verified articles."
+      }
+    ],
+    "downloads": "Link to official publisher/repository copies. Third-party journal PDFs and books are not committed into the application repository."
+  }
+}
