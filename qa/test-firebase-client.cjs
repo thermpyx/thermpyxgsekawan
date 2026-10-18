@@ -145,6 +145,18 @@ function fixture(initial = teacher("teacherA"), configured = true) {
   check((await api.questionSets.get("same-id")).data.owner_id === "teacherB", "new-owner same-id question set survives stale deletion");
   site.changeUser(teacher("teacherA"));
   const feedbackInput = { id: "feedback-test", name: "Student", category: "bug", message: "A diagram label is clipped.", language: "en", page: "https://example.test/index.html" };
+  const deniedFeedback = fixture(teacher("blocked-sender"));
+  await deniedFeedback.global.TPXFirebase.ready();
+  for (const [failure, expected] of [
+    [new Error("Permission denied"), "firebase/permission-denied"],
+    [{ code: "PERMISSION_DENIED" }, "firebase/permission-denied"],
+    [new Error("Failed to fetch"), "firebase/connection"]
+  ]) {
+    deniedFeedback.setReadHook(async () => { throw failure; });
+    const response = await deniedFeedback.global.TPXFirebase.feedback.submit(feedbackInput, "blocked-sender");
+    check(response.error?.code === expected, "feedback distinguishes code-less RTDB read denial from a network failure");
+  }
+  check(!deniedFeedback.log.some(([operation]) => operation === "set"), "a denied feedback preflight never writes or claims delivery");
   const feedback = await api.feedback.submit(feedbackInput, "teacherA");
   check(!feedback.error && feedback.data.sender_id === "teacherA" && Number.isFinite(feedback.data.submitted_at), "feedback confirms a persisted server timestamp under the current Google sender");
   const feedbackPath = "feedback/teacherA/feedback-test";

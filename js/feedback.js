@@ -100,7 +100,9 @@
         delivered = true;
         setStatus(pair("Thank you! Your feedback has been received. Edit the form to send another message.", "Terima kasih! Masukan Anda telah diterima. Ubah isi formulir untuk mengirim pesan lain."));
       } catch (error) {
-        const detail = error?.messageEn && error?.messageId ? pair(error.messageEn, error.messageId) : pair("Your feedback has not been confirmed. Check your connection and try again. Your draft is kept.", "Masukan Anda belum terkonfirmasi. Periksa koneksi lalu coba lagi. Draf Anda tetap tersimpan.");
+        const detail = error?.code === "firebase/permission-denied"
+          ? pair("Feedback access was denied by the server. Your draft is kept. Please contact the site administrator.", "Akses masukan ditolak oleh server. Draf Anda tetap tersimpan. Silakan hubungi pengelola situs.")
+          : error?.messageEn && error?.messageId ? pair(error.messageEn, error.messageId) : pair("Your feedback has not been confirmed. Check your connection and try again. Your draft is kept.", "Masukan Anda belum terkonfirmasi. Periksa koneksi lalu coba lagi. Draf Anda tetap tersimpan.");
         setStatus(detail);
       } finally {setBusy(false);}
     });

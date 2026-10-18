@@ -34,11 +34,15 @@
   function safeError(error) {
     if (error?.messageEn && error?.messageId) return error;
     const code = String(error?.code || "").toLowerCase();
+    // Realtime Database get() can reject with Error("Permission denied")
+    // without a Firebase error code. Preserve that specific access failure.
+    const message = typeof error?.message === "string" ? error.message.trim() : "";
+    const readDenied = !code && /^permission[ _-]denied\.?$/i.test(message);
     if (/popup-closed-by-user|cancelled-popup-request/.test(code)) return fault("auth/popup-cancelled", "Google sign-in was cancelled. You can try again.", "Login Google dibatalkan. Anda dapat mencoba kembali.");
     if (/popup-blocked/.test(code)) return fault("auth/popup-blocked", "Allow pop-ups for this website, then choose Sign in with Google again.", "Izinkan popup untuk situs ini, lalu pilih Masuk dengan Google kembali.");
     if (/unauthorized-domain/.test(code)) return fault("auth/unauthorized-domain", "This website's domain is not authorized for Google sign-in. Add it in Firebase Authentication settings.", "Domain situs ini belum diizinkan untuk login Google. Tambahkan di pengaturan Firebase Authentication.");
     if (/operation-not-allowed/.test(code)) return fault("auth/provider-disabled", "Enable Google sign-in and Anonymous sign-in in Firebase Authentication.", "Aktifkan login Google dan Anonim di Firebase Authentication.");
-    if (/permission.denied|permission-denied/.test(code)) return fault("firebase/permission-denied", "Access was denied. Check the active account and Firebase database rules.", "Akses ditolak. Periksa akun aktif dan aturan database Firebase.");
+    if (/permission.denied|permission-denied/.test(code) || readDenied) return fault("firebase/permission-denied", "Access was denied. Check the active account and Firebase database rules.", "Akses ditolak. Periksa akun aktif dan aturan database Firebase.");
     if (/too-many-requests|quota-exceeded/.test(code)) return fault("firebase/rate-limit", "The service is temporarily limiting requests. Wait before trying again.", "Layanan sedang membatasi permintaan. Tunggu sebelum mencoba kembali.");
     if (/invalid-api-key|invalid-app-credential|project-not-found|configuration-not-found/.test(code)) return errors.config();
     return errors.connection();

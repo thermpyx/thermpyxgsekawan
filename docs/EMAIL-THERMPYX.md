@@ -13,6 +13,14 @@ The homepage **Feedback** popup now submits directly to Firebase Realtime Databa
 
 Open the existing **thermpyx** project in **Firebase Console → Build → Realtime Database → Rules**. Replace the Rules with the complete version linked above and choose **Publish**. Deploying GitHub Pages alone does not publish database Rules. Administrators read submissions under **Data → feedback → sender UID → submission ID**. No frontend secret, email service or public database access is needed.
 
+## Jika muncul “The connection failed” saat mengirim
+
+Versi sebelum perbaikan diagnostik dapat menampilkan pesan koneksi ketika Firebase sebenarnya menolak pembacaan awal record masukan. Firebase SDK dapat mengembalikan `Error("Permission denied")` tanpa properti `code`. Situs sekarang mengenali bentuk galat ini dan menampilkan penolakan akses, bukan menyebutnya sebagai kegagalan jaringan.
+
+Jika Rules `feedback` belum dipublikasikan, lakukan aktivasi di atas pada database proyek `thermpyx` yang benar, lalu tekan **Kirim masukan** lagi. Tidak perlu mengubah atau menghapus draf. Jika Rules sudah dipublikasikan, cocokkan isi aktifnya dengan berkas lengkap pada cabang publik; penolakan akses juga dapat berarti akun tidak memenuhi aturan. Pesan jaringan yang tetap muncul perlu diperiksa sebagai kegagalan koneksi/SDK/autentikasi, sehingga tidak boleh langsung disimpulkan sebagai Rules yang belum dipublikasikan.
+
+The earlier generic connection message could hide a code-less Realtime Database read-denial error. This error shape was reproduced using the real Firebase 13 SDK against an isolated official database emulator. The updated site distinguishes this access denial from a network failure and keeps the draft available for retry. Publishing the feedback Rules is still a separate prerequisite; the diagnostic fix does not publish Rules or prove successful production delivery.
+
 ## Batas dan kegagalan / Limits and errors
 
 - Sebelum Rules baru dipublikasikan, pengiriman ditolak; formulir menampilkan kesalahan dan mempertahankan draf. / Until the new Rules are published, submissions fail visibly and drafts are preserved.

@@ -63,10 +63,16 @@ const base = (process.env.TPX_TEST_URL || "http://127.0.0.1:8003").replace(/\/$/
     assert.match(await status.textContent(), /Mengirim/); assert.match(await submit.textContent(), /Kirim masukan/);
     assert.equal(await message.inputValue(), unicodeMessage); assert.equal(await message.isDisabled(), true); checks++;
     await child.evaluate(() => {__FEEDBACK_QA__.fail = true; __FEEDBACK_QA__.hold = false; __FEEDBACK_QA__.finish();});
-    await status.filter({hasText: /Masukan belum tersimpan/}).waitFor();
+    await status.filter({hasText: /Akses masukan ditolak oleh server/}).waitFor();
     assert.equal(await submit.isDisabled(), false); assert.equal(await message.isDisabled(), false);
     assert.equal(await form.getAttribute("aria-busy"), null); assert.equal(await message.inputValue(), unicodeMessage);
     assert.equal(await form.locator("#feedbackName").inputValue(), "Rina"); checks++;
+    assert.doesNotMatch(await status.textContent(), /Koneksi gagal|Periksa koneksi/);
+    await child.evaluate(() => TPX.setLanguage("en", true));
+    assert.match(await status.textContent(), /Feedback access was denied by the server/);
+    assert.equal(await message.inputValue(), unicodeMessage); checks++;
+    await child.evaluate(() => TPX.setLanguage("id", true));
+    assert.match(await status.textContent(), /Akses masukan ditolak oleh server/); checks++;
     const first = await child.evaluate(() => __FEEDBACK_QA__.calls[0]);
     assert.match(first.input.id, /^feedback-[a-f0-9]{32}$/); assert.equal(first.owner, "visitor-fixture");
     assert.equal(first.input.page.includes("context-secret"), false); assert.equal(first.input.page.includes("private-fragment"), false); checks++;
